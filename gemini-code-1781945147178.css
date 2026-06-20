@@ -1,0 +1,364 @@
+/* --- Base Styling & Variables --- */
+:root {
+    --primary-blue: #0A369D;
+    --light-blue: #4472CA;
+    --ice-blue: #EBF1FA;
+    --dark-text: #1C2541;
+    --pure-white: #FFFFFF;
+    --gray-bg: #F8F9FA;
+    --transition: all 0.3s ease;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    scroll-behavior: smooth;
+}
+
+body {
+    color: var(--dark-text);
+    background-color: var(--pure-white);
+    line-height: 1.6;
+}
+
+.container {
+    width: 85%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 60px 0;
+}
+
+h2 {
+    text-align: center;
+    font-size: 2.5rem;
+    color: var(--primary-blue);
+    margin-bottom: 10px;
+}
+
+.title-line {
+    width: 60px;
+    height: 4px;
+    background-color: var(--light-blue);
+    border: none;
+    margin: 0 auto 40px auto;
+}
+
+/* --- Buttons --- */
+.btn {
+    display: inline-block;
+    padding: 12px 30px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    border: none;
+}
+
+.btn-primary {
+    background-color: var(--primary-blue);
+    color: var(--pure-white);
+}
+
+.btn-primary:hover {
+    background-color: var(--light-blue);
+}
+
+/* --- Header & Nav --- */
+header {
+    background-color: var(--pure-white);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.logo-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 0;
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--primary-blue);
+}
+
+.logo span {
+    color: var(--light-blue);
+}
+
+nav ul {
+    display: flex;
+    list-style: none;
+}
+
+nav ul li {
+    margin-left: 20px;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: var(--dark-text);
+    font-weight: 500;
+    transition: var(--transition);
+}
+
+nav ul li a:hover {
+    color: var(--primary-blue);
+}
+
+/* --- Hero Section --- */
+.hero-section {
+    background: linear-gradient(135deg, rgba(10,54,157,0.9) 0%, rgba(68,114,202,0.8) 100%), 
+                url('https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1920&q=80') no-repeat center center/cover;
+    height: 80vh;
+    display: flex;
+    align-items: center;
+    color: var(--pure-white);
+    text-align: center;
+}
+
+.hero-content h1 {
+    font-size: 3.5rem;
+    margin-bottom: 20px;
+}
+
+.hero-content p {
+    font-size: 1.25rem;
+    max-width: 700px;
+    margin: 0 auto 30px auto;
+}
+
+/* --- About Us --- */
+.about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    align-items: center;
+}
+
+.about-text h3 {
+    color: var(--light-blue);
+    margin-bottom: 15px;
+}
+
+.about-text p {
+    margin-bottom: 15px;
+}
+
+.about-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.stat-box {
+    background-color: var(--ice-blue);
+    padding: 30px 15px;
+    border-radius: 8px;
+    text-align: center;
+    border-bottom: 4px solid var(--primary-blue);
+}
+
+.stat-box h3 {
+    font-size: 2rem;
+    color: var(--primary-blue);
+}
+
+/* --- Courses --- */
+.courses-section {
+    background-color: var(--gray-bg);
+}
+
+.course-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+}
+
+.course-card {
+    background-color: var(--pure-white);
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    transition: var(--transition);
+}
+
+.course-card:hover {
+    transform: translateY(-5px);
+}
+
+.course-card h3 {
+    color: var(--primary-blue);
+    margin-bottom: 15px;
+}
+
+.course-card .price {
+    display: block;
+    margin-top: 20px;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--light-blue);
+}
+
+/* --- Quiz Application --- */
+.quiz-container {
+    background-color: var(--pure-white);
+    border: 2px solid var(--ice-blue);
+    border-radius: 10px;
+    padding: 40px;
+    max-width: 600px;
+    margin: 0 auto;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+}
+
+.btn-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin: 25px 0;
+}
+
+.quiz-container .btn-choice {
+    background-color: var(--ice-blue);
+    color: var(--dark-text);
+    padding: 12px;
+    border-radius: 5px;
+    border: 1px solid transparent;
+    text-align: left;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.quiz-container .btn-choice:hover {
+    background-color: #d2e0f7;
+}
+
+.correct {
+    background-color: #2ec4b6 !important;
+    color: white !important;
+}
+
+.wrong {
+    background-color: #e63946 !important;
+    color: white !important;
+}
+
+#next-btn {
+    background-color: var(--primary-blue);
+    color: white;
+}
+
+.hidden {
+    display: none;
+}
+
+/* --- Testimonials --- */
+.testimonials-section {
+    background-color: var(--ice-blue);
+}
+
+.testimonial-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+}
+
+.testimonial-card {
+    background-color: var(--pure-white);
+    padding: 40px;
+    border-radius: 8px;
+    position: relative;
+}
+
+.testimonial-card p {
+    font-style: italic;
+    margin-bottom: 20px;
+}
+
+.testimonial-card h4 {
+    color: var(--primary-blue);
+}
+
+/* --- Contact Form --- */
+.contact-form {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group input, .form-group textarea {
+    width: 100%;
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+    outline: none;
+}
+
+.form-group input:focus, .form-group textarea:focus {
+    border-color: var(--primary-blue);
+}
+
+/* --- Footer --- */
+footer {
+    background-color: var(--dark-text);
+    color: var(--pure-white);
+    text-align: center;
+    padding: 20px;
+    font-size: 0.9rem;
+}
+
+/* --- Floating Sticky Social Media Widgets --- */
+.social-sticky {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    z-index: 2000;
+}
+
+.social-btn {
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.5rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+.social-btn:hover {
+    transform: scale(1.1) translateY(-3px);
+}
+
+.whatsapp { background-color: #25D366; }
+.instagram { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); }
+.facebook { background-color: #1877F2; }
+
+/* --- Responsive Adjustments --- */
+@media (max-width: 768px) {
+    .logo-nav, .about-grid, .testimonial-grid {
+        flex-direction: column;
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+    nav ul { margin-top: 20px; }
+    .about-stats { grid-template-columns: 1fr; }
+    .hero-content h1 { font-size: 2.2rem; }
+}
