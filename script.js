@@ -309,7 +309,7 @@ function compilePsychDiagnosticsReport() {
             Your concept retention models are running but your speed mechanics are mismanaged. You freeze on hard physics numericals, wasting crucial time allocations. Customized strategy mapping is required.`;
         } else {
             if(badgeDisplay) badgeDisplay.innerText = "🔥";
-            diagnosticHTML = ` = `<strong>🔍 Primary Vulnerability: Strategic Disconnection Loops</strong><br><br>
+            diagnosticHTML = `<strong>🔍 Primary Vulnerability: Strategic Disconnection Loops</strong><br><br>
             Your raw intelligence baseline is running at peak capacity, but you lack an unshakeable day-to-day strategic tracking layout. Re-anchoring your accountability modules will unlock top ranks easily.`;
         }
     } else { // Parent Profile Output
