@@ -1,33 +1,33 @@
-// Interactive Assessment Logic Matrix
+// Gamified Assessment Matrix Configuration
 const quizQuestions = [
     {
-        question: "How do you handle advanced numerical problem derivations under tight mock exam timers?",
+        question: "How do you handle advanced analytical derivations or numerical balance problems under tight examination timers?",
         answers: [
-            { text: "I instantly identify patterns and connect formulas seamlessly.", correct: true },
-            { text: "I panic, confuse my variables, or overthink the process.", correct: false }
+            { text: "I comfortably map logical formulas instantly.", correct: true },
+            { text: "I experience high anxiety and overthink the initial variables.", correct: false }
         ]
     },
     {
-        question: "What does your current self-study workflow look like outside of class hours?",
+        question: "What does your secondary self-study tracking system look like outside of typical classroom hours?",
         answers: [
-            { text: "Highly structured with targeted revisions and active mock sessions.", correct: true },
-            { text: "Mainly chaotic—cramming concepts at random intervals without tracking.", correct: false }
+            { text: "Highly structured notes with mapped revision cycles.", correct: true },
+            { text: "Random cramming sessions without tracking test metrics.", correct: false }
         ]
     },
     {
-        question: "When performance drops or mock scores hit a low point, how do you handle it?",
+        question: "When processing critical mock-score drops or unexpected performance setbacks, what is your mindset?",
         answers: [
-            { text: "I systematically audit mistake metrics and adjust methods.", correct: true },
-            { text: "I deal with severe burnout, anxiety, and doubt my career trajectory.", correct: false }
+            { text: "I isolate problem metrics and adjust conceptual loops cleanly.", correct: true },
+            { text: "I experience heavy psychological burnout or severe imposter panic.", correct: false }
         ]
     }
 ];
 
-// Operational App State Cache
+// App Cache State variables
 let currentQuestionIndex = 0;
 let pointsScore = 0;
 
-// Element Queries
+// Dynamic Element Targets
 const menuToggle = document.getElementById('menu-toggle');
 const navMenu = document.getElementById('nav-menu');
 const questionElement = document.getElementById('question');
@@ -37,8 +37,9 @@ const restartButton = document.getElementById('restart-btn');
 const quizWindow = document.getElementById('quiz-window');
 const resultWindow = document.getElementById('result-window');
 const scoreText = document.getElementById('score-text');
+const badgeDisplay = document.getElementById('badge-display');
 
-// Menu Interaction Hooks
+// Responsive Hamburger Toggle Mechanics
 if (menuToggle && navMenu) {
     menuToggle.addEventListener('click', () => {
         navMenu.classList.toggle('active');
@@ -59,7 +60,7 @@ if (menuToggle && navMenu) {
     });
 }
 
-// Engine Operations Controls
+// Gamified Diagnostic Logic Orchestration
 function launchAssessment() {
     currentQuestionIndex = 0;
     pointsScore = 0;
@@ -101,7 +102,7 @@ function captureSelection(e) {
     
     Array.from(answerButtonsElement.children).forEach(button => {
         button.disabled = true;
-        button.style.opacity = "0.5";
+        button.style.opacity = "0.4";
     });
     
     selectedBtn.style.borderColor = "var(--primary-neon)";
@@ -120,10 +121,16 @@ function showResultsWindow() {
     if(nextButton) nextButton.classList.add('hidden');
     if(resultWindow) resultWindow.classList.remove('hidden');
     
+    // Custom Gamified Addictive Badges for GenZ Engagement
     if (pointsScore === quizQuestions.length) {
-        if(scoreText) scoreText.innerHTML = `🌟 <strong>Score: ${pointsScore} / ${quizQuestions.length}</strong> — Elite strategy profile! Your conceptual workflow is solid. Let's optimize it for peak performance.`;
+        if(badgeDisplay) badgeDisplay.innerText = "🏆";
+        if(scoreText) scoreText.innerHTML = `<strong>Score: ${pointsScore} / ${quizQuestions.length} — Formula Wizard Status</strong><br>Your conceptual logic matrix is clean. Let's maximize it to guarantee top ranks.`;
+    } else if (pointsScore > 0) {
+        if(badgeDisplay) badgeDisplay.innerText = "⚡";
+        if(scoreText) scoreText.innerHTML = `<strong>Score: ${pointsScore} / ${quizQuestions.length} — Speed Demon Status</strong><br>You have great analytical potential, but hidden test anxieties are capping your output under pressure.`;
     } else {
-        if(scoreText) scoreText.innerHTML = `📉 <strong>Score: ${pointsScore} / ${quizQuestions.length}</strong> — You have hidden vulnerability caps or test anxieties holding you back. We can clear this systematically.`;
+        if(badgeDisplay) badgeDisplay.innerText = "📉";
+        if(scoreText) scoreText.innerHTML = `<strong>Score: ${pointsScore} / ${quizQuestions.length} — Severe Burnout Warning</strong><br>Your mind and approach pathways are struggling with stress. We need structured counseling immediately to re-anchor you.`;
     }
 }
 
@@ -140,12 +147,12 @@ if(restartButton) {
 
 document.addEventListener('DOMContentLoaded', launchAssessment);
 
-// Prevent default page reload tracking loops on Contact submit
+// Form Control submission override hooks
 const contactForm = document.getElementById('contact-form');
 if(contactForm) {
     contactForm.addEventListener('submit', (e) => {
         e.preventDefault();
-        alert('Details received successfully! Abhinav sir will review your profile metrics and connect via WhatsApp/Email shortly to set up your free counseling slot.');
+        alert('Data uploaded metrics locked! Abhinav sir will assess your scoring diagnostics profile and reach out via WhatsApp/Email to finalize your free 1-on-1 strategy slot.');
         contactForm.reset();
     });
 }
