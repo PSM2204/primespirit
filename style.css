@@ -442,7 +442,7 @@ header nav ul a:hover {
 
 .testimonial-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(2, 1fr);
     gap: 32px;
 }
 
@@ -472,9 +472,11 @@ header nav ul a:hover {
 }
 
 .testimonial-card span {
+    display: block;
     font-size: 0.85rem;
     color: var(--text-dark);
     font-weight: 600;
+    margin-top: 2px;
 }
 
 /* Contact Entry Form Panel */
@@ -579,7 +581,7 @@ footer {
 }
 
 /* ==========================================================================
-   ADVANCED RESPONSIVE SYSTEM LAYERS (Mobile, Tab, Desktop Adaptive)
+   RESPONSIVE DESIGN INTERFACES (Mobile, Tab, Desktop Adaptive)
    ========================================================================== */
 
 /* LAPTOP / SCREEN SCALE OPTIMIZATIONS (Max-width: 1024px) */
