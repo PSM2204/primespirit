@@ -1,17 +1,17 @@
-/* Core Custom Properties - Modern Dark Theme */
+/* Custom Global Cyberpunk Ecosystem Tokens */
 :root {
-    --bg-dark: #07090e;
-    --card-dark: #121620;
+    --bg-black: #06080c;
+    --card-surface: #111522;
     --primary-neon: #0070F3;
     --accent-glow: #00df89;
-    --text-white: #f7fafc;
-    --text-muted: #94a3b8;
-    --glass-border: rgba(255, 255, 255, 0.05);
+    --text-pure: #f8fafc;
+    --text-dark: #94a3b8;
+    --glass-border: rgba(255, 255, 255, 0.06);
     --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-    --border-radius: 12px;
+    --border-radius: 16px;
 }
 
-/* Base Configuration */
+/* Structural Engine Overhaul */
 * {
     margin: 0;
     padding: 0;
@@ -20,9 +20,9 @@
 }
 
 body {
-    font-family: '-apple-system', BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    color: var(--text-white);
-    background-color: var(--bg-dark);
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    color: var(--text-pure);
+    background-color: var(--bg-black);
     line-height: 1.6;
     overflow-x: hidden;
 }
@@ -34,10 +34,10 @@ body {
     padding: 0 24px;
 }
 
-/* Typography Modifications */
+/* Modern Typography */
 h1, h2, h3, h4 {
     font-weight: 800;
-    letter-spacing: -0.5px;
+    letter-spacing: -0.03em;
 }
 
 .gradient-text {
@@ -53,7 +53,7 @@ h1, h2, h3, h4 {
     font-weight: 700;
     text-transform: uppercase;
     font-size: 0.8rem;
-    letter-spacing: 2px;
+    letter-spacing: 0.2em;
     margin-bottom: 8px;
 }
 
@@ -71,7 +71,7 @@ h2 {
     border-radius: 10px;
 }
 
-/* Component UI System */
+/* Interactive Button Base Layouts */
 .btn {
     display: inline-flex;
     align-items: center;
@@ -88,7 +88,7 @@ h2 {
 
 .btn-primary {
     background: var(--primary-neon);
-    color: var(--text-white);
+    color: var(--text-pure);
     box-shadow: 0 4px 20px rgba(0, 112, 243, 0.3);
 }
 
@@ -98,21 +98,21 @@ h2 {
 }
 
 .btn-secondary {
-    background: rgba(255, 255, 255, 0.03);
-    color: var(--text-white);
+    background: rgba(255, 255, 255, 0.02);
+    color: var(--text-pure);
     border: 1px solid var(--glass-border);
 }
 
 .btn-secondary:hover {
-    background: rgba(255, 255, 255, 0.08);
-    border-color: var(--text-muted);
+    background: rgba(255, 255, 255, 0.06);
+    border-color: var(--text-dark);
 }
 
-/* Navigation Layout */
+/* Glassmorphic Navigation Design */
 header {
-    background-color: rgba(7, 9, 14, 0.8);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    background-color: rgba(6, 8, 12, 0.85);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
     position: sticky;
     top: 0;
     z-index: 1000;
@@ -123,37 +123,39 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    height: 75px;
+    height: 80px;
 }
 
 .logo {
     font-size: 1.6rem;
     font-weight: 900;
-    color: var(--text-white);
+    color: var(--text-pure);
     text-decoration: none;
-    letter-spacing: -1px;
+    letter-spacing: -0.04em;
 }
 
-.logo span {
+.pulse-dot {
     color: var(--primary-neon);
+    display: inline-block;
+    animation: beacon 2s infinite;
 }
 
 header nav ul {
     display: flex;
     list-style: none;
-    gap: 28px;
+    gap: 32px;
 }
 
 header nav ul a {
     text-decoration: none;
-    color: var(--text-muted);
+    color: var(--text-dark);
     font-weight: 600;
     font-size: 0.95rem;
     transition: var(--transition);
 }
 
 header nav ul a:hover {
-    color: var(--text-white);
+    color: var(--text-pure);
 }
 
 .menu-toggle {
@@ -161,13 +163,13 @@ header nav ul a:hover {
     font-size: 1.4rem;
     background: transparent;
     border: none;
-    color: var(--text-white);
+    color: var(--text-pure);
     cursor: pointer;
 }
 
-/* Hero Section layout */
+/* Widescreen Hero Panel */
 .hero-section {
-    padding: 120px 0 100px 0;
+    padding: 130px 0 110px 0;
     text-align: center;
 }
 
@@ -184,8 +186,8 @@ header nav ul a:hover {
 }
 
 .hero-content h1 {
-    font-size: 4rem;
-    line-height: 1.1;
+    font-size: 4.25rem;
+    line-height: 1.05;
     margin-bottom: 24px;
     max-width: 900px;
     margin-left: auto;
@@ -193,9 +195,9 @@ header nav ul a:hover {
 }
 
 .hero-content p {
-    font-size: 1.25rem;
-    color: var(--text-muted);
-    max-width: 700px;
+    font-size: 1.3rem;
+    color: var(--text-dark);
+    max-width: 750px;
     margin: 0 auto 40px auto;
 }
 
@@ -205,9 +207,9 @@ header nav ul a:hover {
     gap: 16px;
 }
 
-/* About Section layout */
+/* About Layout Profile */
 .about-section {
-    padding: 90px 0;
+    padding: 100px 0;
     border-top: 1px solid var(--glass-border);
 }
 
@@ -219,13 +221,13 @@ header nav ul a:hover {
 }
 
 .credentials {
-    font-size: 1.2rem;
+    font-size: 1.25rem;
     color: var(--accent-glow);
     margin-bottom: 15px;
 }
 
 .about-text p {
-    color: var(--text-muted);
+    color: var(--text-dark);
     margin-bottom: 18px;
     font-size: 1.05rem;
 }
@@ -241,34 +243,33 @@ header nav ul a:hover {
     align-items: flex-start;
     gap: 20px;
     padding: 24px;
-    background: var(--card-dark);
+    background: var(--card-surface);
     border-radius: var(--border-radius);
     border: 1px solid var(--glass-border);
 }
 
 .stat-box i {
-    font-size: 1.75rem;
+    font-size: 1.6rem;
     color: var(--primary-neon);
     background: rgba(0, 112, 243, 0.1);
-    padding: 12px;
-    border-radius: 10px;
+    padding: 14px;
+    border-radius: 12px;
 }
 
 .stat-box h3 {
-    font-size: 1.2rem;
+    font-size: 1.25rem;
     margin-bottom: 4px;
-    color: var(--text-white);
 }
 
 .stat-box p {
     font-size: 0.95rem;
-    color: var(--text-muted);
+    color: var(--text-dark);
 }
 
-/* Programs Grid layout */
+/* Responsive Programs Grid Layout */
 .courses-section {
-    padding: 90px 0;
-    background-color: rgba(255,255,255,0.01);
+    padding: 100px 0;
+    background-color: rgba(255, 255, 255, 0.005);
     border-top: 1px solid var(--glass-border);
 }
 
@@ -279,8 +280,8 @@ header nav ul a:hover {
 }
 
 .course-card {
-    background-color: var(--card-dark);
-    padding: 40px 28px;
+    background-color: var(--card-surface);
+    padding: 45px 30px;
     border-radius: var(--border-radius);
     border: 1px solid var(--glass-border);
     transition: var(--transition);
@@ -291,18 +292,18 @@ header nav ul a:hover {
 
 .course-card:hover {
     transform: translateY(-4px);
-    border-color: rgba(255,255,255,0.15);
-    box-shadow: 0 12px 30px rgba(0,0,0,0.4);
+    border-color: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
 }
 
 .course-card h3 {
-    font-size: 1.4rem;
+    font-size: 1.45rem;
     margin-bottom: 14px;
-    padding-right: 30px;
+    padding-right: 25px;
 }
 
 .course-card p {
-    color: var(--text-muted);
+    color: var(--text-dark);
     font-size: 0.95rem;
     margin-bottom: 24px;
     flex-grow: 1;
@@ -310,8 +311,8 @@ header nav ul a:hover {
 
 .target-badge {
     display: inline-block;
-    background-color: rgba(255, 255, 255, 0.04);
-    color: var(--text-white);
+    background-color: rgba(255, 255, 255, 0.03);
+    color: var(--text-pure);
     padding: 6px 14px;
     border-radius: 6px;
     font-size: 0.8rem;
@@ -323,10 +324,10 @@ header nav ul a:hover {
 .btn-course-enroll {
     display: block;
     text-align: center;
-    background-color: rgba(255,255,255,0.04);
-    color: var(--text-white);
-    padding: 12px;
-    margin-top: 28px;
+    background-color: rgba(255, 255, 255, 0.03);
+    color: var(--text-pure);
+    padding: 13px;
+    margin-top: 30px;
     border-radius: var(--border-radius);
     text-decoration: none;
     font-weight: 700;
@@ -340,10 +341,10 @@ header nav ul a:hover {
     box-shadow: 0 4px 15px rgba(0, 112, 243, 0.3);
 }
 
-/* Premium Highlighted Card Setup */
+/* Premium Styling Accentuation */
 .course-card.premium {
     border: 2px solid var(--primary-neon);
-    background: linear-gradient(180deg, #121620 0%, #161c2a 100%);
+    background: linear-gradient(180deg, #111522 0%, #151a2b 100%);
 }
 
 .course-card.premium .btn-course-enroll {
@@ -357,36 +358,36 @@ header nav ul a:hover {
 
 .card-badge {
     position: absolute;
-    top: 15px;
-    right: 15px;
+    top: 18px;
+    right: 18px;
     background: linear-gradient(135deg, var(--primary-neon), var(--accent-glow));
-    color: var(--bg-dark);
-    size: 0.75rem;
+    color: var(--bg-black);
+    font-size: 0.7rem;
     font-weight: 800;
     padding: 4px 12px;
     border-radius: 30px;
     text-transform: uppercase;
 }
 
-/* Interactive Level Checking App Module */
+/* Gamified Level Check Quiz App Styles */
 .quiz-section {
-    padding: 90px 0;
+    padding: 100px 0;
     border-top: 1px solid var(--glass-border);
 }
 
 .quiz-container {
     max-width: 680px;
     margin: 0 auto;
-    background: var(--card-dark);
+    background: var(--card-surface);
     border: 1px solid var(--glass-border);
-    padding: 45px 35px;
+    padding: 50px 40px;
     border-radius: var(--border-radius);
 }
 
 #quiz-window h3 {
-    font-size: 1.5rem;
-    margin-bottom: 28px;
-    line-height: 1.3;
+    font-size: 1.55rem;
+    margin-bottom: 30px;
+    line-height: 1.35;
 }
 
 .btn-grid {
@@ -399,18 +400,24 @@ header nav ul a:hover {
     text-align: left;
     background: rgba(255, 255, 255, 0.02);
     border: 1px solid var(--glass-border);
-    padding: 16px 22px;
+    padding: 16px 24px;
     border-radius: var(--border-radius);
     font-size: 1rem;
     font-weight: 600;
-    color: var(--text-white);
+    color: var(--text-pure);
     cursor: pointer;
     transition: var(--transition);
 }
 
 .quiz-btn:hover {
-    background: rgba(255, 255, 255, 0.06);
-    border-color: var(--text-muted);
+    background: rgba(255, 255, 255, 0.05);
+    border-color: var(--text-dark);
+}
+
+#badge-display {
+    text-align: center;
+    font-size: 3.5rem;
+    margin-bottom: 15px;
 }
 
 #controls {
@@ -420,16 +427,16 @@ header nav ul a:hover {
 }
 
 .quiz-note {
-    color: var(--text-muted);
+    color: var(--text-dark);
     margin: 15px 0 25px 0;
 }
 
 .hidden { display: none !important; }
 
-/* Testimonials Layout */
+/* Testimonials Review Engine Layout */
 .testimonials-section {
-    padding: 90px 0;
-    background-color: rgba(255,255,255,0.01);
+    padding: 100px 0;
+    background-color: rgba(255, 255, 255, 0.005);
     border-top: 1px solid var(--glass-border);
 }
 
@@ -440,10 +447,16 @@ header nav ul a:hover {
 }
 
 .testimonial-card {
-    background: var(--card-dark);
+    background: var(--card-surface);
     padding: 40px;
     border-radius: var(--border-radius);
     border: 1px solid var(--glass-border);
+}
+
+.stars {
+    color: #ffc107;
+    margin-bottom: 18px;
+    font-size: 0.9rem;
 }
 
 .testimonial-card .quote {
@@ -460,13 +473,13 @@ header nav ul a:hover {
 
 .testimonial-card span {
     font-size: 0.85rem;
-    color: var(--text-muted);
+    color: var(--text-dark);
     font-weight: 600;
 }
 
-/* Contact Module Panel */
+/* Contact Entry Form Panel */
 .contact-section {
-    padding: 90px 0;
+    padding: 100px 0;
     border-top: 1px solid var(--glass-border);
 }
 
@@ -476,9 +489,9 @@ header nav ul a:hover {
 }
 
 .contact-form {
-    background: var(--card-dark);
+    background: var(--card-surface);
     border: 1px solid var(--glass-border);
-    padding: 45px 35px;
+    padding: 50px 40px;
     border-radius: var(--border-radius);
 }
 
@@ -491,18 +504,18 @@ header nav ul a:hover {
     font-weight: 600;
     margin-bottom: 10px;
     font-size: 0.9rem;
-    color: var(--text-muted);
+    color: var(--text-dark);
 }
 
 .form-group input, .form-group textarea {
     width: 100%;
     padding: 14px 18px;
-    background: rgba(0,0,0,0.2);
+    background: rgba(0, 0, 0, 0.2);
     border: 1px solid var(--glass-border);
     border-radius: 8px;
     font-family: inherit;
     font-size: 1rem;
-    color: var(--text-white);
+    color: var(--text-pure);
     outline: none;
     transition: var(--transition);
 }
@@ -516,16 +529,16 @@ header nav ul a:hover {
     width: 100%;
 }
 
-/* Footer layout */
+/* Global Footer Layout */
 footer {
     border-top: 1px solid var(--glass-border);
-    color: var(--text-muted);
+    color: var(--text-dark);
     text-align: center;
     padding: 40px 0;
     font-size: 0.9rem;
 }
 
-/* Sticky Social Float Interface */
+/* Fixed Interface Floating Widgets */
 .social-sticky {
     position: fixed;
     bottom: 30px;
@@ -537,18 +550,18 @@ footer {
 }
 
 .social-btn {
-    width: 52px;
-    height: 52px;
+    width: 54px;
+    height: 54px;
     border-radius: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
-    color: var(--text-white);
+    color: var(--text-pure);
     font-size: 1.6rem;
     text-decoration: none;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
     transition: var(--transition);
-    border: 1px solid rgba(255,255,255,0.1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .social-btn:hover {
@@ -559,14 +572,19 @@ footer {
 .instagram { background: linear-gradient(45deg, #405DE6, #5851DB, #833AB4, #C13584, #E1306C, #FD1D1D); }
 .facebook { background-color: #1877F2; }
 
+/* Dynamic Animations Elements */
+@keyframes beacon {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(1.2); }
+}
 
 /* ==========================================================================
-   RESPONSIVE DESIGN INTERFACES (Mobile, Tab, Desktop Friendly)
+   ADVANCED RESPONSIVE SYSTEM LAYERS (Mobile, Tab, Desktop Adaptive)
    ========================================================================== */
 
-/* 1. TABLET/LAPTOP ADAPTATION LAYER (Max-width: 1024px) */
+/* LAPTOP / SCREEN SCALE OPTIMIZATIONS (Max-width: 1024px) */
 @media screen and (max-width: 1024px) {
-    .hero-content h1 { font-size: 3.25rem; }
+    .hero-content h1 { font-size: 3.5rem; }
     .course-grid { grid-template-columns: repeat(2, 1fr); gap: 20px; }
 }
 
@@ -575,16 +593,16 @@ footer {
     .testimonial-grid { grid-template-columns: 1fr; gap: 24px; }
 }
 
-/* 2. MOBILE INTERFACE ADAPTATION LAYER (Max-width: 768px) */
+/* PORTABLE MOBILE INTERFACES ADAPTATION (Max-width: 768px) */
 @media screen and (max-width: 768px) {
     .menu-toggle { display: block; }
     
     header nav {
         position: absolute;
-        top: 75px;
+        top: 80px;
         left: -100%;
         width: 100%;
-        background-color: var(--bg-dark);
+        background-color: var(--bg-black);
         border-bottom: 1px solid var(--glass-border);
         transition: var(--transition);
         padding: 35px 0;
@@ -598,16 +616,16 @@ footer {
         gap: 24px;
     }
 
-    .hero-section { padding: 80px 0 60px 0; }
+    .hero-section { padding: 90px 0 60px 0; }
     .hero-content h1 { font-size: 2.5rem; }
-    .hero-content p { font-size: 1.1rem; }
+    .hero-content p { font-size: 1.15rem; }
     .hero-buttons { flex-direction: column; align-items: center; }
-    .hero-buttons .btn { width: 100%; max-width: 320px; }
+    .hero-buttons .btn { width: 100%; max-width: 340px; }
 
     .course-grid { grid-template-columns: 1fr; }
     h2 { font-size: 2rem; }
     
-    .quiz-container, .contact-form { padding: 30px 20px; }
+    .quiz-container, .contact-form { padding: 35px 20px; }
     
     .social-sticky {
         bottom: 20px;
@@ -615,8 +633,8 @@ footer {
         gap: 10px;
     }
     .social-btn {
-        width: 46px;
-        height: 46px;
-        font-size: 1.35rem;
+        width: 48px;
+        height: 48px;
+        font-size: 1.4rem;
     }
 }
