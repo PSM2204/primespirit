@@ -25,6 +25,19 @@ h2 { text-align: center; font-size: 2.5rem; }
 .btn-secondary { background: rgba(255, 255, 255, 0.02); color: var(--text-pure); border: 1px solid var(--glass-border); }
 .btn-secondary:hover { background: rgba(255,255,255,0.08); }
 
+/* INJECTED: Interactive Cosmic Launch Button Styling Custom Hooks */
+.primetestq-launch-btn {
+    background: linear-gradient(135deg, #00C6FF 0%, #0070F3 100%);
+    color: var(--text-pure);
+    border: 1px solid rgba(0, 198, 255, 0.3);
+    box-shadow: 0 0 25px rgba(0, 198, 255, 0.35);
+}
+.primetestq-launch-btn:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 0 40px rgba(0, 198, 255, 0.6);
+    border-color: #00FF99;
+}
+
 header { background-color: rgba(6, 8, 12, 0.85); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid var(--glass-border); }
 .logo-nav { display: flex; justify-content: space-between; align-items: center; height: 80px; position: relative; }
 .logo { font-size: 1.6rem; font-weight: 900; color: var(--text-pure); text-decoration: none; z-index: 1001; }
@@ -35,6 +48,22 @@ header { background-color: rgba(6, 8, 12, 0.85); backdrop-filter: blur(16px); -w
 header nav ul { display: flex; list-style: none; gap: 24px; align-items: center; }
 header nav ul a { text-decoration: none; color: var(--text-dark); font-weight: 600; font-size: 0.95rem; transition: var(--transition); }
 header nav ul a:hover { color: var(--text-pure); }
+
+/* INJECTED: Header Inline Navbar Selector Layout Hooks */
+.primetestq-nav-trigger {
+    color: #00C6FF !important;
+    font-weight: 800 !important;
+    text-shadow: 0 0 10px rgba(0, 198, 255, 0.4);
+    border: 1px dashed rgba(0, 198, 255, 0.2);
+    padding: 6px 14px;
+    border-radius: 20px;
+    background: rgba(0, 198, 255, 0.03);
+}
+.primetestq-nav-trigger:hover {
+    color: #00FF99 !important;
+    border-color: #00FF99;
+    background: rgba(0, 255, 153, 0.05);
+}
 
 .hero-section { padding: 140px 0 100px 0; text-align: center; }
 .hero-badge { display: inline-block; padding: 6px 16px; background: rgba(0, 112, 243, 0.1); border: 1px solid rgba(0, 112, 243, 0.2); color: var(--primary-neon); font-size: 0.85rem; font-weight: 700; border-radius: 30px; margin-bottom: 25px; }
@@ -147,6 +176,7 @@ footer { border-top: 1px solid var(--glass-border); color: var(--text-dark); tex
     header nav ul li { width: 100%; }
     header nav ul a { font-size: 1.1rem; display: block; width: 100%; padding: 8px 0; }
     .auth-trigger-btn { width: 100%; justify-content: center; padding: 12px; }
+    .primetestq-nav-trigger { width: 100%; text-align: center; display: block; padding: 12px !important; }
 
     .hero-section { padding: 100px 0 60px 0; }
     .hero-content h1 { font-size: 2.85rem; }
@@ -154,7 +184,7 @@ footer { border-top: 1px solid var(--glass-border); color: var(--text-dark); tex
 }
 
 /* ULTRA MOBILE DIMENSION SETTINGS OVERRIDES */
-@media screen nickname (max-width: 600px) {
+@media screen and (max-width: 600px) {
     .course-grid, .testimonial-grid { grid-template-columns: 1fr; }
     .quiz-container, .auth-modal-card, .contact-form { padding: 35px 20px; }
     h2 { font-size: 2rem; }
