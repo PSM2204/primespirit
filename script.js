@@ -1,10 +1,10 @@
 /**
  * 🛡️ PRIME SPIRIT MENTORS PRODUCTION ENGINE v7.0
- * Interactive Portal Actions Engine with Direct Web3Forms Router Integration
+ * Fully Integrated Independent Portal Actions Layer with Web3Forms Access Routing
  */
 
 // ==========================================================================
-// DAILY BLOG DATABASE ARRAY (Add your everyday updates smoothly right here)
+// DAILY BLOG DATABASE ARRAY
 // ==========================================================================
 const blogDatabase = [
     {
@@ -39,7 +39,7 @@ let currentOpenNotesContext = '';
 const WEB3FORMS_ACCESS_KEY = 'c5cc0f11-b241-4a89-8a11-1642cb5aa3a2'; 
 
 // ==========================================================================
-// INTERACTIVE PORTAL ACTIONS ENGINE (All Buttons & Modals Control)
+// INTERACTIVE PORTAL ACTIONS ENGINE
 // ==========================================================================
 window.addEventListener('DOMContentLoaded', () => {
     // 1. Render Blogs dynamically on page setup load
@@ -128,7 +128,7 @@ function switchAuthView(view) {
 
 function handleNotesDownloadSequence() {
     if (!isUserRegisteredAndLoggedIn) {
-        alert(`🔒 Authentication Required:\n\nTo access and download "${currentOpenNotesContext}", please complete your Student Profile registration registration form.`);
+        alert(`🔒 Authentication Required:\n\nTo access and download "${currentOpenNotesContext}", please complete your Student Profile registration form.`);
         window.openAuthModal('signup');
     } else {
         alert(`🚀 Access approved! Compiling secure download package logs for: ${currentOpenNotesContext}`);
@@ -194,7 +194,7 @@ function handleAuthProcess(e, mode) {
                 window.closeAuthModal();
                 e.target.reset();
             } else {
-                alert("❌ Token validation error. Please recheck script.js configurations settings.");
+                alert("❌ Token validation error. Please recheck script.js configuration settings.");
             }
         })
         .catch(error => {
@@ -250,7 +250,7 @@ function launchAudit(role) {
 }
 
 // ==========================================================================
-// ANTI-INSPECT SECURITY CONTROLLER LAYER (Isolated Perimeter Shield)
+// ANTI-INSPECT SECURITY LAYER (Isolated Perimeter Shield)
 // ==========================================================================
 (function() {
     document.addEventListener('contextmenu', (e) => e.preventDefault());
