@@ -1,0 +1,7 @@
+name: Prime Spirit Mentors
+title: Prime Spirit Mentors | Elite Academic & Mindset Mentorship
+description: Premium academic coaching, test prep, and student counseling by Abhinav Kashyap.
+permalink: /blog/:title/
+markdown: kramdown
+highlighter: rouge
+exclude: [Gemfile, Gemfile.lock, node_modules]
