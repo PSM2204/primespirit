@@ -23,6 +23,7 @@ h2 { text-align: center; font-size: 2.5rem; }
 .btn-primary { background: var(--primary-neon); color: var(--text-pure); box-shadow: 0 4px 20px rgba(0, 112, 243, 0.3); }
 .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 25px rgba(0, 112, 243, 0.5); }
 .btn-secondary { background: rgba(255, 255, 255, 0.02); color: var(--text-pure); border: 1px solid var(--glass-border); }
+.btn-secondary:hover { background: rgba(255,255,255,0.08); }
 
 header { background-color: rgba(6, 8, 12, 0.85); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid var(--glass-border); }
 .logo-nav { display: flex; justify-content: space-between; align-items: center; height: 80px; }
@@ -38,7 +39,7 @@ header nav ul a:hover { color: var(--text-pure); }
 .hero-content p { font-size: 1.3rem; color: var(--text-dark); max-width: 750px; margin: 0 auto 40px auto; }
 .hero-buttons { display: flex; justify-content: center; gap: 16px; }
 
-.courses-section { padding: 100px 0; border-top: 1px solid var(--glass-border); }
+.courses-section { padding: 100px 0; border-top: 1px solid var(--glass-border); background-color: var(--bg-black); }
 .course-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
 .course-card { background-color: var(--card-surface); padding: 40px 30px; border-radius: var(--border-radius); border: 1px solid var(--glass-border); transition: var(--transition); display: flex; flex-direction: column; position: relative; }
 .course-card:hover { transform: translateY(-4px); border-color: rgba(255, 255, 255, 0.15); box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5); }
@@ -56,18 +57,19 @@ header nav ul a:hover { color: var(--text-pure); }
 .filter-btn.active, .filter-btn:hover { background: var(--primary-neon); color: var(--text-pure); border-color: var(--primary-neon); }
 .blog-meta { font-size: 0.8rem; color: var(--accent-glow); margin-bottom: 10px; font-weight: 600; }
 
-.quiz-section { padding: 100px 0; }
+.quiz-section { padding: 100px 0; border-top: 1px solid var(--glass-border); background-color: var(--bg-black); }
 .quiz-container { max-width: 680px; margin: 0 auto; background: var(--card-surface); border: 1px solid var(--glass-border); padding: 50px 40px; border-radius: var(--border-radius); }
 .btn-grid { display: flex; flex-direction: column; gap: 14px; }
 .quiz-btn { text-align: left; background: rgba(255, 255, 255, 0.02); border: 1px solid var(--glass-border); padding: 16px 24px; border-radius: var(--border-radius); font-size: 1rem; font-weight: 600; color: var(--text-pure); cursor: pointer; transition: var(--transition); }
 .quiz-btn:hover { background: rgba(255, 255, 255, 0.05); }
 
+.testimonials-section { padding: 100px 0; background-color: var(--bg-black); }
 .testimonial-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 32px; }
 .testimonial-card { background: var(--card-surface); padding: 40px; border-radius: var(--border-radius); border: 1px solid var(--glass-border); }
 .stars { color: #ffc107; margin-bottom: 18px; }
 .quote { color: #e2e8f0; font-size: 1.1rem; margin-bottom: 24px; }
 
-.contact-section { padding: 100px 0; }
+.contact-section { padding: 100px 0; background-color: var(--bg-black); }
 .contact-wrapper { max-width: 580px; margin: 0 auto; }
 .contact-form { background: var(--card-surface); border: 1px solid var(--glass-border); padding: 50px 40px; border-radius: var(--border-radius); }
 .form-group { margin-bottom: 20px; }
@@ -87,9 +89,16 @@ header nav ul a:hover { color: var(--text-pure); }
 .strength-label { display: block; font-size: 0.75rem; margin-top: 4px; }
 .password-rules-box { background: rgba(0, 112, 243, 0.04); border: 1px solid rgba(0, 112, 243, 0.15); padding: 12px; border-radius: 8px; font-size: 0.78rem; color: var(--text-dark); }
 
-footer { border-top: 1px solid var(--glass-border); color: var(--text-dark); text-align: center; padding: 40px 0; font-size: 0.9rem; }
+.social-sticky { position: fixed; bottom: 30px; right: 30px; display: flex; flex-direction: column; gap: 12px; z-index: 2000; }
+.social-btn { width: 54px; height: 54px; border-radius: 50%; display: flex; justify-content: center; align-items: center; color: var(--text-pure); font-size: 1.6rem; text-decoration: none; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3); transition: var(--transition); border: 1px solid rgba(255, 255, 255, 0.1); }
+.social-btn:hover { transform: translateY(-4px) scale(1.05); }
+.whatsapp { background-color: #25D366; }
+.instagram { background: linear-gradient(45deg, #405DE6, #5851DB, #833AB4, #C13584, #E1306C, #FD1D1D); }
+.facebook { background-color: #1877F2; }
+
+footer { border-top: 1px solid var(--glass-border); color: var(--text-dark); text-align: center; padding: 40px 0; font-size: 0.9rem; background-color: var(--bg-black); }
 .hidden { display: none !important; }
 @keyframes beacon { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(1.2); } }
 
 @media screen and (max-width: 1024px) { .course-grid { grid-template-columns: repeat(2, 1fr); } }
-@media screen and (max-width: 768px) { .course-grid, .testimonial-grid { grid-template-columns: 1fr; } .quiz-container, .auth-modal-card { padding: 35px 20px; } h2 { font-size: 2rem; } }
+@media screen and (max-width: 768px) { .course-grid, .testimonial-grid { grid-template-columns: 1fr; } .quiz-container, .auth-modal-card { padding: 35px 20px; } h2 { font-size: 2rem; } .social-sticky { bottom: 20px; right: 20px; } }
