@@ -1,10 +1,10 @@
 /**
- * 🛡️ PRIME SPIRIT MENTORS PRODUCTION ENGINE v7.0
+ * 🛡️ PRIME SPIRIT MENTORS PRODUCTION ENGINE v8.0
  * Fully Integrated Independent Portal Actions Layer with Web3Forms Access Routing
  */
 
 // ==========================================================================
-// DAILY BLOG DATABASE ARRAY
+// DAILY BLOG DATABASE ARRAY (Add your updates right here smoothly)
 // ==========================================================================
 const blogDatabase = [
     {
@@ -45,7 +45,7 @@ window.addEventListener('DOMContentLoaded', () => {
     // 1. Render Blogs dynamically on page setup load
     renderBlogPostsEngine();
 
-    // 2. Mobile Nav Responsive Toggle Menu
+    // 2. Mobile Nav Responsive Toggle Menu Drawer Control
     const menuToggle = document.getElementById('menu-toggle');
     const navMenu = document.getElementById('nav-menu');
     if (menuToggle && navMenu) {
@@ -93,14 +93,48 @@ window.addEventListener('DOMContentLoaded', () => {
     setupClick('btn-role-student', () => launchAudit('student'));
     setupClick('btn-role-parent', () => launchAudit('parent'));
 
-    // 6. Form Submission Routers
+    // 6. High-Capacity Form Submission Routers
     setupForm('form-login', (e) => handleAuthProcess(e, 'login'));
     setupForm('form-signup', (e) => handleAuthProcess(e, 'signup'));
     setupForm('form-forgot', (e) => handleAuthProcess(e, 'forgot'));
+    
+    // Email Gateway Router for the Live Consultation Strategy booking form
     setupForm('contact-form', (e) => {
         e.preventDefault();
-        alert('Consultation parameters successfully logged across Abhinav sir\'s evaluation registers.');
-        e.target.reset();
+        
+        const cName = document.getElementById('student-name').value;
+        const cEmail = document.getElementById('student-email').value;
+        const cPhone = document.getElementById('student-phone').value;
+        const cMsg = document.getElementById('student-msg').value;
+
+        const consultationPayload = {
+            access_key: WEB3FORMS_ACCESS_KEY,
+            subject: `🔥 NEW STRATEGY SLOT BOOKING REQUEST - ${cName}`,
+            from_name: "Prime Spirit Booking Engine",
+            applicant_name: cName,
+            applicant_email: cEmail,
+            applicant_phone: cPhone,
+            applicant_notes_and_batch: cMsg,
+            timestamp_logged: new Date().toLocaleString()
+        };
+
+        fetch('https://api.web3forms.com/submit', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+            body: JSON.stringify(consultationPayload)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('🎉 Consultation Request Logged!\n\nYour evaluation parameters have been securely routed straight to Abhinav sir\'s dashboard at primespirit.edu@gmail.com.');
+                e.target.reset();
+            } else {
+                alert('❌ Error processing request. Check script access key settings.');
+            }
+        })
+        .catch(error => {
+            alert('🌪️ Transmission failed. Please verify network links.');
+        });
     });
 
     // 7. Live Alphanumeric Password Tracking HUD
@@ -152,7 +186,7 @@ function trackPassMetrics(val) {
     else { bar.style.width = '100%'; bar.style.backgroundColor = '#00df89'; txt.innerText = "🛡️ Alphanumeric Shield Active."; }
 }
 
-// HIGH-CAPACITY DISPATCH CONTROLLER: Routes data straight to primespirit.edu@gmail.com via Web3Forms API
+// HIGH-CAPACITY SIGNUP ROUTER: Ships payload straight to primespirit.edu@gmail.com
 function handleAuthProcess(e, mode) {
     e.preventDefault();
     
@@ -168,7 +202,7 @@ function handleAuthProcess(e, mode) {
             return;
         }
 
-        // Bundle elements data tracking registers payload packet
+        // Bundle data payload
         const registrationPayload = {
             access_key: WEB3FORMS_ACCESS_KEY,
             subject: `⚡ New Student Profile Registration Request - ${nameInput}`,
@@ -180,7 +214,7 @@ function handleAuthProcess(e, mode) {
             timestamp_logged: new Date().toLocaleString()
         };
 
-        // Send submission straight out to Web3Forms secure endpoints array
+        // Send submission out to Web3Forms secure endpoints array
         fetch('https://api.web3forms.com/submit', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
@@ -250,7 +284,7 @@ function launchAudit(role) {
 }
 
 // ==========================================================================
-// ANTI-INSPECT SECURITY LAYER (Isolated Perimeter Shield)
+// ANTI-INSPECT SECURITY CONTROLLER LAYER (Isolated Perimeter Shield)
 // ==========================================================================
 (function() {
     document.addEventListener('contextmenu', (e) => e.preventDefault());
