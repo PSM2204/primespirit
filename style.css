@@ -25,20 +25,17 @@ h2 { text-align: center; font-size: 2.5rem; }
 .btn-secondary { background: rgba(255, 255, 255, 0.02); color: var(--text-pure); border: 1px solid var(--glass-border); }
 .btn-secondary:hover { background: rgba(255,255,255,0.08); }
 
-/* MOBILE RESPONSIVE NAVIGATION ENGINE STYLE FIXES */
 header { background-color: rgba(6, 8, 12, 0.85); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid var(--glass-border); }
 .logo-nav { display: flex; justify-content: space-between; align-items: center; height: 80px; position: relative; }
 .logo { font-size: 1.6rem; font-weight: 900; color: var(--text-pure); text-decoration: none; z-index: 1001; }
 .pulse-dot { color: var(--primary-neon); display: inline-block; animation: beacon 2s infinite; }
 
-/* Hamburger Button Settings */
 .menu-toggle { display: none; background: transparent; border: none; color: var(--text-pure); font-size: 1.5rem; cursor: pointer; z-index: 1001; padding: 8px; transition: var(--transition); }
 
 header nav ul { display: flex; list-style: none; gap: 24px; align-items: center; }
 header nav ul a { text-decoration: none; color: var(--text-dark); font-weight: 600; font-size: 0.95rem; transition: var(--transition); }
 header nav ul a:hover { color: var(--text-pure); }
 
-/* HERO LAYOUT ADJUSTMENTS */
 .hero-section { padding: 140px 0 100px 0; text-align: center; }
 .hero-badge { display: inline-block; padding: 6px 16px; background: rgba(0, 112, 243, 0.1); border: 1px solid rgba(0, 112, 243, 0.2); color: var(--primary-neon); font-size: 0.85rem; font-weight: 700; border-radius: 30px; margin-bottom: 25px; }
 .hero-content h1 { font-size: 4.25rem; line-height: 1.1; margin-bottom: 24px; max-width: 900px; margin-left: auto; margin-right: auto; word-break: keep-all; }
@@ -95,7 +92,16 @@ header nav ul a:hover { color: var(--text-pure); }
 .strength-label { display: block; font-size: 0.75rem; margin-top: 4px; }
 .password-rules-box { background: rgba(0, 112, 243, 0.04); border: 1px solid rgba(0, 112, 243, 0.15); padding: 12px; border-radius: 8px; font-size: 0.78rem; color: var(--text-dark); }
 
-.social-sticky { position: fixed; bottom: 30px; right: 30px; display: flex; flex-direction: column; gap: 12px; z-index: 2000; }
+/* BALANCED STICKY SOCIAL CONTAINER HOOKS IN BOTTOM-LEFT CORNER */
+.social-sticky { 
+    position: fixed; 
+    bottom: 30px; 
+    left: 30px; 
+    display: flex; 
+    flex-direction: column; 
+    gap: 12px; 
+    z-index: 2000; 
+}
 .social-btn { width: 54px; height: 54px; border-radius: 50%; display: flex; justify-content: center; align-items: center; color: var(--text-pure); font-size: 1.6rem; text-decoration: none; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3); transition: var(--transition); border: 1px solid rgba(255, 255, 255, 0.1); }
 .social-btn:hover { transform: translateY(-4px) scale(1.05); }
 .whatsapp { background-color: #25D366; }
@@ -106,16 +112,14 @@ footer { border-top: 1px solid var(--glass-border); color: var(--text-dark); tex
 .hidden { display: none !important; }
 @keyframes beacon { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(1.2); } }
 
-/* COMPREHENSIVE DYNAMIC SCREEN MEDIA QUERIES DEFINITION MAPS */
 @media screen and (max-width: 1024px) { 
     .course-grid { grid-template-columns: repeat(2, 1fr); } 
 }
 
-/* TABLET & MOBILE VIEW RE-ENGINEERING ZONE */
+/* RESPONSIBILITY DRAWER RULES FOR MEDIUM RESOLUTION INTERFACES */
 @media screen and (max-width: 868px) {
-    .menu-toggle { display: block; } /* Activate hamburger button asset */
+    .menu-toggle { display: block; }
     
-    /* Transform overlapping inline links row into an elegant, isolated glass drawer sliding panel */
     header nav {
         position: absolute;
         top: 80px;
@@ -131,7 +135,7 @@ footer { border-top: 1px solid var(--glass-border); color: var(--text-dark); tex
         box-shadow: -10px 0 30px rgba(0,0,0,0.5);
     }
     
-    header nav.active { right: 0; } /* Slides navigation out cleanly */
+    header nav.active { right: 0; }
     
     header nav ul {
         flex-direction: column;
@@ -144,17 +148,17 @@ footer { border-top: 1px solid var(--glass-border); color: var(--text-dark); tex
     header nav ul a { font-size: 1.1rem; display: block; width: 100%; padding: 8px 0; }
     .auth-trigger-btn { width: 100%; justify-content: center; padding: 12px; }
 
-    /* Core Hero typography text clamping configuration */
     .hero-section { padding: 100px 0 60px 0; }
     .hero-content h1 { font-size: 2.85rem; }
     .hero-content p { font-size: 1.1rem; }
 }
 
-@media screen and (max-width: 600px) {
+/* ULTRA MOBILE DIMENSION SETTINGS OVERRIDES */
+@media screen nickname (max-width: 600px) {
     .course-grid, .testimonial-grid { grid-template-columns: 1fr; }
     .quiz-container, .auth-modal-card, .contact-form { padding: 35px 20px; }
     h2 { font-size: 2rem; }
     .hero-content h1 { font-size: 2.4rem; }
-    .social-sticky { bottom: 20px; right: 20px; }
+    .social-sticky { bottom: 20px; left: 20px; right: auto; }
     .social-btn { width: 48px; height: 48px; font-size: 1.4rem; }
 }
