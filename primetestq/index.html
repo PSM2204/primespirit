@@ -1,1 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PrimeTestQ™ | Interstellar Academic CBT Command Hub</title>
+    <link rel="stylesheet" href="architecture.css">
+    <link rel="stylesheet" href="dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+
+    <div class="aurora-container">
+        <div class="aurora-glow aurora-1"></div>
+        <div class="aurora-glow aurora-2"></div>
+    </div>
+    <div class="spotlight-shield" id="spotlight"></div>
+
+    <main id="app-view-viewport">
+        <section id="screen-home-hub" class="viewport-screen">
+            <header class="hub-header">
+                <div class="brand-logotype">PRIME SPIRIT MENTORS</div>
+                <div class="user-profile-badge">
+                    <i class="fas fa-satellite-dish"></i> <span>EXPLORER // SYSTEM ACTIVE</span>
+                </div>
+            </header>
+
+            <div class="orbit-universe-wrapper">
+                <div class="center-core-hub glass-panel">
+                    <h1 class="glow-text">PrimeTestQ™</h1>
+                    <p class="tagline-sub">ASSESS • ANALYZE • ACHIEVE</p>
+                    <div class="pulse-ring"></div>
+                </div>
+
+                <div class="orbital-ring path-admission" style="--rotation-speed: 35s;">
+                    <div class="orbit-node node-admission glass-panel" data-ecosystem="admission" style="--theme-color: var(--theme-admission);">
+                        <i class="fas fa-star"></i> <span>Admission (6-9 & 11-12)</span>
+                    </div>
+                </div>
+                <div class="orbital-ring path-neet" style="--rotation-speed: 45s;">
+                    <div class="orbit-node node-neet glass-panel" data-ecosystem="neet" style="--theme-color: var(--theme-neet);">
+                        <i class="fas fa-stethoscope"></i> <span>NEET UG CBT</span>
+                    </div>
+                </div>
+                <div class="orbital-ring path-jee" style="--rotation-speed: 55s;">
+                    <div class="orbit-node node-jee glass-panel" data-ecosystem="jee" style="--theme-color: var(--theme-jee);">
+                        <i class="fas fa-atom"></i> <span>JEE Main CBT</span>
+                    </div>
+                </div>
+                <div class="orbital-ring path-iat" style="--rotation-speed: 65s;">
+                    <div class="orbit-node node-iat glass-panel" data-ecosystem="iat" style="--theme-color: var(--theme-iat);">
+                        <i class="fas fa-flask"></i> <span>IAT CBT</span>
+                    </div>
+                </div>
+                <div class="orbital-ring path-nest" style="--rotation-speed: 75s;">
+                    <div class="orbit-node node-nest glass-panel" data-ecosystem="nest" style="--theme-color: var(--theme-nest);">
+                        <i class="fas fa-satellite"></i> <span>NEST CBT</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="screen-cockpit-simulation" class="viewport-screen hidden">
+            <div class="cockpit-bar glass-panel">
+                <div class="simulation-identity-block">
+                    <span id="cockpit-title-label">EXAM MODULE TRACK</span>
+                    <div class="status-pill-indicator" id="network-status-indicator">🔄 SECURE NODE SYNC ACTIVE</div>
+                </div>
+                <div class="instrumentation-timer-block">
+                    <svg class="countdown-ring-svg" viewBox="0 0 36 36">
+                        <path class="ring-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                        <path class="ring-fill-progress" id="timer-ring-fill" stroke-dasharray="100, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                    </svg>
+                    <div class="timer-numerical-display" id="clock-digital-hud">00:00:00</div>
+                </div>
+                <button class="btn-magnetic emergency-quit-trigger" id="btn-cockpit-submit">SUBMIT CORE TEST</button>
+            </div>
+
+            <div class="cockpit-workstation-grid">
+                <div class="question-workspace glass-panel" id="swipe-surface-target">
+                    <div class="workspace-header-hud">
+                        <span class="index-badge" id="hud-question-index-number">QUESTION 01</span>
+                        <div class="marks-weightage-pill">+4 Correct // -1 Penalty</div>
+                    </div>
+                    <div class="question-body-container" id="hud-question-render-viewport"></div>
+                    <div class="options-matrix-grid" id="hud-options-render-viewport"></div>
+                </div>
+
+                <aside class="telemetry-palette-panel glass-panel" id="collapsible-aside-palette">
+                    <h3 class="palette-panel-title">MISSION PALETTE STATUS</h3>
+                    <div class="circles-status-matrix" id="hud-palette-circles-grid"></div>
+                    <hr class="palette-divider" style="margin: 20px 0; border: none; border-top: 1px solid var(--glass-border);">
+                    <div class="telemetry-legend-metrics">
+                        <div class="legend-item" style="margin-bottom: 8px;"><span class="circle-sample ans" style="display:inline-block; width:12px; height:12px; background:var(--status-answered); border-radius:50%; margin-right:8px;"></span> Answered</div>
+                        <div class="legend-item" style="margin-bottom: 8px;"><span class="circle-sample unans" style="display:inline-block; width:12px; height:12px; background:var(--status-unanswered); border-radius:50%; margin-right:8px;"></span> Not Answered</div>
+                        <div class="legend-item" style="margin-bottom: 8px;"><span class="circle-sample rev" style="display:inline-block; width:12px; height:12px; background:var(--status-review); border-radius:50%; margin-right:8px;"></span> Review Track</div>
+                        <div class="legend-item"><span class="circle-sample unvisit" style="display:inline-block; width:12px; height:12px; background:var(--status-unvisited); border-radius:50%; margin-right:8px;"></span> Unvisited</div>
+                    </div>
+                </aside>
+            </div>
+
+            <div class="cockpit-control-toolbar-row">
+                <div class="left-action-cluster">
+                    <button class="btn-magnetic" id="btn-action-prev"><i class="fas fa-chevron-left"></i> PREVIOUS</button>
+                    <button class="btn-magnetic" id="btn-action-review"><i class="fas fa-eye"></i> MARK REVIEW</button>
+                    <button class="btn-magnetic" id="btn-action-clear"><i class="fas fa-eraser"></i> CLEAR Response</button>
+                </div>
+                <button class="btn-magnetic action-accent-save" id="btn-action-next">SAVE & NEXT <i class="fas fa-chevron-right"></i></button>
+            </div>
+            
+            <button class="mobile-floating-palette-trigger-btn" id="btn-mobile-palette-toggle"><i class="fas fa-th"></i></button>
+        </section>
+    </main>
+
+    <script type="module" src="modules/app.js"></script>
+</body>
+</html>
 
