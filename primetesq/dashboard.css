@@ -1,0 +1,66 @@
+#screen-home-hub { display: flex; flex-direction: column; align-items: center; justify-content: space-between; min-height: 100vh; padding: 40px 24px; }
+.hub-header { width: 100%; display: flex; justify-content: space-between; align-items: center; max-width: 1400px; }
+.brand-logotype { font-size: 1.1rem; font-weight: 900; letter-spacing: 0.3em; background: linear-gradient(90deg, #FFF, rgba(255,255,255,0.4)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.user-profile-badge { padding: 10px 20px; background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-glass); border-radius: 30px; font-size: 0.85rem; font-weight: 700; }
+
+.orbit-universe-wrapper { position: relative; width: 600px; height: 600px; display: flex; align-items: center; justify-content: center; margin: auto; }
+.center-core-hub { position: absolute; width: 250px; height: 250px; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 10; text-align: center; border-color: rgba(0, 198, 255, 0.3); box-shadow: 0 0 60px rgba(0, 198, 255, 0.15); }
+.center-core-hub h1 { font-size: 1.9rem; font-weight: 900; }
+.tagline-sub { font-size: 0.75rem; letter-spacing: 0.25em; color: var(--text-dark); margin-top: 8px; }
+
+.orbital-ring { position: absolute; border: 1px dashed rgba(255, 255, 255, 0.04); border-radius: 50%; animation: spin linear infinite; animation-duration: var(--rotation-speed, 40s); }
+.path-admission { width: 340px; height: 340px; }
+.path-neet      { width: 420px; height: 420px; }
+.path-jee       { width: 500px; height: 500px; }
+.path-iat       { width: 580px; height: 580px; }
+.path-nest      { width: 660px; height: 660px; }
+
+.orbit-node { position: absolute; top: 0; left: 50%; transform: translate(-50%, -50%); padding: 12px 20px; border-radius: 30px; cursor: pointer; display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 0.85rem; white-space: nowrap; border-color: rgba(255,255,255,0.1); }
+.orbit-node:hover { box-shadow: 0 0 25px var(--theme-color); border-color: var(--theme-color); transform: translate(-50%, -50%) scale(1.05); }
+
+#screen-cockpit-simulation { display: flex; flex-direction: column; min-height: 100vh; padding: 24px; gap: 20px; max-width: 1800px; margin: 0 auto; width: 100%; }
+.cockpit-bar { display: flex; justify-content: space-between; align-items: center; padding: 16px 32px; width: 100%; }
+.instrumentation-timer-block { display: flex; align-items: center; gap: 14px; }
+.countdown-ring-svg { width: 28px; height: 28px; transform: rotate(-90deg); }
+.countdown-ring-svg .ring-bg { fill: none; stroke: rgba(255,255,255,0.05); stroke-width: 3; }
+.countdown-ring-svg .ring-fill-progress { fill: none; stroke: var(--accent-glow); stroke-width: 3; stroke-linecap: round; transition: stroke-dasharray 1s linear; }
+.timer-numerical-display { font-family: monospace; font-size: 1.5rem; font-weight: 700; color: var(--accent-glow); }
+
+.cockpit-workstation-grid { display: grid; grid-template-columns: 1fr 340px; gap: 20px; flex-grow: 1; }
+.question-workspace { display: flex; flex-direction: column; padding: 40px; gap: 30px; }
+.workspace-header-hud { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-glass); padding-bottom: 15px; }
+.index-badge { font-size: 1.2rem; font-weight: 900; color: var(--primary-neon); }
+.options-matrix-grid { display: flex; flex-direction: column; gap: 14px; margin-top: auto; }
+
+.option-node-item { display: flex; align-items: center; padding: 18px 24px; border-radius: 16px; background: rgba(255,255,255,0.01); border: 1px solid var(--border-glass); cursor: pointer; font-weight: 600; transition: var(--transition-smooth); }
+.option-node-item:hover { background: rgba(0, 198, 255, 0.03); border-color: rgba(0, 198, 255, 0.3); }
+.option-node-item.selected { background: rgba(0, 255, 153, 0.05); border-color: var(--accent-glow); box-shadow: 0 0 20px rgba(0, 255, 153, 0.1); }
+
+.telemetry-palette-panel { padding: 30px 24px; display: flex; flex-direction: column; }
+.circles-status-matrix { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-top: 20px; overflow-y: auto; max-height: 400px; }
+
+.status-circle-node { width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.9rem; cursor: pointer; border: 1px solid var(--border-glass); transition: var(--transition-smooth); }
+.status-circle-node.answered { background: rgba(0, 255, 153, 0.1); border-color: var(--status-answered); color: var(--status-answered); }
+.status-circle-node.unanswered { background: rgba(255, 77, 77, 0.1); border-color: var(--status-unanswered); color: var(--status-unanswered); }
+.status-circle-node.review { background: rgba(138, 43, 226, 0.1); border-color: var(--status-review); color: var(--status-review); }
+.status-circle-node.unvisited { background: rgba(255,255,255,0.02); border-color: var(--status-unvisited); color: #A0AEC0; }
+
+.cockpit-control-toolbar-row { display: flex; justify-content: space-between; align-items: center; width: 100%; }
+.left-action-cluster { display: flex; gap: 12px; }
+.action-accent-save { background: var(--primary-neon) !important; color: #fff !important; }
+.mobile-floating-palette-trigger-btn { display: none; }
+
+@keyframes spin { 100% { transform: rotate(360deg); } }
+
+@media screen and (max-width: 1024px) {
+    .cockpit-workstation-grid { grid-template-columns: 1fr; }
+    #collapsible-aside-palette { position: fixed; top: 120px; right: -100%; width: 300px; height: calc(100vh - 160px); z-index: 500; transition: right 0.4s ease; }
+    #collapsible-aside-palette.active { right: 24px; }
+    .mobile-floating-palette-trigger-btn { display: flex; position: fixed; bottom: 100px; right: 24px; width: 56px; height: 56px; border-radius: 50%; background: var(--primary-neon); color: #fff; border: none; align-items: center; justify-content: center; font-size: 1.3rem; z-index: 501; }
+}
+@media screen and (max-width: 640px) {
+    .orbit-universe-wrapper { transform: scale(0.55); }
+    .cockpit-control-toolbar-row { flex-direction: column; gap: 12px; width: 100%; }
+    .left-action-cluster { width: 100%; }
+    .left-action-cluster button, .action-accent-save { width: 100%; justify-content: center; }
+}
