@@ -1,7 +1,1 @@
-name: Prime Spirit Mentors
-title: Prime Spirit Mentors | Best Online Coaching for NEET, JEE, CUET, IAT, NEST & Boards
-description: Premium personalized micro-batch online coaching by Abhinav Kashyap.
-permalink: /blog/:title/
-markdown: kramdown
-highlighter: rouge
-exclude: [Gemfile, Gemfile.lock, node_modules]
+
