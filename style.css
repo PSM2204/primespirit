@@ -6,7 +6,7 @@
     --text-pure: #f8fafc;
     --text-dark: #94a3b8;
     --glass-border: rgba(255, 255, 255, 0.06);
-    --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     --border-radius: 16px;
 }
 
@@ -19,25 +19,31 @@ h1, h2, h3, h4 { font-weight: 800; letter-spacing: -0.03em; }
 h2 { text-align: center; font-size: 2.5rem; }
 .title-line { border: none; height: 4px; width: 50px; background: linear-gradient(90deg, var(--primary-neon), var(--accent-glow)); margin: 15px auto 50px auto; border-radius: 10px; }
 
-.btn { display: inline-flex; align-items: center; justify-content: center; padding: 14px 32px; font-weight: 700; border-radius: var(--border-radius); text-decoration: none; transition: var(--transition); cursor: pointer; border: none; font-size: 1rem; }
+.btn { display: inline-flex; align-items: center; justify-content: center; padding: 14px 32px; font-weight: 700; border-radius: var(--border-radius); text-decoration: none; transition: var(--transition); cursor: pointer; border: none; font-size: 1rem; text-align: center; }
 .btn-primary { background: var(--primary-neon); color: var(--text-pure); box-shadow: 0 4px 20px rgba(0, 112, 243, 0.3); }
 .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 25px rgba(0, 112, 243, 0.5); }
 .btn-secondary { background: rgba(255, 255, 255, 0.02); color: var(--text-pure); border: 1px solid var(--glass-border); }
 .btn-secondary:hover { background: rgba(255,255,255,0.08); }
 
+/* MOBILE RESPONSIVE NAVIGATION ENGINE STYLE FIXES */
 header { background-color: rgba(6, 8, 12, 0.85); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid var(--glass-border); }
-.logo-nav { display: flex; justify-content: space-between; align-items: center; height: 80px; }
-.logo { font-size: 1.6rem; font-weight: 900; color: var(--text-pure); text-decoration: none; }
+.logo-nav { display: flex; justify-content: space-between; align-items: center; height: 80px; position: relative; }
+.logo { font-size: 1.6rem; font-weight: 900; color: var(--text-pure); text-decoration: none; z-index: 1001; }
 .pulse-dot { color: var(--primary-neon); display: inline-block; animation: beacon 2s infinite; }
+
+/* Hamburger Button Settings */
+.menu-toggle { display: none; background: transparent; border: none; color: var(--text-pure); font-size: 1.5rem; cursor: pointer; z-index: 1001; padding: 8px; transition: var(--transition); }
+
 header nav ul { display: flex; list-style: none; gap: 24px; align-items: center; }
 header nav ul a { text-decoration: none; color: var(--text-dark); font-weight: 600; font-size: 0.95rem; transition: var(--transition); }
 header nav ul a:hover { color: var(--text-pure); }
 
-.hero-section { padding: 130px 0 110px 0; text-align: center; }
+/* HERO LAYOUT ADJUSTMENTS */
+.hero-section { padding: 140px 0 100px 0; text-align: center; }
 .hero-badge { display: inline-block; padding: 6px 16px; background: rgba(0, 112, 243, 0.1); border: 1px solid rgba(0, 112, 243, 0.2); color: var(--primary-neon); font-size: 0.85rem; font-weight: 700; border-radius: 30px; margin-bottom: 25px; }
-.hero-content h1 { font-size: 4.25rem; line-height: 1.05; margin-bottom: 24px; max-width: 900px; margin-left: auto; margin-right: auto; }
-.hero-content p { font-size: 1.3rem; color: var(--text-dark); max-width: 750px; margin: 0 auto 40px auto; }
-.hero-buttons { display: flex; justify-content: center; gap: 16px; }
+.hero-content h1 { font-size: 4.25rem; line-height: 1.1; margin-bottom: 24px; max-width: 900px; margin-left: auto; margin-right: auto; word-break: keep-all; }
+.hero-content p { font-size: 1.25rem; color: var(--text-dark); max-width: 750px; margin: 0 auto 40px auto; padding: 0 10px; }
+.hero-buttons { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; }
 
 .courses-section { padding: 100px 0; border-top: 1px solid var(--glass-border); background-color: var(--bg-black); }
 .course-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
@@ -100,5 +106,55 @@ footer { border-top: 1px solid var(--glass-border); color: var(--text-dark); tex
 .hidden { display: none !important; }
 @keyframes beacon { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(1.2); } }
 
-@media screen and (max-width: 1024px) { .course-grid { grid-template-columns: repeat(2, 1fr); } }
-@media screen and (max-width: 768px) { .course-grid, .testimonial-grid { grid-template-columns: 1fr; } .quiz-container, .auth-modal-card { padding: 35px 20px; } h2 { font-size: 2rem; } .social-sticky { bottom: 20px; right: 20px; } }
+/* COMPREHENSIVE DYNAMIC SCREEN MEDIA QUERIES DEFINITION MAPS */
+@media screen and (max-width: 1024px) { 
+    .course-grid { grid-template-columns: repeat(2, 1fr); } 
+}
+
+/* TABLET & MOBILE VIEW RE-ENGINEERING ZONE */
+@media screen and (max-width: 868px) {
+    .menu-toggle { display: block; } /* Activate hamburger button asset */
+    
+    /* Transform overlapping inline links row into an elegant, isolated glass drawer sliding panel */
+    header nav {
+        position: absolute;
+        top: 80px;
+        right: -100%;
+        width: 280px;
+        height: calc(100vh - 80px);
+        background: rgba(11, 21, 34, 0.96);
+        backdrop-filter: blur(24px);
+        -webkit-backdrop-filter: blur(24px);
+        border-left: 1px solid var(--glass-border);
+        transition: right 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        padding: 40px 24px;
+        box-shadow: -10px 0 30px rgba(0,0,0,0.5);
+    }
+    
+    header nav.active { right: 0; } /* Slides navigation out cleanly */
+    
+    header nav ul {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 30px;
+        width: 100%;
+    }
+    
+    header nav ul li { width: 100%; }
+    header nav ul a { font-size: 1.1rem; display: block; width: 100%; padding: 8px 0; }
+    .auth-trigger-btn { width: 100%; justify-content: center; padding: 12px; }
+
+    /* Core Hero typography text clamping configuration */
+    .hero-section { padding: 100px 0 60px 0; }
+    .hero-content h1 { font-size: 2.85rem; }
+    .hero-content p { font-size: 1.1rem; }
+}
+
+@media screen and (max-width: 600px) {
+    .course-grid, .testimonial-grid { grid-template-columns: 1fr; }
+    .quiz-container, .auth-modal-card, .contact-form { padding: 35px 20px; }
+    h2 { font-size: 2rem; }
+    .hero-content h1 { font-size: 2.4rem; }
+    .social-sticky { bottom: 20px; right: 20px; }
+    .social-btn { width: 48px; height: 48px; font-size: 1.4rem; }
+}
