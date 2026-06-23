@@ -12,7 +12,7 @@
 
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 512 512%22><circle cx=%22256%22 cy=%22256%22 r=%22240%22 fill=%22%23111522%22 stroke=%22%230070F3%22 stroke-width=%2212%22/><text x=%2250%25%22 y=%2255%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 font-family=%22sans-serif%22 font-weight=%22900%22 font-size=%22200%22 fill=%22%23f8fafc%22>PS</text><circle cx=%22390%22 cy=%22360%22 r=%2230%22 fill=%22%2300df89%22/></svg>">
 
-    <link rel="stylesheet" href="style.css?v=5.0">
+    <link rel="stylesheet" href="style.css?v=6.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
@@ -180,16 +180,7 @@
                 <button class="filter-btn" id="filter-economics">Economics</button>
             </div>
 
-            <div class="course-grid" id="blog-posts-container">
-                {% for post in site.posts %}
-                <div class="course-card blog-post-card" data-category="{{ post.category | lowercase }}">
-                    <div class="blog-meta">📅 {{ post.date | date: "%B %d, %Y" }} | By Abhinav Kashyap</div>
-                    <h3>{{ post.title }}</h3>
-                    <p>{{ post.summary }}</p>
-                    <span class="target-badge">{{ post.category | capitalize }} Insights</span>
-                </div>
-                {% endfor %}
-            </div>
+            <div class="course-grid" id="blog-posts-container"></div>
         </div>
     </section>
 
@@ -265,7 +256,7 @@
                     </div>
                     <div class="form-group">
                         <label for="student-msg">Current Class, Target Exams & Desired Batch (5 or 10 Seater) *</label>
-                        <textarea id="student-msg" placeholder="Let us know your target exams (NEET, JEE, CUET, IAT, NEST, Boards) and preferred personalized micro-batch structure..." rows="5" required></textarea>
+                        <textarea id="student-msg" placeholder="Let us know your target exams and preferred micro-batch structure..." rows="5" required></textarea>
                     </div>
                     <button type="submit" class="btn btn-primary">Book Consultation Slot</button>
                 </form>
@@ -344,12 +335,18 @@
         </div>
     </div>
 
+    <div class="social-sticky">
+        <a href="https://wa.me/919700627812" class="social-btn whatsapp" target="_blank" aria-label="Connect on WhatsApp"><i class="fab fa-whatsapp"></i></a>
+        <a href="https://instagram.com/primespiritmentors" class="social-btn instagram" target="_blank" aria-label="Follow on Instagram"><i class="fab fa-instagram"></i></a>
+        <a href="https://facebook.com/psmentors" class="social-btn facebook" target="_blank" aria-label="Like us on Facebook"><i class="fab fa-facebook"></i></a>
+    </div>
+
     <footer>
         <div class="container">
             <p>&copy; 2026 Prime Spirit Mentors. Carefully engineered for peak educational growth. All Rights Reserved.</p>
         </div>
     </footer>
 
-    <script src="script.js?v=5.0"></script>
+    <script src="script.js?v=6.0"></script>
 </body>
 </html>
