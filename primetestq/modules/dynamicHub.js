@@ -6,24 +6,21 @@ export function initializeOrbitEngine() {
 
     orbitNodes.forEach(node => {
         node.addEventListener('click', (e) => {
-            const ecosystem = e.currentTarget.dataset.ecosystem;
-            const themeColor = e.currentTarget.style.getPropertyValue('--theme-color');
+            // FIX: Grabs the data attribute if it exists, otherwise cleans the text to get the first word
+            let ecosystem = e.currentTarget.dataset.ecosystem;
+            if (!ecosystem) {
+                const fullText = e.currentTarget.innerText || "";
+                ecosystem = fullText.trim().split(' ')[0].toLowerCase().replace(/[^a-z]/g, '');
+            }
             
-            e.currentTarget.style.transform = 'translate(-50%, -50%) scale(4)';
-            e.currentTarget.style.opacity = '0';
+            homeScreen.classList.add('hidden');
+            cockpitScreen.classList.remove('hidden');
             
-            setTimeout(() => {
-                homeScreen.classList.add('hidden');
-                cockpitScreen.classList.remove('hidden');
-                
-                if (cockpitTitle) {
-                    cockpitTitle.innerText = `${ecosystem.toUpperCase()} ASSESSMENT HUD`;
-                    cockpitTitle.style.color = themeColor;
-                }
-                
-                window.dispatchEvent(new CustomEvent('startSimulation', { detail: { stream: ecosystem } }));
-            }, 400);
+            if (cockpitTitle) {
+                cockpitTitle.innerText = `${ecosystem.toUpperCase()} CBT HUD`;
+            }
+            
+            window.dispatchEvent(new CustomEvent('startSimulation', { detail: { stream: ecosystem } }));
         });
     });
 }
-
