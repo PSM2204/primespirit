@@ -3,21 +3,35 @@ import { initializeTestExecutionEngine } from './modules/cockpitEngine.js';
 document.addEventListener('DOMContentLoaded', () => {
     initializeTestExecutionEngine();
 
-    const interactiveOrbitNodes = document.querySelectorAll('.orbit-node');
-    
+    // Handler for competitive direct buttons
+    const interactiveOrbitNodes = document.querySelectorAll('.orbit-node[data-ecosystem]');
     interactiveOrbitNodes.forEach(node => {
-        node.addEventListener('click', () => {
+        node.addEventListener('click', (e) => {
             const selectedTargetStream = node.getAttribute('data-ecosystem');
-            
             if (selectedTargetStream) {
-                swapViewportToSimulationCockpitView();
-                window.dispatchEvent(new CustomEvent('startSimulation', {
-                    detail: { stream: selectedTargetStream }
-                }));
+                launchSimulationTrack(selectedTargetStream);
             }
         });
     });
+
+    // Handler for the Junior classes selection dropdown
+    const juniorDropdown = document.getElementById('dropdown-juniors');
+    if (juniorDropdown) {
+        juniorDropdown.addEventListener('change', (e) => {
+            const selectedClass = e.target.value;
+            if (selectedClass) {
+                launchSimulationTrack(selectedClass);
+            }
+        });
+    }
 });
+
+function launchSimulationTrack(streamLabel) {
+    swapViewportToSimulationCockpitView();
+    window.dispatchEvent(new CustomEvent('startSimulation', {
+        detail: { stream: streamLabel }
+    }));
+}
 
 function swapViewportToSimulationCockpitView() {
     const mainViewBox = document.getElementById('app-view-viewport');
