@@ -1,0 +1,330 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prime Spirit | Miro Infinite Whiteboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-space: #090D1A;
+            --card-glass: rgba(13, 20, 38, 0.75);
+            --border-glass: rgba(255, 255, 255, 0.08);
+            --primary-neon: #00C6FF;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background-color: var(--bg-space); font-family: system-ui, sans-serif; overflow: hidden; height: 100vh; }
+
+        #canvas-container { position: absolute; top:0; left:0; width:100vw; height:100vh; overflow:hidden; }
+        canvas { position: absolute; top: 0; left: 0; background-color: var(--bg-space); }
+
+        /* Floating Miro-Style Tool Dock: Sidebar on Desktop, Bottom bar on Mobile */
+        .miro-dock {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 10px 20px;
+            background: var(--card-glass);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border-glass);
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            transition: all 0.3s ease;
+        }
+
+        @media (min-width: 768px) {
+            .miro-dock {
+                left: 30px;
+                top: 50%;
+                bottom: auto;
+                transform: translateY(-50%);
+                flex-direction: column;
+                padding: 20px 10px;
+            }
+            .control-group { flex-direction: column; }
+            .divider { height: 1px; width: 24px; }
+        }
+
+        .control-group { display: flex; align-items: center; gap: 8px; }
+
+        .dock-btn {
+            background: transparent;
+            border: 1px solid transparent;
+            color: #A0AEC0;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            transition: all 0.2s ease;
+        }
+        .dock-btn:hover, .dock-btn.active {
+            color: var(--primary-neon);
+            background: rgba(0, 198, 255, 0.05);
+            border-color: rgba(0, 198, 255, 0.15);
+        }
+
+        .color-selector {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: transform 0.2s;
+        }
+        .color-selector:hover, .color-selector.active {
+            transform: scale(1.2);
+            border-color: #FFF;
+        }
+
+        .thickness-slider-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #A0AEC0;
+            font-size: 0.8rem;
+            font-family: monospace;
+        }
+        
+        @media (min-width: 768px) {
+            .thickness-slider-container { flex-direction: column; }
+            .thickness-slider { transform: rotate(-90deg); margin: 40px 0; width: 80px; }
+        }
+
+        .divider { height: 24px; width: 1px; background: var(--border-glass); }
+        .hud-log { position: fixed; bottom: 20px; right: 20px; z-index: 10; font-family: monospace; font-size: 0.75rem; color: rgba(255,255,255,0.2); pointer-events: none; }
+    </style>
+</head>
+<body>
+
+    <div id="canvas-container">
+        <canvas id="whiteboardCanvas"></canvas>
+    </div>
+
+    <!-- Miro-Style Dynamic Control Dock -->
+    <div class="miro-dock">
+        <!-- Action Modes -->
+        <div class="control-group">
+            <button class="dock-btn active" id="tool-draw" title="Draw Mode"><i class="fas fa-pen"></i></button>
+            <button class="dock-btn" id="tool-pan" title="Pan Mode (Hand)"><i class="fas fa-hand-paper"></i></button>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- Adaptive Color Swatches -->
+        <div class="control-group">
+            <div class="color-selector active" style="background: #00C6FF;" data-color="#00C6FF"></div>
+            <div class="color-selector" style="background: #00FF99;" data-color="#00FF99"></div>
+            <div class="color-selector" style="background: #FF6B6B;" data-color="#FF6B6B"></div>
+            <div class="color-selector" style="background: #FFFFFF;" data-color="#FFFFFF"></div>
+            <input type="color" id="custom-color" value="#00C6FF" style="width:24px; height:24px; border:none; background:transparent; cursor:pointer;">
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- Thickness Controller -->
+        <div class="thickness-slider-container">
+            <i class="fas fa-minus text-xs"></i>
+            <input type="range" id="brush-thickness" class="thickness-slider" min="1" max="20" value="4" style="cursor:pointer; accent-color:var(--primary-neon);">
+            <i class="fas fa-plus text-xs"></i>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- Utilities -->
+        <div class="control-group">
+            <button class="dock-btn" id="board-undo" title="Undo"><i class="fas fa-undo"></i></button>
+            <button class="dock-btn" id="board-clear" title="Clear All Drawings"><i class="fas fa-trash-alt"></i></button>
+            <button class="dock-btn" id="board-exit" title="Exit Board"><i class="fas fa-home"></i></button>
+        </div>
+    </div>
+
+    <div class="hud-log" id="coords-hud">SPACE COMPASS: X: 0, Y: 0</div>
+
+    <script>
+        const container = document.getElementById('canvas-container');
+        const canvas = document.getElementById('whiteboardCanvas');
+        const ctx = canvas.getContext('2d');
+        const hud = document.getElementById('coords-hud');
+        const thicknessSlider = document.getElementById('brush-thickness');
+        const customColorPicker = document.getElementById('custom-color');
+
+        // Dynamic State Engine
+        let activeTool = 'draw'; 
+        let isInteracting = false;
+        let activeColor = '#00C6FF';
+        let brushWidth = 4;
+        
+        let panOffset = { x: 0, y: 0 };
+        let dragStart = { x: 0, y: 0 };
+        
+        let vectorStrokeCache = []; 
+        let undoHistory = []; 
+
+        function resizeBoardToFit() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            redrawWhiteboardSpace();
+        }
+        window.addEventListener('resize', resizeBoardToFit);
+
+        // Core Infinite Grid Redraw Loop
+        function redrawWhiteboardSpace() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.save();
+            
+            ctx.translate(panOffset.x, panOffset.y);
+
+            // Render Infinite Dot Matrix Grid Lines
+            ctx.beginPath();
+            ctx.fillStyle = "rgba(255, 255, 255, 0.07)";
+            const dotGap = 30;
+            
+            const leftBoundary = -panOffset.x;
+            const rightBoundary = canvas.width - panOffset.x;
+            const topBoundary = -panOffset.y;
+            const bottomBoundary = canvas.height - panOffset.y;
+
+            const startGridX = Math.floor(leftBoundary / dotGap) * dotGap;
+            const startGridY = Math.floor(topBoundary / dotGap) * dotGap;
+
+            for (let x = startGridX; x < rightBoundary; x += dotGap) {
+                for (let y = startGridY; y < bottomBoundary; y += dotGap) {
+                    ctx.fillRect(x, y, 1.5, 1.5);
+                }
+            }
+
+            // Draw Vector Paths preserved in cache
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+
+            vectorStrokeCache.forEach(stroke => {
+                if (stroke.points.length < 2) return;
+                ctx.beginPath();
+                ctx.strokeStyle = stroke.color;
+                ctx.lineWidth = stroke.width;
+                ctx.moveTo(stroke.points[0].x, stroke.points[0].y);
+                for (let i = 1; i < stroke.points.length; i++) {
+                    ctx.lineTo(stroke.points[i].x, stroke.points[i].y);
+                }
+                ctx.stroke();
+            });
+
+            ctx.restore();
+            hud.innerText = `SPACE COMPASS: X: ${Math.round(panOffset.x)}, Y: ${Math.round(panOffset.y)}`;
+        }
+
+        function getCanvasSpacePoint(clientX, clientY) {
+            return {
+                x: clientX - panOffset.x,
+                y: clientY - panOffset.y
+            };
+        }
+
+        function pointerStartAction(e) {
+            isInteracting = true;
+            const clientX = e.clientX || (e.touches && e.touches[0].clientX);
+            const clientY = e.clientY || (e.touches && e.touches[0].clientY);
+
+            dragStart.x = clientX;
+            dragStart.y = clientY;
+
+            if (activeTool === 'draw') {
+                const mapPoint = getCanvasSpacePoint(clientX, clientY);
+                vectorStrokeCache.push({
+                    color: activeColor,
+                    width: brushWidth,
+                    points: [mapPoint]
+                });
+                undoHistory = []; 
+            }
+        }
+
+        function pointerMoveAction(e) {
+            if (!isInteracting) return;
+            const clientX = e.clientX || (e.touches && e.touches[0].clientX);
+            const clientY = e.clientY || (e.touches && e.touches[0].clientY);
+
+            if (activeTool === 'pan') {
+                panOffset.x += clientX - dragStart.x;
+                panOffset.y += clientY - dragStart.y;
+                dragStart.x = clientX;
+                dragStart.y = clientY;
+            } else if (activeTool === 'draw') {
+                const mapPoint = getCanvasSpacePoint(clientX, clientY);
+                const activeStroke = vectorStrokeCache[vectorStrokeCache.length - 1];
+                if (activeStroke) activeStroke.points.push(mapPoint);
+            }
+            redrawWhiteboardSpace();
+        }
+
+        function pointerEndAction() {isInteracting = false;}
+
+        container.addEventListener('mousedown', pointerStartAction);
+        container.addEventListener('mousemove', pointerMoveAction);
+        window.addEventListener('mouseup', pointerEndAction);
+
+        container.addEventListener('touchstart', pointerStartAction, { passive: true });
+        container.addEventListener('touchmove', pointerMoveAction, { passive: true });
+        window.addEventListener('touchend', pointerEndAction);
+
+        const drawBtn = document.getElementById('tool-draw');
+        const panBtn = document.getElementById('tool-pan');
+        const colorSelectors = document.querySelectorAll('.color-selector');
+
+        drawBtn.addEventListener('click', () => { activeTool = 'draw'; drawBtn.classList.add('active'); panBtn.classList.remove('active'); canvas.style.cursor = 'crosshair'; });
+        panBtn.addEventListener('click', () => { activeTool = 'pan'; panBtn.classList.add('active'); drawBtn.classList.remove('active'); canvas.style.cursor = 'grab'; });
+
+        colorSelectors.forEach(selector => {
+            selector.addEventListener('click', (e) => {
+                colorSelectors.forEach(s => s.classList.remove('active'));
+                e.target.classList.add('active');
+                activeColor = e.target.dataset.color;
+                if(activeTool !== 'draw') drawBtn.click();
+            });
+        });
+
+        customColorPicker.addEventListener('input', (e) => {
+            activeColor = e.target.value;
+            colorSelectors.forEach(s => s.classList.remove('active'));
+            if(activeTool !== 'draw') drawBtn.click();
+        });
+
+        thicknessSlider.addEventListener('input', (e) => {
+            brushWidth = parseInt(e.target.value);
+        });
+
+        document.getElementById('board-undo').addEventListener('click', () => {
+            if (vectorStrokeCache.length > 0) {
+                undoHistory.push(vectorStrokeCache.pop());
+                redrawWhiteboardSpace();
+            }
+        });
+
+        document.getElementById('board-clear').addEventListener('click', () => {
+            if (confirm("Clear all drawings from the board?")) {
+                vectorStrokeCache = [];
+                undoHistory = [];
+                redrawWhiteboardSpace();
+            }
+        });
+
+        document.getElementById('board-exit').addEventListener('click', () => {
+            window.location.href = '../index.html';
+        });
+
+        resizeBoardToFit();
+    </script>
+</body>
+</html>
