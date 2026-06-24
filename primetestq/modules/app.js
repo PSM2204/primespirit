@@ -1,16 +1,16 @@
 import { initializeTestExecutionEngine } from './modules/cockpitEngine.js';
 
-// 1. Initialize the engine immediately (No DOMContentLoaded delay trap)
+// Boot the background evaluation engine immediately
 initializeTestExecutionEngine();
 
-// 2. Bind the mobile and desktop click events directly
+// Target your 5 original animated nodes on the mesh grid
 const interactiveOrbitNodes = document.querySelectorAll('.orbit-node');
 
 interactiveOrbitNodes.forEach(node => {
     
-    // Create a bulletproof trigger function
+    // Core function that fires the quiz layout swap
     const triggerExamSimulation = (e) => {
-        e.preventDefault(); // Stops mobile devices from double-tapping
+        e.preventDefault(); // Blocks the browser from running double-taps
         const selectedTargetStream = node.getAttribute('data-ecosystem');
         
         if (selectedTargetStream) {
@@ -21,12 +21,11 @@ interactiveOrbitNodes.forEach(node => {
         }
     };
 
-    // Listen for both mouse clicks AND mobile screen taps instantly
+    // Listen to desktop clicks AND physical mobile finger taps instantly
     node.addEventListener('click', triggerExamSimulation);
     node.addEventListener('touchstart', triggerExamSimulation, { passive: false });
 });
 
-// 3. Viewport Swapper Engine
 function swapViewportToSimulationCockpitView() {
     const mainViewBox = document.getElementById('app-view-viewport');
     mainViewBox.innerHTML = `
@@ -36,10 +35,6 @@ function swapViewportToSimulationCockpitView() {
                     <i class="fas fa-shield-alt" style="color:var(--primary-neon); margin-right:8px;"></i> SECURE NODE SYNC ACTIVE
                 </div>
                 <div class="instrumentation-timer-block">
-                    <svg class="countdown-ring-svg">
-                        <circle class="ring-bg" cx="14" cy="14" r="12"/>
-                        <circle class="ring-fill-progress" id="timer-ring-fill" cx="14" cy="14" r="12" stroke-dasharray="100, 100"/>
-                    </svg>
                     <div class="timer-numerical-display" id="clock-digital-hud">00:00:00</div>
                 </div>
                 <button id="btn-cockpit-submit" style="background:var(--card-glass); border:1px solid var(--border-glass); color:#fff; font-weight:800; font-size:0.75rem; letter-spacing:0.1em; padding:10px 20px; border-radius:30px; cursor:pointer;">SUBMIT CORE TEST</button>
