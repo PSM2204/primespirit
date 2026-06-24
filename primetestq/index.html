@@ -6,6 +6,36 @@
     <title>PrimeTestQ Hub | Prime Spirit Mentors</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="dashboard.css">
+    <style>
+        /* Force drop-down interactive priority over style sheets */
+        .orbit-select-menu {
+            background: rgba(13, 20, 38, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #fff;
+            padding: 6px 10px;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            outline: none;
+            cursor: pointer;
+            margin-top: 6px;
+            width: 100px;
+            text-align: center;
+            pointer-events: auto !important;
+        }
+        .orbit-select-menu option {
+            background: #0d1426;
+            color: #fff;
+        }
+        /* Ensure the node container structure doesn't block the cursor map matrix */
+        .orbit-node {
+            pointer-events: auto !important;
+            cursor: pointer !important;
+        }
+        .orbital-ring {
+            pointer-events: none !important;
+        }
+    </style>
 </head>
 <body>
 
@@ -16,58 +46,51 @@
                 <div class="user-profile-badge">CANDIDATE SECURE NODE</div>
             </header>
 
-            <div class="orbit-universe-wrapper">
+            <div class="orbit-universe-wrapper" style="pointer-events: none !important;">
                 <div class="center-core-hub">
-                    <h1 style="font-size: 1.8rem; font-weight: 900; letter-spacing: 0.1em; color:#fff;">SELECT<br><span style="color:var(--primary-neon);">TRACK</span></h1>
-                    <p style="font-size:0.65rem; color:#A0AEC0; margin-top:10px; letter-spacing:0.2em;">ORBIT INTERFACE</p>
+                    <h1 style="font-size: 1.6rem; font-weight: 900; letter-spacing: 0.1em; color:#fff;">SELECT<br><span style="color:var(--primary-neon);">TRACK</span></h1>
+                    <p style="font-size:0.6rem; color:#A0AEC0; margin-top:5px; letter-spacing:0.2em;">INTERFACE</p>
                 </div>
 
-                <div class="orbital-ring path-admission" style="--rotation-speed: 25s; width:160px; height:160px;">
-                    <div class="orbit-node node-class6 glass-panel" data-ecosystem="class6" style="--theme-color: #FF9F43;">
-                        <i class="fas fa-graduation-cap"></i> <span>6th</span>
-                    </div>
-                </div>
-                <div class="orbital-ring path-admission" style="--rotation-speed: 30s; width: 210px; height: 210px;">
-                    <div class="orbit-node node-class7 glass-panel" data-ecosystem="class7" style="--theme-color: #FF6B6B;">
-                        <i class="fas fa-book-open"></i> <span>7th</span>
-                    </div>
-                </div>
-                <div class="orbital-ring path-admission" style="--rotation-speed: 35s; width: 260px; height: 260px;">
-                    <div class="orbit-node node-class8 glass-panel" data-ecosystem="class8" style="--theme-color: #48DBFB;">
-                        <i class="fas fa-pencil-alt"></i> <span>8th</span>
-                    </div>
-                </div>
-                <div class="orbital-ring path-admission" style="--rotation-speed: 40s; width: 310px; height: 310px;">
-                    <div class="orbit-node node-class9 glass-panel" data-ecosystem="class9" style="--theme-color: #1DD1A1;">
-                        <i class="fas fa-calculator"></i> <span>9th</span>
-                    </div>
-                </div>
-                <div class="orbital-ring path-admission" style="--rotation-speed: 45s; width: 360px; height: 360px;">
-                    <div class="orbit-node node-class10 glass-panel" data-ecosystem="class10" style="--theme-color: #00D2D3;">
-                        <i class="fas fa-flask"></i> <span>10th</span>
+                <!-- PATH 1: JUNIOR HIGH SCHOOL DROPDOWN TRACK -->
+                <div class="orbital-ring path-admission" style="--rotation-speed: 35s;">
+                    <div class="orbit-node node-admission glass-panel" style="--theme-color: #FF9F43; display: flex; flex-direction: column; align-items: center; pointer-events: auto !important;">
+                        <i class="fas fa-graduation-cap"></i>
+                        <select class="orbit-select-menu" id="dropdown-juniors" title="Select Junior Class">
+                            <option value="" disabled selected>Juniors</option>
+                            <option value="class6">Class 6th</option>
+                            <option value="class7">Class 7th</option>
+                            <option value="class8">Class 8th</option>
+                            <option value="class9">Class 9th</option>
+                            <option value="class10">Class 10th</option>
+                        </select>
                     </div>
                 </div>
 
-                <div class="orbital-ring path-neet" style="--rotation-speed: 52s;">
-                    <div class="orbit-node node-neet glass-panel" data-ecosystem="neet" style="--theme-color: #00FF99;">
+                <!-- PATH 2: NEET EXAM TARGET -->
+                <div class="orbital-ring path-neet" style="--rotation-speed: 45s;">
+                    <div class="orbit-node node-neet glass-panel" data-ecosystem="neet" style="--theme-color: #00FF99; pointer-events: auto !important;">
                         <i class="fas fa-stethoscope"></i> <span>NEET UG</span>
                     </div>
                 </div>
 
-                <div class="orbital-ring path-jee" style="--rotation-speed: 60s;">
-                    <div class="orbit-node node-jee glass-panel" data-ecosystem="jee" style="--theme-color: #00C6FF;">
+                <!-- PATH 3: JEE EXAM TARGET -->
+                <div class="orbital-ring path-jee" style="--rotation-speed: 55s;">
+                    <div class="orbit-node node-jee glass-panel" data-ecosystem="jee" style="--theme-color: #00C6FF; pointer-events: auto !important;">
                         <i class="fas fa-atom"></i> <span>JEE Main</span>
                     </div>
                 </div>
 
-                <div class="orbital-ring path-iat" style="--rotation-speed: 70s;">
-                    <div class="orbit-node node-iat glass-panel" data-ecosystem="iat" style="--theme-color: #A855F7;">
+                <!-- PATH 4: IAT EXAM TARGET -->
+                <div class="orbital-ring path-iat" style="--rotation-speed: 65s;">
+                    <div class="orbit-node node-iat glass-panel" data-ecosystem="iat" style="--theme-color: #A855F7; pointer-events: auto !important;">
                         <i class="fas fa-flask"></i> <span>IAT CBT</span>
                     </div>
                 </div>
 
-                <div class="orbital-ring path-nest" style="--rotation-speed: 80s;">
-                    <div class="orbit-node node-nest glass-panel" data-ecosystem="nest" style="--theme-color: #EC4899;">
+                <!-- PATH 5: NEST EXAM TARGET -->
+                <div class="orbital-ring path-nest" style="--rotation-speed: 75s;">
+                    <div class="orbit-node node-nest glass-panel" data-ecosystem="nest" style="--theme-color: #EC4899; pointer-events: auto !important;">
                         <i class="fas fa-microscope"></i> <span>NEST CBT</span>
                     </div>
                 </div>
