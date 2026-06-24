@@ -14,14 +14,12 @@ export function generateMockDataset(stream) {
     const dataset = [];
     const track = stream.toLowerCase().trim();
 
-    // Default global competitive exam score indicators
     ExamState.posMark = 4;
     ExamState.negMark = 1;
 
     if (track.includes('admission')) {
-        // Matches your original Admission tracking key -> Configures your 100 Qs Math & Science split
         ExamState.totalQuestions = 100;
-        ExamState.timerSecondsLeft = 7200; // 2 Hours exactly
+        ExamState.timerSecondsLeft = 7200; // 2 Hours
         ExamState.posMark = 4;  
         ExamState.negMark = 1;  
     } else if (track.includes('neet')) {
@@ -36,7 +34,7 @@ export function generateMockDataset(stream) {
     } else if (track.includes('nest')) {
         ExamState.totalQuestions = 80; 
         ExamState.timerSecondsLeft = 10800;
-        ExamState.posMark = 3; // Official NEST scoring constraints
+        ExamState.posMark = 3; 
         ExamState.negMark = 1;
     }
 
