@@ -39,7 +39,7 @@ export function generateMockDataset(stream) {
     } else if (track.includes('nest')) {
         ExamState.totalQuestions = 80; 
         ExamState.timerSecondsLeft = 10800;
-        ExamState.posMark = 3; // NEST Rules configuration
+        ExamState.posMark = 3; 
         ExamState.negMark = 1;
     }
 
