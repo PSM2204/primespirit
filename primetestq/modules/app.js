@@ -3,7 +3,6 @@ import { initializeTestExecutionEngine } from './modules/cockpitEngine.js';
 document.addEventListener('DOMContentLoaded', () => {
     initializeTestExecutionEngine();
 
-    // Directly bind click metrics to your original 5 orbit nodes
     const interactiveOrbitNodes = document.querySelectorAll('.orbit-node');
     
     interactiveOrbitNodes.forEach(node => {
