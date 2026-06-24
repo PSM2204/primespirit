@@ -10,15 +10,14 @@
     <link rel="stylesheet" href="dashboard.css">
     
     <style>
-        /* Unblocks your cursor mesh layers so your original nodes click perfectly */
+        /* Forces buttons to the absolute top layer and guarantees instant mobile taps */
         .orbit-node {
             pointer-events: auto !important;
             cursor: pointer !important;
+            z-index: 99999 !important;
+            touch-action: manipulation !important; 
         }
-        .orbital-ring {
-            pointer-events: none !important;
-        }
-        .orbit-universe-wrapper {
+        .orbital-ring, .orbit-universe-wrapper {
             pointer-events: none !important;
         }
     </style>
