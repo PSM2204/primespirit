@@ -1,24 +1,32 @@
 import { initializeTestExecutionEngine } from './modules/cockpitEngine.js';
 
-document.addEventListener('DOMContentLoaded', () => {
-    initializeTestExecutionEngine();
+// 1. Initialize the engine immediately (No DOMContentLoaded delay trap)
+initializeTestExecutionEngine();
 
-    const interactiveOrbitNodes = document.querySelectorAll('.orbit-node');
+// 2. Bind the mobile and desktop click events directly
+const interactiveOrbitNodes = document.querySelectorAll('.orbit-node');
+
+interactiveOrbitNodes.forEach(node => {
     
-    interactiveOrbitNodes.forEach(node => {
-        node.addEventListener('click', () => {
-            const selectedTargetStream = node.getAttribute('data-ecosystem');
-            
-            if (selectedTargetStream) {
-                swapViewportToSimulationCockpitView();
-                window.dispatchEvent(new CustomEvent('startSimulation', {
-                    detail: { stream: selectedTargetStream }
-                }));
-            }
-        });
-    });
+    // Create a bulletproof trigger function
+    const triggerExamSimulation = (e) => {
+        e.preventDefault(); // Stops mobile devices from double-tapping
+        const selectedTargetStream = node.getAttribute('data-ecosystem');
+        
+        if (selectedTargetStream) {
+            swapViewportToSimulationCockpitView();
+            window.dispatchEvent(new CustomEvent('startSimulation', {
+                detail: { stream: selectedTargetStream }
+            }));
+        }
+    };
+
+    // Listen for both mouse clicks AND mobile screen taps instantly
+    node.addEventListener('click', triggerExamSimulation);
+    node.addEventListener('touchstart', triggerExamSimulation, { passive: false });
 });
 
+// 3. Viewport Swapper Engine
 function swapViewportToSimulationCockpitView() {
     const mainViewBox = document.getElementById('app-view-viewport');
     mainViewBox.innerHTML = `
