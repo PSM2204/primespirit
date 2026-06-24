@@ -1,45 +1,319 @@
-#screen-home-hub { display: flex; flex-direction: column; align-items: center; justify-content: space-between; min-height: 100vh; padding: 40px 24px; }
-.hub-header { width: 100%; display: flex; justify-content: space-between; align-items: center; }
-.brand-logotype { font-size: 1.1rem; font-weight: 900; letter-spacing: 0.3em; color: rgba(255,255,255,0.8); }
-.user-profile-badge { padding: 10px 20px; background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-glass); border-radius: 30px; font-size: 0.85rem; }
+/* =========================================
+   CORE THEME & RESET
+   ========================================= */
+:root {
+    --primary-neon: #00C6FF;
+    --accent-glow: #00FF99;
+    --status-review: #A855F7;
+    --border-glass: rgba(255, 255, 255, 0.1);
+    --card-glass: rgba(15, 23, 42, 0.5);
+    --bg-space: #070B14;
+}
 
-.orbit-universe-wrapper { position: relative; width: 600px; height: 600px; display: flex; align-items: center; justify-content: center; margin: auto; }
-.center-core-hub { position: absolute; width: 250px; height: 250px; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 10; text-align: center; }
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
 
-/* FIXED: Added pointer-events: none so invisible boxes don't block clicks */
-.orbital-ring { position: absolute; border: 1px dashed rgba(255, 255, 255, 0.04); border-radius: 50%; animation: spin linear infinite; animation-duration: var(--rotation-speed, 40s); pointer-events: none; }
+body {
+    background-color: var(--bg-space);
+    background-image: radial-gradient(circle at center, #111A2E 0%, #070B14 100%);
+    color: #ffffff;
+    overflow-x: hidden;
+    min-height: 100vh;
+}
 
-.path-admission { width: 340px; height: 340px; }
-.path-neet { width: 420px; height: 420px; }
-.path-jee { width: 500px; height: 500px; }
-.path-iat { width: 580px; height: 580px; }
-.path-nest { width: 660px; height: 660px; }
+#app-view-viewport {
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+    overflow: hidden;
+}
 
-/* FIXED: Added pointer-events: auto so the buttons themselves are perfectly clickable */
-.orbit-node { position: absolute; top: 0; left: 50%; transform: translate(-50%, -50%); padding: 12px 20px; border-radius: 30px; cursor: pointer; display: flex; align-items: center; gap: 10px; font-weight: 700; background: var(--card-glass); border: 1px solid var(--border-glass); pointer-events: auto; z-index: 20; }
-.orbit-node:hover { box-shadow: 0 0 25px var(--theme-color); border-color: var(--theme-color); }
+/* =========================================
+   HEADER & FOOTER LAYOUT
+   ========================================= */
+.hub-header {
+    position: absolute;
+    top: 20px;
+    left: 30px;
+    right: 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 100;
+}
 
-#screen-cockpit-simulation { display: flex; flex-direction: column; min-height: 100vh; padding: 24px; gap: 20px; width: 100%; }
-.cockpit-bar { display: flex; justify-content: space-between; align-items: center; padding: 16px 32px; }
-.instrumentation-timer-block { display: flex; align-items: center; gap: 14px; }
-.countdown-ring-svg { width: 28px; height: 28px; transform: rotate(-90deg); }
-.countdown-ring-svg .ring-bg { fill: none; stroke: rgba(255,255,255,0.05); stroke-width: 3; }
-.countdown-ring-svg .ring-fill-progress { fill: none; stroke: var(--accent-glow); stroke-width: 3; }
-.timer-numerical-display { font-family: monospace; font-size: 1.5rem; color: var(--accent-glow); }
-.cockpit-workstation-grid { display: grid; grid-template-columns: 1fr 340px; gap: 20px; }
-.question-workspace { display: flex; flex-direction: column; padding: 40px; gap: 30px; }
-.options-matrix-grid { display: flex; flex-direction: column; gap: 14px; }
-.option-node-item { padding: 18px 24px; border-radius: 16px; background: rgba(255,255,255,0.01); border: 1px solid var(--border-glass); cursor: pointer; }
-.option-node-item.selected { background: rgba(0, 255, 153, 0.05); border-color: var(--accent-glow); }
-.telemetry-palette-panel { padding: 30px 24px; }
-.circles-status-matrix { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-top: 20px; }
-.status-circle-node { width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; cursor: pointer; border: 1px solid var(--border-glass); }
-.status-circle-node.answered { background: rgba(0, 255, 153, 0.1); border-color: var(--status-answered); color: var(--status-answered); }
-.status-circle-node.unanswered { background: rgba(255, 77, 77, 0.1); border-color: var(--status-unanswered); color: var(--status-unanswered); }
-.status-circle-node.review { background: rgba(138, 43, 226, 0.1); border-color: var(--status-review); color: var(--status-review); }
-.status-circle-node.unvisited { background: rgba(255,255,255,0.02); border-color: var(--status-unvisited); color: #A0AEC0; }
-.cockpit-control-toolbar-row { display: flex; justify-content: space-between; }
-.left-action-cluster { display: flex; gap: 12px; }
-.action-accent-save { background: var(--primary-neon) !important; color: #fff !important; }
-@keyframes spin { 100% { transform: rotate(360deg); } }
-@media screen and (max-width: 1024px) { .cockpit-workstation-grid { grid-template-columns: 1fr; } }
+.brand-logotype {
+    font-weight: 900;
+    letter-spacing: 0.15em;
+    font-size: 0.9rem;
+    color: #fff;
+}
+
+.user-profile-badge {
+    font-size: 0.7rem;
+    font-family: monospace;
+    letter-spacing: 0.1em;
+    color: var(--primary-neon);
+    border: 1px solid var(--primary-neon);
+    padding: 6px 12px;
+    border-radius: 20px;
+    background: rgba(0, 198, 255, 0.05);
+}
+
+footer {
+    position: absolute;
+    bottom: 20px;
+    width: 100%;
+    text-align: center;
+    z-index: 100;
+}
+
+/* =========================================
+   ORBITAL UNIVERSE ANIMATION GEOMETRY
+   ========================================= */
+.orbit-universe-wrapper {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 800px;
+    height: 800px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.center-core-hub {
+    position: absolute;
+    text-align: center;
+    z-index: 10;
+}
+
+/* Base ring rules */
+.orbital-ring {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: 1px dashed rgba(255, 255, 255, 0.15);
+    border-radius: 50%;
+    animation: spin var(--rotation-speed) linear infinite;
+}
+
+/* Specific ring diameters to create the nested universe */
+.path-admission { width: 260px; height: 260px; }
+.path-neet      { width: 380px; height: 380px; }
+.path-jee       { width: 500px; height: 500px; }
+.path-iat       { width: 620px; height: 620px; }
+.path-nest      { width: 740px; height: 740px; }
+
+/* Base node (button) rules */
+.orbit-node {
+    position: absolute;
+    top: 0; 
+    left: 50%;
+    /* Counter-spin animation keeps the text upright while the ring spins */
+    animation: reverse-spin var(--rotation-speed) linear infinite;
+    transform-origin: center;
+    transition: box-shadow 0.3s, transform 0.3s;
+}
+
+/* Glassmorphism styling for the floating target nodes */
+.glass-panel {
+    background: rgba(13, 20, 38, 0.7);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--theme-color);
+    padding: 10px 18px;
+    border-radius: 30px;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    white-space: nowrap;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5), inset 0 0 10px rgba(255,255,255,0.02);
+}
+
+.glass-panel i {
+    color: var(--theme-color);
+    font-size: 1.1rem;
+}
+
+/* Hover glow effect */
+.orbit-node:hover {
+    box-shadow: 0 0 25px var(--theme-color);
+    background: rgba(13, 20, 38, 0.95);
+    z-index: 999;
+}
+
+/* Physics Keyframes */
+@keyframes spin {
+    from { transform: translate(-50%, -50%) rotate(0deg); }
+    to   { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+@keyframes reverse-spin {
+    from { transform: translate(-50%, -50%) rotate(360deg); }
+    to   { transform: translate(-50%, -50%) rotate(0deg); }
+}
+
+/* =========================================
+   COCKPIT (EXAM SIMULATION) UI LAYOUT
+   ========================================= */
+#screen-cockpit-simulation {
+    padding: 80px 40px 40px 40px;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.cockpit-bar {
+    position: absolute;
+    top: 20px;
+    left: 40px;
+    right: 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 25px;
+    z-index: 100;
+}
+
+.instrumentation-timer-block {
+    display: flex;
+    align-items: center;
+    background: rgba(255,255,255,0.03);
+    padding: 6px 16px;
+    border-radius: 20px;
+    border: 1px solid var(--border-glass);
+}
+
+.timer-numerical-display {
+    font-family: monospace;
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: 0.1em;
+}
+
+.cockpit-workstation-grid {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 30px;
+    height: 100%;
+}
+
+.question-workspace {
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}
+
+.telemetry-palette-panel {
+    padding: 25px;
+    overflow-y: auto;
+}
+
+/* Question Options Styling */
+.option-node-item {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--border-glass);
+    padding: 18px 24px;
+    border-radius: 14px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+}
+
+.option-node-item:hover {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.option-node-item.selected {
+    border-color: var(--primary-neon);
+    background: rgba(0, 198, 255, 0.08);
+    box-shadow: 0 0 15px rgba(0, 198, 255, 0.15);
+}
+
+/* Toolbar Controls */
+.cockpit-control-toolbar-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: auto;
+}
+
+.left-action-cluster {
+    display: flex;
+    gap: 15px;
+}
+
+/* Palette Status Circles */
+.circles-status-matrix {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.status-circle-node {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    font-weight: 800;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: all 0.2s;
+}
+
+.status-circle-node.unvisited {
+    background: rgba(255, 255, 255, 0.05);
+    color: #A0AEC0;
+    border-color: var(--border-glass);
+}
+
+.status-circle-node.unanswered {
+    background: #FF4D4D;
+    color: #fff;
+    box-shadow: 0 0 10px rgba(255, 77, 77, 0.3);
+}
+
+.status-circle-node.answered {
+    background: #00FF99;
+    color: #000;
+    box-shadow: 0 0 10px rgba(0, 255, 153, 0.3);
+}
+
+.status-circle-node.review {
+    background: #A855F7;
+    color: #fff;
+    box-shadow: 0 0 10px rgba(168, 85, 247, 0.3);
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+    .cockpit-workstation-grid {
+        grid-template-columns: 1fr;
+    }
+    .orbit-universe-wrapper {
+        transform: translate(-50%, -50%) scale(0.6);
+    }
+}
+@media (max-width: 600px) {
+    .orbit-universe-wrapper {
+        transform: translate(-50%, -50%) scale(0.4);
+    }
+}
