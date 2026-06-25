@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PrimeBoard | Prime Spirit Mentors</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Excalidraw's own stylesheet (open source, MIT licensed) -->
+    <link rel="stylesheet" href="https://esm.sh/@excalidraw/excalidraw@0.18.0/dist/dev/index.css" />
+
+    <script>
+        // ===========================================================
+        // SETTINGS YOU MAY WANT TO CHANGE
+        // ===========================================================
+        // Paste your Render.com relay server URL here once deployed.
+        // It must start with wss:// (secure WebSocket), not https://
+        window.PRIMEBOARD_RELAY_URL = "wss://YOUR-RELAY-SERVER.onrender.com";
+        // ===========================================================
+
+        window.EXCALIDRAW_ASSET_PATH = "https://esm.sh/@excalidraw/excalidraw@0.18.0/dist/prod/";
+    </script>
+    <script type="importmap">
+      {
+        "imports": {
+          "react": "https://esm.sh/react@19.0.0",
+          "react/jsx-runtime": "https://esm.sh/react@19.0.0/jsx-runtime",
+          "react-dom": "https://esm.sh/react-dom@19.0.0",
+          "react-dom/client": "https://esm.sh/react-dom@19.0.0/client"
+        }
+      }
+    </script>
+
+    <style>
+        :root {
+            --bg-space: #090D1A;
+            --card-glass: rgba(13, 20, 38, 0.92);
+            --border-glass: rgba(255, 255, 255, 0.08);
+            --primary-neon: #00C6FF;
+            --locked-red: #FF4757;
+            --unlocked-green: #00FF99;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, -apple-system, sans-serif; }
+        html, body { background: var(--bg-space); height: 100%; overflow: hidden; }
+        #root { position: absolute; top: 50px; left: 0; right: 0; bottom: 0; }
+
+        /* ---------- Top brand bar ---------- */
+        #topbar {
+            position: fixed; top: 0; left: 0; right: 0; height: 50px; z-index: 1000;
+            display: flex; align-items: center; gap: 14px;
+            padding: 0 16px;
+            background: var(--card-glass);
+            backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border-glass);
+        }
+        #brand { display: flex; align-items: center; gap: 8px; color: #fff; font-weight: 800; font-size: 0.95rem; letter-spacing: 0.02em; }
+        #brand i { color: var(--primary-neon); }
+        #brand .sub { color: #718096; font-weight: 500; font-size: 0.7rem; margin-left: 4px; }
+
+        #room-pill {
+            margin-left: auto; display: flex; align-items: center; gap: 8px;
+            background: rgba(255,255,255,0.03); border: 1px solid var(--border-glass);
+            padding: 6px 12px; border-radius: 20px; color: #A0AEC0; font-size: 0.72rem; font-family: monospace;
+        }
+        #room-pill b { color: #fff; letter-spacing: 0.05em; }
+
+        #lock-btn {
+            display: flex; align-items: center; gap: 8px;
+            border: 1px solid var(--locked-red); color: var(--locked-red); background: rgba(255,71,87,0.08);
+            font-weight: 700; font-size: 0.75rem; padding: 8px 14px; border-radius: 8px; cursor: pointer;
+            transition: all 0.15s ease;
+        }
+        #lock-btn.unlocked { border-color: var(--unlocked-green); color: var(--unlocked-green); background: rgba(0,255,153,0.08); }
+        #lock-btn:hover { filter: brightness(1.2); }
+
+        #invite-btn, #exit-btn {
+            display: flex; align-items: center; gap: 6px;
+            background: rgba(0,198,255,0.1); border: 1px solid var(--primary-neon); color: var(--primary-neon);
+            font-weight: 700; font-size: 0.75rem; padding: 8px 14px; border-radius: 8px; cursor: pointer; text-decoration: none;
+        }
+        #exit-btn { background: transparent; border-color: var(--border-glass); color: #A0AEC0; }
+        #invite-btn:hover { background: rgba(0,198,255,0.2); }
+
+        #status-dot { width: 8px; height: 8px; border-radius: 50%; background: #718096; flex-shrink: 0; }
+        #status-dot.connected { background: var(--unlocked-green); box-shadow: 0 0 8px var(--unlocked-green); }
+        #status-dot.connecting { background: #FFCD38; }
+        #status-dot.error { background: var(--locked-red); }
+
+        /* ---------- Student "view only" banner ---------- */
+        #locked-banner {
+            position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%); z-index: 1000;
+            display: none; align-items: center; gap: 10px;
+            background: rgba(255,71,87,0.12); border: 1px solid var(--locked-red); color: #fff;
+            padding: 10px 18px; border-radius: 30px; font-size: 0.78rem; font-weight: 600;
+            backdrop-filter: blur(10px);
+        }
+        #locked-banner i { color: var(--locked-red); }
+
+        /* ---------- Landing / setup screen ---------- */
+        #setup-screen {
+            position: fixed; inset: 0; z-index: 2000;
+            display: flex; align-items: center; justify-content: center;
+            background: radial-gradient(circle at center, #0F172A 0%, #050811 100%);
+        }
+        #setup-card {
+            width: min(420px, 90vw);
+            background: var(--card-glass); border: 1px solid var(--border-glass); border-radius: 18px;
+            padding: 32px 28px; text-align: center;
+        }
+        #setup-card h1 { color: #fff; font-size: 1.3rem; font-weight: 800; margin-bottom: 6px; }
+        #setup-card h1 span { color: var(--primary-neon); }
+        #setup-card p.tagline { color: #718096; font-size: 0.8rem; margin-bottom: 24px; letter-spacing: 0.05em; }
+        #setup-card label { display: block; text-align: left; color: #A0AEC0; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em; margin: 16px 0 6px; }
+        #setup-card input {
+            width: 100%; background: rgba(255,255,255,0.04); border: 1px solid var(--border-glass); color: #fff;
+            padding: 12px 14px; border-radius: 10px; font-size: 0.9rem; outline: none;
+        }
+        #setup-card input:focus { border-color: var(--primary-neon); }
+        .role-toggle { display: flex; gap: 8px; margin-top: 6px; }
+        .role-toggle button {
+            flex: 1; padding: 12px; border-radius: 10px; border: 1px solid var(--border-glass);
+            background: rgba(255,255,255,0.03); color: #A0AEC0; font-weight: 700; font-size: 0.8rem; cursor: pointer;
+        }
+        .role-toggle button.active { border-color: var(--primary-neon); color: var(--primary-neon); background: rgba(0,198,255,0.08); }
+        #enter-btn {
+            width: 100%; margin-top: 24px; padding: 14px; border-radius: 10px; border: none;
+            background: var(--primary-neon); color: #000; font-weight: 800; font-size: 0.9rem; cursor: pointer;
+        }
+        #enter-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+        #setup-error { color: var(--locked-red); font-size: 0.75rem; margin-top: 10px; min-height: 1em; }
+        #setup-card .or-row { display: flex; align-items: center; gap: 10px; margin: 18px 0 0; color: #4A5568; font-size: 0.7rem; }
+        #setup-card .or-row::before, #setup-card .or-row::after { content: ''; flex: 1; height: 1px; background: var(--border-glass); }
+    </style>
+</head>
+<body>
+
+    <!-- ============ SETUP SCREEN: pick name + role + room ============ -->
+    <div id="setup-screen">
+        <div id="setup-card">
+            <h1>Prime<span>Board</span></h1>
+            <p class="tagline">PRIME SPIRIT MENTORS // LIVE CLASS WHITEBOARD</p>
+
+            <label>I am the...</label>
+            <div class="role-toggle">
+                <button id="role-teacher" class="active" type="button"><i class="fas fa-chalkboard-teacher"></i> Teacher</button>
+                <button id="role-student" type="button"><i class="fas fa-user-graduate"></i> Student</button>
+            </div>
+
+            <label>Your name</label>
+            <input id="name-input" type="text" placeholder="e.g. Mr. Sharma" maxlength="40">
+
+            <label id="room-label">Class room code</label>
+            <input id="room-input" type="text" placeholder="e.g. CLASS10-PHYSICS" maxlength="30">
+
+            <button id="enter-btn">Enter Board</button>
+            <div id="setup-error"></div>
+            <div class="or-row">student link is auto-filled when opened from an invite</div>
+        </div>
+    </div>
+
+    <!-- ============ TOP BAR (shown once inside the board) ============ -->
+    <div id="topbar" style="display:none;">
+        <div id="brand"><i class="fas fa-atom"></i> PrimeBoard <span class="sub">by Prime Spirit Mentors</span></div>
+        <div id="room-pill"><span id="status-dot"></span> Room: <b id="room-pill-code">-</b></div>
+        <button id="lock-btn" style="display:none;"><i class="fas fa-lock"></i> <span id="lock-btn-text">Drawing Locked</span></button>
+        <button id="invite-btn" style="display:none;"><i class="fas fa-link"></i> Copy invite link</button>
+        <a id="exit-btn" href="../index.html"><i class="fas fa-home"></i></a>
+    </div>
+
+    <div id="locked-banner"><i class="fas fa-lock"></i> Your teacher has locked drawing — you can still pan and zoom to follow along.</div>
+
+    <div id="root"></div>
+
+    <script type="module">
+        import React, { useCallback } from "react";
+        import ReactDOM from "react-dom/client";
+        import * as ExcalidrawLib from "https://esm.sh/@excalidraw/excalidraw@0.18.0/dist/dev/index.js?external=react,react-dom";
+        const { Excalidraw } = ExcalidrawLib;
+
+        // ---------------------------------------------------------------
+        // Helpers
+        // ---------------------------------------------------------------
+        function randomRoomCode() {
+            const words = ['MAPLE','RIVER','COMET','TIGER','ORBIT','PRISM','EAGLE','DELTA'];
+            const w = words[Math.floor(Math.random() * words.length)];
+            const n = Math.floor(100 + Math.random() * 900);
+            return `${w}-${n}`;
+        }
+
+        function getQueryParam(name) {
+            return new URLSearchParams(window.location.search).get(name);
+        }
+
+        // ---------------------------------------------------------------
+        // Setup screen wiring (plain DOM, runs before React mounts)
+        // ---------------------------------------------------------------
+        const setupScreen = document.getElementById('setup-screen');
+        const roleTeacherBtn = document.getElementById('role-teacher');
+        const roleStudentBtn = document.getElementById('role-student');
+        const nameInput = document.getElementById('name-input');
+        const roomInput = document.getElementById('room-input');
+        const roomLabel = document.getElementById('room-label');
+        const enterBtn = document.getElementById('enter-btn');
+        const setupError = document.getElementById('setup-error');
+
+        let selectedRole = 'teacher';
+
+        // If opened via an invite link (?room=XYZ), pre-fill and default to student
+        const inviteRoom = getQueryParam('room');
+        if (inviteRoom) {
+            roomInput.value = inviteRoom;
+            selectedRole = 'student';
+            roleStudentBtn.classList.add('active');
+            roleTeacherBtn.classList.remove('active');
+            roomLabel.textContent = 'Class room code (from your invite link)';
+        }
+
+        roleTeacherBtn.addEventListener('click', () => {
+            selectedRole = 'teacher';
+            roleTeacherBtn.classList.add('active');
+            roleStudentBtn.classList.remove('active');
+        });
+        roleStudentBtn.addEventListener('click', () => {
+            selectedRole = 'student';
+            roleStudentBtn.classList.add('active');
+            roleTeacherBtn.classList.remove('active');
+        });
+
+        enterBtn.addEventListener('click', () => {
+            const name = nameInput.value.trim();
+            let room = roomInput.value.trim().toUpperCase().replace(/\s+/g, '-');
+
+            if (!name) { setupError.textContent = 'Please enter your name.'; return; }
+            if (selectedRole === 'teacher' && !room) {
+                room = randomRoomCode(); // teacher can start a fresh room with one click
+            }
+            if (!room) { setupError.textContent = 'Please enter the room code your teacher shared.'; return; }
+
+            setupError.textContent = '';
+            setupScreen.style.display = 'none';
+            document.getElementById('topbar').style.display = 'flex';
+            startBoard({ name, role: selectedRole, room });
+        });
+
+        // ---------------------------------------------------------------
+        // Main board logic
+        // ---------------------------------------------------------------
+        function startBoard({ name, role, room }) {
+            document.getElementById('room-pill-code').textContent = room;
+
+            const lockBtn = document.getElementById('lock-btn');
+            const lockBtnText = document.getElementById('lock-btn-text');
+            const inviteBtn = document.getElementById('invite-btn');
+            const statusDot = document.getElementById('status-dot');
+            const lockedBanner = document.getElementById('locked-banner');
+
+            if (role === 'teacher') {
+                lockBtn.style.display = 'flex';
+                inviteBtn.style.display = 'flex';
+            }
+
+            // Build the invite link students should open
+            const inviteUrl = `${window.location.origin}${window.location.pathname}?room=${encodeURIComponent(room)}`;
+            inviteBtn.addEventListener('click', () => {
+                navigator.clipboard.writeText(inviteUrl).then(() => {
+                    inviteBtn.innerHTML = '<i class="fas fa-check"></i> Link copied!';
+                    setTimeout(() => { inviteBtn.innerHTML = '<i class="fas fa-link"></i> Copy invite link'; }, 1800);
+                });
+            });
+
+            let locked = false;
+            function applyLockUI() {
+                if (role === 'teacher') {
+                    lockBtn.classList.toggle('unlocked', !locked);
+                    lockBtnText.textContent = locked ? 'Drawing Locked' : 'Drawing Unlocked';
+                    lockBtn.querySelector('i').className = locked ? 'fas fa-lock' : 'fas fa-lock-open';
+                } else {
+                    lockedBanner.style.display = locked ? 'flex' : 'none';
+                }
+            }
+
+            lockBtn.addEventListener('click', () => {
+                locked = !locked;
+                applyLockUI();
+                sendMessage({ type: 'set-lock', locked });
+                setExcalidrawViewMode(false); // teacher is never view-only on their own board
+            });
+
+            // -----------------------------------------------------------
+            // React + Excalidraw mount
+            // -----------------------------------------------------------
+            let excalidrawAPI = null;
+            let suppressNextChange = false; // true while we're applying a REMOTE update,
+                                             // so we don't immediately re-broadcast it back
+
+            function setExcalidrawViewMode(viewOnly) {
+                if (excalidrawAPI) {
+                    excalidrawAPI.updateScene({ appState: { viewModeEnabled: viewOnly } });
+                }
+            }
+
+            function App() {
+                const onChange = useCallback((elements, appState, files) => {
+                    if (suppressNextChange) { suppressNextChange = false; return; }
+                    // Throttle: Excalidraw's onChange fires continuously while a
+                    // stroke is being drawn. Sending every single frame would flood
+                    // the relay and lag for students on slower connections, so we
+                    // send at most ~20 updates/sec, plus one final update once the
+                    // pointer settles (the trailing call after `wait` ms of silence).
+                    const now = Date.now();
+                    const elapsed = now - lastSendTime;
+                    clearTimeout(trailingSendTimer);
+                    if (elapsed >= 50) {
+                        lastSendTime = now;
+                        sendMessage({ type: 'scene-update', elements, appState: pickSafeAppState(appState) });
+                    } else {
+                        trailingSendTimer = setTimeout(() => {
+                            lastSendTime = Date.now();
+                            sendMessage({ type: 'scene-update', elements, appState: pickSafeAppState(appState) });
+                        }, 50 - elapsed);
+                    }
+                }, []);
+
+                return React.createElement(Excalidraw, {
+                    excalidrawAPI: (api) => { excalidrawAPI = api; },
+                    onChange,
+                    theme: 'dark',
+                    name: `PrimeBoard - ${room}`,
+                    UIOptions: { canvasActions: { loadScene: false, saveToActiveFile: false } }
+                });
+            }
+
+            let lastSendTime = 0;
+            let trailingSendTimer = null;
+
+            ReactDOM.createRoot(document.getElementById('root')).render(React.createElement(App));
+
+            // Only forward a few safe, lightweight appState fields between users
+            // (full appState has things like collaborator cursors that we manage separately)
+            function pickSafeAppState(appState) {
+                return { viewBackgroundColor: appState.viewBackgroundColor };
+            }
+
+            // -----------------------------------------------------------
+            // WebSocket connection to the relay server
+            // -----------------------------------------------------------
+            let socket = null;
+            let reconnectTimer = null;
+
+            function connect() {
+                statusDot.className = '';
+                statusDot.classList.add('connecting');
+
+                const relayUrl = window.PRIMEBOARD_RELAY_URL;
+                if (!relayUrl || relayUrl.includes('YOUR-RELAY-SERVER')) {
+                    statusDot.classList.add('error');
+                    console.error('PrimeBoard: set window.PRIMEBOARD_RELAY_URL to your deployed relay server address.');
+                    return;
+                }
+
+                socket = new WebSocket(relayUrl);
+
+                socket.addEventListener('open', () => {
+                    statusDot.className = 'connected';
+                    sendMessage({ type: 'join', room, role, name });
+                });
+
+                socket.addEventListener('message', (event) => {
+                    const data = JSON.parse(event.data);
+
+                    if (data.type === 'state') {
+                        locked = data.locked;
+                        applyLockUI();
+                        if (role === 'student') setExcalidrawViewMode(locked);
+                    }
+
+                    if (data.type === 'lock-changed') {
+                        locked = data.locked;
+                        applyLockUI();
+                        if (role === 'student') setExcalidrawViewMode(locked);
+                    }
+
+                    if (data.type === 'scene-update' && excalidrawAPI) {
+                        suppressNextChange = true;
+                        excalidrawAPI.updateScene({ elements: data.elements });
+                    }
+
+                    if (data.type === 'roster') {
+                        // Reserved for a future "who's online" panel.
+                    }
+                });
+
+                socket.addEventListener('close', () => {
+                    statusDot.className = 'connecting';
+                    reconnectTimer = setTimeout(connect, 2000); // auto-reconnect (handles Render free-tier sleep wake-up)
+                });
+
+                socket.addEventListener('error', () => {
+                    statusDot.className = 'error';
+                });
+            }
+
+            function sendMessage(payload) {
+                if (socket && socket.readyState === WebSocket.OPEN) {
+                    socket.send(JSON.stringify(payload));
+                }
+            }
+
+            connect();
+        }
+    </script>
+</body>
+</html>
