@@ -14,6 +14,26 @@
 
     <link rel="stylesheet" href="style.css?v=9.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+      .primeboard-btn {
+        display: inline-block;
+        padding: 8px 16px;
+        background-color: #007BFF; 
+        color: #ffffff !important;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: bold;
+        border-radius: 6px;
+        transition: background-color 0.3s ease, transform 0.1s ease;
+        border: none;
+        cursor: pointer;
+      }
+      .primeboard-btn:hover {
+        background-color: #0056b3;
+        transform: translateY(-1px);
+      }
+    </style>
 </head>
 <body>
 
@@ -32,6 +52,7 @@
                     <li><a href="#quiz">Mindset Audit</a></li>
                     <li><a href="#testimonials">Reviews</a></li>
                     <li><a href="primetestq/index.html" class="primetestq-nav-trigger"><i class="fas fa-rocket"></i> PrimeTestQ™</a></li>
+                    <li><a href="https://primespirit.co.in/PrimeBoard/" class="primeboard-btn" target="_blank" rel="noopener noreferrer"><i class="fas fa-chalkboard"></i> PrimeBoard</a></li>
                     <li><button class="auth-trigger-btn" onclick="openAuthModal('login')"><i class="fas fa-user-circle"></i> Student Portal</button></li>
                 </ul>
             </nav>
