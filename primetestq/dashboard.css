@@ -7,7 +7,12 @@
     --bg-space: #050811;
 }
 
-* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+* { 
+    margin: 0; 
+    padding: 0; 
+    box-sizing: border-box; 
+    font-family: 'Segoe UI', sans-serif; 
+}
 
 body {
     background-color: var(--bg-space);
@@ -18,7 +23,11 @@ body {
     height: 100vh;
 }
 
-#app-view-viewport { width: 100%; height: 100%; position: relative; }
+#app-view-viewport { 
+    width: 100%; 
+    height: 100%; 
+    position: relative; 
+}
 
 .hub-header {
     position: absolute;
@@ -32,54 +41,79 @@ body {
     border: 1px solid var(--primary-neon); padding: 5px 12px; border-radius: 20px;
 }
 
-/* 10-LEVEL ATOMIC RING SCALING */
+/* =========================================
+   ATOMIC SOLAR SYSTEM MATRIX ENGINE
+   ========================================= */
 .orbit-universe-wrapper {
     position: absolute;
     top: 50%; left: 50%;
     transform: translate(-50%, -50%);
-    width: 900px; height: 900px;
+    width: 950px; height: 950px;
     display: flex; justify-content: center; align-items: center;
 }
-.center-core-hub { position: absolute; text-align: center; z-index: 10; }
 
+.center-core-hub { 
+    position: absolute; 
+    text-align: center; 
+    z-index: 10; 
+}
+
+/* Structural base for tracking elements */
 .orbital-ring {
     position: absolute;
     top: 50%; left: 50%;
     transform: translate(-50%, -50%);
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.04);
     border-radius: 50%;
-    animation: spin var(--rotation-speed) linear infinite;
 }
 
-/* Perfect sequential spacing so shells never hit each other */
-.path-orbit-1  { width: 180px; height: 180px; }
-.path-orbit-2  { width: 250px; height: 250px; }
-.path-orbit-3  { width: 320px; height: 320px; }
-.path-orbit-4  { width: 390px; height: 390px; }
-.path-orbit-5  { width: 460px; height: 460px; }
-.path-orbit-6  { width: 530px; height: 530px; }
-.path-orbit-7  { width: 600px; height: 600px; }
-.path-orbit-8  { width: 680px; height: 680px; }
-.path-orbit-9  { width: 760px; height: 760px; }
-.path-orbit-10 { width: 850px; height: 850px; }
+/* Perfect mathematical step increments for the orbits */
+.path-orbit-1  { width: 190px; height: 190px; animation: spin 20s linear infinite; }
+.path-orbit-2  { width: 260px; height: 260px; animation: spin 24s linear infinite; }
+.path-orbit-3  { width: 330px; height: 330px; animation: spin 28s linear infinite; }
+.path-orbit-4  { width: 400px; height: 400px; animation: spin 32s linear infinite; }
+.path-orbit-5  { width: 470px; height: 470px; animation: spin 36s linear infinite; }
+.path-orbit-6  { width: 540px; height: 540px; animation: spin 40s linear infinite; }
+.path-orbit-7  { width: 610px; height: 610px; animation: spin 44s linear infinite; }
+.path-orbit-8  { width: 690px; height: 690px; animation: spin 50s linear infinite; }
+.path-orbit-9  { width: 770px; height: 770px; animation: spin 56s linear infinite; }
+.path-orbit-10 { width: 860px; height: 860px; animation: spin 65s linear infinite; }
 
+/* Dynamic Node Core Position Mapping rules */
 .orbit-node {
     position: absolute;
-    top: 0; left: 50%;
-    transform: translate(-50%, -50%);
-    animation: reverse-spin var(--rotation-speed) linear infinite;
     transform-origin: center;
 }
 
+/* Distribute positions cleanly along each layer to prevent layout clumping */
+.path-orbit-1 .orbit-node  { top: 0%; left: 50%; animation: reverse-spin 20s linear infinite; }
+.path-orbit-2 .orbit-node  { top: 50%; left: 100%; animation: reverse-spin 24s linear infinite; }
+.path-orbit-3 .orbit-node  { top: 100%; left: 50%; animation: reverse-spin 28s linear infinite; }
+.path-orbit-4 .orbit-node  { top: 50%; left: 0%; animation: reverse-spin 32s linear infinite; }
+.path-orbit-5 .orbit-node  { top: 15%; left: 85%; animation: reverse-spin 36s linear infinite; }
+.path-orbit-6 .orbit-node  { top: 85%; left: 15%; animation: reverse-spin 40s linear infinite; }
+.path-orbit-7 .orbit-node  { top: 15%; left: 15%; animation: reverse-spin 44s linear infinite; }
+.path-orbit-8 .orbit-node  { top: 85%; left: 85%; animation: reverse-spin 50s linear infinite; }
+.path-orbit-9 .orbit-node  { top: 0%; left: 50%; animation: reverse-spin 56s linear infinite; }
+
+/* Spread multiple electron nodes inside the outermost 10th ring cleanly */
+.path-orbit-10 .orbit-node:nth-child(1) { left: 0%; top: 50%; animation: reverse-spin 65s linear infinite; }
+.path-orbit-10 .orbit-node:nth-child(2) { left: 100%; top: 50%; animation: reverse-spin 65s linear infinite; }
+.path-orbit-10 .orbit-node:nth-child(3) { left: 50%; top: 100%; animation: reverse-spin 65s linear infinite; }
+
+/* Glassmorphism Button Styling Elements */
 .glass-panel {
-    background: rgba(7, 11, 22, 0.85);
+    background: rgba(7, 11, 22, 0.9);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     border: 1px solid var(--theme-color);
-    padding: 8px 14px; border-radius: 20px; color: #fff;
+    padding: 8px 16px; 
+    border-radius: 20px; 
+    color: #fff;
     display: flex; align-items: center; gap: 8px;
-    font-size: 0.72rem; font-weight: 700; white-space: nowrap;
+    font-size: 0.75rem; font-weight: 700; white-space: nowrap;
     box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+    transform: translate(-50%, -50%); /* Centering anchor adjustment */
 }
 .glass-panel i { color: var(--theme-color); }
 .orbit-node:hover .glass-panel {
@@ -87,10 +121,20 @@ body {
     background: #070b16;
 }
 
-@keyframes spin { from { transform: translate(-50%, -50%) rotate(0deg); } to { transform: translate(-50%, -50%) rotate(0deg); } }
-@keyframes reverse-spin { from { transform: translate(-50%, -50%) rotate(360deg); } to { transform: translate(-50%, -50%) rotate(0deg); } }
+/* Corrected Core 2D Rotational Vectors to make them spin cleanly */
+@keyframes spin { 
+    from { transform: translate(-50%, -50%) rotate(0deg); } 
+    to   { transform: translate(-50%, -50%) rotate(360deg); } 
+}
 
-/* COCKPIT WORKING ENVIRONMENT STYLING */
+@keyframes reverse-spin { 
+    from { transform: translate(-50%, -50%) rotate(360deg); } 
+    to   { transform: translate(-50%, -50%) rotate(0deg); } 
+}
+
+/* =========================================
+   EXAM WORKSPACE INTERFACE COCKPIT
+   ========================================= */
 #screen-cockpit-simulation { padding: 90px 30px 30px 30px; height: 100vh; display: flex; flex-direction: column; }
 .cockpit-bar {
     position: absolute; top: 15px; left: 30px; right: 30px;
@@ -111,7 +155,7 @@ body {
 .status-circle-node.answered { background: #00FF99; color: #000; }
 .status-circle-node.review { background: #A855F7; color: #fff; }
 
-/* Dynamic Scaling Mixes */
+/* Responsive Scaling Overrides */
 @media (max-width: 1200px) { .orbit-universe-wrapper { transform: translate(-50%, -50%) scale(0.75); } }
 @media (max-width: 900px) { .orbit-universe-wrapper { transform: translate(-50%, -50%) scale(0.55); } .cockpit-workstation-grid { grid-template-columns: 1fr; } }
-@media (max-width: 600px) { .orbit-universe-wrapper { transform: translate(-50%, -50%) scale(0.4); } }
+@media (max-width: 600px) { .orbit-universe-wrapper { transform: translate(-50%, -50%) scale(0.38); } }
