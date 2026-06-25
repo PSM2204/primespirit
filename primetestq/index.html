@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="dashboard.css">
     <style>
+        /* Guarantees that hitboxes are active and directly intercept taps */
         .orbit-node {
             pointer-events: auto !important;
             cursor: pointer !important;
@@ -33,69 +34,93 @@
                     <p style="font-size:0.55rem; color:#A0AEC0; margin-top:5px; letter-spacing:0.2em;">NUCLEUS</p>
                 </div>
 
-                <div class="orbital-ring path-orbit-1" style="--rotation-speed: 25s;">
-                    <div class="orbit-node node-btn glass-panel" data-ecosystem="class6" style="--theme-color: #FF6B6B;">
-                        <i class="fas fa-child"></i> <span>Class 6th</span>
+                <div class="orbital-ring path-orbit-1" style="--rotation-speed: 20s;">
+                    <div class="orbit-node node-btn" data-ecosystem="class6">
+                        <div class="glass-panel" style="--theme-color: #FF6B6B;">
+                            <i class="fas fa-child"></i> <span>Class 6th</span>
+                        </div>
                     </div>
                 </div>
 
-                <div class="orbital-ring path-orbit-2" style="--rotation-speed: 28s;">
-                    <div class="orbit-node node-btn glass-panel" data-ecosystem="class7" style="--theme-color: #FF9F43;">
-                        <i class="fas fa-book-open"></i> <span>Class 7th</span>
+                <div class="orbital-ring path-orbit-2" style="--rotation-speed: 24s;">
+                    <div class="orbit-node node-btn" data-ecosystem="class7">
+                        <div class="glass-panel" style="--theme-color: #FF9F43;">
+                            <i class="fas fa-book-open"></i> <span>Class 7th</span>
+                        </div>
                     </div>
                 </div>
 
-                <div class="orbital-ring path-orbit-3" style="--rotation-speed: 31s;">
-                    <div class="orbit-node node-btn glass-panel" data-ecosystem="class8" style="--theme-color: #FFCD38;">
-                        <i class="fas fa-user-graduate"></i> <span>Class 8th</span>
+                <div class="orbital-ring path-orbit-3" style="--rotation-speed: 28s;">
+                    <div class="orbit-node node-btn" data-ecosystem="class8">
+                        <div class="glass-panel" style="--theme-color: #FFCD38;">
+                            <i class="fas fa-user-graduate"></i> <span>Class 8th</span>
+                        </div>
                     </div>
                 </div>
 
-                <div class="orbital-ring path-orbit-4" style="--rotation-speed: 34s;">
-                    <div class="orbit-node node-btn glass-panel" data-ecosystem="class9" style="--theme-color: #4DFFDF;">
-                        <i class="fas fa-microscope"></i> <span>Class 9th</span>
+                <div class="orbital-ring path-orbit-4" style="--rotation-speed: 32s;">
+                    <div class="orbit-node node-btn" data-ecosystem="class9">
+                        <div class="glass-panel" style="--theme-color: #4DFFDF;">
+                            <i class="fas fa-microscope"></i> <span>Class 9th</span>
+                        </div>
                     </div>
                 </div>
 
-                <div class="orbital-ring path-orbit-5" style="--rotation-speed: 37s;">
-                    <div class="orbit-node node-btn glass-panel" data-ecosystem="class10" style="--theme-color: #00FF99;">
-                        <i class="fas fa-school"></i> <span>Class 10th</span>
+                <div class="orbital-ring path-orbit-5" style="--rotation-speed: 36s;">
+                    <div class="orbit-node node-btn" data-ecosystem="class10">
+                        <div class="glass-panel" style="--theme-color: #00FF99;">
+                            <i class="fas fa-school"></i> <span>Class 10th</span>
+                        </div>
                     </div>
                 </div>
 
                 <div class="orbital-ring path-orbit-6" style="--rotation-speed: 40s;">
-                    <div class="orbit-node node-btn glass-panel" data-ecosystem="class11" style="--theme-color: #00C6FF;">
-                        <i class="fas fa-calculator"></i> <span>Class 11th</span>
+                    <div class="orbit-node node-btn" data-ecosystem="class11">
+                        <div class="glass-panel" style="--theme-color: #00C6FF;">
+                            <i class="fas fa-calculator"></i> <span>Class 11th</span>
+                        </div>
                     </div>
                 </div>
 
-                <div class="orbital-ring path-orbit-7" style="--rotation-speed: 43s;">
-                    <div class="orbit-node node-btn glass-panel" data-ecosystem="class12" style="--theme-color: #70A1FF;">
-                        <i class="fas fa-dna"></i> <span>Class 12th</span>
+                <div class="orbital-ring path-orbit-7" style="--rotation-speed: 44s;">
+                    <div class="orbit-node node-btn" data-ecosystem="class12">
+                        <div class="glass-panel" style="--theme-color: #70A1FF;">
+                            <i class="fas fa-dna"></i> <span>Class 12th</span>
+                        </div>
                     </div>
                 </div>
 
-                <div class="orbital-ring path-orbit-8" style="--rotation-speed: 48s;">
-                    <div class="orbit-node node-btn glass-panel" data-ecosystem="jee" style="--theme-color: #A855F7;">
-                        <i class="fas fa-atom"></i> <span>JEE Main</span>
+                <div class="orbital-ring path-orbit-8" style="--rotation-speed: 50s;">
+                    <div class="orbit-node node-btn" data-ecosystem="jee">
+                        <div class="glass-panel" style="--theme-color: #A855F7;">
+                            <i class="fas fa-atom"></i> <span>JEE Main</span>
+                        </div>
                     </div>
                 </div>
 
-                <div class="orbital-ring path-orbit-9" style="--rotation-speed: 53s;">
-                    <div class="orbit-node node-btn glass-panel" data-ecosystem="neet" style="--theme-color: #FF4757;">
-                        <i class="fas fa-stethoscope"></i> <span>NEET UG</span>
+                <div class="orbital-ring path-orbit-9" style="--rotation-speed: 56s;">
+                    <div class="orbit-node node-btn" data-ecosystem="neet">
+                        <div class="glass-panel" style="--theme-color: #FF4757;">
+                            <i class="fas fa-stethoscope"></i> <span>NEET UG</span>
+                        </div>
                     </div>
                 </div>
 
-                <div class="orbital-ring path-orbit-10" style="--rotation-speed: 60s;">
-                    <div class="orbit-node node-btn glass-panel" data-ecosystem="iat" style="--theme-color: #EC4899; left: 0%; top: 50%; transform: translate(-50%, -50%);">
-                        <i class="fas fa-flask"></i> <span>IAT CBT</span>
+                <div class="orbital-ring path-orbit-10" style="--rotation-speed: 65s;">
+                    <div class="orbit-node node-btn" data-ecosystem="iat">
+                        <div class="glass-panel" style="--theme-color: #EC4899;">
+                            <i class="fas fa-flask"></i> <span>IAT CBT</span>
+                        </div>
                     </div>
-                    <div class="orbit-node node-btn glass-panel" data-ecosystem="nest" style="--theme-color: #10B981; left: 100%; top: 50%; transform: translate(-50%, -50%);">
-                        <i class="fas fa-compass"></i> <span>NEST CBT</span>
+                    <div class="orbit-node node-btn" data-ecosystem="nest">
+                        <div class="glass-panel" style="--theme-color: #10B981;">
+                            <i class="fas fa-compass"></i> <span>NEST CBT</span>
+                        </div>
                     </div>
-                    <div class="orbit-node node-btn glass-panel" data-ecosystem="cuet" style="--theme-color: #E2E8F0; left: 50%; top: 100%; transform: translate(-50%, -50%);">
-                        <i class="fas fa-university"></i> <span>CUET CBT</span>
+                    <div class="orbit-node node-btn" data-ecosystem="cuet">
+                        <div class="glass-panel" style="--theme-color: #E2E8F0;">
+                            <i class="fas fa-university"></i> <span>CUET CBT</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -103,6 +128,35 @@
             <footer style="color:rgba(255,255,255,0.15); font-size:0.7rem; font-family:monospace; letter-spacing:0.1em;">
                 PRIME SPIRIT MENTORS © 2026 // ATOMIC MODEL EVALUATION INTERFACE
             </footer>
+        </div>
+    </div>
+
+    <div id="secure-hidden-cockpit-template" style="display: none;">
+        <div id="screen-cockpit-simulation">
+            <header class="cockpit-bar" style="background: rgba(10,15,30,0.85); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border-bottom:1px solid rgba(255,255,255,0.08); border-radius:12px;">
+                <div style="font-weight:900; font-size:0.8rem; letter-spacing: 0.1em; color:rgba(255,255,255,0.8);"><i class="fas fa-shield-alt" style="color:#00C6FF; margin-right:6px;"></i> SECURE ENVIRONMENT SYNC ACTIVE</div>
+                <div class="instrumentation-timer-block"><div class="timer-numerical-display" id="clock-digital-hud">00:00:00</div></div>
+                <button id="btn-cockpit-submit" style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); color:#fff; font-weight:800; font-size:0.7rem; padding:8px 16px; border-radius:20px; cursor:pointer;">SUBMIT CORE TEST</button>
+            </header>
+            <div class="cockpit-workstation-grid">
+                <main class="question-workspace glass-panel-static" style="background: rgba(10,15,30,0.2); border:1px solid rgba(255,255,255,0.08); border-radius:16px; flex-direction:column; align-items:stretch;">
+                    <div id="hud-question-index-number" style="font-size:0.75rem; font-family:monospace; color:#00C6FF; font-weight:800;">QUESTION --</div>
+                    <div id="hud-question-render-viewport" style="font-size:1.05rem; font-weight:500; color:#fff; line-height:1.5; margin-top:10px;">Loading examination matrix sheets...</div>
+                    <div class="options-matrix-grid" id="hud-options-render-viewport" style="margin-top:25px;"></div>
+                    <div class="cockpit-control-toolbar-row" style="margin-top:auto; border-top:1px solid rgba(255,255,255,0.08); padding-top:15px;">
+                        <div class="left-action-cluster">
+                            <button id="btn-action-prev" style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.08); color:#A0AEC0; padding:10px 18px; border-radius:8px; font-weight:700; cursor:pointer; font-size:0.75rem;">PREVIOUS</button>
+                            <button id="btn-action-review" style="background:rgba(168,85,247,0.1); border:1px solid #A855F7; color:#A855F7; padding:10px 18px; border-radius:8px; font-weight:700; cursor:pointer; font-size:0.75rem;">MARK REVIEW</button>
+                            <button id="btn-action-clear" style="background:transparent; border:none; color:#718096; padding:10px 12px; font-weight:600; cursor:pointer; font-size:0.75rem;">CLEAR Response</button>
+                        </div>
+                        <button id="btn-action-next" style="background:#00C6FF; color:#000; padding:10px 24px; border-radius:8px; font-weight:800; cursor:pointer; border:none;">SAVE & NEXT <i class="fas fa-chevron-right"></i></button>
+                    </div>
+                </main>
+                <aside class="telemetry-palette-panel glass-panel-static" style="background: rgba(10,15,30,0.4); border:1px solid rgba(255,255,255,0.08); border-radius:16px; flex-direction:column; align-items:stretch;">
+                    <div style="font-size:0.75rem; font-weight:800; color:#fff; border-bottom:1px solid rgba(255,255,255,0.08); padding-bottom:8px;">TEST TELEMETRY PALETTE</div>
+                    <div class="circles-status-matrix" id="hud-palette-circles-grid"></div>
+                </aside>
+            </div>
         </div>
     </div>
 
