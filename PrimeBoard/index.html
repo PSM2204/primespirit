@@ -15,7 +15,7 @@
         // ===========================================================
         // Paste your Render.com relay server URL here once deployed.
         // It must start with wss:// (secure WebSocket), not https://
-        window.PRIMEBOARD_RELAY_URL = "wss://YOUR-RELAY-SERVER.onrender.com";
+        window.PRIMEBOARD_RELAY_URL = "wss://primeboard-relay.onrender.com";
         // ===========================================================
 
         window.EXCALIDRAW_ASSET_PATH = "https://esm.sh/@excalidraw/excalidraw@0.18.0/dist/prod/";
@@ -352,7 +352,7 @@
                 statusDot.classList.add('connecting');
 
                 const relayUrl = window.PRIMEBOARD_RELAY_URL;
-                if (!relayUrl || relayUrl.includes('YOUR-RELAY-SERVER')) {
+                if (!relayUrl || relayUrl.includes('primeboard-relay')) {
                     statusDot.classList.add('error');
                     console.error('PrimeBoard: set window.PRIMEBOARD_RELAY_URL to your deployed relay server address.');
                     return;
