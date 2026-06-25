@@ -5,17 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>PrimeBoard | Prime Spirit Mentors</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    <!-- Excalidraw's own stylesheet (open source, MIT licensed) -->
     <link rel="stylesheet" href="https://esm.sh/@excalidraw/excalidraw@0.18.0/dist/dev/index.css" />
 
     <script>
-        // ===========================================================
-        // SETTINGS YOU MAY WANT TO CHANGE
-        // ===========================================================
         window.PRIMEBOARD_RELAY_URL = "wss://primeboard-relay.onrender.com";
-        // ===========================================================
-
         window.EXCALIDRAW_ASSET_PATH = "https://esm.sh/@excalidraw/excalidraw@0.18.0/dist/prod/";
     </script>
     <script type="importmap">
@@ -42,7 +35,6 @@
         html, body { background: var(--bg-space); height: 100%; overflow: hidden; }
         #root { position: absolute; top: 50px; left: 0; right: 0; bottom: 0; }
 
-        /* ---------- Top brand bar ---------- */
         #topbar {
             position: fixed; top: 0; left: 0; right: 0; height: 50px; z-index: 1000;
             display: flex; align-items: center; gap: 12px;
@@ -64,7 +56,6 @@
         }
         #room-pill b { color: #fff; letter-spacing: 0.05em; }
 
-        /* Online students counter */
         #online-students {
             display: flex; align-items: center; gap: 6px;
             background: rgba(0,255,153,0.08); border: 1px solid var(--unlocked-green);
@@ -98,7 +89,6 @@
         #status-dot.connecting { background: #FFCD38; }
         #status-dot.error { background: var(--locked-red); }
 
-        /* ---------- Student "view only" banner ---------- */
         #locked-banner {
             position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%); z-index: 1000;
             display: none; align-items: center; gap: 10px;
@@ -108,7 +98,6 @@
         }
         #locked-banner i { color: var(--locked-red); }
 
-        /* ---------- Landing / setup screen ---------- */
         #setup-screen {
             position: fixed; inset: 0; z-index: 2000;
             display: flex; align-items: center; justify-content: center;
@@ -144,7 +133,6 @@
         #setup-card .or-row { display: flex; align-items: center; gap: 10px; margin: 18px 0 0; color: #4A5568; font-size: 0.7rem; }
         #setup-card .or-row::before, #setup-card .or-row::after { content: ''; flex: 1; height: 1px; background: var(--border-glass); }
 
-        /* ---------- Add Student Modal ---------- */
         #add-student-modal {
             position: fixed; inset: 0; z-index: 3000;
             display: none; align-items: center; justify-content: center;
@@ -160,11 +148,30 @@
         #add-student-card h3 i { color: var(--unlocked-green); }
         #add-student-card p { color: #718096; font-size: 0.75rem; margin-bottom: 20px; }
         #add-student-card label { display: block; text-align: left; color: #A0AEC0; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.08em; margin: 16px 0 6px; }
+        
+        /* New CSS for Email Suggestions */
+        .suggestions-container { position: relative; width: 100%; }
         #add-student-card input {
             width: 100%; background: rgba(255,255,255,0.04); border: 1px solid var(--border-glass); color: #fff;
             padding: 12px 14px; border-radius: 10px; font-size: 0.9rem; outline: none; margin-bottom: 8px;
         }
         #add-student-card input:focus { border-color: var(--unlocked-green); }
+        
+        #email-suggestions {
+            position: absolute; top: 100%; left: 0; right: 0;
+            background: #1a202c; border: 1px solid var(--border-glass);
+            border-radius: 8px; margin-top: 5px; max-height: 150px;
+            overflow-y: auto; z-index: 100; display: none;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+        }
+        .suggestion-item {
+            padding: 10px 14px; color: #e2e8f0; cursor: pointer;
+            font-size: 0.9rem; border-bottom: 1px solid rgba(255,255,255,0.05);
+            transition: background 0.2s;
+        }
+        .suggestion-item:hover { background: rgba(0, 198, 255, 0.1); color: var(--primary-neon); }
+        .suggestion-item:last-child { border-bottom: none; }
+
         #email-list {
             max-height: 150px; overflow-y: auto; margin: 12px 0;
             background: rgba(255,255,255,0.02); border-radius: 8px; padding: 8px;
@@ -186,7 +193,6 @@
         #send-invites-btn { background: var(--unlocked-green); color: #000; }
         #cancel-add-btn { background: rgba(255,255,255,0.1); color: #fff; }
 
-        /* ---------- Mobile adjustments ---------- */
         @media (max-width: 640px) {
             #topbar { height: 45px; padding: 0 8px; gap: 8px; }
             #brand { font-size: 0.8rem; }
@@ -198,7 +204,6 @@
             #locked-banner { bottom: 12px; padding: 8px 14px; font-size: 0.7rem; max-width: 90%; text-align: center; }
         }
 
-        /* ---------- Excalidraw toolbar on left ---------- */
         .excalidraw .layer-ui__wrapper .sidebar {
             left: 0 !important;
             right: auto !important;
@@ -215,31 +220,25 @@
 </head>
 <body>
 
-    <!-- ============ SETUP SCREEN: pick name + role + room ============ -->
     <div id="setup-screen">
         <div id="setup-card">
             <h1>Prime<span>Board</span></h1>
             <p class="tagline">PRIME SPIRIT MENTORS // LIVE CLASS WHITEBOARD</p>
-
             <label>I am the...</label>
             <div class="role-toggle">
                 <button id="role-teacher" class="active" type="button"><i class="fas fa-chalkboard-teacher"></i> Teacher</button>
                 <button id="role-student" type="button"><i class="fas fa-user-graduate"></i> Student</button>
             </div>
-
             <label>Your name</label>
             <input id="name-input" type="text" placeholder="e.g. Mr. Sharma" maxlength="40">
-
             <label id="room-label">Class room code</label>
             <input id="room-input" type="text" placeholder="e.g. CLASS10-PHYSICS" maxlength="30">
-
             <button id="enter-btn">Enter Board</button>
             <div id="setup-error"></div>
             <div class="or-row">student link is auto-filled when opened from an invite</div>
         </div>
     </div>
 
-    <!-- ============ TOP BAR (shown once inside the board) ============ -->
     <div id="topbar" style="display:none;">
         <div id="brand"><i class="fas fa-atom"></i> PrimeBoard <span class="sub">by Prime Spirit Mentors</span></div>
         <div id="room-pill"><span id="status-dot"></span> Room: <b id="room-pill-code">-</b></div>
@@ -252,17 +251,19 @@
 
     <div id="locked-banner"><i class="fas fa-lock"></i> Your teacher has locked drawing — you can still pan and zoom to follow along.</div>
 
-    <!-- ============ ADD STUDENT MODAL ============ -->
     <div id="add-student-modal">
         <div id="add-student-card">
             <h3><i class="fas fa-user-plus"></i> Add Students by Email</h3>
-            <p>Enter student email addresses to send them an invite link to join this board.</p>
-            
+            <p>Enter student email addresses. The server will send them an invite link via Brevo.</p>
             <label>Email addresses (comma separated)</label>
-            <input id="email-input" type="email" placeholder="student1@email.com, student2@email.com">
+            
+            <!-- Updated Input with Suggestions Container -->
+            <div class="suggestions-container">
+                <input id="email-input" type="email" placeholder="student1@email.com, student2@email.com" autocomplete="off">
+                <div id="email-suggestions"></div>
+            </div>
             
             <div id="email-list"></div>
-            
             <div class="btn-row">
                 <button id="cancel-add-btn">Cancel</button>
                 <button id="send-invites-btn">Send Invites</button>
@@ -278,9 +279,6 @@
         import * as ExcalidrawLib from "https://esm.sh/@excalidraw/excalidraw@0.18.0/dist/dev/index.js?external=react,react-dom";
         const { Excalidraw } = ExcalidrawLib;
 
-        // ---------------------------------------------------------------
-        // Helpers
-        // ---------------------------------------------------------------
         function randomRoomCode() {
             const words = ['MAPLE','RIVER','COMET','TIGER','ORBIT','PRISM','EAGLE','DELTA'];
             const w = words[Math.floor(Math.random() * words.length)];
@@ -292,9 +290,6 @@
             return new URLSearchParams(window.location.search).get(name);
         }
 
-        // ---------------------------------------------------------------
-        // Setup screen wiring (plain DOM, runs before React mounts)
-        // ---------------------------------------------------------------
         const setupScreen = document.getElementById('setup-screen');
         const roleTeacherBtn = document.getElementById('role-teacher');
         const roleStudentBtn = document.getElementById('role-student');
@@ -305,8 +300,6 @@
         const setupError = document.getElementById('setup-error');
 
         let selectedRole = 'teacher';
-
-        // If opened via an invite link (?room=XYZ), pre-fill and default to student
         const inviteRoom = getQueryParam('room');
         if (inviteRoom) {
             roomInput.value = inviteRoom;
@@ -330,25 +323,17 @@
         enterBtn.addEventListener('click', () => {
             const name = nameInput.value.trim();
             let room = roomInput.value.trim().toUpperCase().replace(/\s+/g, '-');
-
             if (!name) { setupError.textContent = 'Please enter your name.'; return; }
-            if (selectedRole === 'teacher' && !room) {
-                room = randomRoomCode(); // teacher can start a fresh room with one click
-            }
+            if (selectedRole === 'teacher' && !room) { room = randomRoomCode(); }
             if (!room) { setupError.textContent = 'Please enter the room code your teacher shared.'; return; }
-
             setupError.textContent = '';
             setupScreen.style.display = 'none';
             document.getElementById('topbar').style.display = 'flex';
             startBoard({ name, role: selectedRole, room });
         });
 
-        // ---------------------------------------------------------------
-        // Main board logic
-        // ---------------------------------------------------------------
         function startBoard({ name, role, room }) {
             document.getElementById('room-pill-code').textContent = room;
-
             const lockBtn = document.getElementById('lock-btn');
             const lockBtnText = document.getElementById('lock-btn-text');
             const inviteBtn = document.getElementById('invite-btn');
@@ -358,7 +343,6 @@
             const statusDot = document.getElementById('status-dot');
             const lockedBanner = document.getElementById('locked-banner');
 
-            // Only teacher gets lock and invite buttons
             if (role === 'teacher') {
                 lockBtn.style.display = 'flex';
                 inviteBtn.style.display = 'flex';
@@ -368,7 +352,6 @@
                 onlineStudents.style.display = 'flex';
             }
 
-            // Build the invite link students should open
             const inviteUrl = `${window.location.origin}${window.location.pathname}?room=${encodeURIComponent(room)}`;
             inviteBtn.addEventListener('click', () => {
                 navigator.clipboard.writeText(inviteUrl).then(() => {
@@ -378,13 +361,16 @@
                 });
             });
 
-            // Add student modal
             const addStudentModal = document.getElementById('add-student-modal');
             const emailInput = document.getElementById('email-input');
+            const emailSuggestions = document.getElementById('email-suggestions');
             const emailList = document.getElementById('email-list');
             const cancelAddBtn = document.getElementById('cancel-add-btn');
             const sendInvitesBtn = document.getElementById('send-invites-btn');
             let emailTags = [];
+            
+            // Load saved emails from browser memory
+            let savedEmails = JSON.parse(localStorage.getItem('primeboard_saved_emails') || '[]');
 
             addStudentBtn.addEventListener('click', () => {
                 addStudentModal.style.display = 'flex';
@@ -396,12 +382,54 @@
                 emailTags = [];
                 updateEmailList();
                 emailInput.value = '';
+                emailSuggestions.style.display = 'none';
             });
 
             emailInput.addEventListener('keypress', (e) => {
                 if (e.key === 'Enter' || e.key === ',') {
                     e.preventDefault();
                     parseAndAddEmails();
+                }
+            });
+
+            // New: Show suggestions as user types
+            emailInput.addEventListener('input', (e) => {
+                const query = e.target.value.trim().toLowerCase();
+                if (!query || savedEmails.length === 0) {
+                    emailSuggestions.style.display = 'none';
+                    return;
+                }
+                
+                const matches = savedEmails.filter(email => 
+                    email.toLowerCase().includes(query) && !emailTags.includes(email)
+                );
+                
+                if (matches.length === 0) {
+                    emailSuggestions.style.display = 'none';
+                    return;
+                }
+                
+                emailSuggestions.innerHTML = matches.map(email => 
+                    `<div class="suggestion-item" onclick="selectSuggestion('${email}')">${email}</div>`
+                ).join('');
+                emailSuggestions.style.display = 'block';
+            });
+
+            // Global function for clicking a suggestion
+            window.selectSuggestion = function(email) {
+                if (!emailTags.includes(email)) {
+                    emailTags.push(email);
+                    updateEmailList();
+                }
+                emailInput.value = '';
+                emailSuggestions.style.display = 'none';
+                emailInput.focus();
+            };
+
+            // Hide suggestions when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.suggestions-container')) {
+                    emailSuggestions.style.display = 'none';
                 }
             });
 
@@ -415,6 +443,7 @@
                 });
                 updateEmailList();
                 emailInput.value = '';
+                emailSuggestions.style.display = 'none';
             }
 
             function updateEmailList() {
@@ -432,20 +461,37 @@
                 updateEmailList();
             };
 
-            // Initialize empty list display
             updateEmailList();
 
             sendInvitesBtn.addEventListener('click', () => {
-                // Parse any remaining email in the input field
                 parseAndAddEmails();
-                
                 if (emailTags.length === 0) {
                     alert('Please add at least one email address');
                     return;
                 }
-                // Send invite message to server
-                sendMessage({ type: 'email-invites', room, emails: emailTags, inviteUrl });
-                alert(`Invites sent to ${emailTags.length} student(s)! They will receive an email with the join link.`);
+                
+                // Save new emails to browser memory for next time
+                emailTags.forEach(email => {
+                    if (!savedEmails.includes(email)) savedEmails.push(email);
+                });
+                // Keep only last 20 emails to prevent huge lists
+                if (savedEmails.length > 20) savedEmails = savedEmails.slice(-20);
+                localStorage.setItem('primeboard_saved_emails', JSON.stringify(savedEmails));
+
+                sendMessage({ 
+                    type: 'email-invites', 
+                    room: room, 
+                    emails: emailTags, 
+                    inviteUrl: inviteUrl,
+                    teacherName: name
+                });
+
+                sendInvitesBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+                setTimeout(() => {
+                    sendInvitesBtn.innerHTML = 'Send Invites';
+                }, 2000);
+
+                alert(`Invite request sent to server! Check your Render logs to confirm Brevo sent them.`);
                 addStudentModal.style.display = 'none';
                 emailTags = [];
                 updateEmailList();
@@ -453,7 +499,7 @@
             });
 
             let locked = false;
-            let localUserCount = 1; // Start with 1 (the current user)
+            let localUserCount = 1;
 
             function applyLockUI() {
                 if (role === 'teacher') {
@@ -469,17 +515,13 @@
                 studentCount.textContent = count;
             }
 
-            // Teacher can lock/unlock
             lockBtn.addEventListener('click', () => {
                 locked = !locked;
                 applyLockUI();
                 sendMessage({ type: 'set-lock', locked });
-                setExcalidrawViewMode(false); // teacher is never view-only on their own board
+                setExcalidrawViewMode(false);
             });
 
-            // -----------------------------------------------------------
-            // React + Excalidraw mount
-            // -----------------------------------------------------------
             let excalidrawAPI = null;
             let suppressNextChange = false;
 
@@ -530,79 +572,49 @@
                 return { viewBackgroundColor: appState.viewBackgroundColor };
             }
 
-            // -----------------------------------------------------------
-            // WebSocket connection to the relay server
-            // -----------------------------------------------------------
             let socket = null;
             let reconnectTimer = null;
 
             function connect() {
                 statusDot.className = '';
                 statusDot.classList.add('connecting');
-
                 const relayUrl = window.PRIMEBOARD_RELAY_URL;
                 if (!relayUrl) {
                     statusDot.classList.add('error');
-                    console.error('PrimeBoard: set window.PRIMEBOARD_RELAY_URL to your deployed relay server address.');
                     return;
                 }
-
                 socket = new WebSocket(relayUrl);
-
                 socket.addEventListener('open', () => {
                     statusDot.className = 'connected';
                     sendMessage({ type: 'join', room, role, name });
                 });
-
                 socket.addEventListener('message', (event) => {
                     const data = JSON.parse(event.data);
-
-                    if (data.type === 'state') {
+                    if (data.type === 'state' || data.type === 'lock-changed') {
                         locked = data.locked;
                         applyLockUI();
                         if (role === 'student') setExcalidrawViewMode(locked);
                     }
-
-                    if (data.type === 'lock-changed') {
-                        locked = data.locked;
-                        applyLockUI();
-                        if (role === 'student') setExcalidrawViewMode(locked);
-                    }
-
                     if (data.type === 'scene-update' && excalidrawAPI) {
                         suppressNextChange = true;
                         excalidrawAPI.updateScene({ elements: data.elements });
                     }
-
                     if (data.type === 'roster') {
-                        // Update online students count from server
                         const count = data.users ? data.users.length : 0;
-                        if (count > 0) {
-                            localUserCount = count;
-                            updateOnlineStudents(count);
-                        }
+                        if (count > 0) { localUserCount = count; updateOnlineStudents(count); }
                     }
-
-                    // Track users joining/leaving locally as fallback
-                    if (data.type === 'user-joined') {
-                        localUserCount++;
-                        updateOnlineStudents(localUserCount);
-                    }
-
-                    if (data.type === 'user-left') {
-                        localUserCount = Math.max(1, localUserCount - 1);
-                        updateOnlineStudents(localUserCount);
+                    if (data.type === 'user-joined') { localUserCount++; updateOnlineStudents(localUserCount); }
+                    if (data.type === 'user-left') { localUserCount = Math.max(1, localUserCount - 1); updateOnlineStudents(localUserCount); }
+                    if (data.type === 'email-sent') {
+                        if(data.success) console.log('Emails sent successfully via backend!');
+                        else console.error('Backend failed to send emails:', data.error);
                     }
                 });
-
                 socket.addEventListener('close', () => {
                     statusDot.className = 'connecting';
                     reconnectTimer = setTimeout(connect, 2000);
                 });
-
-                socket.addEventListener('error', () => {
-                    statusDot.className = 'error';
-                });
+                socket.addEventListener('error', () => { statusDot.className = 'error'; });
             }
 
             function sendMessage(payload) {
