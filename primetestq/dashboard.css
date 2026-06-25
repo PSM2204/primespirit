@@ -87,8 +87,8 @@ body {
     background: #070b16;
 }
 
-@keyframes spin { from { transform: translate(-50%, -50%) rotate(0deg); } to { transform: translate(-50%, -50%) rotate(360deg); } }
-@keyframes reverse-spin { from { transform: translate(-50%, 50%) rotate(360deg); } to { transform: translate(-50%, 50%) rotate(0deg); } }
+@keyframes spin { from { transform: translate(-50%, -50%) rotate(0deg); } to { transform: translate(-50%, -50%) rotate(0deg); } }
+@keyframes reverse-spin { from { transform: translate(-50%, -50%) rotate(360deg); } to { transform: translate(-50%, -50%) rotate(0deg); } }
 
 /* COCKPIT WORKING ENVIRONMENT STYLING */
 #screen-cockpit-simulation { padding: 90px 30px 30px 30px; height: 100vh; display: flex; flex-direction: column; }
