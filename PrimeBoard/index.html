@@ -168,6 +168,7 @@
         #email-list {
             max-height: 150px; overflow-y: auto; margin: 12px 0;
             background: rgba(255,255,255,0.02); border-radius: 8px; padding: 8px;
+            min-height: 40px;
         }
         .email-tag {
             display: inline-flex; align-items: center; gap: 6px;
@@ -189,7 +190,7 @@
         @media (max-width: 640px) {
             #topbar { height: 45px; padding: 0 8px; gap: 8px; }
             #brand { font-size: 0.8rem; }
-            #room-pill, #online-students { display: none; }
+            #room-pill { display: none; }
             #lock-btn span { display: none; }
             #invite-btn span, #add-student-btn span { display: none; }
             #invite-btn, #add-student-btn, #lock-btn { padding: 6px 10px; }
@@ -242,7 +243,7 @@
     <div id="topbar" style="display:none;">
         <div id="brand"><i class="fas fa-atom"></i> PrimeBoard <span class="sub">by Prime Spirit Mentors</span></div>
         <div id="room-pill"><span id="status-dot"></span> Room: <b id="room-pill-code">-</b></div>
-        <div id="online-students" style="display:none;"><i class="fas fa-users"></i> <span id="student-count">0</span> online</div>
+        <div id="online-students" style="display:none;"><i class="fas fa-users"></i> <span id="student-count">1</span> online</div>
         <button id="lock-btn" style="display:none;"><i class="fas fa-lock"></i> <span id="lock-btn-text">Drawing Locked</span></button>
         <button id="add-student-btn" style="display:none;"><i class="fas fa-user-plus"></i> <span>Add Student</span></button>
         <button id="invite-btn" style="display:none;"><i class="fas fa-link"></i> <span>Copy Link</span></button>
@@ -400,21 +401,30 @@
             emailInput.addEventListener('keypress', (e) => {
                 if (e.key === 'Enter' || e.key === ',') {
                     e.preventDefault();
-                    const emails = emailInput.value.split(/[,\s]+/).filter(e => e.trim());
-                    emails.forEach(email => {
-                        if (email.includes('@') && !emailTags.includes(email)) {
-                            emailTags.push(email);
-                        }
-                    });
-                    updateEmailList();
-                    emailInput.value = '';
+                    parseAndAddEmails();
                 }
             });
 
+            function parseAndAddEmails() {
+                const emails = emailInput.value.split(/[,\s]+/).filter(e => e.trim());
+                emails.forEach(email => {
+                    const cleanEmail = email.trim().toLowerCase();
+                    if (cleanEmail.includes('@') && !emailTags.includes(cleanEmail)) {
+                        emailTags.push(cleanEmail);
+                    }
+                });
+                updateEmailList();
+                emailInput.value = '';
+            }
+
             function updateEmailList() {
-                emailList.innerHTML = emailTags.map(email => 
-                    `<span class="email-tag">${email} <i class="fas fa-times" onclick="removeEmail('${email}')"></i></span>`
-                ).join('');
+                if (emailTags.length === 0) {
+                    emailList.innerHTML = '<span style="color: #718096; font-size: 0.75rem;">No emails added yet</span>';
+                } else {
+                    emailList.innerHTML = emailTags.map(email => 
+                        `<span class="email-tag">${email} <i class="fas fa-times" onclick="removeEmail('${email}')"></i></span>`
+                    ).join('');
+                }
             }
 
             window.removeEmail = function(email) {
@@ -422,14 +432,20 @@
                 updateEmailList();
             };
 
+            // Initialize empty list display
+            updateEmailList();
+
             sendInvitesBtn.addEventListener('click', () => {
+                // Parse any remaining email in the input field
+                parseAndAddEmails();
+                
                 if (emailTags.length === 0) {
                     alert('Please add at least one email address');
                     return;
                 }
                 // Send invite message to server
                 sendMessage({ type: 'email-invites', room, emails: emailTags, inviteUrl });
-                alert(`Invites sent to ${emailTags.length} student(s)!`);
+                alert(`Invites sent to ${emailTags.length} student(s)! They will receive an email with the join link.`);
                 addStudentModal.style.display = 'none';
                 emailTags = [];
                 updateEmailList();
@@ -437,7 +453,7 @@
             });
 
             let locked = false;
-            let onlineStudentsList = [];
+            let localUserCount = 1; // Start with 1 (the current user)
 
             function applyLockUI() {
                 if (role === 'teacher') {
@@ -451,9 +467,6 @@
 
             function updateOnlineStudents(count) {
                 studentCount.textContent = count;
-                if (count > 1) {
-                    onlineStudents.style.background = 'rgba(0,255,153,0.15)';
-                }
             }
 
             // Teacher can lock/unlock
@@ -562,10 +575,23 @@
                     }
 
                     if (data.type === 'roster') {
-                        // Update online students count (exclude teacher from count if needed)
+                        // Update online students count from server
                         const count = data.users ? data.users.length : 0;
-                        updateOnlineStudents(count);
-                        onlineStudentsList = data.users || [];
+                        if (count > 0) {
+                            localUserCount = count;
+                            updateOnlineStudents(count);
+                        }
+                    }
+
+                    // Track users joining/leaving locally as fallback
+                    if (data.type === 'user-joined') {
+                        localUserCount++;
+                        updateOnlineStudents(localUserCount);
+                    }
+
+                    if (data.type === 'user-left') {
+                        localUserCount = Math.max(1, localUserCount - 1);
+                        updateOnlineStudents(localUserCount);
                     }
                 });
 
