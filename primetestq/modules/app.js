@@ -1,4 +1,3 @@
-// Strict State Matrix Object Definition
 const ExamState = {
     stream: '',
     activeQuestionIndex: 0,
@@ -11,7 +10,6 @@ const ExamState = {
     negMark: 1
 };
 
-// Bind active ecosystem rings immediately
 const interactiveOrbitNodes = document.querySelectorAll('.orbit-node');
 interactiveOrbitNodes.forEach(node => {
     const triggerExamSimulation = (e) => {
@@ -26,13 +24,11 @@ interactiveOrbitNodes.forEach(node => {
 });
 
 function bootSecureCockpitViewport(stream) {
-    // Clone template safely without calling text evaluation string parsing
     const templateElement = document.getElementById('secure-hidden-cockpit-template');
     const targetViewport = document.getElementById('app-view-viewport');
     
     targetViewport.innerHTML = templateElement.innerHTML;
     
-    // Core Parameters Setup Sequence
     ExamState.stream = stream;
     ExamState.userResponses = {};
     ExamState.activeQuestionIndex = 0;
@@ -62,7 +58,7 @@ function bootSecureCockpitViewport(stream) {
     ExamState.questionsData = [];
     for (let i = 1; i <= ExamState.totalQuestions; i++) {
         let subjectLabel = "GENERAL COGNITION";
-        let questionText = `[${stream.toUpperCase()} EXAM CRITERIA LOGIC INDEX ${i}] Evaluate standard testing parameters framework accuracy patterns.`;
+        let questionText = `[${stream.toUpperCase()} EXAM] Evaluation parameter index ${i}.`;
         let optionsArray = ["Option A", "Option B", "Option C", "Option D"];
         let correctOptionIndex = Math.floor(Math.random() * 4);
 
@@ -87,16 +83,16 @@ function bootSecureCockpitViewport(stream) {
             correctOptionIndex = QuestionPool[classKey].physics.ans;
         } else if (track.includes('neet')) {
             if (i <= 45) subjectLabel = "PHYSICS"; else if (i <= 90) subjectLabel = "CHEMISTRY"; else if (i <= 135) subjectLabel = "BOTANY"; else subjectLabel = "ZOOLOGY";
-            questionText = `[NEET EXAM LEVEL ASSESSMENT // ${subjectLabel} Q.${i}] Medical entry standard validation tracking vectors.`;
+            questionText = `[NEET HIGH-LEVEL ASSESSMENT // ${subjectLabel} Q.${i}] Medical entrance level matrix analysis.`;
         } else if (track.includes('jee')) {
             if (i <= 30) subjectLabel = "PHYSICS"; else if (i <= 60) subjectLabel = "CHEMISTRY"; else subjectLabel = "MATHEMATICS";
-            questionText = `[JEE MAIN EVALUATION ROW // ${subjectLabel} Q.${i}] Advanced engineering calculation baseline metrics parameters.`;
+            questionText = `[JEE MAIN TARGET ASSESSMENT // ${subjectLabel} Q.${i}] Core analytical engineering vector alignment.`;
         } else if (track.includes('iat') || track.includes('nest')) {
             if (i <= 15 || (track.includes('nest') && i <= 20)) subjectLabel = "PHYSICS"; else if (i <= 30 || (track.includes('nest') && i <= 40)) subjectLabel = "CHEMISTRY"; else if (i <= 45 || (track.includes('nest') && i <= 60)) subjectLabel = "MATHEMATICS"; else subjectLabel = "BIOLOGY";
-            questionText = `[RESEARCH INTEGRATED APTITUDE // ${subjectLabel} Q.${i}] Core scientific analytical conceptual derivatives parameters.`;
+            questionText = `[RESEARCH INTEGRATED APTITUDE // ${subjectLabel} Q.${i}] Conceptual advanced science derivatives test entry.`;
         } else if (track.includes('cuet')) {
             subjectLabel = (i <= 25) ? "DOMAIN PHYSICS" : "DOMAIN MATHEMATICS";
-            questionText = `[CUET UG VALIDATION CRITERIA // ${subjectLabel} Q.${i}] Domain specific higher university admission check framework.`;
+            questionText = `[CUET UG ADMISSION MATRIX // ${subjectLabel} Q.${i}] Higher secondary verification level matrix element.`;
         }
 
         ExamState.questionsData.push({ id: i, subject: subjectLabel, text: questionText, options: optionsArray, correct: correctOptionIndex });
@@ -192,7 +188,7 @@ function bootTimerInstrumentation() {
     }, 1000);
 }
 
-// FIXED: Bulletproof closest-child event delegate map matching CSP firewall rules
+// Global delegated interaction router handles dynamically injected inner cockpit components
 document.addEventListener('click', (e) => {
     if (e.target.closest('#btn-action-next')) saveAndNavigate(1);
     if (e.target.closest('#btn-action-prev')) saveAndNavigate(-1);
@@ -220,7 +216,7 @@ function executeFinalSubmissionSequence() {
 
     document.getElementById('app-view-viewport').innerHTML = `
         <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; text-align: center;">
-            <div class="glass-panel" style="padding: 40px; max-width: 550px; width: 100%; background:rgba(7,11,22,0.9); flex-direction: column;">
+            <div class="glass-panel-static" style="padding: 40px; max-width: 550px; width: 100%; background:rgba(7,11,22,0.9); flex-direction: column; border-radius: 24px; border: 1px solid rgba(255,255,255,0.08);">
                 <h2 style="font-size: 1.8rem; font-weight: 900; margin-bottom: 5px;">Test Submitted Successfully</h2>
                 <p style="color: #A0AEC0; font-size: 0.75rem; text-transform: uppercase; margin-bottom: 20px;">Stream: ${ExamState.stream.toUpperCase()}</p>
                 <div style="font-size: 3.5rem; font-weight: 900; color: #00FF99; margin-bottom: 20px;">${finalScore} <span style="font-size: 1.2rem; color: #4A5568;">/ ${maximumPossibleScore}</span></div>
