@@ -315,7 +315,7 @@
                         sendMessage({ type: 'scene-update', elements, appState: pickSafeAppState(appState) });
                     } else {
                         trailingSendTimer = setTimeout(() => {
-                            lastSendTime = Date.now();
+                            lastSendTime = now;
                             sendMessage({ type: 'scene-update', elements, appState: pickSafeAppState(appState) });
                         }, 50 - elapsed);
                     }
@@ -352,7 +352,7 @@
                 statusDot.classList.add('connecting');
 
                 const relayUrl = window.PRIMEBOARD_RELAY_URL;
-                if (!relayUrl || relayUrl.includes('primeboard-relay')) {
+                if (!relayUrl) {
                     statusDot.classList.add('error');
                     console.error('PrimeBoard: set window.PRIMEBOARD_RELAY_URL to your deployed relay server address.');
                     return;
@@ -411,3 +411,4 @@
     </script>
 </body>
 </html>
+
