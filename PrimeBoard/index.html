@@ -32,6 +32,7 @@
             --primary-neon: #00C6FF;
             --locked-red: #FF4757;
             --unlocked-green: #00FF99;
+            --timer-warning: #FFCD38;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, -apple-system, sans-serif; }
         html, body { background: var(--bg-space); height: 100%; overflow: hidden; }
@@ -129,6 +130,42 @@
         .feature-btn:hover { background: rgba(0,198,255,0.15); color: var(--primary-neon); transform: scale(1.05); }
         .feature-btn.active { background: rgba(0,255,153,0.15); color: var(--unlocked-green); border-color: var(--unlocked-green); }
 
+        /* TIMER WIDGET STYLES */
+        #timer-widget {
+            position: fixed; top: 60px; right: 20px; z-index: 998;
+            background: var(--card-glass); border: 1px solid var(--border-glass);
+            border-radius: 16px; padding: 16px; min-width: 220px;
+            backdrop-filter: blur(16px); box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            display: none; flex-direction: column; align-items: center;
+        }
+        #timer-display {
+            font-size: 3rem; font-weight: 800; color: var(--primary-neon);
+            font-family: 'Courier New', monospace; letter-spacing: 2px;
+            margin-bottom: 12px; text-shadow: 0 0 15px rgba(0,198,255,0.5);
+        }
+        #timer-display.warning { color: var(--timer-warning); text-shadow: 0 0 15px rgba(255,205,56,0.5); }
+        #timer-display.danger { color: var(--locked-red); text-shadow: 0 0 15px rgba(255,71,87,0.5); animation: pulse 1s infinite; }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+        
+        .timer-controls { display: flex; gap: 8px; width: 100%; margin-bottom: 12px; }
+        .timer-btn {
+            flex: 1; padding: 8px; border-radius: 8px; border: none;
+            background: rgba(255,255,255,0.1); color: #fff; font-weight: 700;
+            font-size: 0.8rem; cursor: pointer; transition: all 0.2s;
+        }
+        .timer-btn:hover { background: rgba(0,198,255,0.2); }
+        .timer-btn.start { background: var(--unlocked-green); color: #000; }
+        .timer-btn.pause { background: var(--timer-warning); color: #000; }
+        .timer-btn.reset { background: var(--locked-red); color: #fff; }
+
+        .timer-inputs { display: flex; gap: 6px; width: 100%; align-items: center; }
+        .timer-inputs input {
+            width: 100%; background: rgba(255,255,255,0.05); border: 1px solid var(--border-glass);
+            color: #fff; padding: 8px; border-radius: 6px; text-align: center; font-size: 0.9rem;
+        }
+        .timer-inputs input:focus { outline: none; border-color: var(--primary-neon); }
+        .timer-inputs span { color: #718096; font-weight: bold; }
+
         @media (max-width: 640px) {
             #topbar { height: 45px; padding: 0 8px; gap: 8px; }
             #brand { font-size: 0.8rem; }
@@ -140,6 +177,8 @@
             .feature-btn { width: 40px; height: 40px; font-size: 1rem; }
             #locked-banner { bottom: 12px; padding: 8px 14px; font-size: 0.7rem; max-width: 90%; text-align: center; }
             .toolkit-grid { grid-template-columns: repeat(2, 1fr); }
+            #timer-widget { top: 55px; right: 10px; min-width: 180px; padding: 12px; }
+            #timer-display { font-size: 2.2rem; }
         }
 
         .excalidraw .layer-ui__wrapper .sidebar { left: 80px !important; right: auto !important; top: 60px !important; }
@@ -182,8 +221,24 @@
     <!-- Unique Features Panel (LEFT SIDE) -->
     <div id="features-panel" style="display:none;">
         <button class="feature-btn" id="btn-toolkit" title="Smart Educational Toolkit"><i class="fas fa-graduation-cap"></i></button>
+        <button class="feature-btn" id="btn-timer" title="Classroom Timer"><i class="fas fa-stopwatch"></i></button>
         <button class="feature-btn" id="btn-math" title="Insert Math Equation"><i class="fas fa-square-root-alt"></i></button>
         <button class="feature-btn" id="btn-theme" title="Change Theme"><i class="fas fa-palette"></i></button>
+    </div>
+
+    <!-- TIMER WIDGET (FLOATING TOP RIGHT) -->
+    <div id="timer-widget">
+        <div id="timer-display">00:00</div>
+        <div class="timer-controls" id="timer-controls-container">
+            <button class="timer-btn start" id="timer-start"><i class="fas fa-play"></i></button>
+            <button class="timer-btn pause" id="timer-pause"><i class="fas fa-pause"></i></button>
+            <button class="timer-btn reset" id="timer-reset"><i class="fas fa-redo"></i></button>
+        </div>
+        <div class="timer-inputs" id="timer-inputs-container">
+            <input type="number" id="timer-min" placeholder="Min" min="0" max="99" value="5">
+            <span>:</span>
+            <input type="number" id="timer-sec" placeholder="Sec" min="0" max="59" value="00">
+        </div>
     </div>
 
     <!-- Smart Toolkit Modal -->
@@ -191,42 +246,15 @@
         <div id="toolkit-card">
             <h3><i class="fas fa-graduation-cap"></i> Smart Educational Toolkit</h3>
             <p>Click a tool to instantly add it to the board.</p>
-            
             <div class="toolkit-grid">
-                <div class="toolkit-item" onclick="applyToolkit('grid')">
-                    <i class="fas fa-border-all"></i>
-                    <span>Math Grid</span>
-                    <span class="sub-text">Snap to graph paper</span>
-                </div>
-                <div class="toolkit-item" onclick="applyToolkit('chem-benzene')">
-                    <i class="fas fa-atom"></i>
-                    <span>Chemistry</span>
-                    <span class="sub-text">Benzene Ring</span>
-                </div>
-                <div class="toolkit-item" onclick="applyToolkit('bio-cell')">
-                    <i class="fas fa-dna"></i>
-                    <span>Biology</span>
-                    <span class="sub-text">Animal Cell</span>
-                </div>
-                <div class="toolkit-item" onclick="applyToolkit('physics-circuit')">
-                    <i class="fas fa-bolt"></i>
-                    <span>Physics</span>
-                    <span class="sub-text">Simple Circuit</span>
-                </div>
-                <div class="toolkit-item" onclick="applyToolkit('history-timeline')">
-                    <i class="fas fa-history"></i>
-                    <span>History</span>
-                    <span class="sub-text">Timeline Maker</span>
-                </div>
-                <div class="toolkit-item" onclick="applyToolkit('code-block')">
-                    <i class="fas fa-code"></i>
-                    <span>Computer Sci</span>
-                    <span class="sub-text">Code Block</span>
-                </div>
+                <div class="toolkit-item" onclick="applyToolkit('grid')"><i class="fas fa-border-all"></i><span>Math Grid</span><span class="sub-text">Snap to graph paper</span></div>
+                <div class="toolkit-item" onclick="applyToolkit('chem-benzene')"><i class="fas fa-atom"></i><span>Chemistry</span><span class="sub-text">Benzene Ring</span></div>
+                <div class="toolkit-item" onclick="applyToolkit('bio-cell')"><i class="fas fa-dna"></i><span>Biology</span><span class="sub-text">Animal Cell</span></div>
+                <div class="toolkit-item" onclick="applyToolkit('physics-circuit')"><i class="fas fa-bolt"></i><span>Physics</span><span class="sub-text">Simple Circuit</span></div>
+                <div class="toolkit-item" onclick="applyToolkit('history-timeline')"><i class="fas fa-history"></i><span>History</span><span class="sub-text">Timeline Maker</span></div>
+                <div class="toolkit-item" onclick="applyToolkit('code-block')"><i class="fas fa-code"></i><span>Computer Sci</span><span class="sub-text">Code Block</span></div>
             </div>
-            <div class="btn-row">
-                <button id="close-toolkit-btn">Close</button>
-            </div>
+            <div class="btn-row"><button id="close-toolkit-btn">Close</button></div>
         </div>
     </div>
 
@@ -275,7 +303,6 @@
             const n = Math.floor(100 + Math.random() * 900);
             return `${w}-${n}`;
         }
-
         function getQueryParam(name) { return new URLSearchParams(window.location.search).get(name); }
 
         const setupScreen = document.getElementById('setup-screen');
@@ -290,10 +317,8 @@
         let selectedRole = 'teacher';
         const inviteRoom = getQueryParam('room');
         if (inviteRoom) {
-            roomInput.value = inviteRoom;
-            selectedRole = 'student';
-            roleStudentBtn.classList.add('active');
-            roleTeacherBtn.classList.remove('active');
+            roomInput.value = inviteRoom; selectedRole = 'student';
+            roleStudentBtn.classList.add('active'); roleTeacherBtn.classList.remove('active');
             roomLabel.textContent = 'Class room code (from your invite link)';
         }
 
@@ -313,16 +338,12 @@
             startBoard({ name, role: selectedRole, room });
         });
 
-        // Helper to generate Excalidraw elements
         function createEl(type, x, y, width, height, extra = {}) {
-            return {
-                type, x, y, width, height, angle: 0, strokeColor: "#1e1e1e", backgroundColor: "transparent",
+            return { type, x, y, width, height, angle: 0, strokeColor: "#1e1e1e", backgroundColor: "transparent",
                 fillStyle: "hachure", strokeWidth: 1, roughness: 1, opacity: 100, groupIds: [],
                 roundness: type === "rectangle" || type === "ellipse" ? { type: 3 } : null,
                 seed: Math.floor(Math.random() * 2000000000), version: 1, versionNonce: Math.floor(Math.random() * 2000000000),
-                isDeleted: false, boundElements: null, updated: Date.now(), link: null, locked: false,
-                ...extra
-            };
+                isDeleted: false, boundElements: null, updated: Date.now(), link: null, locked: false, ...extra };
         }
 
         function startBoard({ name, role, room }) {
@@ -349,11 +370,99 @@
                 });
             });
 
-            // Toolkit Logic
+            // --- TIMER LOGIC ---
+            const timerWidget = document.getElementById('timer-widget');
+            const timerDisplay = document.getElementById('timer-display');
+            const timerStartBtn = document.getElementById('timer-start');
+            const timerPauseBtn = document.getElementById('timer-pause');
+            const timerResetBtn = document.getElementById('timer-reset');
+            const timerMinInput = document.getElementById('timer-min');
+            const timerSecInput = document.getElementById('timer-sec');
+            const timerControls = document.getElementById('timer-controls-container');
+            const timerInputs = document.getElementById('timer-inputs-container');
+
+            let timerInterval = null;
+            let timeLeft = 0;
+            let isTimerRunning = false;
+
+            // Show/Hide Timer
+            document.getElementById('btn-timer').addEventListener('click', () => {
+                timerWidget.style.display = timerWidget.style.display === 'flex' ? 'none' : 'flex';
+            });
+
+            // Teacher-only controls visibility
+            if (role !== 'teacher') {
+                timerControls.style.display = 'none';
+                timerInputs.style.display = 'none';
+            }
+
+            function formatTime(seconds) {
+                const m = Math.floor(seconds / 60).toString().padStart(2, '0');
+                const s = (seconds % 60).toString().padStart(2, '0');
+                return `${m}:${s}`;
+            }
+
+            function updateTimerDisplay() {
+                timerDisplay.textContent = formatTime(timeLeft);
+                timerDisplay.className = '';
+                if (timeLeft <= 10 && timeLeft > 0) timerDisplay.classList.add('danger');
+                else if (timeLeft <= 60 && timeLeft > 10) timerDisplay.classList.add('warning');
+            }
+
+            function startTimer() {
+                if (isTimerRunning) return;
+                isTimerRunning = true;
+                timerInterval = setInterval(() => {
+                    if (timeLeft > 0) {
+                        timeLeft--;
+                        updateTimerDisplay();
+                    } else {
+                        clearInterval(timerInterval);
+                        isTimerRunning = false;
+                        // Play a subtle beep or just flash (visual only for now)
+                    }
+                }, 1000);
+            }
+
+            function pauseTimer() {
+                clearInterval(timerInterval);
+                isTimerRunning = false;
+            }
+
+            function resetTimer() {
+                pauseTimer();
+                const m = parseInt(timerMinInput.value) || 0;
+                const s = parseInt(timerSecInput.value) || 0;
+                timeLeft = (m * 60) + s;
+                updateTimerDisplay();
+            }
+
+            // Teacher Event Listeners
+            if (role === 'teacher') {
+                timerStartBtn.addEventListener('click', () => {
+                    if (timeLeft === 0) resetTimer();
+                    startTimer();
+                    sendMessage({ type: 'timer-update', action: 'start', timeLeft });
+                });
+                timerPauseBtn.addEventListener('click', () => {
+                    pauseTimer();
+                    sendMessage({ type: 'timer-update', action: 'pause', timeLeft });
+                });
+                timerResetBtn.addEventListener('click', () => {
+                    resetTimer();
+                    sendMessage({ type: 'timer-update', action: 'reset', timeLeft });
+                });
+                timerMinInput.addEventListener('change', resetTimer);
+                timerSecInput.addEventListener('change', resetTimer);
+            }
+
+            // Initialize display
+            resetTimer();
+
+            // --- TOOLKIT LOGIC ---
             const toolkitModal = document.getElementById('toolkit-modal');
-            const closeToolkitBtn = document.getElementById('close-toolkit-btn');
             document.getElementById('btn-toolkit').addEventListener('click', () => { toolkitModal.style.display = 'flex'; });
-            closeToolkitBtn.addEventListener('click', () => { toolkitModal.style.display = 'none'; });
+            document.getElementById('close-toolkit-btn').addEventListener('click', () => { toolkitModal.style.display = 'none'; });
 
             window.applyToolkit = function(type) {
                 if (!excalidrawAPI) return;
@@ -364,10 +473,7 @@
                 if (type === 'grid') {
                     const appState = excalidrawAPI.getAppState();
                     excalidrawAPI.updateScene({ appState: { gridSize: appState.gridSize ? 0 : 20 } });
-                    toolkitModal.style.display = 'none';
-                    return;
                 } else if (type === 'chem-benzene') {
-                    // Simple Hexagon representation
                     newElements.push(createEl('diamond', startX, startY, 100, 100, { strokeColor: "#00C6FF", strokeWidth: 2 }));
                     newElements.push(createEl('text', startX + 20, startY + 40, 60, 20, { text: "C₆H₆", fontSize: 20, strokeColor: "#fff" }));
                 } else if (type === 'bio-cell') {
@@ -375,10 +481,9 @@
                     newElements.push(createEl('ellipse', startX + 70, startY + 50, 60, 50, { strokeColor: "#FF4757", backgroundColor: "rgba(255,71,87,0.2)", fillStyle: "solid" }));
                     newElements.push(createEl('text', startX + 80, startY + 70, 40, 20, { text: "Nucleus", fontSize: 14, strokeColor: "#fff" }));
                 } else if (type === 'physics-circuit') {
-                    // Battery and Wire
                     newElements.push(createEl('rectangle', startX, startY + 40, 20, 40, { strokeColor: "#FFCD38" }));
                     newElements.push(createEl('line', startX + 20, startY + 60, 100, 0, { strokeColor: "#fff", points: [[0,0], [100,0]] }));
-                    newElements.push(createEl('rectangle', startX + 120, startY + 40, 40, 40, { strokeColor: "#00C6FF" })); // Resistor
+                    newElements.push(createEl('rectangle', startX + 120, startY + 40, 40, 40, { strokeColor: "#00C6FF" }));
                     newElements.push(createEl('line', startX + 160, startY + 60, 100, 0, { strokeColor: "#fff", points: [[0,0], [100,0]] }));
                     newElements.push(createEl('line', startX + 260, startY + 60, 0, -100, { strokeColor: "#fff", points: [[0,0], [0,-100]] }));
                     newElements.push(createEl('line', startX + 260, startY - 40, -260, 0, { strokeColor: "#fff", points: [[0,0], [-260,0]] }));
@@ -393,13 +498,11 @@
                     newElements.push(createEl('text', startX + 10, startY + 10, 280, 130, { text: "def hello():\n  print('Hello World')", fontSize: 14, fontFamily: 3, strokeColor: "#00FF99" }));
                 }
 
-                if (newElements.length > 0) {
-                    excalidrawAPI.updateScene({ elements: [...elements, ...newElements] });
-                }
+                if (newElements.length > 0) excalidrawAPI.updateScene({ elements: [...elements, ...newElements] });
                 toolkitModal.style.display = 'none';
             };
 
-            // Math Modal Logic
+            // --- MATH MODAL LOGIC ---
             const mathModal = document.getElementById('math-modal');
             const mathInput = document.getElementById('math-input');
             const mathPreview = document.getElementById('math-preview');
@@ -417,14 +520,14 @@
                 mathModal.style.display = 'none';
             });
 
-            // Theme Toggle
+            // --- THEME TOGGLE ---
             let currentTheme = 'dark';
             document.getElementById('btn-theme').addEventListener('click', () => {
                 currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
                 if (excalidrawAPI) excalidrawAPI.updateScene({ appState: { theme: currentTheme } });
             });
 
-            // Email Logic (Same as before)
+            // --- EMAIL LOGIC ---
             const addStudentModal = document.getElementById('add-student-modal');
             const emailInput = document.getElementById('email-input');
             const emailSuggestions = document.getElementById('email-suggestions');
@@ -508,6 +611,17 @@
                     if (data.type === 'state' || data.type === 'lock-changed') { locked = data.locked; applyLockUI(); }
                     if (data.type === 'scene-update' && excalidrawAPI) { suppressNextChange = true; excalidrawAPI.updateScene({ elements: data.elements }); }
                     if (data.type === 'roster') { if (data.users) studentCount.textContent = data.users.length; }
+                    
+                    // TIMER SYNC
+                    if (data.type === 'timer-update') {
+                        if (data.action === 'start' || data.action === 'pause' || data.action === 'reset') {
+                            timeLeft = data.timeLeft;
+                            updateTimerDisplay();
+                            if (data.action === 'start' && !isTimerRunning) startTimer();
+                            if (data.action === 'pause') pauseTimer();
+                            if (data.action === 'reset') { pauseTimer(); timeLeft = data.timeLeft; updateTimerDisplay(); }
+                        }
+                    }
                 });
                 socket.addEventListener('close', () => { statusDot.className = 'connecting'; setTimeout(connect, 2000); });
             }
