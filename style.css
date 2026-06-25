@@ -39,8 +39,8 @@ h2 { text-align: center; font-size: 2.5rem; }
 }
 
 header { background-color: rgba(6, 8, 12, 0.85); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid var(--glass-border); }
-.logo-nav { display: flex; justify-content: space-between; align-items: center; height: 80px; position: relative; }
-.logo { font-size: 1.6rem; font-weight: 900; color: var(--text-pure); text-decoration: none; z-index: 1001; }
+.logo-nav { display: flex; justify-content: space-between; align-items: center; height: 80px; position: relative; flex-wrap: nowrap; }
+.logo { font-size: 1.6rem; font-weight: 900; color: var(--text-pure); text-decoration: none; z-index: 1001; white-space: nowrap; flex-shrink: 1; min-width: 0; }
 .pulse-dot { color: var(--primary-neon); display: inline-block; animation: beacon 2s infinite; }
 
 .menu-toggle { display: none; background: transparent; border: none; color: var(--text-pure); font-size: 1.5rem; cursor: pointer; z-index: 1001; padding: 8px; transition: var(--transition); }
@@ -148,6 +148,8 @@ footer { border-top: 1px solid var(--glass-border); color: var(--text-dark); tex
 /* RESPONSIBILITY DRAWER RULES FOR MEDIUM RESOLUTION INTERFACES */
 @media screen and (max-width: 868px) {
     .menu-toggle { display: block; }
+    .logo-nav { gap: 10px; padding: 0 15px; } /* FIX: Tighten header spacing */
+    .logo { font-size: 1.3rem; } /* FIX: Reduce logo size for tablets */
     
     header nav {
         position: absolute;
@@ -191,4 +193,6 @@ footer { border-top: 1px solid var(--glass-border); color: var(--text-dark); tex
     .hero-content h1 { font-size: 2.4rem; }
     .social-sticky { bottom: 20px; left: 20px; right: auto; }
     .social-btn { width: 48px; height: 48px; font-size: 1.4rem; }
+    .logo { font-size: 1.1rem; } /* FIX: Smallest font size for mobile phones */
+    .logo-nav { padding: 0 10px; } /* FIX: Minimal padding on very small screens */
 }
