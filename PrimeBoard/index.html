@@ -6,6 +6,7 @@
     <title>PrimeBoard | Prime Spirit Mentors</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://esm.sh/@excalidraw/excalidraw@0.18.0/dist/dev/index.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
 
     <script>
         window.PRIMEBOARD_RELAY_URL = "wss://primeboard-relay.onrender.com";
@@ -21,6 +22,7 @@
         }
       }
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
 
     <style>
         :root {
@@ -48,37 +50,16 @@
         #brand .sub { color: #718096; font-weight: 500; font-size: 0.65rem; margin-left: 4px; display: none; }
         @media (min-width: 768px) { #brand .sub { display: inline; } }
 
-        #room-pill {
-            display: flex; align-items: center; gap: 6px;
-            background: rgba(255,255,255,0.03); border: 1px solid var(--border-glass);
-            padding: 5px 10px; border-radius: 20px; color: #A0AEC0; font-size: 0.7rem; font-family: monospace;
-            white-space: nowrap;
-        }
+        #room-pill { display: flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.03); border: 1px solid var(--border-glass); padding: 5px 10px; border-radius: 20px; color: #A0AEC0; font-size: 0.7rem; font-family: monospace; white-space: nowrap; }
         #room-pill b { color: #fff; letter-spacing: 0.05em; }
-
-        #online-students {
-            display: flex; align-items: center; gap: 6px;
-            background: rgba(0,255,153,0.08); border: 1px solid var(--unlocked-green);
-            padding: 5px 10px; border-radius: 20px; color: var(--unlocked-green); font-size: 0.7rem; font-weight: 700;
-            white-space: nowrap;
-        }
+        #online-students { display: flex; align-items: center; gap: 6px; background: rgba(0,255,153,0.08); border: 1px solid var(--unlocked-green); padding: 5px 10px; border-radius: 20px; color: var(--unlocked-green); font-size: 0.7rem; font-weight: 700; white-space: nowrap; }
         #online-students i { font-size: 0.65rem; }
 
-        #lock-btn {
-            display: flex; align-items: center; gap: 6px;
-            border: 1px solid var(--locked-red); color: var(--locked-red); background: rgba(255,71,87,0.08);
-            font-weight: 700; font-size: 0.7rem; padding: 6px 12px; border-radius: 8px; cursor: pointer;
-            transition: all 0.15s ease; white-space: nowrap;
-        }
-        #lock-btn.unlocked { border-color: var(--unlocked-green); color: var(--unlocked-green); background: rgba(0,255,153,0.08); }
-        #lock-btn:hover { filter: brightness(1.2); }
+        #lock-btn, .feature-btn { display: flex; align-items: center; gap: 6px; border: 1px solid var(--locked-red); color: var(--locked-red); background: rgba(255,71,87,0.08); font-weight: 700; font-size: 0.7rem; padding: 6px 12px; border-radius: 8px; cursor: pointer; transition: all 0.15s ease; white-space: nowrap; }
+        #lock-btn.unlocked, .feature-btn.active { border-color: var(--unlocked-green); color: var(--unlocked-green); background: rgba(0,255,153,0.08); }
+        #lock-btn:hover, .feature-btn:hover { filter: brightness(1.2); }
 
-        #invite-btn, #add-student-btn, #exit-btn {
-            display: flex; align-items: center; gap: 6px;
-            background: rgba(0,198,255,0.1); border: 1px solid var(--primary-neon); color: var(--primary-neon);
-            font-weight: 700; font-size: 0.7rem; padding: 6px 12px; border-radius: 8px; cursor: pointer; text-decoration: none;
-            white-space: nowrap;
-        }
+        #invite-btn, #add-student-btn, #exit-btn { display: flex; align-items: center; gap: 6px; background: rgba(0,198,255,0.1); border: 1px solid var(--primary-neon); color: var(--primary-neon); font-weight: 700; font-size: 0.7rem; padding: 6px 12px; border-radius: 8px; cursor: pointer; text-decoration: none; white-space: nowrap; }
         #add-student-btn { background: rgba(0,255,153,0.1); border-color: var(--unlocked-green); color: var(--unlocked-green); }
         #exit-btn { background: transparent; border-color: var(--border-glass); color: #A0AEC0; }
         #invite-btn:hover { background: rgba(0,198,255,0.2); }
@@ -89,133 +70,80 @@
         #status-dot.connecting { background: #FFCD38; }
         #status-dot.error { background: var(--locked-red); }
 
-        #locked-banner {
-            position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%); z-index: 1000;
-            display: none; align-items: center; gap: 10px;
-            background: rgba(255,71,87,0.12); border: 1px solid var(--locked-red); color: #fff;
-            padding: 10px 18px; border-radius: 30px; font-size: 0.78rem; font-weight: 600;
-            backdrop-filter: blur(10px);
-        }
+        #locked-banner { position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%); z-index: 1000; display: none; align-items: center; gap: 10px; background: rgba(255,71,87,0.12); border: 1px solid var(--locked-red); color: #fff; padding: 10px 18px; border-radius: 30px; font-size: 0.78rem; font-weight: 600; backdrop-filter: blur(10px); }
         #locked-banner i { color: var(--locked-red); }
 
-        #setup-screen {
-            position: fixed; inset: 0; z-index: 2000;
-            display: flex; align-items: center; justify-content: center;
-            background: radial-gradient(circle at center, #0F172A 0%, #050811 100%);
-            padding: 20px;
-        }
-        #setup-card {
-            width: min(420px, 95vw);
-            background: var(--card-glass); border: 1px solid var(--border-glass); border-radius: 18px;
-            padding: 28px 24px; text-align: center;
-        }
+        #setup-screen { position: fixed; inset: 0; z-index: 2000; display: flex; align-items: center; justify-content: center; background: radial-gradient(circle at center, #0F172A 0%, #050811 100%); padding: 20px; }
+        #setup-card { width: min(420px, 95vw); background: var(--card-glass); border: 1px solid var(--border-glass); border-radius: 18px; padding: 28px 24px; text-align: center; }
         #setup-card h1 { color: #fff; font-size: 1.4rem; font-weight: 800; margin-bottom: 6px; }
         #setup-card h1 span { color: var(--primary-neon); }
         #setup-card p.tagline { color: #718096; font-size: 0.75rem; margin-bottom: 24px; letter-spacing: 0.05em; }
         #setup-card label { display: block; text-align: left; color: #A0AEC0; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.08em; margin: 16px 0 6px; }
-        #setup-card input {
-            width: 100%; background: rgba(255,255,255,0.04); border: 1px solid var(--border-glass); color: #fff;
-            padding: 12px 14px; border-radius: 10px; font-size: 0.9rem; outline: none;
-        }
+        #setup-card input { width: 100%; background: rgba(255,255,255,0.04); border: 1px solid var(--border-glass); color: #fff; padding: 12px 14px; border-radius: 10px; font-size: 0.9rem; outline: none; }
         #setup-card input:focus { border-color: var(--primary-neon); }
         .role-toggle { display: flex; gap: 8px; margin-top: 6px; }
-        .role-toggle button {
-            flex: 1; padding: 12px; border-radius: 10px; border: 1px solid var(--border-glass);
-            background: rgba(255,255,255,0.03); color: #A0AEC0; font-weight: 700; font-size: 0.75rem; cursor: pointer;
-        }
+        .role-toggle button { flex: 1; padding: 12px; border-radius: 10px; border: 1px solid var(--border-glass); background: rgba(255,255,255,0.03); color: #A0AEC0; font-weight: 700; font-size: 0.75rem; cursor: pointer; }
         .role-toggle button.active { border-color: var(--primary-neon); color: var(--primary-neon); background: rgba(0,198,255,0.08); }
-        #enter-btn {
-            width: 100%; margin-top: 24px; padding: 14px; border-radius: 10px; border: none;
-            background: var(--primary-neon); color: #000; font-weight: 800; font-size: 0.9rem; cursor: pointer;
-        }
+        #enter-btn { width: 100%; margin-top: 24px; padding: 14px; border-radius: 10px; border: none; background: var(--primary-neon); color: #000; font-weight: 800; font-size: 0.9rem; cursor: pointer; }
         #enter-btn:disabled { opacity: 0.4; cursor: not-allowed; }
         #setup-error { color: var(--locked-red); font-size: 0.75rem; margin-top: 10px; min-height: 1em; }
         #setup-card .or-row { display: flex; align-items: center; gap: 10px; margin: 18px 0 0; color: #4A5568; font-size: 0.7rem; }
         #setup-card .or-row::before, #setup-card .or-row::after { content: ''; flex: 1; height: 1px; background: var(--border-glass); }
 
-        #add-student-modal {
-            position: fixed; inset: 0; z-index: 3000;
-            display: none; align-items: center; justify-content: center;
-            background: rgba(0,0,0,0.8); backdrop-filter: blur(4px);
-            padding: 20px;
-        }
-        #add-student-card {
-            width: min(450px, 95vw);
-            background: var(--card-glass); border: 1px solid var(--border-glass); border-radius: 16px;
-            padding: 28px 24px;
-        }
-        #add-student-card h3 { color: #fff; font-size: 1.1rem; font-weight: 800; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
-        #add-student-card h3 i { color: var(--unlocked-green); }
-        #add-student-card p { color: #718096; font-size: 0.75rem; margin-bottom: 20px; }
+        #add-student-modal, #toolkit-modal, #math-modal { position: fixed; inset: 0; z-index: 3000; display: none; align-items: center; justify-content: center; background: rgba(0,0,0,0.8); backdrop-filter: blur(4px); padding: 20px; }
+        #add-student-card, #toolkit-card, #math-card { width: min(450px, 95vw); background: var(--card-glass); border: 1px solid var(--border-glass); border-radius: 16px; padding: 28px 24px; }
+        #toolkit-card { width: min(600px, 95vw); max-height: 80vh; overflow-y: auto; }
+        
+        #add-student-card h3, #toolkit-card h3, #math-card h3 { color: #fff; font-size: 1.1rem; font-weight: 800; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+        #add-student-card h3 i, #toolkit-card h3 i, #math-card h3 i { color: var(--unlocked-green); }
+        #add-student-card p, #toolkit-card p { color: #718096; font-size: 0.75rem; margin-bottom: 20px; }
         #add-student-card label { display: block; text-align: left; color: #A0AEC0; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.08em; margin: 16px 0 6px; }
         
-        /* New CSS for Email Suggestions */
         .suggestions-container { position: relative; width: 100%; }
-        #add-student-card input {
-            width: 100%; background: rgba(255,255,255,0.04); border: 1px solid var(--border-glass); color: #fff;
-            padding: 12px 14px; border-radius: 10px; font-size: 0.9rem; outline: none; margin-bottom: 8px;
-        }
-        #add-student-card input:focus { border-color: var(--unlocked-green); }
-        
-        #email-suggestions {
-            position: absolute; top: 100%; left: 0; right: 0;
-            background: #1a202c; border: 1px solid var(--border-glass);
-            border-radius: 8px; margin-top: 5px; max-height: 150px;
-            overflow-y: auto; z-index: 100; display: none;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
-        }
-        .suggestion-item {
-            padding: 10px 14px; color: #e2e8f0; cursor: pointer;
-            font-size: 0.9rem; border-bottom: 1px solid rgba(255,255,255,0.05);
-            transition: background 0.2s;
-        }
+        #add-student-card input, #math-input { width: 100%; background: rgba(255,255,255,0.04); border: 1px solid var(--border-glass); color: #fff; padding: 12px 14px; border-radius: 10px; font-size: 0.9rem; outline: none; margin-bottom: 8px; }
+        #add-student-card input:focus, #math-input:focus { border-color: var(--unlocked-green); }
+        #email-suggestions { position: absolute; top: 100%; left: 0; right: 0; background: #1a202c; border: 1px solid var(--border-glass); border-radius: 8px; margin-top: 5px; max-height: 150px; overflow-y: auto; z-index: 100; display: none; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5); }
+        .suggestion-item { padding: 10px 14px; color: #e2e8f0; cursor: pointer; font-size: 0.9rem; border-bottom: 1px solid rgba(255,255,255,0.05); transition: background 0.2s; }
         .suggestion-item:hover { background: rgba(0, 198, 255, 0.1); color: var(--primary-neon); }
         .suggestion-item:last-child { border-bottom: none; }
-
-        #email-list {
-            max-height: 150px; overflow-y: auto; margin: 12px 0;
-            background: rgba(255,255,255,0.02); border-radius: 8px; padding: 8px;
-            min-height: 40px;
-        }
-        .email-tag {
-            display: inline-flex; align-items: center; gap: 6px;
-            background: rgba(0,255,153,0.1); border: 1px solid var(--unlocked-green);
-            color: var(--unlocked-green); padding: 4px 10px; border-radius: 20px;
-            font-size: 0.75rem; margin: 4px;
-        }
+        #email-list { max-height: 150px; overflow-y: auto; margin: 12px 0; background: rgba(255,255,255,0.02); border-radius: 8px; padding: 8px; min-height: 40px; }
+        .email-tag { display: inline-flex; align-items: center; gap: 6px; background: rgba(0,255,153,0.1); border: 1px solid var(--unlocked-green); color: var(--unlocked-green); padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; margin: 4px; }
         .email-tag i { cursor: pointer; font-size: 0.65rem; }
         .email-tag i:hover { color: #fff; }
-        #add-student-card .btn-row { display: flex; gap: 10px; margin-top: 20px; }
-        #add-student-card .btn-row button {
-            flex: 1; padding: 12px; border-radius: 10px; border: none;
-            font-weight: 700; font-size: 0.85rem; cursor: pointer;
-        }
-        #send-invites-btn { background: var(--unlocked-green); color: #000; }
-        #cancel-add-btn { background: rgba(255,255,255,0.1); color: #fff; }
+        .btn-row { display: flex; gap: 10px; margin-top: 20px; }
+        .btn-row button { flex: 1; padding: 12px; border-radius: 10px; border: none; font-weight: 700; font-size: 0.85rem; cursor: pointer; }
+        #send-invites-btn, #insert-math-btn { background: var(--unlocked-green); color: #000; }
+        #cancel-add-btn, #cancel-math-btn, #close-toolkit-btn { background: rgba(255,255,255,0.1); color: #fff; }
+
+        /* Toolkit Grid */
+        .toolkit-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; margin-top: 16px; }
+        .toolkit-item { background: rgba(255,255,255,0.05); border: 1px solid var(--border-glass); border-radius: 12px; padding: 16px; text-align: center; cursor: pointer; transition: all 0.2s; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+        .toolkit-item:hover { background: rgba(0,198,255,0.1); border-color: var(--primary-neon); transform: translateY(-2px); }
+        .toolkit-item i { font-size: 1.5rem; color: var(--primary-neon); }
+        .toolkit-item span { color: #fff; font-size: 0.8rem; font-weight: 600; }
+        .toolkit-item .sub-text { color: #718096; font-size: 0.65rem; font-weight: 400; }
+
+        /* Features Panel */
+        #features-panel { position: fixed; left: 10px; top: 60px; z-index: 999; display: flex; flex-direction: column; gap: 8px; background: var(--card-glass); padding: 12px; border-radius: 12px; border: 1px solid var(--border-glass); backdrop-filter: blur(16px); }
+        .feature-btn { width: 45px; height: 45px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; border: 1px solid var(--border-glass); background: rgba(255,255,255,0.05); color: #A0AEC0; cursor: pointer; transition: all 0.2s; }
+        .feature-btn:hover { background: rgba(0,198,255,0.15); color: var(--primary-neon); transform: scale(1.05); }
+        .feature-btn.active { background: rgba(0,255,153,0.15); color: var(--unlocked-green); border-color: var(--unlocked-green); }
 
         @media (max-width: 640px) {
             #topbar { height: 45px; padding: 0 8px; gap: 8px; }
             #brand { font-size: 0.8rem; }
             #room-pill { display: none; }
-            #lock-btn span { display: none; }
-            #invite-btn span, #add-student-btn span { display: none; }
+            #lock-btn span, #invite-btn span, #add-student-btn span { display: none; }
             #invite-btn, #add-student-btn, #lock-btn { padding: 6px 10px; }
             #root { top: 45px; }
+            #features-panel { top: 50px; left: 8px; padding: 8px; }
+            .feature-btn { width: 40px; height: 40px; font-size: 1rem; }
             #locked-banner { bottom: 12px; padding: 8px 14px; font-size: 0.7rem; max-width: 90%; text-align: center; }
+            .toolkit-grid { grid-template-columns: repeat(2, 1fr); }
         }
 
-        .excalidraw .layer-ui__wrapper .sidebar {
-            left: 0 !important;
-            right: auto !important;
-        }
-        @media (max-width: 640px) {
-            .excalidraw .layer-ui__wrapper .sidebar {
-                position: fixed !important;
-                top: 60px !important;
-                left: 8px !important;
-                z-index: 100 !important;
-            }
-        }
+        .excalidraw .layer-ui__wrapper .sidebar { left: 80px !important; right: auto !important; top: 60px !important; }
+        @media (max-width: 640px) { .excalidraw .layer-ui__wrapper .sidebar { left: 60px !important; top: 55px !important; } }
     </style>
 </head>
 <body>
@@ -251,18 +179,80 @@
 
     <div id="locked-banner"><i class="fas fa-lock"></i> Your teacher has locked drawing — you can still pan and zoom to follow along.</div>
 
+    <!-- Unique Features Panel (LEFT SIDE) -->
+    <div id="features-panel" style="display:none;">
+        <button class="feature-btn" id="btn-toolkit" title="Smart Educational Toolkit"><i class="fas fa-graduation-cap"></i></button>
+        <button class="feature-btn" id="btn-math" title="Insert Math Equation"><i class="fas fa-square-root-alt"></i></button>
+        <button class="feature-btn" id="btn-theme" title="Change Theme"><i class="fas fa-palette"></i></button>
+    </div>
+
+    <!-- Smart Toolkit Modal -->
+    <div id="toolkit-modal">
+        <div id="toolkit-card">
+            <h3><i class="fas fa-graduation-cap"></i> Smart Educational Toolkit</h3>
+            <p>Click a tool to instantly add it to the board.</p>
+            
+            <div class="toolkit-grid">
+                <div class="toolkit-item" onclick="applyToolkit('grid')">
+                    <i class="fas fa-border-all"></i>
+                    <span>Math Grid</span>
+                    <span class="sub-text">Snap to graph paper</span>
+                </div>
+                <div class="toolkit-item" onclick="applyToolkit('chem-benzene')">
+                    <i class="fas fa-atom"></i>
+                    <span>Chemistry</span>
+                    <span class="sub-text">Benzene Ring</span>
+                </div>
+                <div class="toolkit-item" onclick="applyToolkit('bio-cell')">
+                    <i class="fas fa-dna"></i>
+                    <span>Biology</span>
+                    <span class="sub-text">Animal Cell</span>
+                </div>
+                <div class="toolkit-item" onclick="applyToolkit('physics-circuit')">
+                    <i class="fas fa-bolt"></i>
+                    <span>Physics</span>
+                    <span class="sub-text">Simple Circuit</span>
+                </div>
+                <div class="toolkit-item" onclick="applyToolkit('history-timeline')">
+                    <i class="fas fa-history"></i>
+                    <span>History</span>
+                    <span class="sub-text">Timeline Maker</span>
+                </div>
+                <div class="toolkit-item" onclick="applyToolkit('code-block')">
+                    <i class="fas fa-code"></i>
+                    <span>Computer Sci</span>
+                    <span class="sub-text">Code Block</span>
+                </div>
+            </div>
+            <div class="btn-row">
+                <button id="close-toolkit-btn">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Math Equation Modal -->
+    <div id="math-modal">
+        <div id="math-card">
+            <h3><i class="fas fa-square-root-alt"></i> Insert LaTeX Math Equation</h3>
+            <p style="color: #718096; font-size: 0.8rem; margin-bottom: 12px;">Type LaTeX code (e.g., \frac{a}{b}, \sum_{i=1}^{n})</p>
+            <textarea id="math-input" placeholder="\frac{-b \pm \sqrt{b^2-4ac}}{2a}"></textarea>
+            <div id="math-preview" style="margin-top: 16px; padding: 16px; background: rgba(255,255,255,0.05); border-radius: 10px; min-height: 60px; color: #fff;"></div>
+            <div class="btn-row">
+                <button id="cancel-math-btn">Cancel</button>
+                <button id="insert-math-btn">Insert Equation</button>
+            </div>
+        </div>
+    </div>
+
     <div id="add-student-modal">
         <div id="add-student-card">
             <h3><i class="fas fa-user-plus"></i> Add Students by Email</h3>
             <p>Enter student email addresses. The server will send them an invite link via Brevo.</p>
             <label>Email addresses (comma separated)</label>
-            
-            <!-- Updated Input with Suggestions Container -->
             <div class="suggestions-container">
                 <input id="email-input" type="email" placeholder="student1@email.com, student2@email.com" autocomplete="off">
                 <div id="email-suggestions"></div>
             </div>
-            
             <div id="email-list"></div>
             <div class="btn-row">
                 <button id="cancel-add-btn">Cancel</button>
@@ -286,9 +276,7 @@
             return `${w}-${n}`;
         }
 
-        function getQueryParam(name) {
-            return new URLSearchParams(window.location.search).get(name);
-        }
+        function getQueryParam(name) { return new URLSearchParams(window.location.search).get(name); }
 
         const setupScreen = document.getElementById('setup-screen');
         const roleTeacherBtn = document.getElementById('role-teacher');
@@ -309,16 +297,8 @@
             roomLabel.textContent = 'Class room code (from your invite link)';
         }
 
-        roleTeacherBtn.addEventListener('click', () => {
-            selectedRole = 'teacher';
-            roleTeacherBtn.classList.add('active');
-            roleStudentBtn.classList.remove('active');
-        });
-        roleStudentBtn.addEventListener('click', () => {
-            selectedRole = 'student';
-            roleStudentBtn.classList.add('active');
-            roleTeacherBtn.classList.remove('active');
-        });
+        roleTeacherBtn.addEventListener('click', () => { selectedRole = 'teacher'; roleTeacherBtn.classList.add('active'); roleStudentBtn.classList.remove('active'); });
+        roleStudentBtn.addEventListener('click', () => { selectedRole = 'student'; roleStudentBtn.classList.add('active'); roleTeacherBtn.classList.remove('active'); });
 
         enterBtn.addEventListener('click', () => {
             const name = nameInput.value.trim();
@@ -329,8 +309,21 @@
             setupError.textContent = '';
             setupScreen.style.display = 'none';
             document.getElementById('topbar').style.display = 'flex';
+            document.getElementById('features-panel').style.display = 'flex';
             startBoard({ name, role: selectedRole, room });
         });
+
+        // Helper to generate Excalidraw elements
+        function createEl(type, x, y, width, height, extra = {}) {
+            return {
+                type, x, y, width, height, angle: 0, strokeColor: "#1e1e1e", backgroundColor: "transparent",
+                fillStyle: "hachure", strokeWidth: 1, roughness: 1, opacity: 100, groupIds: [],
+                roundness: type === "rectangle" || type === "ellipse" ? { type: 3 } : null,
+                seed: Math.floor(Math.random() * 2000000000), version: 1, versionNonce: Math.floor(Math.random() * 2000000000),
+                isDeleted: false, boundElements: null, updated: Date.now(), link: null, locked: false,
+                ...extra
+            };
+        }
 
         function startBoard({ name, role, room }) {
             document.getElementById('room-pill-code').textContent = room;
@@ -344,13 +337,8 @@
             const lockedBanner = document.getElementById('locked-banner');
 
             if (role === 'teacher') {
-                lockBtn.style.display = 'flex';
-                inviteBtn.style.display = 'flex';
-                addStudentBtn.style.display = 'flex';
-                onlineStudents.style.display = 'flex';
-            } else {
-                onlineStudents.style.display = 'flex';
-            }
+                lockBtn.style.display = 'flex'; inviteBtn.style.display = 'flex'; addStudentBtn.style.display = 'flex'; onlineStudents.style.display = 'flex';
+            } else { onlineStudents.style.display = 'flex'; }
 
             const inviteUrl = `${window.location.origin}${window.location.pathname}?room=${encodeURIComponent(room)}`;
             inviteBtn.addEventListener('click', () => {
@@ -361,268 +349,169 @@
                 });
             });
 
+            // Toolkit Logic
+            const toolkitModal = document.getElementById('toolkit-modal');
+            const closeToolkitBtn = document.getElementById('close-toolkit-btn');
+            document.getElementById('btn-toolkit').addEventListener('click', () => { toolkitModal.style.display = 'flex'; });
+            closeToolkitBtn.addEventListener('click', () => { toolkitModal.style.display = 'none'; });
+
+            window.applyToolkit = function(type) {
+                if (!excalidrawAPI) return;
+                const elements = excalidrawAPI.getSceneElements();
+                let newElements = [];
+                const startX = 100, startY = 100;
+
+                if (type === 'grid') {
+                    const appState = excalidrawAPI.getAppState();
+                    excalidrawAPI.updateScene({ appState: { gridSize: appState.gridSize ? 0 : 20 } });
+                    toolkitModal.style.display = 'none';
+                    return;
+                } else if (type === 'chem-benzene') {
+                    // Simple Hexagon representation
+                    newElements.push(createEl('diamond', startX, startY, 100, 100, { strokeColor: "#00C6FF", strokeWidth: 2 }));
+                    newElements.push(createEl('text', startX + 20, startY + 40, 60, 20, { text: "C₆H₆", fontSize: 20, strokeColor: "#fff" }));
+                } else if (type === 'bio-cell') {
+                    newElements.push(createEl('ellipse', startX, startY, 200, 150, { strokeColor: "#00FF99", backgroundColor: "rgba(0,255,153,0.1)", fillStyle: "solid" }));
+                    newElements.push(createEl('ellipse', startX + 70, startY + 50, 60, 50, { strokeColor: "#FF4757", backgroundColor: "rgba(255,71,87,0.2)", fillStyle: "solid" }));
+                    newElements.push(createEl('text', startX + 80, startY + 70, 40, 20, { text: "Nucleus", fontSize: 14, strokeColor: "#fff" }));
+                } else if (type === 'physics-circuit') {
+                    // Battery and Wire
+                    newElements.push(createEl('rectangle', startX, startY + 40, 20, 40, { strokeColor: "#FFCD38" }));
+                    newElements.push(createEl('line', startX + 20, startY + 60, 100, 0, { strokeColor: "#fff", points: [[0,0], [100,0]] }));
+                    newElements.push(createEl('rectangle', startX + 120, startY + 40, 40, 40, { strokeColor: "#00C6FF" })); // Resistor
+                    newElements.push(createEl('line', startX + 160, startY + 60, 100, 0, { strokeColor: "#fff", points: [[0,0], [100,0]] }));
+                    newElements.push(createEl('line', startX + 260, startY + 60, 0, -100, { strokeColor: "#fff", points: [[0,0], [0,-100]] }));
+                    newElements.push(createEl('line', startX + 260, startY - 40, -260, 0, { strokeColor: "#fff", points: [[0,0], [-260,0]] }));
+                } else if (type === 'history-timeline') {
+                    newElements.push(createEl('line', startX, startY + 50, 400, 0, { strokeColor: "#00C6FF", strokeWidth: 3, points: [[0,0], [400,0]] }));
+                    for(let i=0; i<3; i++) {
+                        newElements.push(createEl('ellipse', startX + (i*150), startY + 40, 20, 20, { strokeColor: "#FF4757", backgroundColor: "#FF4757", fillStyle: "solid" }));
+                        newElements.push(createEl('text', startX + (i*150) - 20, startY + 80, 60, 20, { text: `Event ${i+1}`, fontSize: 16, strokeColor: "#fff" }));
+                    }
+                } else if (type === 'code-block') {
+                    newElements.push(createEl('rectangle', startX, startY, 300, 150, { strokeColor: "#1e1e1e", backgroundColor: "#1e1e1e", fillStyle: "solid", roundness: {type: 3} }));
+                    newElements.push(createEl('text', startX + 10, startY + 10, 280, 130, { text: "def hello():\n  print('Hello World')", fontSize: 14, fontFamily: 3, strokeColor: "#00FF99" }));
+                }
+
+                if (newElements.length > 0) {
+                    excalidrawAPI.updateScene({ elements: [...elements, ...newElements] });
+                }
+                toolkitModal.style.display = 'none';
+            };
+
+            // Math Modal Logic
+            const mathModal = document.getElementById('math-modal');
+            const mathInput = document.getElementById('math-input');
+            const mathPreview = document.getElementById('math-preview');
+            document.getElementById('btn-math').addEventListener('click', () => { mathModal.style.display = 'flex'; mathInput.value = ''; mathPreview.innerHTML = ''; });
+            document.getElementById('cancel-math-btn').addEventListener('click', () => { mathModal.style.display = 'none'; });
+            mathInput.addEventListener('input', () => {
+                try { katex.render(mathInput.value, mathPreview, { throwOnError: false, displayMode: true }); } catch(e) { mathPreview.textContent = 'Invalid LaTeX'; }
+            });
+            document.getElementById('insert-math-btn').addEventListener('click', () => {
+                if (mathInput.value && excalidrawAPI) {
+                    const elements = excalidrawAPI.getSceneElements();
+                    elements.push(createEl('text', 150, 150, 200, 50, { text: mathInput.value, fontSize: 24, strokeColor: "#fff" }));
+                    excalidrawAPI.updateScene({ elements });
+                }
+                mathModal.style.display = 'none';
+            });
+
+            // Theme Toggle
+            let currentTheme = 'dark';
+            document.getElementById('btn-theme').addEventListener('click', () => {
+                currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                if (excalidrawAPI) excalidrawAPI.updateScene({ appState: { theme: currentTheme } });
+            });
+
+            // Email Logic (Same as before)
             const addStudentModal = document.getElementById('add-student-modal');
             const emailInput = document.getElementById('email-input');
             const emailSuggestions = document.getElementById('email-suggestions');
             const emailList = document.getElementById('email-list');
-            const cancelAddBtn = document.getElementById('cancel-add-btn');
-            const sendInvitesBtn = document.getElementById('send-invites-btn');
-            let emailTags = [];
+            document.getElementById('cancel-add-btn').addEventListener('click', () => { addStudentModal.style.display = 'none'; emailTags = []; updateEmailList(); });
+            addStudentBtn.addEventListener('click', () => { addStudentModal.style.display = 'flex'; });
             
-            // Load saved emails from browser memory
+            let emailTags = [];
             let savedEmails = JSON.parse(localStorage.getItem('primeboard_saved_emails') || '[]');
 
-            addStudentBtn.addEventListener('click', () => {
-                addStudentModal.style.display = 'flex';
-                emailInput.focus();
-            });
-
-            cancelAddBtn.addEventListener('click', () => {
-                addStudentModal.style.display = 'none';
-                emailTags = [];
-                updateEmailList();
-                emailInput.value = '';
-                emailSuggestions.style.display = 'none';
-            });
-
-            emailInput.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter' || e.key === ',') {
-                    e.preventDefault();
-                    parseAndAddEmails();
-                }
-            });
-
-            // New: Show suggestions as user types
+            emailInput.addEventListener('keypress', (e) => { if (e.key === 'Enter' || e.key === ',') { e.preventDefault(); parseAndAddEmails(); } });
             emailInput.addEventListener('input', (e) => {
                 const query = e.target.value.trim().toLowerCase();
-                if (!query || savedEmails.length === 0) {
-                    emailSuggestions.style.display = 'none';
-                    return;
-                }
-                
-                const matches = savedEmails.filter(email => 
-                    email.toLowerCase().includes(query) && !emailTags.includes(email)
-                );
-                
-                if (matches.length === 0) {
-                    emailSuggestions.style.display = 'none';
-                    return;
-                }
-                
-                emailSuggestions.innerHTML = matches.map(email => 
-                    `<div class="suggestion-item" onclick="selectSuggestion('${email}')">${email}</div>`
-                ).join('');
+                if (!query || savedEmails.length === 0) { emailSuggestions.style.display = 'none'; return; }
+                const matches = savedEmails.filter(email => email.toLowerCase().includes(query) && !emailTags.includes(email));
+                if (matches.length === 0) { emailSuggestions.style.display = 'none'; return; }
+                emailSuggestions.innerHTML = matches.map(email => `<div class="suggestion-item" onclick="selectSuggestion('${email}')">${email}</div>`).join('');
                 emailSuggestions.style.display = 'block';
             });
-
-            // Global function for clicking a suggestion
-            window.selectSuggestion = function(email) {
-                if (!emailTags.includes(email)) {
-                    emailTags.push(email);
-                    updateEmailList();
-                }
-                emailInput.value = '';
-                emailSuggestions.style.display = 'none';
-                emailInput.focus();
-            };
-
-            // Hide suggestions when clicking outside
-            document.addEventListener('click', (e) => {
-                if (!e.target.closest('.suggestions-container')) {
-                    emailSuggestions.style.display = 'none';
-                }
-            });
-
+            window.selectSuggestion = function(email) { if (!emailTags.includes(email)) { emailTags.push(email); updateEmailList(); } emailInput.value = ''; emailSuggestions.style.display = 'none'; };
             function parseAndAddEmails() {
                 const emails = emailInput.value.split(/[,\s]+/).filter(e => e.trim());
-                emails.forEach(email => {
-                    const cleanEmail = email.trim().toLowerCase();
-                    if (cleanEmail.includes('@') && !emailTags.includes(cleanEmail)) {
-                        emailTags.push(cleanEmail);
-                    }
-                });
-                updateEmailList();
-                emailInput.value = '';
-                emailSuggestions.style.display = 'none';
+                emails.forEach(email => { const cleanEmail = email.trim().toLowerCase(); if (cleanEmail.includes('@') && !emailTags.includes(cleanEmail)) { emailTags.push(cleanEmail); } });
+                updateEmailList(); emailInput.value = ''; emailSuggestions.style.display = 'none';
             }
-
             function updateEmailList() {
-                if (emailTags.length === 0) {
-                    emailList.innerHTML = '<span style="color: #718096; font-size: 0.75rem;">No emails added yet</span>';
-                } else {
-                    emailList.innerHTML = emailTags.map(email => 
-                        `<span class="email-tag">${email} <i class="fas fa-times" onclick="removeEmail('${email}')"></i></span>`
-                    ).join('');
-                }
+                if (emailTags.length === 0) { emailList.innerHTML = '<span style="color: #718096; font-size: 0.75rem;">No emails added yet</span>'; }
+                else { emailList.innerHTML = emailTags.map(email => `<span class="email-tag">${email} <i class="fas fa-times" onclick="removeEmail('${email}')"></i></span>`).join(''); }
             }
-
-            window.removeEmail = function(email) {
-                emailTags = emailTags.filter(e => e !== email);
-                updateEmailList();
-            };
-
+            window.removeEmail = function(email) { emailTags = emailTags.filter(e => e !== email); updateEmailList(); };
             updateEmailList();
 
-            sendInvitesBtn.addEventListener('click', () => {
+            document.getElementById('send-invites-btn').addEventListener('click', () => {
                 parseAndAddEmails();
-                if (emailTags.length === 0) {
-                    alert('Please add at least one email address');
-                    return;
-                }
-                
-                // Save new emails to browser memory for next time
-                emailTags.forEach(email => {
-                    if (!savedEmails.includes(email)) savedEmails.push(email);
-                });
-                // Keep only last 20 emails to prevent huge lists
+                if (emailTags.length === 0) { alert('Please add at least one email address'); return; }
+                emailTags.forEach(email => { if (!savedEmails.includes(email)) savedEmails.push(email); });
                 if (savedEmails.length > 20) savedEmails = savedEmails.slice(-20);
                 localStorage.setItem('primeboard_saved_emails', JSON.stringify(savedEmails));
-
-                sendMessage({ 
-                    type: 'email-invites', 
-                    room: room, 
-                    emails: emailTags, 
-                    inviteUrl: inviteUrl,
-                    teacherName: name
-                });
-
-                sendInvitesBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
-                setTimeout(() => {
-                    sendInvitesBtn.innerHTML = 'Send Invites';
-                }, 2000);
-
-                alert(`Invite request sent to server! Check your Render logs to confirm Brevo sent them.`);
-                addStudentModal.style.display = 'none';
-                emailTags = [];
-                updateEmailList();
-                emailInput.value = '';
+                sendMessage({ type: 'email-invites', room: room, emails: emailTags, inviteUrl: inviteUrl, teacherName: name });
+                alert(`Invite request sent to server!`);
+                addStudentModal.style.display = 'none'; emailTags = []; updateEmailList(); emailInput.value = '';
             });
 
             let locked = false;
-            let localUserCount = 1;
-
             function applyLockUI() {
                 if (role === 'teacher') {
                     lockBtn.classList.toggle('unlocked', !locked);
                     lockBtnText.textContent = locked ? 'Drawing Locked' : 'Drawing Unlocked';
                     lockBtn.querySelector('i').className = locked ? 'fas fa-lock' : 'fas fa-lock-open';
-                } else {
-                    lockedBanner.style.display = locked ? 'flex' : 'none';
-                }
+                } else { lockedBanner.style.display = locked ? 'flex' : 'none'; }
             }
-
-            function updateOnlineStudents(count) {
-                studentCount.textContent = count;
-            }
-
-            lockBtn.addEventListener('click', () => {
-                locked = !locked;
-                applyLockUI();
-                sendMessage({ type: 'set-lock', locked });
-                setExcalidrawViewMode(false);
-            });
+            lockBtn.addEventListener('click', () => { locked = !locked; applyLockUI(); sendMessage({ type: 'set-lock', locked }); });
 
             let excalidrawAPI = null;
             let suppressNextChange = false;
-
-            function setExcalidrawViewMode(viewOnly) {
-                if (excalidrawAPI) {
-                    excalidrawAPI.updateScene({ appState: { viewModeEnabled: viewOnly } });
-                }
-            }
-
             function App() {
                 const onChange = useCallback((elements, appState, files) => {
                     if (suppressNextChange) { suppressNextChange = false; return; }
                     const now = Date.now();
-                    const elapsed = now - lastSendTime;
-                    clearTimeout(trailingSendTimer);
-                    if (elapsed >= 50) {
+                    if (now - lastSendTime >= 50) {
                         lastSendTime = now;
-                        sendMessage({ type: 'scene-update', elements, appState: pickSafeAppState(appState) });
-                    } else {
-                        trailingSendTimer = setTimeout(() => {
-                            lastSendTime = Date.now();
-                            sendMessage({ type: 'scene-update', elements, appState: pickSafeAppState(appState) });
-                        }, 50 - elapsed);
+                        sendMessage({ type: 'scene-update', elements, appState: { viewBackgroundColor: appState.viewBackgroundColor } });
                     }
                 }, []);
-
                 return React.createElement(Excalidraw, {
                     excalidrawAPI: (api) => { excalidrawAPI = api; },
-                    onChange,
-                    theme: 'dark',
-                    name: `PrimeBoard - ${room}`,
-                    UIOptions: { 
-                        canvasActions: { 
-                            loadScene: false, 
-                            saveToActiveFile: false,
-                            export: { saveFileToDisk: false }
-                        } 
-                    }
+                    onChange, theme: 'dark', name: `PrimeBoard - ${room}`,
+                    UIOptions: { canvasActions: { loadScene: false, saveToActiveFile: false, export: { saveFileToDisk: false } } }
                 });
             }
-
             let lastSendTime = 0;
-            let trailingSendTimer = null;
-
             ReactDOM.createRoot(document.getElementById('root')).render(React.createElement(App));
 
-            function pickSafeAppState(appState) {
-                return { viewBackgroundColor: appState.viewBackgroundColor };
-            }
-
             let socket = null;
-            let reconnectTimer = null;
-
             function connect() {
-                statusDot.className = '';
-                statusDot.classList.add('connecting');
-                const relayUrl = window.PRIMEBOARD_RELAY_URL;
-                if (!relayUrl) {
-                    statusDot.classList.add('error');
-                    return;
-                }
-                socket = new WebSocket(relayUrl);
-                socket.addEventListener('open', () => {
-                    statusDot.className = 'connected';
-                    sendMessage({ type: 'join', room, role, name });
-                });
+                statusDot.className = 'connecting';
+                socket = new WebSocket(window.PRIMEBOARD_RELAY_URL);
+                socket.addEventListener('open', () => { statusDot.className = 'connected'; sendMessage({ type: 'join', room, role, name }); });
                 socket.addEventListener('message', (event) => {
                     const data = JSON.parse(event.data);
-                    if (data.type === 'state' || data.type === 'lock-changed') {
-                        locked = data.locked;
-                        applyLockUI();
-                        if (role === 'student') setExcalidrawViewMode(locked);
-                    }
-                    if (data.type === 'scene-update' && excalidrawAPI) {
-                        suppressNextChange = true;
-                        excalidrawAPI.updateScene({ elements: data.elements });
-                    }
-                    if (data.type === 'roster') {
-                        const count = data.users ? data.users.length : 0;
-                        if (count > 0) { localUserCount = count; updateOnlineStudents(count); }
-                    }
-                    if (data.type === 'user-joined') { localUserCount++; updateOnlineStudents(localUserCount); }
-                    if (data.type === 'user-left') { localUserCount = Math.max(1, localUserCount - 1); updateOnlineStudents(localUserCount); }
-                    if (data.type === 'email-sent') {
-                        if(data.success) console.log('Emails sent successfully via backend!');
-                        else console.error('Backend failed to send emails:', data.error);
-                    }
+                    if (data.type === 'state' || data.type === 'lock-changed') { locked = data.locked; applyLockUI(); }
+                    if (data.type === 'scene-update' && excalidrawAPI) { suppressNextChange = true; excalidrawAPI.updateScene({ elements: data.elements }); }
+                    if (data.type === 'roster') { if (data.users) studentCount.textContent = data.users.length; }
                 });
-                socket.addEventListener('close', () => {
-                    statusDot.className = 'connecting';
-                    reconnectTimer = setTimeout(connect, 2000);
-                });
-                socket.addEventListener('error', () => { statusDot.className = 'error'; });
+                socket.addEventListener('close', () => { statusDot.className = 'connecting'; setTimeout(connect, 2000); });
             }
-
-            function sendMessage(payload) {
-                if (socket && socket.readyState === WebSocket.OPEN) {
-                    socket.send(JSON.stringify(payload));
-                }
-            }
-
+            function sendMessage(payload) { if (socket && socket.readyState === WebSocket.OPEN) { socket.send(JSON.stringify(payload)); } }
             connect();
         }
     </script>
