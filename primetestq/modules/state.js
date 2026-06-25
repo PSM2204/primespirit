@@ -14,35 +14,44 @@ export function generateMockDataset(stream) {
     const dataset = [];
     const track = stream.toLowerCase().trim();
 
+    // Default Competitive Mapping Setup Rules
     ExamState.posMark = 4;
     ExamState.negMark = 1;
 
-    if (track.includes('admission')) {
+    if (track.match(/class(6|7|8|9|10)/)) {
         ExamState.totalQuestions = 100;
-        ExamState.timerSecondsLeft = 7200; // 2 Hours
-        ExamState.posMark = 4;  
-        ExamState.negMark = 1;  
+        ExamState.timerSecondsLeft = 7200; // 2 Hours for Secondary Admission Checks
+        ExamState.posMark = 4;
+        ExamState.negMark = 1;
+    } else if (track.match(/class(11|12)/)) {
+        ExamState.totalQuestions = 100;
+        ExamState.timerSecondsLeft = 10800; // 3 Hours
     } else if (track.includes('neet')) {
         ExamState.totalQuestions = 180;
-        ExamState.timerSecondsLeft = 12000; // 3 Hours 20 Mins
+        ExamState.timerSecondsLeft = 12000;
     } else if (track.includes('jee')) {
         ExamState.totalQuestions = 90;
-        ExamState.timerSecondsLeft = 10800; // 3 Hours
+        ExamState.timerSecondsLeft = 10800;
     } else if (track.includes('iat')) {
         ExamState.totalQuestions = 60;
         ExamState.timerSecondsLeft = 10800;
     } else if (track.includes('nest')) {
         ExamState.totalQuestions = 80; 
         ExamState.timerSecondsLeft = 10800;
-        ExamState.posMark = 3; 
-        ExamState.negMark = 1;
+        ExamState.posMark = 3;
+    } else if (track.includes('cuet')) {
+        ExamState.totalQuestions = 50;
+        ExamState.timerSecondsLeft = 2700; // 45 Mins
+        ExamState.posMark = 5;
     }
 
     for (let i = 1; i <= ExamState.totalQuestions; i++) {
-        let subjectLabel = "GENERAL CORE";
+        let subjectLabel = "GENERAL TRACK";
         
-        if (track.includes('admission')) {
+        if (track.match(/class(6|7|8|9|10)/)) {
             subjectLabel = (i <= 50) ? "MATHEMATICS" : "SCIENCE";
+        } else if (track.match(/class(11|12)/)) {
+            subjectLabel = (i <= 50) ? "PHYSICS" : "CHEMISTRY";
         } else if (track.includes('neet')) {
             if (i <= 45) subjectLabel = "PHYSICS";
             else if (i <= 90) subjectLabel = "CHEMISTRY";
@@ -62,8 +71,8 @@ export function generateMockDataset(stream) {
         dataset.push({
             id: i,
             subject: subjectLabel,
-            text: `[${subjectLabel} // TRACK EVALUATION CHANNELS ${i}] Evaluate the testing metrics baseline under structural exam criteria layer indices ${i}.`,
-            options: ["Option A: Calculation matches baseline parameters.", "Option B: Functional transformation reaches threshold limits.", "Option C: Scalar potential output logs optimal status.", "Option D: Theoretical metric satisfies system metrics balance."],
+            text: `[${subjectLabel} Sample Evaluation Question ${i}] Analyze structural metrics logic framework mapping standard testing constraints parameters.`,
+            options: ["Option A: Matches target core calibration parameters perfectly.", "Option B: Fulfills benchmark limits mapping structural metrics.", "Option C: Fails optimization bounds forcing error fallback logic.", "Option D: Outputs equilibrium state across execution levels."],
             correct: Math.floor(Math.random() * 4)
         });
         
