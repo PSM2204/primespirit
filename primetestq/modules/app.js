@@ -1,4 +1,4 @@
-// Clean State Matrix
+// Strict State Matrix Object Definition
 const ExamState = {
     stream: '',
     activeQuestionIndex: 0,
@@ -11,72 +11,28 @@ const ExamState = {
     negMark: 1
 };
 
-// Initialize interactive nodes directly
+// Bind active ecosystem rings immediately
 const interactiveOrbitNodes = document.querySelectorAll('.orbit-node');
 interactiveOrbitNodes.forEach(node => {
     const triggerExamSimulation = (e) => {
         e.preventDefault();
         const selectedTargetStream = node.getAttribute('data-ecosystem');
         if (selectedTargetStream) {
-            swapViewportToSimulationCockpitView();
-            startSimulationEngine(selectedTargetStream);
+            bootSecureCockpitViewport(selectedTargetStream);
         }
     };
     node.addEventListener('click', triggerExamSimulation);
     node.addEventListener('touchstart', triggerExamSimulation, { passive: false });
 });
 
-function swapViewportToSimulationCockpitView() {
-    // Create DOM fragments instead of raw dynamic text evaluation to pass CSP blocks
-    const mainViewBox = document.getElementById('app-view-viewport');
-    mainViewBox.innerHTML = ''; 
-
-    const containerNode = document.createElement('div');
-    containerNode.id = 'screen-cockpit-simulation';
-
-    containerNode.innerHTML = `
-        <header class="cockpit-bar" style="background: rgba(10,15,30,0.7); backdrop-filter:blur(20px); border-bottom:1px solid rgba(255,255,255,0.08); border-radius:12px;">
-            <div style="font-weight:900; font-size:0.8rem; letter-spacing: 0.1em; color:rgba(255,255,255,0.8);"><i class="fas fa-shield-alt" style="color:#00C6FF; margin-right:6px;"></i> SECURE NODE ACTIVE</div>
-            <div class="instrumentation-timer-block"><div class="timer-numerical-display" id="clock-digital-hud">00:00:00</div></div>
-            <button id="btn-cockpit-submit" style="background:rgba(15,23,42,0.6); border:1px solid rgba(255,255,255,0.08); color:#fff; font-weight:800; font-size:0.7rem; padding:8px 16px; border-radius:20px; cursor:pointer;">SUBMIT CORE TEST</button>
-        </header>
-        <div class="cockpit-workstation-grid">
-            <main class="question-workspace glass-panel" style="background: rgba(10,15,30,0.2); border:1px solid rgba(255,255,255,0.08); border-radius:16px; flex-direction:column; align-items:stretch;">
-                <div id="hud-question-index-number" style="font-size:0.75rem; font-family:monospace; color:#00C6FF; font-weight:800;">QUESTION --</div>
-                <div id="hud-question-render-viewport" style="font-size:1.05rem; font-weight:500; color:#fff; line-height:1.5; margin-top:10px;">Loading exam parameters...</div>
-                <div class="options-matrix-grid" id="hud-options-render-viewport" style="margin-top:25px;"></div>
-                <div class="cockpit-control-toolbar-row" style="margin-top:auto; border-top:1px solid rgba(255,255,255,0.08); padding-top:15px;">
-                    <div class="left-action-cluster">
-                        <button id="btn-action-prev" style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.08); color:#A0AEC0; padding:10px 18px; border-radius:8px; font-weight:700; cursor:pointer; font-size:0.75rem;">PREVIOUS</button>
-                        <button id="btn-action-review" style="background:rgba(168,85,247,0.1); border:1px solid #A855F7; color:#A855F7; padding:10px 18px; border-radius:8px; font-weight:700; cursor:pointer; font-size:0.75rem;">MARK REVIEW</button>
-                        <button id="btn-action-clear" style="background:transparent; border:none; color:#718096; padding:10px 12px; font-weight:600; cursor:pointer; font-size:0.75rem;">CLEAR</button>
-                    </div>
-                    <button id="btn-action-next" style="background:#00C6FF; color:#000; padding:10px 24px; border-radius:8px; font-weight:800; cursor:pointer; border:none;">SAVE & NEXT <i class="fas fa-chevron-right"></i></button>
-                </div>
-            </main>
-            <aside class="telemetry-palette-panel glass-panel" style="background: rgba(10,15,30,0.4); border:1px solid rgba(255,255,255,0.08); border-radius:16px; flex-direction:column; align-items:stretch;">
-                <div style="font-size:0.75rem; font-weight:800; color:#fff; border-bottom:1px solid rgba(255,255,255,0.08); padding-bottom:8px;">TEST TELEMETRY PALETTE</div>
-                <div class="circles-status-matrix" id="hud-palette-circles-grid"></div>
-            </aside>
-        </div>
-    `;
-    mainViewBox.appendChild(containerNode);
-}
-
-// Global Event Delegate Map
-document.addEventListener('click', (e) => {
-    if (e.target.id === 'btn-action-next') saveAndNavigate(1);
-    if (e.target.id === 'btn-action-prev') saveAndNavigate(-1);
-    if (e.target.id === 'btn-action-review') markQuestionForReviewMetric();
-    if (e.target.id === 'btn-action-clear') clearSelectedResponseMetric();
-    if (e.target.id === 'btn-cockpit-submit') {
-        if (confirm("Are you sure you want to finalize your tracking logs and submit this test?")) {
-            executeFinalSubmissionSequence();
-        }
-    }
-});
-
-function startSimulationEngine(stream) {
+function bootSecureCockpitViewport(stream) {
+    // Clone template safely without calling text evaluation string parsing
+    const templateElement = document.getElementById('secure-hidden-cockpit-template');
+    const targetViewport = document.getElementById('app-view-viewport');
+    
+    targetViewport.innerHTML = templateElement.innerHTML;
+    
+    // Core Parameters Setup Sequence
     ExamState.stream = stream;
     ExamState.userResponses = {};
     ExamState.activeQuestionIndex = 0;
@@ -106,7 +62,7 @@ function startSimulationEngine(stream) {
     ExamState.questionsData = [];
     for (let i = 1; i <= ExamState.totalQuestions; i++) {
         let subjectLabel = "GENERAL COGNITION";
-        let questionText = `[${stream.toUpperCase()} EXAM CRITERIA LOGIC INDEX ${i}] Evaluate standard parameters.`;
+        let questionText = `[${stream.toUpperCase()} EXAM CRITERIA LOGIC INDEX ${i}] Evaluate standard testing parameters framework accuracy patterns.`;
         let optionsArray = ["Option A", "Option B", "Option C", "Option D"];
         let correctOptionIndex = Math.floor(Math.random() * 4);
 
@@ -131,16 +87,16 @@ function startSimulationEngine(stream) {
             correctOptionIndex = QuestionPool[classKey].physics.ans;
         } else if (track.includes('neet')) {
             if (i <= 45) subjectLabel = "PHYSICS"; else if (i <= 90) subjectLabel = "CHEMISTRY"; else if (i <= 135) subjectLabel = "BOTANY"; else subjectLabel = "ZOOLOGY";
-            questionText = `[NEET HIGH-LEVEL ASSESSMENT // ${subjectLabel} Q.${i}] Medical entry standard validation testing parameters.`;
+            questionText = `[NEET EXAM LEVEL ASSESSMENT // ${subjectLabel} Q.${i}] Medical entry standard validation tracking vectors.`;
         } else if (track.includes('jee')) {
             if (i <= 30) subjectLabel = "PHYSICS"; else if (i <= 60) subjectLabel = "CHEMISTRY"; else subjectLabel = "MATHEMATICS";
-            questionText = `[JEE MAIN EVALUATION // ${subjectLabel} Q.${i}] Analytical mechanics diagnostic logic testing parameters alignment.`;
+            questionText = `[JEE MAIN EVALUATION ROW // ${subjectLabel} Q.${i}] Advanced engineering calculation baseline metrics parameters.`;
         } else if (track.includes('iat') || track.includes('nest')) {
             if (i <= 15 || (track.includes('nest') && i <= 20)) subjectLabel = "PHYSICS"; else if (i <= 30 || (track.includes('nest') && i <= 40)) subjectLabel = "CHEMISTRY"; else if (i <= 45 || (track.includes('nest') && i <= 60)) subjectLabel = "MATHEMATICS"; else subjectLabel = "BIOLOGY";
-            questionText = `[RESEARCH APTITUDE MATRIX // ${subjectLabel} Q.${i}] Conceptual advanced scientific derivatives testing matrix level.`;
+            questionText = `[RESEARCH INTEGRATED APTITUDE // ${subjectLabel} Q.${i}] Core scientific analytical conceptual derivatives parameters.`;
         } else if (track.includes('cuet')) {
             subjectLabel = (i <= 25) ? "DOMAIN PHYSICS" : "DOMAIN MATHEMATICS";
-            questionText = `[CUET UG ADMISSION // ${subjectLabel} Q.${i}] Central University criteria test question alignment format.`;
+            questionText = `[CUET UG VALIDATION CRITERIA // ${subjectLabel} Q.${i}] Domain specific higher university admission check framework.`;
         }
 
         ExamState.questionsData.push({ id: i, subject: subjectLabel, text: questionText, options: optionsArray, correct: correctOptionIndex });
@@ -167,7 +123,8 @@ function renderWorkspaceQuestionItem() {
         const item = document.createElement('div');
         item.className = 'option-node-item';
         if (ExamState.userResponses[currentQ.id] === idx) item.classList.add('selected');
-        item.innerHTML = `<span style="margin-right:12px; color:#00C6FF; font-weight:800;">${String.fromCharCode(65+idx)}.</span> ${opt}`;
+        item.innerHTML = `<span style="margin-right:12px; color:#00C6FF; font-weight:800;">${String.fromCharCode(65+idx)}.</span> `;
+        item.appendChild(document.createTextNode(opt));
         item.addEventListener('click', () => registerOptionSelection(currentQ.id, idx));
         optionsBox.appendChild(item);
     });
@@ -235,6 +192,19 @@ function bootTimerInstrumentation() {
     }, 1000);
 }
 
+// FIXED: Bulletproof closest-child event delegate map matching CSP firewall rules
+document.addEventListener('click', (e) => {
+    if (e.target.closest('#btn-action-next')) saveAndNavigate(1);
+    if (e.target.closest('#btn-action-prev')) saveAndNavigate(-1);
+    if (e.target.closest('#btn-action-review')) markQuestionForReviewMetric();
+    if (e.target.closest('#btn-action-clear')) clearSelectedResponseMetric();
+    if (e.target.closest('#btn-cockpit-submit')) {
+        if (confirm("Are you sure you want to finalize your tracking logs and submit this test?")) {
+            executeFinalSubmissionSequence();
+        }
+    }
+});
+
 function executeFinalSubmissionSequence() {
     clearInterval(clockIntervalId);
     let totalCorrect = 0, totalWrong = 0, totalUnanswered = 0;
@@ -251,7 +221,7 @@ function executeFinalSubmissionSequence() {
     document.getElementById('app-view-viewport').innerHTML = `
         <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; text-align: center;">
             <div class="glass-panel" style="padding: 40px; max-width: 550px; width: 100%; background:rgba(7,11,22,0.9); flex-direction: column;">
-                <h2 style="font-size: 1.8rem; font-weight: 900; margin-bottom: 5px;">Test Submitted</h2>
+                <h2 style="font-size: 1.8rem; font-weight: 900; margin-bottom: 5px;">Test Submitted Successfully</h2>
                 <p style="color: #A0AEC0; font-size: 0.75rem; text-transform: uppercase; margin-bottom: 20px;">Stream: ${ExamState.stream.toUpperCase()}</p>
                 <div style="font-size: 3.5rem; font-weight: 900; color: #00FF99; margin-bottom: 20px;">${finalScore} <span style="font-size: 1.2rem; color: #4A5568;">/ ${maximumPossibleScore}</span></div>
                 <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; width: 100%; margin-bottom: 25px;">
