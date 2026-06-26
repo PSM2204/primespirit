@@ -64,7 +64,6 @@
         .role-toggle button{flex:1;padding:12px;border-radius:10px;border:1px solid var(--border-glass);background:rgba(255,255,255,.03);color:#A0AEC0;font-weight:700;font-size:.75rem;cursor:pointer}
         .role-toggle button.active{border-color:var(--primary-neon);color:var(--primary-neon);background:rgba(0,198,255,.08)}
         #enter-btn{width:100%;margin-top:24px;padding:14px;border-radius:10px;border:none;background:var(--primary-neon);color:#000;font-weight:800;font-size:.9rem;cursor:pointer}
-        #enter-btn:disabled{opacity:.4;cursor:not-allowed}
         #setup-error{color:var(--locked-red);font-size:.75rem;margin-top:10px;min-height:1em}
         #setup-card .or-row{display:flex;align-items:center;gap:10px;margin:18px 0 0;color:#4A5568;font-size:.7rem}
         #setup-card .or-row::before,#setup-card .or-row::after{content:'';flex:1;height:1px;background:var(--border-glass)}
@@ -108,21 +107,22 @@
         .feature-btn.active{background:rgba(0,255,153,.15);color:var(--unlocked-green);border-color:var(--unlocked-green)}
 
         /* BACKGROUND COLOR POPUP */
-        #bg-color-popup{
-            display:none; position:fixed; left:75px; top:240px; z-index:1001; 
-            background:var(--card-glass); border:1px solid var(--border-glass); 
-            border-radius:12px; padding:16px; backdrop-filter:blur(16px); 
-            box-shadow:0 10px 30px rgba(0,0,0,0.5); width: 220px;
+        #bg-color-popup{display:none;position:fixed;left:75px;top:240px;z-index:1001;background:var(--card-glass);border:1px solid var(--border-glass);border-radius:12px;padding:16px;backdrop-filter:blur(16px);box-shadow:0 10px 30px rgba(0,0,0,0.5);width:220px}
+        .color-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px}
+        .color-swatch{width:100%;aspect-ratio:1;border-radius:8px;cursor:pointer;border:2px solid transparent;transition:transform .2s,border-color .2s}
+        .color-swatch:hover{transform:scale(1.1);border-color:#fff}
+        .custom-color-row{display:flex;align-items:center;gap:10px;border-top:1px solid var(--border-glass);padding-top:12px}
+        .custom-color-row span{color:#fff;font-size:.8rem;font-weight:600}
+        #custom-bg-picker{width:100%;height:35px;border:none;border-radius:6px;cursor:pointer;background:transparent}
+
+        /* FOG OF WAR OVERLAY */
+        #spotlight-overlay {
+            position: fixed; inset: 0; z-index: 950;
+            background: radial-gradient(circle 250px at var(--sx, 50%) var(--sy, 50%), transparent 0%, rgba(0,0,0,0.96) 100%);
+            pointer-events: none; /* Allows students to still pan/zoom if needed */
+            display: none;
+            transition: background 0.1s ease-out;
         }
-        .color-grid{display:grid; grid-template-columns:repeat(4, 1fr); gap:8px; margin-bottom:12px;}
-        .color-swatch{
-            width:100%; aspect-ratio:1; border-radius:8px; cursor:pointer; 
-            border:2px solid transparent; transition:transform 0.2s, border-color 0.2s;
-        }
-        .color-swatch:hover{transform:scale(1.1); border-color:#fff;}
-        .custom-color-row{display:flex; align-items:center; gap:10px; border-top:1px solid var(--border-glass); padding-top:12px;}
-        .custom-color-row span{color:#fff; font-size:0.8rem; font-weight:600;}
-        #custom-bg-picker{width:100%; height:35px; border:none; border-radius:6px; cursor:pointer; background:transparent;}
 
         /* TIMER WIDGET */
         #timer-widget{position:fixed;top:60px;right:20px;z-index:998;background:var(--card-glass);border:1px solid var(--border-glass);border-radius:16px;padding:16px;min-width:220px;backdrop-filter:blur(16px);box-shadow:0 10px 30px rgba(0,0,0,.5);display:none;flex-direction:column;align-items:center}
@@ -156,7 +156,7 @@
             .toolkit-grid{grid-template-columns:repeat(2,1fr)}
             #timer-widget{top:55px;right:10px;min-width:180px;padding:12px}
             #timer-display{font-size:2.2rem}
-            #bg-color-popup{left:55px; top:200px; width: 180px;}
+            #bg-color-popup{left:55px;top:200px;width:180px}
         }
 
         /* FORCE TOOLBAR LEFT */
@@ -202,23 +202,27 @@
     <!-- FEATURES PANEL (LEFT) -->
     <div id="features-panel" style="display:none;">
         <button class="feature-btn" id="btn-toolkit" title="Smart Educational Toolkit"><i class="fas fa-graduation-cap"></i></button>
+        <button class="feature-btn" id="btn-spotlight" title="Toggle Fog of War (Spotlight)"><i class="fas fa-lightbulb"></i></button>
         <button class="feature-btn" id="btn-timer" title="Classroom Timer"><i class="fas fa-stopwatch"></i></button>
         <button class="feature-btn" id="btn-math" title="Insert Math Equation"><i class="fas fa-square-root-alt"></i></button>
         <button class="feature-btn" id="btn-bg-color" title="Change Background Color"><i class="fas fa-fill-drip"></i></button>
         <button class="feature-btn" id="btn-theme" title="Change Theme"><i class="fas fa-palette"></i></button>
     </div>
 
+    <!-- FOG OF WAR OVERLAY -->
+    <div id="spotlight-overlay"></div>
+
     <!-- BACKGROUND COLOR POPUP -->
     <div id="bg-color-popup">
         <div class="color-grid">
-            <div class="color-swatch" style="background:#090D1A;" onclick="setBgColor('#090D1A')"></div> <!-- Dark Blue -->
-            <div class="color-swatch" style="background:#1e1e1e;" onclick="setBgColor('#1e1e1e')"></div> <!-- Dark Gray -->
-            <div class="color-swatch" style="background:#ffffff;" onclick="setBgColor('#ffffff')"></div> <!-- White -->
-            <div class="color-swatch" style="background:#f4f4f4;" onclick="setBgColor('#f4f4f4')"></div> <!-- Light Gray -->
-            <div class="color-swatch" style="background:#fff9c4;" onclick="setBgColor('#fff9c4')"></div> <!-- Yellow Note -->
-            <div class="color-swatch" style="background:#e3f2fd;" onclick="setBgColor('#e3f2fd')"></div> <!-- Light Blue -->
-            <div class="color-swatch" style="background:#e8f5e9;" onclick="setBgColor('#e8f5e9')"></div> <!-- Light Green -->
-            <div class="color-swatch" style="background:#000000;" onclick="setBgColor('#000000')"></div> <!-- Black -->
+            <div class="color-swatch" style="background:#090D1A;" onclick="setBgColor('#090D1A')"></div>
+            <div class="color-swatch" style="background:#1e1e1e;" onclick="setBgColor('#1e1e1e')"></div>
+            <div class="color-swatch" style="background:#ffffff;" onclick="setBgColor('#ffffff')"></div>
+            <div class="color-swatch" style="background:#f4f4f4;" onclick="setBgColor('#f4f4f4')"></div>
+            <div class="color-swatch" style="background:#fff9c4;" onclick="setBgColor('#fff9c4')"></div>
+            <div class="color-swatch" style="background:#e3f2fd;" onclick="setBgColor('#e3f2fd')"></div>
+            <div class="color-swatch" style="background:#e8f5e9;" onclick="setBgColor('#e8f5e9')"></div>
+            <div class="color-swatch" style="background:#000000;" onclick="setBgColor('#000000')"></div>
         </div>
         <div class="custom-color-row">
             <span>Custom:</span>
@@ -336,6 +340,36 @@
             const inviteUrl=`${window.location.origin}${window.location.pathname}?room=${encodeURIComponent(room)}`;
             inviteBtn.addEventListener('click',()=>{navigator.clipboard.writeText(inviteUrl).then(()=>{const o=inviteBtn.innerHTML;inviteBtn.innerHTML='<i class="fas fa-check"></i> <span>Copied!</span>';setTimeout(()=>{inviteBtn.innerHTML=o;},1800);});});
 
+            // ===== FOG OF WAR (SPOTLIGHT) =====
+            const btnSpotlight = document.getElementById('btn-spotlight');
+            const spotlightOverlay = document.getElementById('spotlight-overlay');
+            let isSpotlightActive = false;
+            let lastSpotlightSend = 0;
+
+            btnSpotlight.addEventListener('click', () => {
+                isSpotlightActive = !isSpotlightActive;
+                btnSpotlight.classList.toggle('active', isSpotlightActive);
+                
+                if (role === 'teacher') {
+                    sendMessage({ type: 'spotlight-update', active: isSpotlightActive });
+                    if (isSpotlightActive) {
+                        document.addEventListener('mousemove', handleTeacherMouse);
+                    } else {
+                        document.removeEventListener('mousemove', handleTeacherMouse);
+                        spotlightOverlay.style.display = 'none';
+                    }
+                }
+            });
+
+            function handleTeacherMouse(e) {
+                const now = Date.now();
+                // Throttle to 30fps to prevent WebSocket flooding
+                if (now - lastSpotlightSend > 33) {
+                    lastSpotlightSend = now;
+                    sendMessage({ type: 'spotlight-update', active: true, x: e.clientX, y: e.clientY });
+                }
+            }
+
             // ===== BACKGROUND COLOR =====
             const btnBgColor = document.getElementById('btn-bg-color');
             const bgColorPopup = document.getElementById('bg-color-popup');
@@ -353,16 +387,12 @@
             });
 
             window.setBgColor = function(color) {
-                if (excalidrawAPI) {
-                    excalidrawAPI.updateScene({ appState: { viewBackgroundColor: color } });
-                }
+                if (excalidrawAPI) excalidrawAPI.updateScene({ appState: { viewBackgroundColor: color } });
                 customBgPicker.value = color;
             };
 
             customBgPicker.addEventListener('input', (e) => {
-                if (excalidrawAPI) {
-                    excalidrawAPI.updateScene({ appState: { viewBackgroundColor: e.target.value } });
-                }
+                if (excalidrawAPI) excalidrawAPI.updateScene({ appState: { viewBackgroundColor: e.target.value } });
             });
 
             // ===== TIMER =====
@@ -461,6 +491,16 @@
                         if(data.action==='start'&&!isTimerRunning)startTimerLocal();
                         if(data.action==='pause')pauseTimerLocal();
                         if(data.action==='reset'){pauseTimerLocal();timeLeft=data.timeLeft;updateTimerDisplay();}
+                    }
+                    // FOG OF WAR SYNC
+                    if(data.type==='spotlight-update'){
+                        if(data.active){
+                            spotlightOverlay.style.display='block';
+                            spotlightOverlay.style.setProperty('--sx',`${data.x}px`);
+                            spotlightOverlay.style.setProperty('--sy',`${data.y}px`);
+                        } else {
+                            spotlightOverlay.style.display='none';
+                        }
                     }
                 });
                 socket.addEventListener('close',()=>{statusDot.className='connecting';setTimeout(connect,2000);});
