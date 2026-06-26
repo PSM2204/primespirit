@@ -42,6 +42,7 @@
         #status-dot.connected{background:var(--unlocked-green);box-shadow:0 0 8px var(--unlocked-green)}
         #locked-banner{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:1000;display:none;align-items:center;gap:10px;background:rgba(255,71,87,.12);border:1px solid var(--locked-red);color:#fff;padding:10px 18px;border-radius:30px;font-size:.8rem;font-weight:600;backdrop-filter:blur(10px)}
 
+        /* LEFT SIDEBAR - Z-INDEX 999 */
         #left-sidebar{position:fixed;left:0;top:50px;bottom:0;width:52px;background:var(--card-glass);border-right:1px solid var(--border-glass);backdrop-filter:blur(16px);z-index:999;display:flex;flex-direction:column;align-items:center;padding:12px 0;gap:8px}
         .sidebar-btn{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;border:1px solid var(--border-glass);background:rgba(255,255,255,.05);color:#A0AEC0;cursor:pointer;transition:all .2s}
         .sidebar-btn:hover{background:rgba(0,198,255,.15);color:var(--primary-neon);transform:scale(1.05)}
@@ -66,16 +67,18 @@
         .timer-inputs input:focus{outline:none;border-color:var(--primary-neon)}
         .timer-inputs span{color:#718096;font-weight:bold}
 
-        #bg-color-popup{display:none;position:fixed;right:80px;top:70px;z-index:1001;background:var(--card-glass);border:1px solid var(--border-glass);border-radius:12px;backdrop-filter:blur(16px);box-shadow:0 10px 30px rgba(0,0,0,.5);width:220px}
+        /* COLOR POPUP - Z-INDEX 1050 (Higher than sidebar) */
+        #bg-color-popup{display:none;position:fixed;right:100px;top:70px;z-index:1050 !important;background:var(--card-glass);border:1px solid var(--border-glass);border-radius:12px;backdrop-filter:blur(16px);box-shadow:0 10px 30px rgba(0,0,0,.5);width:240px}
         .popup-header{display:flex;align-items:center;gap:8px;padding:10px 12px;border-bottom:1px solid var(--border-glass);cursor:move;color:#fff;font-size:.85rem;font-weight:700;background:rgba(255,255,255,.03);border-radius:12px 12px 0 0;user-select:none}
         .popup-header i{color:#718096}
         .popup-content{padding:16px}
-        .color-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px}
-        .color-swatch{width:100%;aspect-ratio:1;border-radius:8px;cursor:pointer;border:2px solid transparent;transition:transform .2s,border-color .2s}
-        .color-swatch:hover{transform:scale(1.1);border-color:#fff}
+        .color-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:12px}
+        .color-swatch{width:100%;aspect-ratio:1;border-radius:8px;cursor:pointer;border:3px solid rgba(255,255,255,0.2);transition:transform .2s,border-color .2s;box-shadow:0 2px 8px rgba(0,0,0,0.3)}
+        .color-swatch:hover{transform:scale(1.15);border-color:#fff}
+        .color-swatch.selected{border-color:var(--primary-neon);border-width:3px}
         .custom-color-row{display:flex;align-items:center;gap:10px;border-top:1px solid var(--border-glass);padding-top:12px}
         .custom-color-row span{color:#fff;font-size:.8rem;font-weight:600}
-        #custom-bg-picker{width:100%;height:35px;border:none;border-radius:6px;cursor:pointer;background:transparent}
+        #custom-bg-picker{width:100%;height:40px;border:2px solid var(--border-glass);border-radius:6px;cursor:pointer;background:transparent}
 
         #setup-screen{position:fixed;inset:0;z-index:2000;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at center,#0F172A 0%,#050811 100%);padding:20px}
         #setup-card{width:min(420px,95vw);background:var(--card-glass);border:1px solid var(--border-glass);border-radius:18px;padding:32px 28px;text-align:center}
@@ -200,14 +203,14 @@
         <div class="popup-header"><i class="fas fa-grip-vertical"></i> Background Color</div>
         <div class="popup-content">
             <div class="color-grid">
-                <div class="color-swatch" style="background:#090D1A;" data-color="#090D1A"></div>
-                <div class="color-swatch" style="background:#1e1e1e;" data-color="#1e1e1e"></div>
-                <div class="color-swatch" style="background:#ffffff;" data-color="#ffffff"></div>
-                <div class="color-swatch" style="background:#f4f4f4;" data-color="#f4f4f4"></div>
-                <div class="color-swatch" style="background:#fff9c4;" data-color="#fff9c4"></div>
-                <div class="color-swatch" style="background:#e3f2fd;" data-color="#e3f2fd"></div>
-                <div class="color-swatch" style="background:#e8f5e9;" data-color="#e8f5e9"></div>
-                <div class="color-swatch" style="background:#000000;" data-color="#000000"></div>
+                <div class="color-swatch" style="background:#090D1A !important;" data-color="#090D1A" title="Dark Blue"></div>
+                <div class="color-swatch" style="background:#1e1e1e !important;" data-color="#1e1e1e" title="Dark Gray"></div>
+                <div class="color-swatch" style="background:#ffffff !important;" data-color="#ffffff" title="White"></div>
+                <div class="color-swatch" style="background:#f4f4f4 !important;" data-color="#f4f4f4" title="Light Gray"></div>
+                <div class="color-swatch" style="background:#fff9c4 !important;" data-color="#fff9c4" title="Yellow"></div>
+                <div class="color-swatch" style="background:#e3f2fd !important;" data-color="#e3f2fd" title="Light Blue"></div>
+                <div class="color-swatch" style="background:#e8f5e9 !important;" data-color="#e8f5e9" title="Light Green"></div>
+                <div class="color-swatch" style="background:#000000 !important;" data-color="#000000" title="Black"></div>
             </div>
             <div class="custom-color-row">
                 <span>Custom:</span>
@@ -310,7 +313,14 @@
             let isRemoteUpdate=false;
             let lastSendTime=0;
 
-            // ===== FOG OF WAR - FIXED =====
+            // FUNCTION TO DESELECT EXCALIDRAW TOOLS
+            function deselectExcalidrawTools() {
+                if (excalidrawAPI) {
+                    excalidrawAPI.setActiveTool({ type: "selection" });
+                }
+            }
+
+            // ===== FOG OF WAR =====
             const btnSpotlight = document.getElementById('btn-spotlight');
             const spotlightOverlay = document.getElementById('spotlight-overlay');
             let isSpotlightActive = false, lastSpotlightSend = 0;
@@ -318,7 +328,6 @@
             btnSpotlight.addEventListener('click', () => {
                 isSpotlightActive = !isSpotlightActive;
                 btnSpotlight.classList.toggle('active', isSpotlightActive);
-                console.log('Spotlight toggled:', isSpotlightActive);
                 
                 if (role === 'teacher') {
                     sendMessage({ type: 'spotlight-update', active: isSpotlightActive });
@@ -340,7 +349,7 @@
                 }
             }
 
-            // ===== BACKGROUND COLOR - FIXED =====
+            // ===== BACKGROUND COLOR =====
             const btnBgColor = document.getElementById('btn-bg-color');
             const bgColorPopup = document.getElementById('bg-color-popup');
             const popupHeader = bgColorPopup.querySelector('.popup-header');
@@ -350,8 +359,8 @@
             
             btnBgColor.addEventListener('click', (e) => { 
                 e.stopPropagation(); 
+                deselectExcalidrawTools(); // FIX: Deselect pen when opening colors
                 bgColorPopup.style.display = bgColorPopup.style.display === 'block' ? 'none' : 'block';
-                console.log('Color popup toggled');
             });
             
             document.addEventListener('click', (e) => { 
@@ -360,33 +369,30 @@
                 }
             });
 
-            // Color swatch click handlers
+            function setBackgroundColor(color) {
+                if (excalidrawAPI) {
+                    excalidrawAPI.updateScene({ appState: { viewBackgroundColor: color } });
+                    customBgPicker.value = color;
+                    colorSwatches.forEach(swatch => {
+                        swatch.classList.remove('selected');
+                        if (swatch.getAttribute('data-color') === color) {
+                            swatch.classList.add('selected');
+                        }
+                    });
+                }
+            }
+
             colorSwatches.forEach(swatch => {
                 swatch.addEventListener('click', (e) => {
                     e.stopPropagation();
-                    const color = swatch.getAttribute('data-color');
-                    console.log('Color clicked:', color);
-                    if (excalidrawAPI) {
-                        excalidrawAPI.updateScene({ 
-                            appState: { viewBackgroundColor: color } 
-                        });
-                        customBgPicker.value = color;
-                    } else {
-                        console.error('excalidrawAPI not available');
-                    }
+                    setBackgroundColor(swatch.getAttribute('data-color'));
                 });
             });
 
-            // Custom color picker
             customBgPicker.addEventListener('input', (e) => {
-                if (excalidrawAPI) {
-                    excalidrawAPI.updateScene({ 
-                        appState: { viewBackgroundColor: e.target.value } 
-                    });
-                }
+                setBackgroundColor(e.target.value);
             });
 
-            // Drag functionality
             popupHeader.addEventListener('mousedown', (e) => {
                 isDragging = true; 
                 const rect = bgColorPopup.getBoundingClientRect();
@@ -406,16 +412,18 @@
             });
             
             document.addEventListener('mouseup', () => { 
-                if (isDragging) { 
-                    isDragging = false; 
-                    bgColorPopup.style.transition = 'background 0.1s ease-out'; 
-                } 
+                if (isDragging) { isDragging = false; bgColorPopup.style.transition = 'background 0.1s ease-out'; } 
             });
 
             // ===== TIMER =====
             const timerWidget=document.getElementById('timer-widget'),timerDisplay=document.getElementById('timer-display'),timerStartBtn=document.getElementById('timer-start'),timerPauseBtn=document.getElementById('timer-pause'),timerResetBtn=document.getElementById('timer-reset'),timerMinInput=document.getElementById('timer-min'),timerSecInput=document.getElementById('timer-sec'),timerControls=document.getElementById('timer-controls-container'),timerInputs=document.getElementById('timer-inputs-container');
             let timerInterval=null,timeLeft=300,isTimerRunning=false;
-            document.getElementById('btn-timer').addEventListener('click',()=>{timerWidget.style.display=timerWidget.style.display==='flex'?'none':'flex';});
+            
+            document.getElementById('btn-timer').addEventListener('click',()=>{
+                deselectExcalidrawTools(); // FIX: Deselect pen when opening timer
+                timerWidget.style.display=timerWidget.style.display==='flex'?'none':'flex';
+            });
+            
             if(role!=='teacher'){timerControls.style.display='none';timerInputs.style.display='none';}
             function formatTime(s){return `${Math.floor(s/60).toString().padStart(2,'0')}:${(s%60).toString().padStart(2,'0')}`;}
             function updateTimerDisplay(){timerDisplay.textContent=formatTime(timeLeft);timerDisplay.className='';if(timeLeft<=10&&timeLeft>0)timerDisplay.classList.add('danger');else if(timeLeft<=60&&timeLeft>10)timerDisplay.classList.add('warning');}
@@ -425,25 +433,22 @@
             if(role==='teacher'){timerStartBtn.addEventListener('click',()=>{if(timeLeft===0)resetTimerLocal();startTimerLocal();sendMessage({type:'timer-update',action:'start',timeLeft});});timerPauseBtn.addEventListener('click',()=>{pauseTimerLocal();sendMessage({type:'timer-update',action:'pause',timeLeft});});timerResetBtn.addEventListener('click',()=>{resetTimerLocal();sendMessage({type:'timer-update',action:'reset',timeLeft});});timerMinInput.addEventListener('change',resetTimerLocal);timerSecInput.addEventListener('change',resetTimerLocal);}
             updateTimerDisplay();
 
-            // ===== TOOLKIT - FIXED =====
+            // ===== TOOLKIT =====
             const toolkitModal=document.getElementById('toolkit-modal');
-            document.getElementById('btn-toolkit').addEventListener('click',()=>{toolkitModal.style.display='flex';});
+            document.getElementById('btn-toolkit').addEventListener('click',()=>{
+                deselectExcalidrawTools(); // FIX: Deselect pen when opening toolkit
+                toolkitModal.style.display='flex';
+            });
             document.getElementById('close-toolkit-btn').addEventListener('click',()=>{toolkitModal.style.display='none';});
             
-            // Toolkit item click handlers
             document.querySelectorAll('.toolkit-item').forEach(item => {
                 item.addEventListener('click', () => {
-                    const tool = item.getAttribute('data-tool');
-                    console.log('Toolkit clicked:', tool);
-                    applyToolkit(tool);
+                    applyToolkit(item.getAttribute('data-tool'));
                 });
             });
 
             function applyToolkit(type){
-                if(!excalidrawAPI){
-                    console.error('excalidrawAPI not available');
-                    return;
-                }
+                if(!excalidrawAPI) return;
                 const elements=excalidrawAPI.getSceneElements();
                 let n=[];
                 const sx=100,sy=100;
@@ -456,7 +461,7 @@
                 }
                 else if(type==='chem-benzene'){
                     n.push(createEl('diamond',sx,sy,100,100,{strokeColor:"#00C6FF",strokeWidth:2}));
-                    n.push(createEl('text',sx+20,sy+40,60,20,{text:"C₆H₆",fontSize:20,strokeColor:"#fff"}));
+                    n.push(createEl('text',sx+20,sy+40,60,20,{text:"C₆H",fontSize:20,strokeColor:"#fff"}));
                 }
                 else if(type==='bio-cell'){
                     n.push(createEl('ellipse',sx,sy,200,150,{strokeColor:"#00FF99",backgroundColor:"rgba(0,255,153,0.1)",fillStyle:"solid"}));
@@ -483,16 +488,16 @@
                     n.push(createEl('text',sx+10,sy+10,280,130,{text:"def hello():\n  print('Hello World')",fontSize:14,fontFamily:3,strokeColor:"#00FF99"}));
                 }
                 
-                if(n.length>0){
-                    console.log('Adding elements:', n.length);
-                    excalidrawAPI.updateScene({elements:[...elements,...n]});
-                }
+                if(n.length>0){ excalidrawAPI.updateScene({elements:[...elements,...n]}); }
                 toolkitModal.style.display='none';
             }
 
             // ===== MATH =====
             const mathModal=document.getElementById('math-modal'),mathInput=document.getElementById('math-input'),mathPreview=document.getElementById('math-preview');
-            document.getElementById('btn-math').addEventListener('click',()=>{mathModal.style.display='flex';mathInput.value='';mathPreview.innerHTML='';});
+            document.getElementById('btn-math').addEventListener('click',()=>{
+                deselectExcalidrawTools(); // FIX: Deselect pen when opening math
+                mathModal.style.display='flex';mathInput.value='';mathPreview.innerHTML='';
+            });
             document.getElementById('cancel-math-btn').addEventListener('click',()=>{mathModal.style.display='none';});
             mathInput.addEventListener('input',()=>{try{katex.render(mathInput.value,mathPreview,{throwOnError:false,displayMode:true});}catch(e){mathPreview.textContent='Invalid LaTeX';}});
             document.getElementById('insert-math-btn').addEventListener('click',()=>{if(mathInput.value&&excalidrawAPI){const e=excalidrawAPI.getSceneElements();e.push(createEl('text',150,150,200,50,{text:mathInput.value,fontSize:24,strokeColor:"#fff"}));excalidrawAPI.updateScene({elements:e});}mathModal.style.display='none';});
@@ -501,9 +506,7 @@
             let currentTheme='dark';
             document.getElementById('btn-theme').addEventListener('click',()=>{
                 currentTheme=currentTheme==='dark'?'light':'dark';
-                if(excalidrawAPI){
-                    excalidrawAPI.updateScene({appState:{theme:currentTheme}});
-                }
+                if(excalidrawAPI){ excalidrawAPI.updateScene({appState:{theme:currentTheme}}); }
             });
 
             // ===== EMAIL =====
@@ -527,27 +530,16 @@
                     lockBtn.classList.toggle('unlocked',!locked);
                     lockBtnText.textContent=locked?'Drawing Locked':'Drawing Unlocked';
                     lockBtn.querySelector('i').className=locked?'fas fa-lock':'fas fa-lock-open';
-                }else{
-                    lockedBanner.style.display=locked?'flex':'none';
-                }
+                }else{ lockedBanner.style.display=locked?'flex':'none'; }
             }
             lockBtn.addEventListener('click',()=>{
-                locked=!locked;
-                applyLockUI();
-                sendMessage({type:'set-lock',locked});
-                if(role==='teacher'){
-                    setExcalidrawViewMode(false);
-                }
+                locked=!locked; applyLockUI(); sendMessage({type:'set-lock',locked});
+                if(role==='teacher'){ setExcalidrawViewMode(false); }
             });
 
             function setExcalidrawViewMode(viewOnly){
                 if(excalidrawAPI){
-                    excalidrawAPI.updateScene({
-                        appState: {
-                            viewModeEnabled: viewOnly,
-                            activeTool: viewOnly ? { type: 'selection', locked: true } : { type: 'selection', locked: false }
-                        }
-                    });
+                    excalidrawAPI.updateScene({ appState: { viewModeEnabled: viewOnly, activeTool: viewOnly ? { type: 'selection', locked: true } : { type: 'selection', locked: false } } });
                 }
             }
 
@@ -564,13 +556,8 @@
                     isRemoteUpdate=false;
                 },[]);
                 return React.createElement(Excalidraw,{
-                    excalidrawAPI:(api)=>{
-                        excalidrawAPI=api;
-                        console.log('Excalidraw API initialized');
-                    },
-                    onChange,
-                    theme:'dark',
-                    name:`PrimeBoard - ${room}`,
+                    excalidrawAPI:(api)=>{ excalidrawAPI=api; },
+                    onChange, theme:'dark', name:`PrimeBoard - ${room}`,
                     UIOptions:{canvasActions:{loadScene:false,saveToActiveFile:false,export:{saveFileToDisk:false}}},
                     initialData:{appState:{viewModeEnabled:role==='student'&&locked}}
                 });
@@ -585,28 +572,11 @@
                 socket.addEventListener('open',()=>{statusDot.className='connected';sendMessage({type:'join',room,role,name});});
                 socket.addEventListener('message',(event)=>{
                     const data=JSON.parse(event.data);
-                    if(data.type==='state'||data.type==='lock-changed'){
-                        locked=data.locked;
-                        applyLockUI();
-                        if(role==='student'){
-                            setExcalidrawViewMode(locked);
-                        }
-                    }
-                    if(data.type==='scene-update'&&excalidrawAPI){
-                        isRemoteUpdate=true;
-                        excalidrawAPI.updateScene({elements:data.elements});
-                    }
+                    if(data.type==='state'||data.type==='lock-changed'){ locked=data.locked; applyLockUI(); if(role==='student'){ setExcalidrawViewMode(locked); } }
+                    if(data.type==='scene-update'&&excalidrawAPI){ isRemoteUpdate=true; excalidrawAPI.updateScene({elements:data.elements}); }
                     if(data.type==='roster'&&data.users)studentCount.textContent=data.users.length;
                     if(data.type==='timer-update'){timeLeft=data.timeLeft;updateTimerDisplay();if(data.action==='start'&&!isTimerRunning)startTimerLocal();if(data.action==='pause')pauseTimerLocal();if(data.action==='reset'){pauseTimerLocal();timeLeft=data.timeLeft;updateTimerDisplay();}}
-                    if(data.type==='spotlight-update'){
-                        if(data.active){
-                            spotlightOverlay.style.display='block';
-                            spotlightOverlay.style.setProperty('--sx',`${data.x}px`);
-                            spotlightOverlay.style.setProperty('--sy',`${data.y}px`);
-                        }else{
-                            spotlightOverlay.style.display='none';
-                        }
-                    }
+                    if(data.type==='spotlight-update'){if(data.active){spotlightOverlay.style.display='block';spotlightOverlay.style.setProperty('--sx',`${data.x}px`);spotlightOverlay.style.setProperty('--sy',`${data.y}px`);}else{spotlightOverlay.style.display='none';}}
                 });
                 socket.addEventListener('close',()=>{statusDot.className='connecting';setTimeout(connect,2000);});
                 socket.addEventListener('error',()=>{statusDot.className='error';});
