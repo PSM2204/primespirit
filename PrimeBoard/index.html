@@ -106,9 +106,10 @@
         .feature-btn:hover{background:rgba(0,198,255,.15);color:var(--primary-neon);transform:scale(1.05)}
         .feature-btn.active{background:rgba(0,255,153,.15);color:var(--unlocked-green);border-color:var(--unlocked-green)}
 
-        /* DRAGGABLE BACKGROUND COLOR POPUP */
+        /* DRAGGABLE BACKGROUND COLOR POPUP - CENTERED */
         #bg-color-popup {
-            display: none; position: fixed; left: 100px; top: 150px; z-index: 1001; 
+            display: none; position: fixed; left: 50%; top: 50%; 
+            transform: translate(-50%, -50%); z-index: 1001; 
             background: var(--card-glass); border: 1px solid var(--border-glass); 
             border-radius: 12px; backdrop-filter: blur(16px); 
             box-shadow: 0 10px 30px rgba(0,0,0,0.5); width: 220px;
@@ -171,7 +172,7 @@
             .toolkit-grid{grid-template-columns:repeat(2,1fr)}
             #timer-widget{top:55px;right:10px;min-width:180px;padding:12px}
             #timer-display{font-size:2.2rem}
-            #bg-color-popup{left: 20px !important; top: 200px !important; width: 180px;}
+            #bg-color-popup{width: 180px;}
         }
 
         /* FORCE TOOLBAR LEFT */
@@ -411,7 +412,11 @@
                 const rect = bgColorPopup.getBoundingClientRect();
                 dragOffsetX = e.clientX - rect.left;
                 dragOffsetY = e.clientY - rect.top;
-                bgColorPopup.style.transition = 'none'; // Disable transition for smooth dragging
+                bgColorPopup.style.transition = 'none'; 
+                // Remove center transform so absolute positioning takes over cleanly
+                bgColorPopup.style.transform = 'none';
+                bgColorPopup.style.left = rect.left + 'px';
+                bgColorPopup.style.top = rect.top + 'px';
             });
 
             document.addEventListener('mousemove', (e) => {
