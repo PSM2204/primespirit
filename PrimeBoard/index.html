@@ -24,106 +24,57 @@
         :root { --bg-space:#090D1A; --card-glass:rgba(13,20,38,0.92); --border-glass:rgba(255,255,255,0.08); --primary-neon:#00C6FF; --locked-red:#FF4757; --unlocked-green:#00FF99; --timer-warning:#FFCD38; }
         *{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,-apple-system,sans-serif}
         html,body{background:var(--bg-space);height:100%;overflow:hidden}
-        #root{position:absolute;top:50px;left:0;right:0;bottom:0}
+        #root{position:absolute;top:110px;left:0;right:0;bottom:0}
 
-        /* TOPBAR */
-        #topbar{position:fixed;top:0;left:0;right:0;height:50px;z-index:1000;display:flex;align-items:center;gap:12px;padding:0 12px;background:var(--card-glass);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--border-glass)}
-        #brand{display:flex;align-items:center;gap:8px;color:#fff;font-weight:800;font-size:.9rem;white-space:nowrap}
+        /* TOP BRAND BAR */
+        #topbar{position:fixed;top:0;left:0;right:0;height:50px;z-index:1000;display:flex;align-items:center;gap:12px;padding:0 16px;background:var(--card-glass);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--border-glass)}
+        #brand{display:flex;align-items:center;gap:8px;color:#fff;font-weight:800;font-size:.95rem}
         #brand i{color:var(--primary-neon)}
-        #brand .sub{color:#718096;font-weight:500;font-size:.65rem;margin-left:4px;display:none}
-        @media(min-width:768px){#brand .sub{display:inline}}
-        #room-pill{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.03);border:1px solid var(--border-glass);padding:5px 10px;border-radius:20px;color:#A0AEC0;font-size:.7rem;font-family:monospace;white-space:nowrap}
+        #brand .sub{color:#718096;font-weight:500;font-size:.7rem;margin-left:4px}
+        #room-pill{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.03);border:1px solid var(--border-glass);padding:6px 12px;border-radius:20px;color:#A0AEC0;font-size:.75rem;font-family:monospace}
         #room-pill b{color:#fff;letter-spacing:.05em}
-        #online-students{display:flex;align-items:center;gap:6px;background:rgba(0,255,153,.08);border:1px solid var(--unlocked-green);padding:5px 10px;border-radius:20px;color:var(--unlocked-green);font-size:.7rem;font-weight:700;white-space:nowrap}
-        #online-students i{font-size:.65rem}
-        #lock-btn{display:flex;align-items:center;gap:6px;border:1px solid var(--locked-red);color:var(--locked-red);background:rgba(255,71,87,.08);font-weight:700;font-size:.7rem;padding:6px 12px;border-radius:8px;cursor:pointer;transition:all .15s;white-space:nowrap}
+        #online-students{display:flex;align-items:center;gap:6px;background:rgba(0,255,153,.08);border:1px solid var(--unlocked-green);padding:6px 12px;border-radius:20px;color:var(--unlocked-green);font-size:.75rem;font-weight:700}
+        #lock-btn{display:flex;align-items:center;gap:6px;border:1px solid var(--locked-red);color:var(--locked-red);background:rgba(255,71,87,.08);font-weight:700;font-size:.75rem;padding:6px 12px;border-radius:8px;cursor:pointer;transition:all .15s}
         #lock-btn.unlocked{border-color:var(--unlocked-green);color:var(--unlocked-green);background:rgba(0,255,153,.08)}
-        #lock-btn:hover{filter:brightness(1.2)}
-        #invite-btn,#add-student-btn,#exit-btn{display:flex;align-items:center;gap:6px;background:rgba(0,198,255,.1);border:1px solid var(--primary-neon);color:var(--primary-neon);font-weight:700;font-size:.7rem;padding:6px 12px;border-radius:8px;cursor:pointer;text-decoration:none;white-space:nowrap}
+        #invite-btn,#add-student-btn,#exit-btn{display:flex;align-items:center;gap:6px;background:rgba(0,198,255,.1);border:1px solid var(--primary-neon);color:var(--primary-neon);font-weight:700;font-size:.75rem;padding:6px 12px;border-radius:8px;cursor:pointer;text-decoration:none}
         #add-student-btn{background:rgba(0,255,153,.1);border-color:var(--unlocked-green);color:var(--unlocked-green)}
         #exit-btn{background:transparent;border-color:var(--border-glass);color:#A0AEC0}
-        #invite-btn:hover{background:rgba(0,198,255,.2)}
-        #add-student-btn:hover{background:rgba(0,255,153,.2)}
-        #status-dot{width:7px;height:7px;border-radius:50%;background:#718096;flex-shrink:0}
+        #status-dot{width:8px;height:8px;border-radius:50%;background:#718096}
         #status-dot.connected{background:var(--unlocked-green);box-shadow:0 0 8px var(--unlocked-green)}
-        #status-dot.connecting{background:#FFCD38}
-        #status-dot.error{background:var(--locked-red)}
-        #locked-banner{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);z-index:1000;display:none;align-items:center;gap:10px;background:rgba(255,71,87,.12);border:1px solid var(--locked-red);color:#fff;padding:10px 18px;border-radius:30px;font-size:.78rem;font-weight:600;backdrop-filter:blur(10px)}
-        #locked-banner i{color:var(--locked-red)}
+        #locked-banner{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:1000;display:none;align-items:center;gap:10px;background:rgba(255,71,87,.12);border:1px solid var(--locked-red);color:#fff;padding:10px 18px;border-radius:30px;font-size:.8rem;font-weight:600;backdrop-filter:blur(10px)}
 
-        /* SETUP */
-        #setup-screen{position:fixed;inset:0;z-index:2000;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at center,#0F172A 0%,#050811 100%);padding:20px}
-        #setup-card{width:min(420px,95vw);background:var(--card-glass);border:1px solid var(--border-glass);border-radius:18px;padding:28px 24px;text-align:center}
-        #setup-card h1{color:#fff;font-size:1.4rem;font-weight:800;margin-bottom:6px}
-        #setup-card h1 span{color:var(--primary-neon)}
-        #setup-card p.tagline{color:#718096;font-size:.75rem;margin-bottom:24px;letter-spacing:.05em}
-        #setup-card label{display:block;text-align:left;color:#A0AEC0;font-size:.7rem;font-weight:700;letter-spacing:.08em;margin:16px 0 6px}
-        #setup-card input{width:100%;background:rgba(255,255,255,.04);border:1px solid var(--border-glass);color:#fff;padding:12px 14px;border-radius:10px;font-size:.9rem;outline:none}
-        #setup-card input:focus{border-color:var(--primary-neon)}
-        .role-toggle{display:flex;gap:8px;margin-top:6px}
-        .role-toggle button{flex:1;padding:12px;border-radius:10px;border:1px solid var(--border-glass);background:rgba(255,255,255,.03);color:#A0AEC0;font-weight:700;font-size:.75rem;cursor:pointer}
-        .role-toggle button.active{border-color:var(--primary-neon);color:var(--primary-neon);background:rgba(0,198,255,.08)}
-        #enter-btn{width:100%;margin-top:24px;padding:14px;border-radius:10px;border:none;background:var(--primary-neon);color:#000;font-weight:800;font-size:.9rem;cursor:pointer}
-        #setup-error{color:var(--locked-red);font-size:.75rem;margin-top:10px;min-height:1em}
-        #setup-card .or-row{display:flex;align-items:center;gap:10px;margin:18px 0 0;color:#4A5568;font-size:.7rem}
-        #setup-card .or-row::before,#setup-card .or-row::after{content:'';flex:1;height:1px;background:var(--border-glass)}
+        /* LEFT SIDEBAR - MIRO STYLE */
+        #left-sidebar{position:fixed;left:0;top:50px;bottom:0;width:52px;background:var(--card-glass);border-right:1px solid var(--border-glass);backdrop-filter:blur(16px);z-index:999;display:flex;flex-direction:column;align-items:center;padding:12px 0;gap:8px}
+        .sidebar-btn{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;border:1px solid var(--border-glass);background:rgba(255,255,255,.05);color:#A0AEC0;cursor:pointer;transition:all .2s}
+        .sidebar-btn:hover{background:rgba(0,198,255,.15);color:var(--primary-neon);transform:scale(1.05)}
+        .sidebar-btn.active{background:rgba(0,255,153,.15);color:var(--unlocked-green);border-color:var(--unlocked-green)}
+        .sidebar-divider{width:32px;height:1px;background:var(--border-glass);margin:4px 0}
 
-        /* MODALS */
-        #add-student-modal,#toolkit-modal,#math-modal{position:fixed;inset:0;z-index:3000;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.8);backdrop-filter:blur(4px);padding:20px}
-        #add-student-card,#toolkit-card,#math-card{width:min(450px,95vw);background:var(--card-glass);border:1px solid var(--border-glass);border-radius:16px;padding:28px 24px}
-        #toolkit-card{width:min(600px,95vw);max-height:80vh;overflow-y:auto}
-        #add-student-card h3,#toolkit-card h3,#math-card h3{color:#fff;font-size:1.1rem;font-weight:800;margin-bottom:16px;display:flex;align-items:center;gap:8px}
-        #add-student-card h3 i,#toolkit-card h3 i,#math-card h3 i{color:var(--unlocked-green)}
-        #add-student-card p,#toolkit-card p{color:#718096;font-size:.75rem;margin-bottom:20px}
-        #add-student-card label{display:block;text-align:left;color:#A0AEC0;font-size:.7rem;font-weight:700;letter-spacing:.08em;margin:16px 0 6px}
-        .suggestions-container{position:relative;width:100%}
-        #add-student-card input,#math-input{width:100%;background:rgba(255,255,255,.04);border:1px solid var(--border-glass);color:#fff;padding:12px 14px;border-radius:10px;font-size:.9rem;outline:none;margin-bottom:8px}
-        #add-student-card input:focus,#math-input:focus{border-color:var(--unlocked-green)}
-        #email-suggestions{position:absolute;top:100%;left:0;right:0;background:#1a202c;border:1px solid var(--border-glass);border-radius:8px;margin-top:5px;max-height:150px;overflow-y:auto;z-index:100;display:none;box-shadow:0 10px 15px -3px rgba(0,0,0,.5)}
-        .suggestion-item{padding:10px 14px;color:#e2e8f0;cursor:pointer;font-size:.9rem;border-bottom:1px solid rgba(255,255,255,.05);transition:background .2s}
-        .suggestion-item:hover{background:rgba(0,198,255,.1);color:var(--primary-neon)}
-        .suggestion-item:last-child{border-bottom:none}
-        #email-list{max-height:150px;overflow-y:auto;margin:12px 0;background:rgba(255,255,255,.02);border-radius:8px;padding:8px;min-height:40px}
-        .email-tag{display:inline-flex;align-items:center;gap:6px;background:rgba(0,255,153,.1);border:1px solid var(--unlocked-green);color:var(--unlocked-green);padding:4px 10px;border-radius:20px;font-size:.75rem;margin:4px}
-        .email-tag i{cursor:pointer;font-size:.65rem}
-        .email-tag i:hover{color:#fff}
-        .btn-row{display:flex;gap:10px;margin-top:20px}
-        .btn-row button{flex:1;padding:12px;border-radius:10px;border:none;font-weight:700;font-size:.85rem;cursor:pointer}
-        #send-invites-btn,#insert-math-btn{background:var(--unlocked-green);color:#000}
-        #cancel-add-btn,#cancel-math-btn,#close-toolkit-btn{background:rgba(255,255,255,.1);color:#fff}
-
-        /* TOOLKIT GRID */
-        .toolkit-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;margin-top:16px}
-        .toolkit-item{background:rgba(255,255,255,.05);border:1px solid var(--border-glass);border-radius:12px;padding:16px;text-align:center;cursor:pointer;transition:all .2s;display:flex;flex-direction:column;align-items:center;gap:8px}
-        .toolkit-item:hover{background:rgba(0,198,255,.1);border-color:var(--primary-neon);transform:translateY(-2px)}
-        .toolkit-item i{font-size:1.5rem;color:var(--primary-neon)}
-        .toolkit-item span{color:#fff;font-size:.8rem;font-weight:600}
-        .toolkit-item .sub-text{color:#718096;font-size:.65rem;font-weight:400}
-
-        /* FEATURES PANEL */
-        #features-panel{position:fixed;left:10px;top:60px;z-index:999;display:flex;flex-direction:column;gap:8px;background:var(--card-glass);padding:12px;border-radius:12px;border:1px solid var(--border-glass);backdrop-filter:blur(16px)}
-        .feature-btn{width:45px;height:45px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;border:1px solid var(--border-glass);background:rgba(255,255,255,.05);color:#A0AEC0;cursor:pointer;transition:all .2s}
-        .feature-btn:hover{background:rgba(0,198,255,.15);color:var(--primary-neon);transform:scale(1.05)}
-        .feature-btn.active{background:rgba(0,255,153,.15);color:var(--unlocked-green);border-color:var(--unlocked-green)}
-
-        /* DRAGGABLE BACKGROUND COLOR POPUP - CENTERED */
-        #bg-color-popup {
-            display: none; position: fixed; left: 50%; top: 50%; 
-            transform: translate(-50%, -50%); z-index: 1001; 
-            background: var(--card-glass); border: 1px solid var(--border-glass); 
-            border-radius: 12px; backdrop-filter: blur(16px); 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5); width: 220px;
-        }
-        .popup-header {
-            display: flex; align-items: center; gap: 8px;
-            padding: 8px 12px; border-bottom: 1px solid var(--border-glass);
-            cursor: move; color: #fff; font-size: 0.8rem; font-weight: 700;
-            background: rgba(255,255,255,0.03); border-radius: 12px 12px 0 0;
-            user-select: none;
-        }
-        .popup-header i { color: #718096; }
-        .popup-content { padding: 16px; }
+        /* RIGHT FLOATING PANELS */
+        #right-panels{position:fixed;right:20px;top:70px;z-index:998;display:flex;flex-direction:column;gap:12px}
         
+        /* TIMER WIDGET */
+        #timer-widget{background:var(--card-glass);border:1px solid var(--border-glass);border-radius:12px;padding:14px;min-width:200px;backdrop-filter:blur(16px);box-shadow:0 4px 20px rgba(0,0,0,.3);display:none;flex-direction:column;align-items:center}
+        #timer-display{font-size:2.5rem;font-weight:800;color:var(--primary-neon);font-family:'Courier New',monospace;letter-spacing:2px;margin-bottom:10px;text-shadow:0 0 15px rgba(0,198,255,.5)}
+        #timer-display.warning{color:var(--timer-warning);text-shadow:0 0 15px rgba(255,205,56,.5)}
+        #timer-display.danger{color:var(--locked-red);text-shadow:0 0 15px rgba(255,71,87,.5);animation:pulse 1s infinite}
+        @keyframes pulse{0%{opacity:1}50%{opacity:.5}100%{opacity:1}}
+        .timer-controls{display:flex;gap:6px;width:100%;margin-bottom:10px}
+        .timer-btn{flex:1;padding:6px;border-radius:6px;border:none;background:rgba(255,255,255,.1);color:#fff;font-weight:700;font-size:.7rem;cursor:pointer;transition:all .2s}
+        .timer-btn:hover{background:rgba(0,198,255,.2)}
+        .timer-btn.start{background:var(--unlocked-green);color:#000}
+        .timer-btn.pause{background:var(--timer-warning);color:#000}
+        .timer-btn.reset{background:var(--locked-red);color:#fff}
+        .timer-inputs{display:flex;gap:4px;width:100%;align-items:center}
+        .timer-inputs input{width:100%;background:rgba(255,255,255,.05);border:1px solid var(--border-glass);color:#fff;padding:6px;border-radius:4px;text-align:center;font-size:.8rem}
+        .timer-inputs input:focus{outline:none;border-color:var(--primary-neon)}
+        .timer-inputs span{color:#718096;font-weight:bold}
+
+        /* DRAGGABLE COLOR POPUP */
+        #bg-color-popup{display:none;position:fixed;right:80px;top:70px;z-index:1001;background:var(--card-glass);border:1px solid var(--border-glass);border-radius:12px;backdrop-filter:blur(16px);box-shadow:0 10px 30px rgba(0,0,0,.5);width:220px}
+        .popup-header{display:flex;align-items:center;gap:8px;padding:10px 12px;border-bottom:1px solid var(--border-glass);cursor:move;color:#fff;font-size:.85rem;font-weight:700;background:rgba(255,255,255,.03);border-radius:12px 12px 0 0;user-select:none}
+        .popup-header i{color:#718096}
+        .popup-content{padding:16px}
         .color-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px}
         .color-swatch{width:100%;aspect-ratio:1;border-radius:8px;cursor:pointer;border:2px solid transparent;transition:transform .2s,border-color .2s}
         .color-swatch:hover{transform:scale(1.1);border-color:#fff}
@@ -131,53 +82,67 @@
         .custom-color-row span{color:#fff;font-size:.8rem;font-weight:600}
         #custom-bg-picker{width:100%;height:35px;border:none;border-radius:6px;cursor:pointer;background:transparent}
 
+        /* SETUP SCREEN */
+        #setup-screen{position:fixed;inset:0;z-index:2000;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at center,#0F172A 0%,#050811 100%);padding:20px}
+        #setup-card{width:min(420px,95vw);background:var(--card-glass);border:1px solid var(--border-glass);border-radius:18px;padding:32px 28px;text-align:center}
+        #setup-card h1{color:#fff;font-size:1.5rem;font-weight:800;margin-bottom:8px}
+        #setup-card h1 span{color:var(--primary-neon)}
+        #setup-card p.tagline{color:#718096;font-size:.8rem;margin-bottom:28px;letter-spacing:.05em}
+        #setup-card label{display:block;text-align:left;color:#A0AEC0;font-size:.75rem;font-weight:700;letter-spacing:.08em;margin:18px 0 8px}
+        #setup-card input{width:100%;background:rgba(255,255,255,.04);border:1px solid var(--border-glass);color:#fff;padding:12px 14px;border-radius:10px;font-size:.95rem;outline:none}
+        #setup-card input:focus{border-color:var(--primary-neon)}
+        .role-toggle{display:flex;gap:8px;margin-top:8px}
+        .role-toggle button{flex:1;padding:12px;border-radius:10px;border:1px solid var(--border-glass);background:rgba(255,255,255,.03);color:#A0AEC0;font-weight:700;font-size:.8rem;cursor:pointer}
+        .role-toggle button.active{border-color:var(--primary-neon);color:var(--primary-neon);background:rgba(0,198,255,.08)}
+        #enter-btn{width:100%;margin-top:28px;padding:14px;border-radius:10px;border:none;background:var(--primary-neon);color:#000;font-weight:800;font-size:1rem;cursor:pointer}
+        #setup-error{color:var(--locked-red);font-size:.8rem;margin-top:12px;min-height:1.2em}
+
+        /* MODALS */
+        #add-student-modal,#toolkit-modal,#math-modal{position:fixed;inset:0;z-index:3000;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.8);backdrop-filter:blur(4px);padding:20px}
+        #add-student-card,#toolkit-card,#math-card{width:min(450px,95vw);background:var(--card-glass);border:1px solid var(--border-glass);border-radius:16px;padding:28px 24px}
+        #toolkit-card{width:min(600px,95vw);max-height:80vh;overflow-y:auto}
+        #add-student-card h3,#toolkit-card h3,#math-card h3{color:#fff;font-size:1.15rem;font-weight:800;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+        #add-student-card h3 i,#toolkit-card h3 i,#math-card h3 i{color:var(--unlocked-green)}
+        #add-student-card p,#toolkit-card p{color:#718096;font-size:.8rem;margin-bottom:20px}
+        #add-student-card label{display:block;text-align:left;color:#A0AEC0;font-size:.75rem;font-weight:700;letter-spacing:.08em;margin:16px 0 8px}
+        .suggestions-container{position:relative;width:100%}
+        #add-student-card input,#math-input{width:100%;background:rgba(255,255,255,.04);border:1px solid var(--border-glass);color:#fff;padding:12px 14px;border-radius:10px;font-size:.95rem;outline:none;margin-bottom:8px}
+        #add-student-card input:focus,#math-input:focus{border-color:var(--unlocked-green)}
+        #email-suggestions{position:absolute;top:100%;left:0;right:0;background:#1a202c;border:1px solid var(--border-glass);border-radius:8px;margin-top:5px;max-height:150px;overflow-y:auto;z-index:100;display:none;box-shadow:0 10px 15px -3px rgba(0,0,0,.5)}
+        .suggestion-item{padding:10px 14px;color:#e2e8f0;cursor:pointer;font-size:.9rem;border-bottom:1px solid rgba(255,255,255,.05);transition:background .2s}
+        .suggestion-item:hover{background:rgba(0,198,255,.1);color:var(--primary-neon)}
+        .suggestion-item:last-child{border-bottom:none}
+        #email-list{max-height:150px;overflow-y:auto;margin:12px 0;background:rgba(255,255,255,.02);border-radius:8px;padding:8px;min-height:40px}
+        .email-tag{display:inline-flex;align-items:center;gap:6px;background:rgba(0,255,153,.1);border:1px solid var(--unlocked-green);color:var(--unlocked-green);padding:4px 10px;border-radius:20px;font-size:.8rem;margin:4px}
+        .email-tag i{cursor:pointer;font-size:.65rem}
+        .email-tag i:hover{color:#fff}
+        .btn-row{display:flex;gap:10px;margin-top:20px}
+        .btn-row button{flex:1;padding:12px;border-radius:10px;border:none;font-weight:700;font-size:.9rem;cursor:pointer}
+        #send-invites-btn,#insert-math-btn{background:var(--unlocked-green);color:#000}
+        #cancel-add-btn,#cancel-math-btn,#close-toolkit-btn{background:rgba(255,255,255,.1);color:#fff}
+        .toolkit-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;margin-top:16px}
+        .toolkit-item{background:rgba(255,255,255,.05);border:1px solid var(--border-glass);border-radius:12px;padding:16px;text-align:center;cursor:pointer;transition:all .2s;display:flex;flex-direction:column;align-items:center;gap:8px}
+        .toolkit-item:hover{background:rgba(0,198,255,.1);border-color:var(--primary-neon);transform:translateY(-2px)}
+        .toolkit-item i{font-size:1.5rem;color:var(--primary-neon)}
+        .toolkit-item span{color:#fff;font-size:.85rem;font-weight:600}
+        .toolkit-item .sub-text{color:#718096;font-size:.7rem;font-weight:400}
+
         /* FOG OF WAR OVERLAY */
-        #spotlight-overlay {
-            position: fixed; inset: 0; z-index: 950;
-            background: radial-gradient(circle 250px at var(--sx, 50%) var(--sy, 50%), transparent 0%, rgba(0,0,0,0.96) 100%);
-            pointer-events: none;
-            display: none;
-            transition: background 0.1s ease-out;
+        #spotlight-overlay{position:fixed;inset:0;z-index:950;background:radial-gradient(circle 250px at var(--sx,50%) var(--sy,50%),transparent 0%,rgba(0,0,0,0.96) 100%);pointer-events:none;display:none;transition:background .1s ease-out}
+
+        /* FORCE EXCALIDRAW TOOLBAR TO TOP */
+        .excalidraw .App-toolbar{position:fixed!important;top:50px!important;left:70px!important;right:320px!important;z-index:997!important;background:var(--card-glass)!important;backdrop-filter:blur(16px)!important;border-radius:0 0 12px 12px!important;border:1px solid var(--border-glass)!important;border-top:none!important;padding:8px 16px!important;box-shadow:0 4px 20px rgba(0,0,0,.3)!important}
+        
+        /* MOBILE RESPONSIVE */
+        @media(max-width:768px){
+            #root{top:150px!important}
+            #left-sidebar{width:48px;top:50px}
+            .sidebar-btn{width:36px;height:36px;font-size:1rem}
+            .excalidraw .App-toolbar{left:60px!important;right:20px!important;top:50px!important}
+            #timer-widget{right:10px;top:60px;min-width:160px}
+            #timer-display{font-size:2rem}
+            #bg-color-popup{right:10px;top:100px;width:200px}
         }
-
-        /* TIMER WIDGET */
-        #timer-widget{position:fixed;top:60px;right:20px;z-index:998;background:var(--card-glass);border:1px solid var(--border-glass);border-radius:16px;padding:16px;min-width:220px;backdrop-filter:blur(16px);box-shadow:0 10px 30px rgba(0,0,0,.5);display:none;flex-direction:column;align-items:center}
-        #timer-display{font-size:3rem;font-weight:800;color:var(--primary-neon);font-family:'Courier New',monospace;letter-spacing:2px;margin-bottom:12px;text-shadow:0 0 15px rgba(0,198,255,.5)}
-        #timer-display.warning{color:var(--timer-warning);text-shadow:0 0 15px rgba(255,205,56,.5)}
-        #timer-display.danger{color:var(--locked-red);text-shadow:0 0 15px rgba(255,71,87,.5);animation:pulse 1s infinite}
-        @keyframes pulse{0%{opacity:1}50%{opacity:.5}100%{opacity:1}}
-        .timer-controls{display:flex;gap:8px;width:100%;margin-bottom:12px}
-        .timer-btn{flex:1;padding:8px;border-radius:8px;border:none;background:rgba(255,255,255,.1);color:#fff;font-weight:700;font-size:.8rem;cursor:pointer;transition:all .2s}
-        .timer-btn:hover{background:rgba(0,198,255,.2)}
-        .timer-btn.start{background:var(--unlocked-green);color:#000}
-        .timer-btn.pause{background:var(--timer-warning);color:#000}
-        .timer-btn.reset{background:var(--locked-red);color:#fff}
-        .timer-inputs{display:flex;gap:6px;width:100%;align-items:center}
-        .timer-inputs input{width:100%;background:rgba(255,255,255,.05);border:1px solid var(--border-glass);color:#fff;padding:8px;border-radius:6px;text-align:center;font-size:.9rem}
-        .timer-inputs input:focus{outline:none;border-color:var(--primary-neon)}
-        .timer-inputs span{color:#718096;font-weight:bold}
-        #timer-label{color:#718096;font-size:.65rem;font-weight:700;letter-spacing:.08em;margin-bottom:8px;text-transform:uppercase}
-
-        /* MOBILE */
-        @media(max-width:640px){
-            #topbar{height:45px;padding:0 8px;gap:8px}
-            #brand{font-size:.8rem}
-            #room-pill{display:none}
-            #lock-btn span,#invite-btn span,#add-student-btn span{display:none}
-            #invite-btn,#add-student-btn,#lock-btn{padding:6px 10px}
-            #root{top:45px}
-            #features-panel{top:50px;left:8px;padding:8px}
-            .feature-btn{width:40px;height:40px;font-size:1rem}
-            #locked-banner{bottom:12px;padding:8px 14px;font-size:.7rem;max-width:90%;text-align:center}
-            .toolkit-grid{grid-template-columns:repeat(2,1fr)}
-            #timer-widget{top:55px;right:10px;min-width:180px;padding:12px}
-            #timer-display{font-size:2.2rem}
-            #bg-color-popup{width: 180px;}
-        }
-
-        /* FORCE TOOLBAR LEFT */
-        .excalidraw .layer-ui__wrapper .sidebar{left:80px!important;right:auto!important;top:60px!important}
-        @media(max-width:640px){.excalidraw .layer-ui__wrapper .sidebar{left:60px!important;top:55px!important}}
     </style>
 </head>
 <body>
@@ -198,11 +163,10 @@
             <input id="room-input" type="text" placeholder="e.g. CLASS10-PHYSICS" maxlength="30">
             <button id="enter-btn">Enter Board</button>
             <div id="setup-error"></div>
-            <div class="or-row">student link is auto-filled when opened from an invite</div>
         </div>
     </div>
 
-    <!-- TOPBAR -->
+    <!-- TOP BRAND BAR -->
     <div id="topbar" style="display:none;">
         <div id="brand"><i class="fas fa-atom"></i> PrimeBoard <span class="sub">by Prime Spirit Mentors</span></div>
         <div id="room-pill"><span id="status-dot"></span> Room: <b id="room-pill-code">-</b></div>
@@ -210,25 +174,45 @@
         <button id="lock-btn" style="display:none;"><i class="fas fa-lock"></i> <span id="lock-btn-text">Drawing Locked</span></button>
         <button id="add-student-btn" style="display:none;"><i class="fas fa-user-plus"></i> <span>Add Student</span></button>
         <button id="invite-btn" style="display:none;"><i class="fas fa-link"></i> <span>Copy Link</span></button>
-        <a id="exit-btn" href="../index.html"><i class="fas fa-home"></i></a>
+        <a id="exit-btn" href="../index.html" style="margin-left:auto;"><i class="fas fa-home"></i></a>
     </div>
 
     <div id="locked-banner"><i class="fas fa-lock"></i> Your teacher has locked drawing — you can still pan and zoom to follow along.</div>
 
-    <!-- FEATURES PANEL (LEFT) -->
-    <div id="features-panel" style="display:none;">
-        <button class="feature-btn" id="btn-toolkit" title="Smart Educational Toolkit"><i class="fas fa-graduation-cap"></i></button>
-        <button class="feature-btn" id="btn-spotlight" title="Toggle Fog of War (Spotlight)"><i class="fas fa-lightbulb"></i></button>
-        <button class="feature-btn" id="btn-timer" title="Classroom Timer"><i class="fas fa-stopwatch"></i></button>
-        <button class="feature-btn" id="btn-math" title="Insert Math Equation"><i class="fas fa-square-root-alt"></i></button>
-        <button class="feature-btn" id="btn-bg-color" title="Change Background Color"><i class="fas fa-fill-drip"></i></button>
-        <button class="feature-btn" id="btn-theme" title="Change Theme"><i class="fas fa-palette"></i></button>
+    <!-- LEFT SIDEBAR (MIRO STYLE) -->
+    <div id="left-sidebar" style="display:none;">
+        <button class="sidebar-btn" id="btn-toolkit" title="Smart Toolkit"><i class="fas fa-graduation-cap"></i></button>
+        <button class="sidebar-btn" id="btn-spotlight" title="Fog of War"><i class="fas fa-lightbulb"></i></button>
+        <div class="sidebar-divider"></div>
+        <button class="sidebar-btn" id="btn-timer" title="Timer"><i class="fas fa-stopwatch"></i></button>
+        <button class="sidebar-btn" id="btn-math" title="Math Equation"><i class="fas fa-square-root-alt"></i></button>
+        <div class="sidebar-divider"></div>
+        <button class="sidebar-btn" id="btn-bg-color" title="Background Color"><i class="fas fa-fill-drip"></i></button>
+        <button class="sidebar-btn" id="btn-theme" title="Theme"><i class="fas fa-palette"></i></button>
+    </div>
+
+    <!-- RIGHT FLOATING PANELS -->
+    <div id="right-panels">
+        <!-- TIMER WIDGET -->
+        <div id="timer-widget">
+            <div id="timer-display">05:00</div>
+            <div class="timer-controls" id="timer-controls-container">
+                <button class="timer-btn start" id="timer-start"><i class="fas fa-play"></i></button>
+                <button class="timer-btn pause" id="timer-pause"><i class="fas fa-pause"></i></button>
+                <button class="timer-btn reset" id="timer-reset"><i class="fas fa-redo"></i></button>
+            </div>
+            <div class="timer-inputs" id="timer-inputs-container">
+                <input type="number" id="timer-min" placeholder="Min" min="0" max="99" value="5">
+                <span>:</span>
+                <input type="number" id="timer-sec" placeholder="Sec" min="0" max="59" value="0">
+            </div>
+        </div>
     </div>
 
     <!-- FOG OF WAR OVERLAY -->
     <div id="spotlight-overlay"></div>
 
-    <!-- DRAGGABLE BACKGROUND COLOR POPUP -->
+    <!-- DRAGGABLE COLOR POPUP -->
     <div id="bg-color-popup">
         <div class="popup-header"><i class="fas fa-grip-vertical"></i> Background Color</div>
         <div class="popup-content">
@@ -246,22 +230,6 @@
                 <span>Custom:</span>
                 <input type="color" id="custom-bg-picker" value="#090D1A">
             </div>
-        </div>
-    </div>
-
-    <!-- TIMER WIDGET -->
-    <div id="timer-widget">
-        <div id="timer-label">Classroom Timer</div>
-        <div id="timer-display">05:00</div>
-        <div class="timer-controls" id="timer-controls-container">
-            <button class="timer-btn start" id="timer-start"><i class="fas fa-play"></i> Start</button>
-            <button class="timer-btn pause" id="timer-pause"><i class="fas fa-pause"></i> Pause</button>
-            <button class="timer-btn reset" id="timer-reset"><i class="fas fa-redo"></i> Reset</button>
-        </div>
-        <div class="timer-inputs" id="timer-inputs-container">
-            <input type="number" id="timer-min" placeholder="Min" min="0" max="99" value="5">
-            <span>:</span>
-            <input type="number" id="timer-sec" placeholder="Sec" min="0" max="59" value="0">
         </div>
     </div>
 
@@ -345,7 +313,7 @@
             if(!room){setupError.textContent='Please enter the room code.';return;}
             setupError.textContent='';setupScreen.style.display='none';
             document.getElementById('topbar').style.display='flex';
-            document.getElementById('features-panel').style.display='flex';
+            document.getElementById('left-sidebar').style.display='flex';
             startBoard({name,role:selectedRole,room});
         });
 
@@ -359,113 +327,51 @@
             const inviteUrl=`${window.location.origin}${window.location.pathname}?room=${encodeURIComponent(room)}`;
             inviteBtn.addEventListener('click',()=>{navigator.clipboard.writeText(inviteUrl).then(()=>{const o=inviteBtn.innerHTML;inviteBtn.innerHTML='<i class="fas fa-check"></i> <span>Copied!</span>';setTimeout(()=>{inviteBtn.innerHTML=o;},1800);});});
 
-            // ===== FOG OF WAR (SPOTLIGHT) =====
+            // ===== FOG OF WAR =====
             const btnSpotlight = document.getElementById('btn-spotlight');
             const spotlightOverlay = document.getElementById('spotlight-overlay');
-            let isSpotlightActive = false;
-            let lastSpotlightSend = 0;
-
+            let isSpotlightActive = false, lastSpotlightSend = 0;
             btnSpotlight.addEventListener('click', () => {
                 isSpotlightActive = !isSpotlightActive;
                 btnSpotlight.classList.toggle('active', isSpotlightActive);
-                
                 if (role === 'teacher') {
                     sendMessage({ type: 'spotlight-update', active: isSpotlightActive });
-                    if (isSpotlightActive) {
-                        document.addEventListener('mousemove', handleTeacherMouse);
-                    } else {
-                        document.removeEventListener('mousemove', handleTeacherMouse);
-                        spotlightOverlay.style.display = 'none';
-                    }
+                    if (isSpotlightActive) document.addEventListener('mousemove', handleTeacherMouse);
+                    else { document.removeEventListener('mousemove', handleTeacherMouse); spotlightOverlay.style.display = 'none'; }
                 }
             });
-
             function handleTeacherMouse(e) {
                 const now = Date.now();
-                if (now - lastSpotlightSend > 33) {
-                    lastSpotlightSend = now;
-                    sendMessage({ type: 'spotlight-update', active: true, x: e.clientX, y: e.clientY });
-                }
+                if (now - lastSpotlightSend > 33) { lastSpotlightSend = now; sendMessage({ type: 'spotlight-update', active: true, x: e.clientX, y: e.clientY }); }
             }
 
-            // ===== DRAGGABLE BACKGROUND COLOR =====
-            const btnBgColor = document.getElementById('btn-bg-color');
-            const bgColorPopup = document.getElementById('bg-color-popup');
-            const popupHeader = bgColorPopup.querySelector('.popup-header');
-            const customBgPicker = document.getElementById('custom-bg-picker');
+            // ===== DRAGGABLE COLOR POPUP =====
+            const btnBgColor = document.getElementById('btn-bg-color'), bgColorPopup = document.getElementById('bg-color-popup'), popupHeader = bgColorPopup.querySelector('.popup-header'), customBgPicker = document.getElementById('custom-bg-picker');
             let isDragging = false, dragOffsetX = 0, dragOffsetY = 0;
-
-            btnBgColor.addEventListener('click', (e) => {
-                e.stopPropagation();
-                bgColorPopup.style.display = bgColorPopup.style.display === 'block' ? 'none' : 'block';
-            });
-
-            document.addEventListener('click', (e) => {
-                if (!bgColorPopup.contains(e.target) && e.target !== btnBgColor) {
-                    bgColorPopup.style.display = 'none';
-                }
-            });
-
-            // Drag Logic
+            btnBgColor.addEventListener('click', (e) => { e.stopPropagation(); bgColorPopup.style.display = bgColorPopup.style.display === 'block' ? 'none' : 'block'; });
+            document.addEventListener('click', (e) => { if (!bgColorPopup.contains(e.target) && e.target !== btnBgColor) bgColorPopup.style.display = 'none'; });
             popupHeader.addEventListener('mousedown', (e) => {
-                isDragging = true;
-                const rect = bgColorPopup.getBoundingClientRect();
-                dragOffsetX = e.clientX - rect.left;
-                dragOffsetY = e.clientY - rect.top;
-                bgColorPopup.style.transition = 'none'; 
-                // Remove center transform so absolute positioning takes over cleanly
-                bgColorPopup.style.transform = 'none';
-                bgColorPopup.style.left = rect.left + 'px';
-                bgColorPopup.style.top = rect.top + 'px';
+                isDragging = true; const rect = bgColorPopup.getBoundingClientRect();
+                dragOffsetX = e.clientX - rect.left; dragOffsetY = e.clientY - rect.top;
+                bgColorPopup.style.transition = 'none'; bgColorPopup.style.transform = 'none';
+                bgColorPopup.style.left = rect.left + 'px'; bgColorPopup.style.top = rect.top + 'px';
             });
-
-            document.addEventListener('mousemove', (e) => {
-                if (!isDragging) return;
-                e.preventDefault();
-                bgColorPopup.style.left = `${e.clientX - dragOffsetX}px`;
-                bgColorPopup.style.top = `${e.clientY - dragOffsetY}px`;
-            });
-
-            document.addEventListener('mouseup', () => {
-                if (isDragging) {
-                    isDragging = false;
-                    bgColorPopup.style.transition = 'background 0.1s ease-out';
-                }
-            });
-
-            window.setBgColor = function(color) {
-                if (excalidrawAPI) excalidrawAPI.updateScene({ appState: { viewBackgroundColor: color } });
-                customBgPicker.value = color;
-            };
-
-            customBgPicker.addEventListener('input', (e) => {
-                if (excalidrawAPI) excalidrawAPI.updateScene({ appState: { viewBackgroundColor: e.target.value } });
-            });
+            document.addEventListener('mousemove', (e) => { if (!isDragging) return; e.preventDefault(); bgColorPopup.style.left = `${e.clientX - dragOffsetX}px`; bgColorPopup.style.top = `${e.clientY - dragOffsetY}px`; });
+            document.addEventListener('mouseup', () => { if (isDragging) { isDragging = false; bgColorPopup.style.transition = 'background 0.1s ease-out'; } });
+            window.setBgColor = function(color) { if (excalidrawAPI) excalidrawAPI.updateScene({ appState: { viewBackgroundColor: color } }); customBgPicker.value = color; };
+            customBgPicker.addEventListener('input', (e) => { if (excalidrawAPI) excalidrawAPI.updateScene({ appState: { viewBackgroundColor: e.target.value } }); });
 
             // ===== TIMER =====
             const timerWidget=document.getElementById('timer-widget'),timerDisplay=document.getElementById('timer-display'),timerStartBtn=document.getElementById('timer-start'),timerPauseBtn=document.getElementById('timer-pause'),timerResetBtn=document.getElementById('timer-reset'),timerMinInput=document.getElementById('timer-min'),timerSecInput=document.getElementById('timer-sec'),timerControls=document.getElementById('timer-controls-container'),timerInputs=document.getElementById('timer-inputs-container');
             let timerInterval=null,timeLeft=300,isTimerRunning=false;
-
             document.getElementById('btn-timer').addEventListener('click',()=>{timerWidget.style.display=timerWidget.style.display==='flex'?'none':'flex';});
             if(role!=='teacher'){timerControls.style.display='none';timerInputs.style.display='none';}
-
             function formatTime(s){return `${Math.floor(s/60).toString().padStart(2,'0')}:${(s%60).toString().padStart(2,'0')}`;}
-            function updateTimerDisplay(){
-                timerDisplay.textContent=formatTime(timeLeft);timerDisplay.className='';
-                if(timeLeft<=10&&timeLeft>0)timerDisplay.classList.add('danger');
-                else if(timeLeft<=60&&timeLeft>10)timerDisplay.classList.add('warning');
-            }
+            function updateTimerDisplay(){timerDisplay.textContent=formatTime(timeLeft);timerDisplay.className='';if(timeLeft<=10&&timeLeft>0)timerDisplay.classList.add('danger');else if(timeLeft<=60&&timeLeft>10)timerDisplay.classList.add('warning');}
             function startTimerLocal(){if(isTimerRunning)return;isTimerRunning=true;timerInterval=setInterval(()=>{if(timeLeft>0){timeLeft--;updateTimerDisplay();}else{clearInterval(timerInterval);isTimerRunning=false;}},1000);}
             function pauseTimerLocal(){clearInterval(timerInterval);isTimerRunning=false;}
             function resetTimerLocal(){pauseTimerLocal();timeLeft=(parseInt(timerMinInput.value)||0)*60+(parseInt(timerSecInput.value)||0);updateTimerDisplay();}
-
-            if(role==='teacher'){
-                timerStartBtn.addEventListener('click',()=>{if(timeLeft===0)resetTimerLocal();startTimerLocal();sendMessage({type:'timer-update',action:'start',timeLeft});});
-                timerPauseBtn.addEventListener('click',()=>{pauseTimerLocal();sendMessage({type:'timer-update',action:'pause',timeLeft});});
-                timerResetBtn.addEventListener('click',()=>{resetTimerLocal();sendMessage({type:'timer-update',action:'reset',timeLeft});});
-                timerMinInput.addEventListener('change',resetTimerLocal);
-                timerSecInput.addEventListener('change',resetTimerLocal);
-            }
+            if(role==='teacher'){timerStartBtn.addEventListener('click',()=>{if(timeLeft===0)resetTimerLocal();startTimerLocal();sendMessage({type:'timer-update',action:'start',timeLeft});});timerPauseBtn.addEventListener('click',()=>{pauseTimerLocal();sendMessage({type:'timer-update',action:'pause',timeLeft});});timerResetBtn.addEventListener('click',()=>{resetTimerLocal();sendMessage({type:'timer-update',action:'reset',timeLeft});});timerMinInput.addEventListener('change',resetTimerLocal);timerSecInput.addEventListener('change',resetTimerLocal);}
             updateTimerDisplay();
 
             // ===== TOOLKIT =====
@@ -533,21 +439,8 @@
                     if(data.type==='state'||data.type==='lock-changed'){locked=data.locked;applyLockUI();}
                     if(data.type==='scene-update'&&excalidrawAPI){suppressNextChange=true;excalidrawAPI.updateScene({elements:data.elements});}
                     if(data.type==='roster'&&data.users)studentCount.textContent=data.users.length;
-                    if(data.type==='timer-update'){
-                        timeLeft=data.timeLeft;updateTimerDisplay();
-                        if(data.action==='start'&&!isTimerRunning)startTimerLocal();
-                        if(data.action==='pause')pauseTimerLocal();
-                        if(data.action==='reset'){pauseTimerLocal();timeLeft=data.timeLeft;updateTimerDisplay();}
-                    }
-                    if(data.type==='spotlight-update'){
-                        if(data.active){
-                            spotlightOverlay.style.display='block';
-                            spotlightOverlay.style.setProperty('--sx',`${data.x}px`);
-                            spotlightOverlay.style.setProperty('--sy',`${data.y}px`);
-                        } else {
-                            spotlightOverlay.style.display='none';
-                        }
-                    }
+                    if(data.type==='timer-update'){timeLeft=data.timeLeft;updateTimerDisplay();if(data.action==='start'&&!isTimerRunning)startTimerLocal();if(data.action==='pause')pauseTimerLocal();if(data.action==='reset'){pauseTimerLocal();timeLeft=data.timeLeft;updateTimerDisplay();}}
+                    if(data.type==='spotlight-update'){if(data.active){spotlightOverlay.style.display='block';spotlightOverlay.style.setProperty('--sx',`${data.x}px`);spotlightOverlay.style.setProperty('--sy',`${data.y}px`);}else{spotlightOverlay.style.display='none';}}
                 });
                 socket.addEventListener('close',()=>{statusDot.className='connecting';setTimeout(connect,2000);});
                 socket.addEventListener('error',()=>{statusDot.className='error';});
