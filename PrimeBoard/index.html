@@ -26,7 +26,6 @@
         html,body{background:var(--bg-space);height:100%;overflow:hidden}
         #root{position:absolute;top:110px;left:0;right:0;bottom:0}
 
-        /* TOP BRAND BAR */
         #topbar{position:fixed;top:0;left:0;right:0;height:50px;z-index:1000;display:flex;align-items:center;gap:12px;padding:0 16px;background:var(--card-glass);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--border-glass)}
         #brand{display:flex;align-items:center;gap:8px;color:#fff;font-weight:800;font-size:.95rem}
         #brand i{color:var(--primary-neon)}
@@ -43,17 +42,14 @@
         #status-dot.connected{background:var(--unlocked-green);box-shadow:0 0 8px var(--unlocked-green)}
         #locked-banner{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:1000;display:none;align-items:center;gap:10px;background:rgba(255,71,87,.12);border:1px solid var(--locked-red);color:#fff;padding:10px 18px;border-radius:30px;font-size:.8rem;font-weight:600;backdrop-filter:blur(10px)}
 
-        /* LEFT SIDEBAR - MIRO STYLE */
         #left-sidebar{position:fixed;left:0;top:50px;bottom:0;width:52px;background:var(--card-glass);border-right:1px solid var(--border-glass);backdrop-filter:blur(16px);z-index:999;display:flex;flex-direction:column;align-items:center;padding:12px 0;gap:8px}
         .sidebar-btn{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;border:1px solid var(--border-glass);background:rgba(255,255,255,.05);color:#A0AEC0;cursor:pointer;transition:all .2s}
         .sidebar-btn:hover{background:rgba(0,198,255,.15);color:var(--primary-neon);transform:scale(1.05)}
         .sidebar-btn.active{background:rgba(0,255,153,.15);color:var(--unlocked-green);border-color:var(--unlocked-green)}
         .sidebar-divider{width:32px;height:1px;background:var(--border-glass);margin:4px 0}
 
-        /* RIGHT FLOATING PANELS */
         #right-panels{position:fixed;right:20px;top:70px;z-index:998;display:flex;flex-direction:column;gap:12px}
         
-        /* TIMER WIDGET */
         #timer-widget{background:var(--card-glass);border:1px solid var(--border-glass);border-radius:12px;padding:14px;min-width:200px;backdrop-filter:blur(16px);box-shadow:0 4px 20px rgba(0,0,0,.3);display:none;flex-direction:column;align-items:center}
         #timer-display{font-size:2.5rem;font-weight:800;color:var(--primary-neon);font-family:'Courier New',monospace;letter-spacing:2px;margin-bottom:10px;text-shadow:0 0 15px rgba(0,198,255,.5)}
         #timer-display.warning{color:var(--timer-warning);text-shadow:0 0 15px rgba(255,205,56,.5)}
@@ -70,7 +66,6 @@
         .timer-inputs input:focus{outline:none;border-color:var(--primary-neon)}
         .timer-inputs span{color:#718096;font-weight:bold}
 
-        /* DRAGGABLE COLOR POPUP */
         #bg-color-popup{display:none;position:fixed;right:80px;top:70px;z-index:1001;background:var(--card-glass);border:1px solid var(--border-glass);border-radius:12px;backdrop-filter:blur(16px);box-shadow:0 10px 30px rgba(0,0,0,.5);width:220px}
         .popup-header{display:flex;align-items:center;gap:8px;padding:10px 12px;border-bottom:1px solid var(--border-glass);cursor:move;color:#fff;font-size:.85rem;font-weight:700;background:rgba(255,255,255,.03);border-radius:12px 12px 0 0;user-select:none}
         .popup-header i{color:#718096}
@@ -82,7 +77,6 @@
         .custom-color-row span{color:#fff;font-size:.8rem;font-weight:600}
         #custom-bg-picker{width:100%;height:35px;border:none;border-radius:6px;cursor:pointer;background:transparent}
 
-        /* SETUP SCREEN */
         #setup-screen{position:fixed;inset:0;z-index:2000;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at center,#0F172A 0%,#050811 100%);padding:20px}
         #setup-card{width:min(420px,95vw);background:var(--card-glass);border:1px solid var(--border-glass);border-radius:18px;padding:32px 28px;text-align:center}
         #setup-card h1{color:#fff;font-size:1.5rem;font-weight:800;margin-bottom:8px}
@@ -97,7 +91,6 @@
         #enter-btn{width:100%;margin-top:28px;padding:14px;border-radius:10px;border:none;background:var(--primary-neon);color:#000;font-weight:800;font-size:1rem;cursor:pointer}
         #setup-error{color:var(--locked-red);font-size:.8rem;margin-top:12px;min-height:1.2em}
 
-        /* MODALS */
         #add-student-modal,#toolkit-modal,#math-modal{position:fixed;inset:0;z-index:3000;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.8);backdrop-filter:blur(4px);padding:20px}
         #add-student-card,#toolkit-card,#math-card{width:min(450px,95vw);background:var(--card-glass);border:1px solid var(--border-glass);border-radius:16px;padding:28px 24px}
         #toolkit-card{width:min(600px,95vw);max-height:80vh;overflow-y:auto}
@@ -127,13 +120,10 @@
         .toolkit-item span{color:#fff;font-size:.85rem;font-weight:600}
         .toolkit-item .sub-text{color:#718096;font-size:.7rem;font-weight:400}
 
-        /* FOG OF WAR OVERLAY */
         #spotlight-overlay{position:fixed;inset:0;z-index:950;background:radial-gradient(circle 250px at var(--sx,50%) var(--sy,50%),transparent 0%,rgba(0,0,0,0.96) 100%);pointer-events:none;display:none;transition:background .1s ease-out}
 
-        /* FORCE EXCALIDRAW TOOLBAR TO TOP */
         .excalidraw .App-toolbar{position:fixed!important;top:50px!important;left:70px!important;right:320px!important;z-index:997!important;background:var(--card-glass)!important;backdrop-filter:blur(16px)!important;border-radius:0 0 12px 12px!important;border:1px solid var(--border-glass)!important;border-top:none!important;padding:8px 16px!important;box-shadow:0 4px 20px rgba(0,0,0,.3)!important}
         
-        /* MOBILE RESPONSIVE */
         @media(max-width:768px){
             #root{top:150px!important}
             #left-sidebar{width:48px;top:50px}
@@ -147,7 +137,6 @@
 </head>
 <body>
 
-    <!-- SETUP SCREEN -->
     <div id="setup-screen">
         <div id="setup-card">
             <h1>Prime<span>Board</span></h1>
@@ -166,7 +155,6 @@
         </div>
     </div>
 
-    <!-- TOP BRAND BAR -->
     <div id="topbar" style="display:none;">
         <div id="brand"><i class="fas fa-atom"></i> PrimeBoard <span class="sub">by Prime Spirit Mentors</span></div>
         <div id="room-pill"><span id="status-dot"></span> Room: <b id="room-pill-code">-</b></div>
@@ -179,7 +167,6 @@
 
     <div id="locked-banner"><i class="fas fa-lock"></i> Your teacher has locked drawing — you can still pan and zoom to follow along.</div>
 
-    <!-- LEFT SIDEBAR (MIRO STYLE) -->
     <div id="left-sidebar" style="display:none;">
         <button class="sidebar-btn" id="btn-toolkit" title="Smart Toolkit"><i class="fas fa-graduation-cap"></i></button>
         <button class="sidebar-btn" id="btn-spotlight" title="Fog of War"><i class="fas fa-lightbulb"></i></button>
@@ -191,9 +178,7 @@
         <button class="sidebar-btn" id="btn-theme" title="Theme"><i class="fas fa-palette"></i></button>
     </div>
 
-    <!-- RIGHT FLOATING PANELS -->
     <div id="right-panels">
-        <!-- TIMER WIDGET -->
         <div id="timer-widget">
             <div id="timer-display">05:00</div>
             <div class="timer-controls" id="timer-controls-container">
@@ -209,22 +194,20 @@
         </div>
     </div>
 
-    <!-- FOG OF WAR OVERLAY -->
     <div id="spotlight-overlay"></div>
 
-    <!-- DRAGGABLE COLOR POPUP -->
     <div id="bg-color-popup">
         <div class="popup-header"><i class="fas fa-grip-vertical"></i> Background Color</div>
         <div class="popup-content">
             <div class="color-grid">
-                <div class="color-swatch" style="background:#090D1A;" onclick="setBgColor('#090D1A')"></div>
-                <div class="color-swatch" style="background:#1e1e1e;" onclick="setBgColor('#1e1e1e')"></div>
-                <div class="color-swatch" style="background:#ffffff;" onclick="setBgColor('#ffffff')"></div>
-                <div class="color-swatch" style="background:#f4f4f4;" onclick="setBgColor('#f4f4f4')"></div>
-                <div class="color-swatch" style="background:#fff9c4;" onclick="setBgColor('#fff9c4')"></div>
-                <div class="color-swatch" style="background:#e3f2fd;" onclick="setBgColor('#e3f2fd')"></div>
-                <div class="color-swatch" style="background:#e8f5e9;" onclick="setBgColor('#e8f5e9')"></div>
-                <div class="color-swatch" style="background:#000000;" onclick="setBgColor('#000000')"></div>
+                <div class="color-swatch" style="background:#090D1A;" data-color="#090D1A"></div>
+                <div class="color-swatch" style="background:#1e1e1e;" data-color="#1e1e1e"></div>
+                <div class="color-swatch" style="background:#ffffff;" data-color="#ffffff"></div>
+                <div class="color-swatch" style="background:#f4f4f4;" data-color="#f4f4f4"></div>
+                <div class="color-swatch" style="background:#fff9c4;" data-color="#fff9c4"></div>
+                <div class="color-swatch" style="background:#e3f2fd;" data-color="#e3f2fd"></div>
+                <div class="color-swatch" style="background:#e8f5e9;" data-color="#e8f5e9"></div>
+                <div class="color-swatch" style="background:#000000;" data-color="#000000"></div>
             </div>
             <div class="custom-color-row">
                 <span>Custom:</span>
@@ -233,24 +216,22 @@
         </div>
     </div>
 
-    <!-- TOOLKIT MODAL -->
     <div id="toolkit-modal">
         <div id="toolkit-card">
             <h3><i class="fas fa-graduation-cap"></i> Smart Educational Toolkit</h3>
             <p>Click a tool to instantly add it to the board.</p>
             <div class="toolkit-grid">
-                <div class="toolkit-item" onclick="applyToolkit('grid')"><i class="fas fa-border-all"></i><span>Math Grid</span><span class="sub-text">Snap to graph paper</span></div>
-                <div class="toolkit-item" onclick="applyToolkit('chem-benzene')"><i class="fas fa-atom"></i><span>Chemistry</span><span class="sub-text">Benzene Ring</span></div>
-                <div class="toolkit-item" onclick="applyToolkit('bio-cell')"><i class="fas fa-dna"></i><span>Biology</span><span class="sub-text">Animal Cell</span></div>
-                <div class="toolkit-item" onclick="applyToolkit('physics-circuit')"><i class="fas fa-bolt"></i><span>Physics</span><span class="sub-text">Simple Circuit</span></div>
-                <div class="toolkit-item" onclick="applyToolkit('history-timeline')"><i class="fas fa-history"></i><span>History</span><span class="sub-text">Timeline Maker</span></div>
-                <div class="toolkit-item" onclick="applyToolkit('code-block')"><i class="fas fa-code"></i><span>Computer Sci</span><span class="sub-text">Code Block</span></div>
+                <div class="toolkit-item" data-tool="grid"><i class="fas fa-border-all"></i><span>Math Grid</span><span class="sub-text">Snap to graph paper</span></div>
+                <div class="toolkit-item" data-tool="chem-benzene"><i class="fas fa-atom"></i><span>Chemistry</span><span class="sub-text">Benzene Ring</span></div>
+                <div class="toolkit-item" data-tool="bio-cell"><i class="fas fa-dna"></i><span>Biology</span><span class="sub-text">Animal Cell</span></div>
+                <div class="toolkit-item" data-tool="physics-circuit"><i class="fas fa-bolt"></i><span>Physics</span><span class="sub-text">Simple Circuit</span></div>
+                <div class="toolkit-item" data-tool="history-timeline"><i class="fas fa-history"></i><span>History</span><span class="sub-text">Timeline Maker</span></div>
+                <div class="toolkit-item" data-tool="code-block"><i class="fas fa-code"></i><span>Computer Sci</span><span class="sub-text">Code Block</span></div>
             </div>
             <div class="btn-row"><button id="close-toolkit-btn">Close</button></div>
         </div>
     </div>
 
-    <!-- MATH MODAL -->
     <div id="math-modal">
         <div id="math-card">
             <h3><i class="fas fa-square-root-alt"></i> Insert LaTeX Math Equation</h3>
@@ -264,7 +245,6 @@
         </div>
     </div>
 
-    <!-- ADD STUDENT MODAL -->
     <div id="add-student-modal">
         <div id="add-student-card">
             <h3><i class="fas fa-user-plus"></i> Add Students by Email</h3>
@@ -299,7 +279,6 @@
             return {type,x,y,width,height,angle:0,strokeColor:"#1e1e1e",backgroundColor:"transparent",fillStyle:"hachure",strokeWidth:1,roughness:1,opacity:100,groupIds:[],roundness:type==="rectangle"||type==="ellipse"?{type:3}:null,seed:Math.floor(Math.random()*2e9),version:1,versionNonce:Math.floor(Math.random()*2e9),isDeleted:false,boundElements:null,updated:Date.now(),link:null,locked:false,...extra};
         }
 
-        // SETUP
         const setupScreen=document.getElementById('setup-screen'),roleTeacherBtn=document.getElementById('role-teacher'),roleStudentBtn=document.getElementById('role-student'),nameInput=document.getElementById('name-input'),roomInput=document.getElementById('room-input'),roomLabel=document.getElementById('room-label'),enterBtn=document.getElementById('enter-btn'),setupError=document.getElementById('setup-error');
         let selectedRole='teacher';
         const inviteRoom=getQueryParam('room');
@@ -327,39 +306,111 @@
             const inviteUrl=`${window.location.origin}${window.location.pathname}?room=${encodeURIComponent(room)}`;
             inviteBtn.addEventListener('click',()=>{navigator.clipboard.writeText(inviteUrl).then(()=>{const o=inviteBtn.innerHTML;inviteBtn.innerHTML='<i class="fas fa-check"></i> <span>Copied!</span>';setTimeout(()=>{inviteBtn.innerHTML=o;},1800);});});
 
-            // ===== FOG OF WAR =====
+            let excalidrawAPI=null;
+            let isRemoteUpdate=false;
+            let lastSendTime=0;
+
+            // ===== FOG OF WAR - FIXED =====
             const btnSpotlight = document.getElementById('btn-spotlight');
             const spotlightOverlay = document.getElementById('spotlight-overlay');
             let isSpotlightActive = false, lastSpotlightSend = 0;
+            
             btnSpotlight.addEventListener('click', () => {
                 isSpotlightActive = !isSpotlightActive;
                 btnSpotlight.classList.toggle('active', isSpotlightActive);
+                console.log('Spotlight toggled:', isSpotlightActive);
+                
                 if (role === 'teacher') {
                     sendMessage({ type: 'spotlight-update', active: isSpotlightActive });
-                    if (isSpotlightActive) document.addEventListener('mousemove', handleTeacherMouse);
-                    else { document.removeEventListener('mousemove', handleTeacherMouse); spotlightOverlay.style.display = 'none'; }
+                    if (isSpotlightActive) {
+                        document.addEventListener('mousemove', handleTeacherMouse);
+                        spotlightOverlay.style.display = 'block';
+                    } else {
+                        document.removeEventListener('mousemove', handleTeacherMouse);
+                        spotlightOverlay.style.display = 'none';
+                    }
                 }
             });
+            
             function handleTeacherMouse(e) {
                 const now = Date.now();
-                if (now - lastSpotlightSend > 33) { lastSpotlightSend = now; sendMessage({ type: 'spotlight-update', active: true, x: e.clientX, y: e.clientY }); }
+                if (now - lastSpotlightSend > 33) { 
+                    lastSpotlightSend = now; 
+                    sendMessage({ type: 'spotlight-update', active: true, x: e.clientX, y: e.clientY });
+                }
             }
 
-            // ===== DRAGGABLE COLOR POPUP =====
-            const btnBgColor = document.getElementById('btn-bg-color'), bgColorPopup = document.getElementById('bg-color-popup'), popupHeader = bgColorPopup.querySelector('.popup-header'), customBgPicker = document.getElementById('custom-bg-picker');
+            // ===== BACKGROUND COLOR - FIXED =====
+            const btnBgColor = document.getElementById('btn-bg-color');
+            const bgColorPopup = document.getElementById('bg-color-popup');
+            const popupHeader = bgColorPopup.querySelector('.popup-header');
+            const customBgPicker = document.getElementById('custom-bg-picker');
+            const colorSwatches = document.querySelectorAll('.color-swatch');
             let isDragging = false, dragOffsetX = 0, dragOffsetY = 0;
-            btnBgColor.addEventListener('click', (e) => { e.stopPropagation(); bgColorPopup.style.display = bgColorPopup.style.display === 'block' ? 'none' : 'block'; });
-            document.addEventListener('click', (e) => { if (!bgColorPopup.contains(e.target) && e.target !== btnBgColor) bgColorPopup.style.display = 'none'; });
-            popupHeader.addEventListener('mousedown', (e) => {
-                isDragging = true; const rect = bgColorPopup.getBoundingClientRect();
-                dragOffsetX = e.clientX - rect.left; dragOffsetY = e.clientY - rect.top;
-                bgColorPopup.style.transition = 'none'; bgColorPopup.style.transform = 'none';
-                bgColorPopup.style.left = rect.left + 'px'; bgColorPopup.style.top = rect.top + 'px';
+            
+            btnBgColor.addEventListener('click', (e) => { 
+                e.stopPropagation(); 
+                bgColorPopup.style.display = bgColorPopup.style.display === 'block' ? 'none' : 'block';
+                console.log('Color popup toggled');
             });
-            document.addEventListener('mousemove', (e) => { if (!isDragging) return; e.preventDefault(); bgColorPopup.style.left = `${e.clientX - dragOffsetX}px`; bgColorPopup.style.top = `${e.clientY - dragOffsetY}px`; });
-            document.addEventListener('mouseup', () => { if (isDragging) { isDragging = false; bgColorPopup.style.transition = 'background 0.1s ease-out'; } });
-            window.setBgColor = function(color) { if (excalidrawAPI) excalidrawAPI.updateScene({ appState: { viewBackgroundColor: color } }); customBgPicker.value = color; };
-            customBgPicker.addEventListener('input', (e) => { if (excalidrawAPI) excalidrawAPI.updateScene({ appState: { viewBackgroundColor: e.target.value } }); });
+            
+            document.addEventListener('click', (e) => { 
+                if (!bgColorPopup.contains(e.target) && e.target !== btnBgColor) {
+                    bgColorPopup.style.display = 'none';
+                }
+            });
+
+            // Color swatch click handlers
+            colorSwatches.forEach(swatch => {
+                swatch.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const color = swatch.getAttribute('data-color');
+                    console.log('Color clicked:', color);
+                    if (excalidrawAPI) {
+                        excalidrawAPI.updateScene({ 
+                            appState: { viewBackgroundColor: color } 
+                        });
+                        customBgPicker.value = color;
+                    } else {
+                        console.error('excalidrawAPI not available');
+                    }
+                });
+            });
+
+            // Custom color picker
+            customBgPicker.addEventListener('input', (e) => {
+                if (excalidrawAPI) {
+                    excalidrawAPI.updateScene({ 
+                        appState: { viewBackgroundColor: e.target.value } 
+                    });
+                }
+            });
+
+            // Drag functionality
+            popupHeader.addEventListener('mousedown', (e) => {
+                isDragging = true; 
+                const rect = bgColorPopup.getBoundingClientRect();
+                dragOffsetX = e.clientX - rect.left; 
+                dragOffsetY = e.clientY - rect.top;
+                bgColorPopup.style.transition = 'none'; 
+                bgColorPopup.style.transform = 'none';
+                bgColorPopup.style.left = rect.left + 'px'; 
+                bgColorPopup.style.top = rect.top + 'px';
+            });
+            
+            document.addEventListener('mousemove', (e) => { 
+                if (!isDragging) return; 
+                e.preventDefault(); 
+                bgColorPopup.style.left = `${e.clientX - dragOffsetX}px`; 
+                bgColorPopup.style.top = `${e.clientY - dragOffsetY}px`; 
+            });
+            
+            document.addEventListener('mouseup', () => { 
+                if (isDragging) { 
+                    isDragging = false; 
+                    bgColorPopup.style.transition = 'background 0.1s ease-out'; 
+                } 
+            });
 
             // ===== TIMER =====
             const timerWidget=document.getElementById('timer-widget'),timerDisplay=document.getElementById('timer-display'),timerStartBtn=document.getElementById('timer-start'),timerPauseBtn=document.getElementById('timer-pause'),timerResetBtn=document.getElementById('timer-reset'),timerMinInput=document.getElementById('timer-min'),timerSecInput=document.getElementById('timer-sec'),timerControls=document.getElementById('timer-controls-container'),timerInputs=document.getElementById('timer-inputs-container');
@@ -374,20 +425,70 @@
             if(role==='teacher'){timerStartBtn.addEventListener('click',()=>{if(timeLeft===0)resetTimerLocal();startTimerLocal();sendMessage({type:'timer-update',action:'start',timeLeft});});timerPauseBtn.addEventListener('click',()=>{pauseTimerLocal();sendMessage({type:'timer-update',action:'pause',timeLeft});});timerResetBtn.addEventListener('click',()=>{resetTimerLocal();sendMessage({type:'timer-update',action:'reset',timeLeft});});timerMinInput.addEventListener('change',resetTimerLocal);timerSecInput.addEventListener('change',resetTimerLocal);}
             updateTimerDisplay();
 
-            // ===== TOOLKIT =====
+            // ===== TOOLKIT - FIXED =====
             const toolkitModal=document.getElementById('toolkit-modal');
             document.getElementById('btn-toolkit').addEventListener('click',()=>{toolkitModal.style.display='flex';});
             document.getElementById('close-toolkit-btn').addEventListener('click',()=>{toolkitModal.style.display='none';});
-            window.applyToolkit=function(type){
-                if(!excalidrawAPI)return;const elements=excalidrawAPI.getSceneElements();let n=[];const sx=100,sy=100;
-                if(type==='grid'){const a=excalidrawAPI.getAppState();excalidrawAPI.updateScene({appState:{gridSize:a.gridSize?0:20}});}
-                else if(type==='chem-benzene'){n.push(createEl('diamond',sx,sy,100,100,{strokeColor:"#00C6FF",strokeWidth:2}));n.push(createEl('text',sx+20,sy+40,60,20,{text:"C₆H₆",fontSize:20,strokeColor:"#fff"}));}
-                else if(type==='bio-cell'){n.push(createEl('ellipse',sx,sy,200,150,{strokeColor:"#00FF99",backgroundColor:"rgba(0,255,153,0.1)",fillStyle:"solid"}));n.push(createEl('ellipse',sx+70,sy+50,60,50,{strokeColor:"#FF4757",backgroundColor:"rgba(255,71,87,0.2)",fillStyle:"solid"}));n.push(createEl('text',sx+80,sy+70,40,20,{text:"Nucleus",fontSize:14,strokeColor:"#fff"}));}
-                else if(type==='physics-circuit'){n.push(createEl('rectangle',sx,sy+40,20,40,{strokeColor:"#FFCD38"}));n.push(createEl('line',sx+20,sy+60,100,0,{strokeColor:"#fff",points:[[0,0],[100,0]]}));n.push(createEl('rectangle',sx+120,sy+40,40,40,{strokeColor:"#00C6FF"}));n.push(createEl('line',sx+160,sy+60,100,0,{strokeColor:"#fff",points:[[0,0],[100,0]]}));n.push(createEl('line',sx+260,sy+60,0,-100,{strokeColor:"#fff",points:[[0,0],[0,-100]]}));n.push(createEl('line',sx+260,sy-40,-260,0,{strokeColor:"#fff",points:[[0,0],[-260,0]]}));}
-                else if(type==='history-timeline'){n.push(createEl('line',sx,sy+50,400,0,{strokeColor:"#00C6FF",strokeWidth:3,points:[[0,0],[400,0]]}));for(let i=0;i<3;i++){n.push(createEl('ellipse',sx+(i*150),sy+40,20,20,{strokeColor:"#FF4757",backgroundColor:"#FF4757",fillStyle:"solid"}));n.push(createEl('text',sx+(i*150)-20,sy+80,60,20,{text:`Event ${i+1}`,fontSize:16,strokeColor:"#fff"}));}}
-                else if(type==='code-block'){n.push(createEl('rectangle',sx,sy,300,150,{strokeColor:"#1e1e1e",backgroundColor:"#1e1e1e",fillStyle:"solid",roundness:{type:3}}));n.push(createEl('text',sx+10,sy+10,280,130,{text:"def hello():\n  print('Hello World')",fontSize:14,fontFamily:3,strokeColor:"#00FF99"}));}
-                if(n.length>0)excalidrawAPI.updateScene({elements:[...elements,...n]});toolkitModal.style.display='none';
-            };
+            
+            // Toolkit item click handlers
+            document.querySelectorAll('.toolkit-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    const tool = item.getAttribute('data-tool');
+                    console.log('Toolkit clicked:', tool);
+                    applyToolkit(tool);
+                });
+            });
+
+            function applyToolkit(type){
+                if(!excalidrawAPI){
+                    console.error('excalidrawAPI not available');
+                    return;
+                }
+                const elements=excalidrawAPI.getSceneElements();
+                let n=[];
+                const sx=100,sy=100;
+                
+                if(type==='grid'){
+                    const a=excalidrawAPI.getAppState();
+                    excalidrawAPI.updateScene({appState:{gridSize:a.gridSize?0:20}});
+                    toolkitModal.style.display='none';
+                    return;
+                }
+                else if(type==='chem-benzene'){
+                    n.push(createEl('diamond',sx,sy,100,100,{strokeColor:"#00C6FF",strokeWidth:2}));
+                    n.push(createEl('text',sx+20,sy+40,60,20,{text:"C₆H₆",fontSize:20,strokeColor:"#fff"}));
+                }
+                else if(type==='bio-cell'){
+                    n.push(createEl('ellipse',sx,sy,200,150,{strokeColor:"#00FF99",backgroundColor:"rgba(0,255,153,0.1)",fillStyle:"solid"}));
+                    n.push(createEl('ellipse',sx+70,sy+50,60,50,{strokeColor:"#FF4757",backgroundColor:"rgba(255,71,87,0.2)",fillStyle:"solid"}));
+                    n.push(createEl('text',sx+80,sy+70,40,20,{text:"Nucleus",fontSize:14,strokeColor:"#fff"}));
+                }
+                else if(type==='physics-circuit'){
+                    n.push(createEl('rectangle',sx,sy+40,20,40,{strokeColor:"#FFCD38"}));
+                    n.push(createEl('line',sx+20,sy+60,100,0,{strokeColor:"#fff",points:[[0,0],[100,0]]}));
+                    n.push(createEl('rectangle',sx+120,sy+40,40,40,{strokeColor:"#00C6FF"}));
+                    n.push(createEl('line',sx+160,sy+60,100,0,{strokeColor:"#fff",points:[[0,0],[100,0]]}));
+                    n.push(createEl('line',sx+260,sy+60,0,-100,{strokeColor:"#fff",points:[[0,0],[0,-100]]}));
+                    n.push(createEl('line',sx+260,sy-40,-260,0,{strokeColor:"#fff",points:[[0,0],[-260,0]]}));
+                }
+                else if(type==='history-timeline'){
+                    n.push(createEl('line',sx,sy+50,400,0,{strokeColor:"#00C6FF",strokeWidth:3,points:[[0,0],[400,0]]}));
+                    for(let i=0;i<3;i++){
+                        n.push(createEl('ellipse',sx+(i*150),sy+40,20,20,{strokeColor:"#FF4757",backgroundColor:"#FF4757",fillStyle:"solid"}));
+                        n.push(createEl('text',sx+(i*150)-20,sy+80,60,20,{text:`Event ${i+1}`,fontSize:16,strokeColor:"#fff"}));
+                    }
+                }
+                else if(type==='code-block'){
+                    n.push(createEl('rectangle',sx,sy,300,150,{strokeColor:"#1e1e1e",backgroundColor:"#1e1e1e",fillStyle:"solid",roundness:{type:3}}));
+                    n.push(createEl('text',sx+10,sy+10,280,130,{text:"def hello():\n  print('Hello World')",fontSize:14,fontFamily:3,strokeColor:"#00FF99"}));
+                }
+                
+                if(n.length>0){
+                    console.log('Adding elements:', n.length);
+                    excalidrawAPI.updateScene({elements:[...elements,...n]});
+                }
+                toolkitModal.style.display='none';
+            }
 
             // ===== MATH =====
             const mathModal=document.getElementById('math-modal'),mathInput=document.getElementById('math-input'),mathPreview=document.getElementById('math-preview');
@@ -398,7 +499,12 @@
 
             // ===== THEME =====
             let currentTheme='dark';
-            document.getElementById('btn-theme').addEventListener('click',()=>{currentTheme=currentTheme==='dark'?'light':'dark';if(excalidrawAPI)excalidrawAPI.updateScene({appState:{theme:currentTheme}});});
+            document.getElementById('btn-theme').addEventListener('click',()=>{
+                currentTheme=currentTheme==='dark'?'light':'dark';
+                if(excalidrawAPI){
+                    excalidrawAPI.updateScene({appState:{theme:currentTheme}});
+                }
+            });
 
             // ===== EMAIL =====
             const addStudentModal=document.getElementById('add-student-modal'),emailInput=document.getElementById('email-input'),emailSuggestions=document.getElementById('email-suggestions'),emailList=document.getElementById('email-list');
@@ -416,16 +522,59 @@
 
             // ===== LOCK =====
             let locked=false;
-            function applyLockUI(){if(role==='teacher'){lockBtn.classList.toggle('unlocked',!locked);lockBtnText.textContent=locked?'Drawing Locked':'Drawing Unlocked';lockBtn.querySelector('i').className=locked?'fas fa-lock':'fas fa-lock-open';}else{lockedBanner.style.display=locked?'flex':'none';}}
-            lockBtn.addEventListener('click',()=>{locked=!locked;applyLockUI();sendMessage({type:'set-lock',locked});});
+            function applyLockUI(){
+                if(role==='teacher'){
+                    lockBtn.classList.toggle('unlocked',!locked);
+                    lockBtnText.textContent=locked?'Drawing Locked':'Drawing Unlocked';
+                    lockBtn.querySelector('i').className=locked?'fas fa-lock':'fas fa-lock-open';
+                }else{
+                    lockedBanner.style.display=locked?'flex':'none';
+                }
+            }
+            lockBtn.addEventListener('click',()=>{
+                locked=!locked;
+                applyLockUI();
+                sendMessage({type:'set-lock',locked});
+                if(role==='teacher'){
+                    setExcalidrawViewMode(false);
+                }
+            });
+
+            function setExcalidrawViewMode(viewOnly){
+                if(excalidrawAPI){
+                    excalidrawAPI.updateScene({
+                        appState: {
+                            viewModeEnabled: viewOnly,
+                            activeTool: viewOnly ? { type: 'selection', locked: true } : { type: 'selection', locked: false }
+                        }
+                    });
+                }
+            }
 
             // ===== EXCALIDRAW =====
-            let excalidrawAPI=null,suppressNextChange=false;
             function App(){
-                const onChange=useCallback((elements,appState)=>{if(suppressNextChange){suppressNextChange=false;return;}const now=Date.now();if(now-lastSendTime>=50){lastSendTime=now;sendMessage({type:'scene-update',elements,appState:{viewBackgroundColor:appState.viewBackgroundColor}});}},[]);
-                return React.createElement(Excalidraw,{excalidrawAPI:(api)=>{excalidrawAPI=api;},onChange,theme:'dark',name:`PrimeBoard - ${room}`,UIOptions:{canvasActions:{loadScene:false,saveToActiveFile:false,export:{saveFileToDisk:false}}}});
+                const onChange=useCallback((elements,appState,files)=>{
+                    if(!isRemoteUpdate){
+                        const now=Date.now();
+                        if(now-lastSendTime>=50){
+                            lastSendTime=now;
+                            sendMessage({type:'scene-update',elements,appState:{viewBackgroundColor:appState.viewBackgroundColor}});
+                        }
+                    }
+                    isRemoteUpdate=false;
+                },[]);
+                return React.createElement(Excalidraw,{
+                    excalidrawAPI:(api)=>{
+                        excalidrawAPI=api;
+                        console.log('Excalidraw API initialized');
+                    },
+                    onChange,
+                    theme:'dark',
+                    name:`PrimeBoard - ${room}`,
+                    UIOptions:{canvasActions:{loadScene:false,saveToActiveFile:false,export:{saveFileToDisk:false}}},
+                    initialData:{appState:{viewModeEnabled:role==='student'&&locked}}
+                });
             }
-            let lastSendTime=0;
             ReactDOM.createRoot(document.getElementById('root')).render(React.createElement(App));
 
             // ===== WEBSOCKET =====
@@ -436,11 +585,28 @@
                 socket.addEventListener('open',()=>{statusDot.className='connected';sendMessage({type:'join',room,role,name});});
                 socket.addEventListener('message',(event)=>{
                     const data=JSON.parse(event.data);
-                    if(data.type==='state'||data.type==='lock-changed'){locked=data.locked;applyLockUI();}
-                    if(data.type==='scene-update'&&excalidrawAPI){suppressNextChange=true;excalidrawAPI.updateScene({elements:data.elements});}
+                    if(data.type==='state'||data.type==='lock-changed'){
+                        locked=data.locked;
+                        applyLockUI();
+                        if(role==='student'){
+                            setExcalidrawViewMode(locked);
+                        }
+                    }
+                    if(data.type==='scene-update'&&excalidrawAPI){
+                        isRemoteUpdate=true;
+                        excalidrawAPI.updateScene({elements:data.elements});
+                    }
                     if(data.type==='roster'&&data.users)studentCount.textContent=data.users.length;
                     if(data.type==='timer-update'){timeLeft=data.timeLeft;updateTimerDisplay();if(data.action==='start'&&!isTimerRunning)startTimerLocal();if(data.action==='pause')pauseTimerLocal();if(data.action==='reset'){pauseTimerLocal();timeLeft=data.timeLeft;updateTimerDisplay();}}
-                    if(data.type==='spotlight-update'){if(data.active){spotlightOverlay.style.display='block';spotlightOverlay.style.setProperty('--sx',`${data.x}px`);spotlightOverlay.style.setProperty('--sy',`${data.y}px`);}else{spotlightOverlay.style.display='none';}}
+                    if(data.type==='spotlight-update'){
+                        if(data.active){
+                            spotlightOverlay.style.display='block';
+                            spotlightOverlay.style.setProperty('--sx',`${data.x}px`);
+                            spotlightOverlay.style.setProperty('--sy',`${data.y}px`);
+                        }else{
+                            spotlightOverlay.style.display='none';
+                        }
+                    }
                 });
                 socket.addEventListener('close',()=>{statusDot.className='connecting';setTimeout(connect,2000);});
                 socket.addEventListener('error',()=>{statusDot.className='error';});
