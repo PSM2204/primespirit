@@ -106,8 +106,23 @@
         .feature-btn:hover{background:rgba(0,198,255,.15);color:var(--primary-neon);transform:scale(1.05)}
         .feature-btn.active{background:rgba(0,255,153,.15);color:var(--unlocked-green);border-color:var(--unlocked-green)}
 
-        /* BACKGROUND COLOR POPUP */
-        #bg-color-popup{display:none;position:fixed;left:75px;top:240px;z-index:1001;background:var(--card-glass);border:1px solid var(--border-glass);border-radius:12px;padding:16px;backdrop-filter:blur(16px);box-shadow:0 10px 30px rgba(0,0,0,0.5);width:220px}
+        /* DRAGGABLE BACKGROUND COLOR POPUP */
+        #bg-color-popup {
+            display: none; position: fixed; left: 100px; top: 150px; z-index: 1001; 
+            background: var(--card-glass); border: 1px solid var(--border-glass); 
+            border-radius: 12px; backdrop-filter: blur(16px); 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); width: 220px;
+        }
+        .popup-header {
+            display: flex; align-items: center; gap: 8px;
+            padding: 8px 12px; border-bottom: 1px solid var(--border-glass);
+            cursor: move; color: #fff; font-size: 0.8rem; font-weight: 700;
+            background: rgba(255,255,255,0.03); border-radius: 12px 12px 0 0;
+            user-select: none;
+        }
+        .popup-header i { color: #718096; }
+        .popup-content { padding: 16px; }
+        
         .color-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px}
         .color-swatch{width:100%;aspect-ratio:1;border-radius:8px;cursor:pointer;border:2px solid transparent;transition:transform .2s,border-color .2s}
         .color-swatch:hover{transform:scale(1.1);border-color:#fff}
@@ -119,7 +134,7 @@
         #spotlight-overlay {
             position: fixed; inset: 0; z-index: 950;
             background: radial-gradient(circle 250px at var(--sx, 50%) var(--sy, 50%), transparent 0%, rgba(0,0,0,0.96) 100%);
-            pointer-events: none; /* Allows students to still pan/zoom if needed */
+            pointer-events: none;
             display: none;
             transition: background 0.1s ease-out;
         }
@@ -156,7 +171,7 @@
             .toolkit-grid{grid-template-columns:repeat(2,1fr)}
             #timer-widget{top:55px;right:10px;min-width:180px;padding:12px}
             #timer-display{font-size:2.2rem}
-            #bg-color-popup{left:55px;top:200px;width:180px}
+            #bg-color-popup{left: 20px !important; top: 200px !important; width: 180px;}
         }
 
         /* FORCE TOOLBAR LEFT */
@@ -212,21 +227,24 @@
     <!-- FOG OF WAR OVERLAY -->
     <div id="spotlight-overlay"></div>
 
-    <!-- BACKGROUND COLOR POPUP -->
+    <!-- DRAGGABLE BACKGROUND COLOR POPUP -->
     <div id="bg-color-popup">
-        <div class="color-grid">
-            <div class="color-swatch" style="background:#090D1A;" onclick="setBgColor('#090D1A')"></div>
-            <div class="color-swatch" style="background:#1e1e1e;" onclick="setBgColor('#1e1e1e')"></div>
-            <div class="color-swatch" style="background:#ffffff;" onclick="setBgColor('#ffffff')"></div>
-            <div class="color-swatch" style="background:#f4f4f4;" onclick="setBgColor('#f4f4f4')"></div>
-            <div class="color-swatch" style="background:#fff9c4;" onclick="setBgColor('#fff9c4')"></div>
-            <div class="color-swatch" style="background:#e3f2fd;" onclick="setBgColor('#e3f2fd')"></div>
-            <div class="color-swatch" style="background:#e8f5e9;" onclick="setBgColor('#e8f5e9')"></div>
-            <div class="color-swatch" style="background:#000000;" onclick="setBgColor('#000000')"></div>
-        </div>
-        <div class="custom-color-row">
-            <span>Custom:</span>
-            <input type="color" id="custom-bg-picker" value="#090D1A">
+        <div class="popup-header"><i class="fas fa-grip-vertical"></i> Background Color</div>
+        <div class="popup-content">
+            <div class="color-grid">
+                <div class="color-swatch" style="background:#090D1A;" onclick="setBgColor('#090D1A')"></div>
+                <div class="color-swatch" style="background:#1e1e1e;" onclick="setBgColor('#1e1e1e')"></div>
+                <div class="color-swatch" style="background:#ffffff;" onclick="setBgColor('#ffffff')"></div>
+                <div class="color-swatch" style="background:#f4f4f4;" onclick="setBgColor('#f4f4f4')"></div>
+                <div class="color-swatch" style="background:#fff9c4;" onclick="setBgColor('#fff9c4')"></div>
+                <div class="color-swatch" style="background:#e3f2fd;" onclick="setBgColor('#e3f2fd')"></div>
+                <div class="color-swatch" style="background:#e8f5e9;" onclick="setBgColor('#e8f5e9')"></div>
+                <div class="color-swatch" style="background:#000000;" onclick="setBgColor('#000000')"></div>
+            </div>
+            <div class="custom-color-row">
+                <span>Custom:</span>
+                <input type="color" id="custom-bg-picker" value="#090D1A">
+            </div>
         </div>
     </div>
 
@@ -363,17 +381,18 @@
 
             function handleTeacherMouse(e) {
                 const now = Date.now();
-                // Throttle to 30fps to prevent WebSocket flooding
                 if (now - lastSpotlightSend > 33) {
                     lastSpotlightSend = now;
                     sendMessage({ type: 'spotlight-update', active: true, x: e.clientX, y: e.clientY });
                 }
             }
 
-            // ===== BACKGROUND COLOR =====
+            // ===== DRAGGABLE BACKGROUND COLOR =====
             const btnBgColor = document.getElementById('btn-bg-color');
             const bgColorPopup = document.getElementById('bg-color-popup');
+            const popupHeader = bgColorPopup.querySelector('.popup-header');
             const customBgPicker = document.getElementById('custom-bg-picker');
+            let isDragging = false, dragOffsetX = 0, dragOffsetY = 0;
 
             btnBgColor.addEventListener('click', (e) => {
                 e.stopPropagation();
@@ -383,6 +402,29 @@
             document.addEventListener('click', (e) => {
                 if (!bgColorPopup.contains(e.target) && e.target !== btnBgColor) {
                     bgColorPopup.style.display = 'none';
+                }
+            });
+
+            // Drag Logic
+            popupHeader.addEventListener('mousedown', (e) => {
+                isDragging = true;
+                const rect = bgColorPopup.getBoundingClientRect();
+                dragOffsetX = e.clientX - rect.left;
+                dragOffsetY = e.clientY - rect.top;
+                bgColorPopup.style.transition = 'none'; // Disable transition for smooth dragging
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+                e.preventDefault();
+                bgColorPopup.style.left = `${e.clientX - dragOffsetX}px`;
+                bgColorPopup.style.top = `${e.clientY - dragOffsetY}px`;
+            });
+
+            document.addEventListener('mouseup', () => {
+                if (isDragging) {
+                    isDragging = false;
+                    bgColorPopup.style.transition = 'background 0.1s ease-out';
                 }
             });
 
@@ -492,7 +534,6 @@
                         if(data.action==='pause')pauseTimerLocal();
                         if(data.action==='reset'){pauseTimerLocal();timeLeft=data.timeLeft;updateTimerDisplay();}
                     }
-                    // FOG OF WAR SYNC
                     if(data.type==='spotlight-update'){
                         if(data.active){
                             spotlightOverlay.style.display='block';
