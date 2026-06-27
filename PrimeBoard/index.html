@@ -65,20 +65,6 @@
         }
         #root { position: absolute; top: 110px; left: 0; right: 0; bottom: 0; }
 
-        /* ─── HIDE EXCALIDRAW PROPERTIES PANEL ─────────────────────────────── */
-        /* This hides the stroke/fill/width/opacity/layers panel that appears when you click a tool */
-        .excalidraw .App-toolbar-content > div:not(:first-child),
-        .excalidraw .panelColumn,
-        .excalidraw .Island.App-toolbar-content > div:last-child {
-            display: none !important;
-        }
-        
-        /* Also hide any floating properties panel */
-        .excalidraw .properties-panel,
-        .excalidraw [class*="properties"] {
-            display: none !important;
-        }
-
         /* ── TOPBAR ─────────────────────────────────────── */
         #topbar {
             position: fixed; top: 0; left: 0; right: 0; height: 56px; z-index: 1000;
@@ -195,7 +181,7 @@
             box-shadow: var(--shadow-card);
         }
 
-        /* ─── RIGHT PANELS ───────────────────────────────── */
+        /* ── RIGHT PANELS ───────────────────────────────── */
         #right-panels { position: fixed; right: 20px; top: 76px; z-index: 1100; display: flex; flex-direction: column; gap: 14px; }
         
         #timer-widget {
@@ -238,84 +224,137 @@
         .timer-inputs input:focus { outline: none; border-color: var(--accent-primary); box-shadow: 0 0 8px rgba(167, 139, 250, 0.3); }
         .timer-inputs span { color: var(--text-muted); font-weight: 800; font-family: 'JetBrains Mono', monospace; }
 
-        /* ─── COLOR POPUP - REDESIGNED (z-index: 10000 - ABOVE EVERYTHING) ────────────────── */
-        #bg-color-popup {
-            display: none; 
-            position: fixed; 
-            right: 20px; 
-            top: 76px; 
+        /* ─ MIRO-STYLE COLOR PICKER ───────────────────── */
+        #miro-color-picker {
+            display: none;
+            position: fixed;
+            left: 70px;
+            top: 120px;
             z-index: 10000 !important;
-            background: var(--glass-bg); 
-            border: 1px solid var(--glass-border);
-            border-radius: var(--radius-lg); 
-            backdrop-filter: blur(24px) saturate(1.8);
-            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255,255,255,0.05);
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2), 0 2px 8px rgba(0, 0, 0, 0.1);
             width: 280px;
-            animation: popIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            padding: 16px;
+            animation: popIn 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
-        @keyframes popIn { from { opacity: 0; transform: scale(0.9) translateY(-10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+        @keyframes popIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
         
-        .popup-header {
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 14px 16px;
-            border-bottom: 1px solid var(--glass-border); cursor: move;
-            color: var(--text-primary); font-size: 0.85rem; font-weight: 800;
-            background: var(--glass-highlight); border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-            user-select: none; letter-spacing: -0.01em;
+        .miro-color-section {
+            margin-bottom: 16px;
         }
-        .popup-header-left {
-            display: flex; align-items: center; gap: 10px;
+        .miro-color-section-title {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #64748b;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
-        .popup-header i { color: var(--accent-primary); font-size: 0.8rem; }
-        .popup-close-btn {
-            background: transparent; border: none; color: var(--text-muted);
-            cursor: pointer; font-size: 1rem; padding: 4px 8px; border-radius: var(--radius-sm);
-            transition: var(--transition-smooth);
+        .miro-color-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
         }
-        .popup-close-btn:hover {
-            color: var(--accent-danger); background: rgba(251, 113, 133, 0.1);
-        }
-        .popup-content { padding: 18px; }
-        
-        .color-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 14px; }
-        .color-swatch {
-            width: 100%; aspect-ratio: 1; border-radius: var(--radius-sm); cursor: pointer;
-            border: 2px solid rgba(255, 255, 255, 0.08);
-            transition: var(--transition-bounce);
-            box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+        .miro-color-swatch {
+            width: 100%;
+            aspect-ratio: 1;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 3px solid transparent;
+            transition: all 0.2s ease;
             position: relative;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
-        .color-swatch:hover { 
-            transform: scale(1.15) rotate(3deg); 
-            border-color: rgba(255,255,255,0.4); 
-            z-index: 1;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        .miro-color-swatch:hover {
+            transform: scale(1.15);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
         }
-        .color-swatch.selected { 
-            border-color: var(--accent-primary) !important; 
-            box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.3), 0 4px 12px rgba(0,0,0,0.3);
-            transform: scale(1.1);
+        .miro-color-swatch.selected {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 2px #fff, 0 0 0 4px #3b82f6;
         }
-        .color-swatch.selected::after {
-            content: '✓'; position: absolute; inset: 0;
-            display: flex; align-items: center; justify-content: center;
-            color: #fff; font-size: 1.2rem; font-weight: 800;
-            text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+        .miro-color-swatch.selected::after {
+            content: '✓';
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 1rem;
+            font-weight: 800;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
         }
         
-        .custom-color-row {
-            display: flex; align-items: center; gap: 12px;
-            border-top: 1px solid var(--glass-border); padding-top: 14px;
+        .miro-stroke-slider {
+            width: 100%;
+            margin: 12px 0;
+            -webkit-appearance: none;
+            height: 4px;
+            border-radius: 2px;
+            background: #e2e8f0;
+            outline: none;
         }
-        .custom-color-row span { color: var(--text-secondary); font-size: 0.75rem; font-weight: 700; white-space: nowrap; }
-        #custom-bg-picker {
-            flex: 1; height: 38px; border: 2px solid var(--glass-border);
-            border-radius: var(--radius-sm); cursor: pointer; background: transparent; padding: 2px;
-            transition: var(--transition-smooth);
+        .miro-stroke-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #3b82f6;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(59, 130, 246, 0.4);
         }
-        #custom-bg-picker:hover { border-color: var(--accent-primary); }
+        
+        .miro-add-color-btn {
+            width: 100%;
+            padding: 10px;
+            border: 2px dashed #cbd5e1;
+            border-radius: 50%;
+            background: transparent;
+            cursor: pointer;
+            font-size: 1.2rem;
+            color: #94a3b8;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .miro-add-color-btn:hover {
+            border-color: #3b82f6;
+            color: #3b82f6;
+            background: rgba(59, 130, 246, 0.05);
+        }
 
-        /* ─── SETUP SCREEN ─────────────────────────────── */
+        /* ── FOG OF WAR - DRAGGABLE SPOTLIGHT ──────────── */
+        #spotlight-overlay {
+            position: fixed; inset: 0; z-index: 1500;
+            background: radial-gradient(circle 280px at var(--sx, 50%) var(--sy, 50%), transparent 0%, rgba(15, 12, 41, 0.97) 100%);
+            pointer-events: none; display: none; transition: background 0.08s ease-out;
+        }
+        
+        #spotlight-handle {
+            position: fixed;
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            background: rgba(167, 139, 250, 0.3);
+            border: 2px solid var(--accent-primary);
+            box-shadow: 0 0 20px rgba(167, 139, 250, 0.5);
+            cursor: grab;
+            z-index: 1501;
+            display: none;
+            align-items: center; justify-content: center;
+            color: #fff; font-size: 1.2rem;
+            transition: transform 0.2s ease;
+            left: var(--hx, 50%);
+            top: var(--hy, 50%);
+            transform: translate(-50%, -50%);
+        }
+        #spotlight-handle:hover { transform: translate(-50%, -50%) scale(1.2); }
+        #spotlight-handle:active { cursor: grabbing; transform: translate(-50%, -50%) scale(0.9); }
+        #spotlight-handle i { pointer-events: none; }
+
+        /* ── SETUP SCREEN ──────────────────────────────── */
         #setup-screen {
             position: fixed; inset: 0; z-index: 3000;
             display: flex; align-items: center; justify-content: center;
@@ -376,7 +415,7 @@
         #enter-btn:active { transform: scale(0.98); }
         #setup-error { color: var(--accent-danger); font-size: 0.8rem; margin-top: 14px; min-height: 1.2em; font-weight: 700; }
 
-        /* ── MODALS ─────────────────────────────────────── */
+        /* ─ MODALS ─────────────────────────────────────── */
         #add-student-modal, #toolkit-modal, #math-modal {
             position: fixed; inset: 0; z-index: 4000;
             display: none; align-items: center; justify-content: center;
@@ -464,14 +503,7 @@
         .toolkit-item span { color: var(--text-primary); font-size: 0.85rem; font-weight: 700; }
         .toolkit-item .sub-text { color: var(--text-muted); font-size: 0.65rem; font-weight: 600; }
 
-        /* ─── SPOTLIGHT OVERLAY ──────────────────────────── */
-        #spotlight-overlay {
-            position: fixed; inset: 0; z-index: 1500;
-            background: radial-gradient(circle 280px at var(--sx, 50%) var(--sy, 50%), transparent 0%, rgba(15, 12, 41, 0.97) 100%);
-            pointer-events: none; display: none; transition: background 0.08s ease-out;
-        }
-
-        /* ─── EXCALIDRAW TOOLBAR OVERRIDE ────────────────── */
+        /* ── EXCALIDRAW TOOLBAR ────────────────────────── */
         .excalidraw .App-toolbar {
             position: fixed !important; top: 56px !important; left: 76px !important; right: 320px !important;
             z-index: 997 !important; background: var(--glass-bg) !important;
@@ -489,7 +521,7 @@
             .excalidraw .App-toolbar { left: 60px !important; right: 20px !important; }
             #timer-widget { right: 10px; min-width: 170px; }
             #timer-display { font-size: 2.2rem; }
-            #bg-color-popup { right: 10px; width: 240px; }
+            #miro-color-picker { left: 60px; width: 240px; }
             .sidebar-btn[title]:hover::after { display: none; }
         }
     </style>
@@ -510,7 +542,7 @@
             <input id="name-input" type="text" placeholder="e.g. Mr. Sharma" maxlength="40">
             <label id="room-label">Class room code</label>
             <input id="room-input" type="text" placeholder="e.g. CLASS10-PHYSICS" maxlength="30">
-            <button id="enter-btn">Enter Board ✨</button>
+            <button id="enter-btn">Enter Board </button>
             <div id="setup-error"></div>
         </div>
     </div>
@@ -531,12 +563,11 @@
     <!-- LEFT SIDEBAR -->
     <div id="left-sidebar" style="display:none;">
         <button class="sidebar-btn" id="btn-toolkit" title="Smart Toolkit"><i class="fas fa-graduation-cap"></i></button>
-        <button class="sidebar-btn" id="btn-spotlight" title="Fog of War"><i class="fas fa-lightbulb"></i></button>
+        <button class="sidebar-btn" id="btn-spotlight" title="Fog of War (Draggable)"><i class="fas fa-lightbulb"></i></button>
         <div class="sidebar-divider"></div>
         <button class="sidebar-btn" id="btn-timer" title="Timer"><i class="fas fa-stopwatch"></i></button>
         <button class="sidebar-btn" id="btn-math" title="Math Equation"><i class="fas fa-square-root-alt"></i></button>
         <div class="sidebar-divider"></div>
-        <button class="sidebar-btn" id="btn-bg-color" title="Background Color"><i class="fas fa-fill-drip"></i></button>
         <button class="sidebar-btn" id="btn-theme" title="Theme"><i class="fas fa-palette"></i></button>
     </div>
 
@@ -557,27 +588,31 @@
         </div>
     </div>
 
-    <!-- SPOTLIGHT OVERLAY -->
+    <!-- SPOTLIGHT OVERLAY + DRAGGABLE HANDLE -->
     <div id="spotlight-overlay"></div>
+    <div id="spotlight-handle"><i class="fas fa-crosshairs"></i></div>
 
-    <!-- COLOR POPUP -->
-    <div id="bg-color-popup">
-        <div class="popup-header">
-            <div class="popup-header-left">
-                <i class="fas fa-grip-vertical"></i>
-                <span>Background Color</span>
-            </div>
-            <button class="popup-close-btn" id="popup-close-btn" title="Close">
-                <i class="fas fa-times"></i>
-            </button>
+    <!-- MIRO-STYLE COLOR PICKER -->
+    <div id="miro-color-picker">
+        <div class="miro-color-section">
+            <div class="miro-color-section-title">Quick Colors</div>
+            <div class="miro-color-grid" id="quick-colors"></div>
         </div>
-        <div class="popup-content">
-            <div class="color-grid" id="color-grid"></div>
-            <div class="custom-color-row">
-                <span>Custom:</span>
-                <input type="color" id="custom-bg-picker" value="#090D1A">
-            </div>
+        
+        <div class="miro-color-section">
+            <div class="miro-color-section-title">All Colors</div>
+            <div class="miro-color-grid" id="all-colors"></div>
         </div>
+        
+        <div class="miro-color-section">
+            <div class="miro-color-section-title">Stroke Width</div>
+            <input type="range" class="miro-stroke-slider" id="stroke-width-slider" min="1" max="20" value="2">
+        </div>
+        
+        <button class="miro-add-color-btn" id="add-custom-color" title="Add custom color">
+            <i class="fas fa-plus"></i>
+        </button>
+        <input type="color" id="custom-color-input" style="display:none;">
     </div>
 
     <!-- TOOLKIT MODAL -->
@@ -721,117 +756,171 @@
                 }
             }
 
+            // ══════════════════════════════════════════════
+            // MIRO-STYLE COLOR PICKER
+            // ═══════════════════════════════════════════════
+            const miroColorPicker = document.getElementById('miro-color-picker');
+            const quickColorsGrid = document.getElementById('quick-colors');
+            const allColorsGrid = document.getElementById('all-colors');
+            const strokeWidthSlider = document.getElementById('stroke-width-slider');
+            const addCustomColorBtn = document.getElementById('add-custom-color');
+            const customColorInput = document.getElementById('custom-color-input');
+            
+            const QUICK_COLORS = ['#000000', '#ffffff', '#ef4444', '#f97316', '#eab308', '#22c55e', '#3b82f6', '#a855f7'];
+            const ALL_COLORS = [
+                '#fef3c7', '#fde68a', '#fcd34d', '#fbbf24',
+                '#fed7aa', '#fdba74', '#fb923c', '#f97316',
+                '#fecaca', '#fca5a5', '#f87171', '#ef4444',
+                '#bbf7d0', '#86efac', '#4ade80', '#22c55e',
+                '#bfdbfe', '#93c5fd', '#60a5fa', '#3b82f6',
+                '#e9d5ff', '#d8b4fe', '#c084fc', '#a855f7',
+                '#fbcfe8', '#f9a8d4', '#f472b6', '#ec4899'
+            ];
+            
+            let selectedColor = '#a78bfa';
+            let selectedStrokeWidth = 2;
+
+            // Create quick color swatches
+            QUICK_COLORS.forEach(color => {
+                const swatch = document.createElement('div');
+                swatch.className = 'miro-color-swatch';
+                swatch.style.backgroundColor = color;
+                swatch.dataset.color = color;
+                if (color === '#ffffff') {
+                    swatch.style.border = '2px solid #e2e8f0';
+                }
+                swatch.addEventListener('click', () => selectColor(color, swatch));
+                quickColorsGrid.appendChild(swatch);
+            });
+
+            // Create all colors swatches
+            ALL_COLORS.forEach(color => {
+                const swatch = document.createElement('div');
+                swatch.className = 'miro-color-swatch';
+                swatch.style.backgroundColor = color;
+                swatch.dataset.color = color;
+                swatch.addEventListener('click', () => selectColor(color, swatch));
+                allColorsGrid.appendChild(swatch);
+            });
+
+            function selectColor(color, swatchElement) {
+                selectedColor = color;
+                
+                // Update all swatches
+                document.querySelectorAll('.miro-color-swatch').forEach(s => {
+                    s.classList.remove('selected');
+                });
+                
+                // Mark selected
+                if (swatchElement) {
+                    swatchElement.classList.add('selected');
+                }
+                
+                // Apply to Excalidraw
+                if (excalidrawAPI) {
+                    const appState = excalidrawAPI.getAppState();
+                    excalidrawAPI.updateScene({
+                        appState: {
+                            currentItemStrokeColor: color,
+                            currentItemBackgroundColor: color,
+                        }
+                    });
+                }
+            }
+
+            // Stroke width slider
+            strokeWidthSlider.addEventListener('input', (e) => {
+                selectedStrokeWidth = parseInt(e.target.value);
+                if (excalidrawAPI) {
+                    excalidrawAPI.updateScene({
+                        appState: {
+                            currentItemStrokeWidth: selectedStrokeWidth
+                        }
+                    });
+                }
+            });
+
+            // Custom color picker
+            addCustomColorBtn.addEventListener('click', () => {
+                customColorInput.click();
+            });
+            
+            customColorInput.addEventListener('input', (e) => {
+                selectColor(e.target.value, null);
+            });
+
+            // Close color picker when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!miroColorPicker.contains(e.target) && !e.target.closest('.excalidraw')) {
+                    miroColorPicker.style.display = 'none';
+                }
+            });
+
+            // ═══════════════════════════════════════════════
+            // FOG OF WAR - DRAGGABLE SPOTLIGHT
+            // ═══════════════════════════════════════════════
             const btnSpotlight=document.getElementById('btn-spotlight');
             const spotlightOverlay=document.getElementById('spotlight-overlay');
-            let isSpotlightActive=false, lastSpotlightSend=0;
+            const spotlightHandle=document.getElementById('spotlight-handle');
+            let isSpotlightActive=false;
+            let spotlightX=window.innerWidth/2, spotlightY=window.innerHeight/2;
+            let isDraggingSpotlight=false, dragOffsetSpotX=0, dragOffsetSpotY=0;
+
+            function updateSpotlightPosition(x, y) {
+                spotlightX = x;
+                spotlightY = y;
+                spotlightOverlay.style.setProperty('--sx', `${x}px`);
+                spotlightOverlay.style.setProperty('--sy', `${y}px`);
+                spotlightHandle.style.setProperty('--hx', `${x}px`);
+                spotlightHandle.style.setProperty('--hy', `${y}px`);
+            }
 
             btnSpotlight.addEventListener('click',()=>{
                 deselectTools();
                 isSpotlightActive=!isSpotlightActive;
                 btnSpotlight.classList.toggle('active',isSpotlightActive);
+                
                 if(role==='teacher'){
-                    sendMessage({type:'spotlight-update',active:isSpotlightActive});
+                    sendMessage({type:'spotlight-update',active:isSpotlightActive,x:spotlightX,y:spotlightY});
                     if(isSpotlightActive){
-                        document.addEventListener('mousemove',handleTeacherMouse);
                         spotlightOverlay.style.display='block';
+                        spotlightHandle.style.display='flex';
+                        updateSpotlightPosition(spotlightX, spotlightY);
                     } else {
-                        document.removeEventListener('mousemove',handleTeacherMouse);
                         spotlightOverlay.style.display='none';
+                        spotlightHandle.style.display='none';
                     }
                 }
             });
 
-            function handleTeacherMouse(e){
-                const now=Date.now();
-                if(now-lastSpotlightSend>33){
-                    lastSpotlightSend=now;
-                    sendMessage({type:'spotlight-update',active:true,x:e.clientX,y:e.clientY});
-                }
-            }
-
-            const btnBgColor=document.getElementById('btn-bg-color');
-            const bgColorPopup=document.getElementById('bg-color-popup');
-            const popupHeader=bgColorPopup.querySelector('.popup-header');
-            const popupCloseBtn=document.getElementById('popup-close-btn');
-            const customBgPicker=document.getElementById('custom-bg-picker');
-            const colorGrid=document.getElementById('color-grid');
-            let isDragging=false, dragOffsetX=0, dragOffsetY=0;
-
-            const COLORS = [
-                {hex:'#0f0c29', name:'Deep Purple'},
-                {hex:'#1e1b4b', name:'Indigo'},
-                {hex:'#ffffff', name:'White'},
-                {hex:'#f1f5f9', name:'Cloud'},
-                {hex:'#fef9c3', name:'Butter'},
-                {hex:'#dbeafe', name:'Sky'},
-                {hex:'#dcfce7', name:'Mint'},
-                {hex:'#000000', name:'Midnight'}
-            ];
-
-            COLORS.forEach(c => {
-                const swatch = document.createElement('div');
-                swatch.className = 'color-swatch';
-                swatch.style.backgroundColor = c.hex;
-                swatch.title = c.name;
-                swatch.dataset.color = c.hex;
-                swatch.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    e.preventDefault();
-                    applyBackgroundColor(c.hex);
-                });
-                colorGrid.appendChild(swatch);
-            });
-
-            function applyBackgroundColor(color) {
-                if (!excalidrawAPI) return;
-                excalidrawAPI.updateScene({ appState: { viewBackgroundColor: color } });
-                customBgPicker.value = color;
-                colorGrid.querySelectorAll('.color-swatch').forEach(s => {
-                    s.classList.toggle('selected', s.dataset.color === color);
-                });
-            }
-
-            btnBgColor.addEventListener('click',(e)=>{
-                e.stopPropagation();
-                deselectTools();
-                bgColorPopup.style.display = bgColorPopup.style.display==='block' ? 'none' : 'block';
-            });
-
-            popupCloseBtn.addEventListener('click',(e)=>{
-                e.stopPropagation();
-                bgColorPopup.style.display='none';
-            });
-
-            document.addEventListener('click',(e)=>{
-                if(!bgColorPopup.contains(e.target) && e.target!==btnBgColor && e.target!==popupCloseBtn){
-                    bgColorPopup.style.display='none';
-                }
-            });
-
-            customBgPicker.addEventListener('input',(e)=>{ applyBackgroundColor(e.target.value); });
-            customBgPicker.addEventListener('click',(e)=>e.stopPropagation());
-
-            popupHeader.addEventListener('mousedown',(e)=>{
-                if(e.target.closest('.popup-close-btn')) return;
-                isDragging=true;
-                const rect=bgColorPopup.getBoundingClientRect();
-                dragOffsetX=e.clientX-rect.left;
-                dragOffsetY=e.clientY-rect.top;
-                bgColorPopup.style.transition='none';
-                bgColorPopup.style.transform='none';
-                bgColorPopup.style.left=rect.left+'px';
-                bgColorPopup.style.top=rect.top+'px';
-            });
-            document.addEventListener('mousemove',(e)=>{
-                if(!isDragging)return;
+            spotlightHandle.addEventListener('mousedown',(e)=>{
+                isDraggingSpotlight=true;
+                const rect=spotlightHandle.getBoundingClientRect();
+                dragOffsetSpotX=e.clientX-rect.left-rect.width/2;
+                dragOffsetSpotY=e.clientY-rect.top-rect.height/2;
                 e.preventDefault();
-                bgColorPopup.style.left=`${e.clientX-dragOffsetX}px`;
-                bgColorPopup.style.top=`${e.clientY-dragOffsetY}px`;
-            });
-            document.addEventListener('mouseup',()=>{
-                if(isDragging){isDragging=false;bgColorPopup.style.transition='';}
             });
 
+            document.addEventListener('mousemove',(e)=>{
+                if(!isDraggingSpotlight) return;
+                const newX=e.clientX-dragOffsetSpotX;
+                const newY=e.clientY-dragOffsetSpotY;
+                updateSpotlightPosition(newX, newY);
+                
+                if(role==='teacher'){
+                    sendMessage({type:'spotlight-update',active:true,x:newX,y:newY});
+                }
+            });
+
+            document.addEventListener('mouseup',()=>{
+                if(isDraggingSpotlight){
+                    isDraggingSpotlight=false;
+                }
+            });
+
+            // ══════════════════════════════════════════════
+            // TIMER
+            // ═══════════════════════════════════════════════
             const timerWidget=document.getElementById('timer-widget');
             const timerDisplay=document.getElementById('timer-display');
             const timerStartBtn=document.getElementById('timer-start');
@@ -869,6 +958,9 @@
             }
             updateTimerDisplay();
 
+            // ═══════════════════════════════════════════════
+            // SMART TOOLKIT
+            // ═══════════════════════════════════════════════
             const toolkitModal=document.getElementById('toolkit-modal');
             document.getElementById('btn-toolkit').addEventListener('click',()=>{
                 deselectTools();
@@ -916,6 +1008,9 @@
                 toolkitModal.style.display='none';
             }
 
+            // ═══════════════════════════════════════════════
+            // MATH EQUATION
+            // ═══════════════════════════════════════════════
             const mathModal=document.getElementById('math-modal');
             const mathInput=document.getElementById('math-input');
             const mathPreview=document.getElementById('math-preview');
@@ -938,6 +1033,9 @@
                 mathModal.style.display='none';
             });
 
+            // ═══════════════════════════════════════════════
+            // THEME TOGGLE
+            // ══════════════════════════════════════════════
             let currentTheme='dark';
             document.getElementById('btn-theme').addEventListener('click',()=>{
                 deselectTools();
@@ -945,6 +1043,9 @@
                 if(excalidrawAPI) excalidrawAPI.updateScene({appState:{theme:currentTheme}});
             });
 
+            // ═══════════════════════════════════════════════
+            // EMAIL INVITES
+            // ═══════════════════════════════════════════════
             const addStudentModal=document.getElementById('add-student-modal');
             const emailInput=document.getElementById('email-input');
             const emailSuggestions=document.getElementById('email-suggestions');
@@ -992,6 +1093,9 @@
                 addStudentModal.style.display='none';emailTags=[];updateEmailList();emailInput.value='';
             });
 
+            // ══════════════════════════════════════════════
+            // LOCK / UNLOCK
+            // ══════════════════════════════════════════════
             let locked=false;
             function applyLockUI(){
                 if(role==='teacher'){
@@ -1011,6 +1115,9 @@
                 if(excalidrawAPI) excalidrawAPI.updateScene({appState:{viewModeEnabled:viewOnly}});
             }
 
+            // ══════════════════════════════════════════════
+            // EXCALIDRAW RENDER
+            // ═══════════════════════════════════════════════
             function App(){
                 const onChange=useCallback((elements,appState)=>{
                     if(!isRemoteUpdate){
@@ -1023,7 +1130,18 @@
                     isRemoteUpdate=false;
                 },[]);
                 return React.createElement(Excalidraw,{
-                    excalidrawAPI:(api)=>{excalidrawAPI=api;},
+                    excalidrawAPI:(api)=>{
+                        excalidrawAPI=api;
+                        // Initialize with selected color
+                        if (api) {
+                            api.updateScene({
+                                appState: {
+                                    currentItemStrokeColor: selectedColor,
+                                    currentItemStrokeWidth: selectedStrokeWidth
+                                }
+                            });
+                        }
+                    },
                     onChange,theme:'dark',name:`PrimeBoard - ${room}`,
                     UIOptions:{canvasActions:{loadScene:false,saveToActiveFile:false,export:{saveFileToDisk:false}}},
                     initialData:{appState:{viewModeEnabled:role==='student'&&locked}}
@@ -1031,6 +1149,9 @@
             }
             ReactDOM.createRoot(document.getElementById('root')).render(React.createElement(App));
 
+            // ═══════════════════════════════════════════════
+            // WEBSOCKET CONNECTION
+            // ═══════════════════════════════════════════════
             let socket=null;
             function connect(){
                 statusDot.className='connecting';
@@ -1056,10 +1177,11 @@
                     if(data.type==='spotlight-update'){
                         if(data.active){
                             spotlightOverlay.style.display='block';
-                            spotlightOverlay.style.setProperty('--sx',`${data.x}px`);
-                            spotlightOverlay.style.setProperty('--sy',`${data.y}px`);
+                            if(role!=='teacher') spotlightHandle.style.display='flex';
+                            updateSpotlightPosition(data.x||window.innerWidth/2, data.y||window.innerHeight/2);
                         } else {
                             spotlightOverlay.style.display='none';
+                            spotlightHandle.style.display='none';
                         }
                     }
                 });
