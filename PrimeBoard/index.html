@@ -4,9 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>PrimeBoard | Prime Spirit Mentors</title>
+    
+    <!-- Gen Z Fonts: Nunito (Rounded/Friendly) + JetBrains Mono (Code) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://esm.sh/@excalidraw/excalidraw@0.18.0/dist/dev/index.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    
     <script>
         window.PRIMEBOARD_RELAY_URL = "wss://primeboard-relay.onrender.com";
         window.EXCALIDRAW_ASSET_PATH = "https://esm.sh/@excalidraw/excalidraw@0.18.0/dist/prod/";
@@ -20,126 +27,438 @@
       } }
     </script>
     <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    
     <style>
-        :root { --bg-space:#090D1A; --card-glass:rgba(13,20,38,0.92); --border-glass:rgba(255,255,255,0.08); --primary-neon:#00C6FF; --locked-red:#FF4757; --unlocked-green:#00FF99; --timer-warning:#FFCD38; }
-        *{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,-apple-system,sans-serif}
-        html,body{background:var(--bg-space);height:100%;overflow:hidden}
-        #root{position:absolute;top:110px;left:0;right:0;bottom:0}
-
-        #topbar{position:fixed;top:0;left:0;right:0;height:50px;z-index:1000;display:flex;align-items:center;gap:12px;padding:0 16px;background:var(--card-glass);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--border-glass)}
-        #brand{display:flex;align-items:center;gap:8px;color:#fff;font-weight:800;font-size:.95rem}
-        #brand i{color:var(--primary-neon)}
-        #brand .sub{color:#718096;font-weight:500;font-size:.7rem;margin-left:4px}
-        #room-pill{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.03);border:1px solid var(--border-glass);padding:6px 12px;border-radius:20px;color:#A0AEC0;font-size:.75rem;font-family:monospace}
-        #room-pill b{color:#fff;letter-spacing:.05em}
-        #online-students{display:flex;align-items:center;gap:6px;background:rgba(0,255,153,.08);border:1px solid var(--unlocked-green);padding:6px 12px;border-radius:20px;color:var(--unlocked-green);font-size:.75rem;font-weight:700}
-        #lock-btn{display:flex;align-items:center;gap:6px;border:1px solid var(--locked-red);color:var(--locked-red);background:rgba(255,71,87,.08);font-weight:700;font-size:.75rem;padding:6px 12px;border-radius:8px;cursor:pointer;transition:all .15s}
-        #lock-btn.unlocked{border-color:var(--unlocked-green);color:var(--unlocked-green);background:rgba(0,255,153,.08)}
-        #invite-btn,#add-student-btn,#exit-btn{display:flex;align-items:center;gap:6px;background:rgba(0,198,255,.1);border:1px solid var(--primary-neon);color:var(--primary-neon);font-weight:700;font-size:.75rem;padding:6px 12px;border-radius:8px;cursor:pointer;text-decoration:none}
-        #add-student-btn{background:rgba(0,255,153,.1);border-color:var(--unlocked-green);color:var(--unlocked-green)}
-        #exit-btn{background:transparent;border-color:var(--border-glass);color:#A0AEC0}
-        #status-dot{width:8px;height:8px;border-radius:50%;background:#718096}
-        #status-dot.connected{background:var(--unlocked-green);box-shadow:0 0 8px var(--unlocked-green)}
-        #locked-banner{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:1000;display:none;align-items:center;gap:10px;background:rgba(255,71,87,.12);border:1px solid var(--locked-red);color:#fff;padding:10px 18px;border-radius:30px;font-size:.8rem;font-weight:600;backdrop-filter:blur(10px)}
-
-        /* LEFT SIDEBAR - Z-INDEX 999 */
-        #left-sidebar{position:fixed;left:0;top:50px;bottom:0;width:52px;background:var(--card-glass);border-right:1px solid var(--border-glass);backdrop-filter:blur(16px);z-index:999;display:flex;flex-direction:column;align-items:center;padding:12px 0;gap:8px}
-        .sidebar-btn{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;border:1px solid var(--border-glass);background:rgba(255,255,255,.05);color:#A0AEC0;cursor:pointer;transition:all .2s}
-        .sidebar-btn:hover{background:rgba(0,198,255,.15);color:var(--primary-neon);transform:scale(1.05)}
-        .sidebar-btn.active{background:rgba(0,255,153,.15);color:var(--unlocked-green);border-color:var(--unlocked-green)}
-        .sidebar-divider{width:32px;height:1px;background:var(--border-glass);margin:4px 0}
-
-        #right-panels{position:fixed;right:20px;top:70px;z-index:998;display:flex;flex-direction:column;gap:12px}
+        /* ═══════════════════════════════════════════════════
+           GEN Z AESTHETIC DESIGN SYSTEM
+           Soft gradients, glassmorphism, rounded corners, 
+           bouncy animations, warm neon accents
+           ═══════════════════════════════════════════════════ */
+        :root {
+            --bg-deep: #0f0c29;
+            --bg-mid: #302b63;
+            --bg-light: #24243e;
+            --glass-bg: rgba(30, 27, 75, 0.65);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --glass-highlight: rgba(255, 255, 255, 0.12);
+            
+            --accent-primary: #a78bfa;      /* Soft lavender */
+            --accent-secondary: #f472b6;    /* Pink */
+            --accent-tertiary: #38bdf8;     /* Sky blue */
+            --accent-success: #4ade80;      /* Mint green */
+            --accent-warning: #fbbf24;      /* Amber */
+            --accent-danger: #fb7185;       /* Rose */
+            
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            
+            --radius-sm: 8px;
+            --radius-md: 14px;
+            --radius-lg: 20px;
+            --radius-xl: 28px;
+            
+            --shadow-glow: 0 0 20px rgba(167, 139, 250, 0.15);
+            --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.3);
+            --transition-bounce: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            --transition-smooth: all 0.25s ease;
+        }
         
-        #timer-widget{background:var(--card-glass);border:1px solid var(--border-glass);border-radius:12px;padding:14px;min-width:200px;backdrop-filter:blur(16px);box-shadow:0 4px 20px rgba(0,0,0,.3);display:none;flex-direction:column;align-items:center}
-        #timer-display{font-size:2.5rem;font-weight:800;color:var(--primary-neon);font-family:'Courier New',monospace;letter-spacing:2px;margin-bottom:10px;text-shadow:0 0 15px rgba(0,198,255,.5)}
-        #timer-display.warning{color:var(--timer-warning);text-shadow:0 0 15px rgba(255,205,56,.5)}
-        #timer-display.danger{color:var(--locked-red);text-shadow:0 0 15px rgba(255,71,87,.5);animation:pulse 1s infinite}
-        @keyframes pulse{0%{opacity:1}50%{opacity:.5}100%{opacity:1}}
-        .timer-controls{display:flex;gap:6px;width:100%;margin-bottom:10px}
-        .timer-btn{flex:1;padding:6px;border-radius:6px;border:none;background:rgba(255,255,255,.1);color:#fff;font-weight:700;font-size:.7rem;cursor:pointer;transition:all .2s}
-        .timer-btn:hover{background:rgba(0,198,255,.2)}
-        .timer-btn.start{background:var(--unlocked-green);color:#000}
-        .timer-btn.pause{background:var(--timer-warning);color:#000}
-        .timer-btn.reset{background:var(--locked-red);color:#fff}
-        .timer-inputs{display:flex;gap:4px;width:100%;align-items:center}
-        .timer-inputs input{width:100%;background:rgba(255,255,255,.05);border:1px solid var(--border-glass);color:#fff;padding:6px;border-radius:4px;text-align:center;font-size:.8rem}
-        .timer-inputs input:focus{outline:none;border-color:var(--primary-neon)}
-        .timer-inputs span{color:#718096;font-weight:bold}
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Nunito', system-ui, sans-serif; }
+        html, body { 
+            background: linear-gradient(135deg, var(--bg-deep) 0%, var(--bg-mid) 50%, var(--bg-light) 100%);
+            height: 100%; overflow: hidden; 
+        }
+        #root { position: absolute; top: 110px; left: 0; right: 0; bottom: 0; }
 
-        /* COLOR POPUP - Z-INDEX 1050 (Higher than sidebar) */
-        #bg-color-popup{display:none;position:fixed;right:100px;top:70px;z-index:1050 !important;background:var(--card-glass);border:1px solid var(--border-glass);border-radius:12px;backdrop-filter:blur(16px);box-shadow:0 10px 30px rgba(0,0,0,.5);width:240px}
-        .popup-header{display:flex;align-items:center;gap:8px;padding:10px 12px;border-bottom:1px solid var(--border-glass);cursor:move;color:#fff;font-size:.85rem;font-weight:700;background:rgba(255,255,255,.03);border-radius:12px 12px 0 0;user-select:none}
-        .popup-header i{color:#718096}
-        .popup-content{padding:16px}
-        .color-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:12px}
-        .color-swatch{width:100%;aspect-ratio:1;border-radius:8px;cursor:pointer;border:3px solid rgba(255,255,255,0.2);transition:transform .2s,border-color .2s;box-shadow:0 2px 8px rgba(0,0,0,0.3)}
-        .color-swatch:hover{transform:scale(1.15);border-color:#fff}
-        .color-swatch.selected{border-color:var(--primary-neon);border-width:3px}
-        .custom-color-row{display:flex;align-items:center;gap:10px;border-top:1px solid var(--border-glass);padding-top:12px}
-        .custom-color-row span{color:#fff;font-size:.8rem;font-weight:600}
-        #custom-bg-picker{width:100%;height:40px;border:2px solid var(--border-glass);border-radius:6px;cursor:pointer;background:transparent}
-
-        #setup-screen{position:fixed;inset:0;z-index:2000;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at center,#0F172A 0%,#050811 100%);padding:20px}
-        #setup-card{width:min(420px,95vw);background:var(--card-glass);border:1px solid var(--border-glass);border-radius:18px;padding:32px 28px;text-align:center}
-        #setup-card h1{color:#fff;font-size:1.5rem;font-weight:800;margin-bottom:8px}
-        #setup-card h1 span{color:var(--primary-neon)}
-        #setup-card p.tagline{color:#718096;font-size:.8rem;margin-bottom:28px;letter-spacing:.05em}
-        #setup-card label{display:block;text-align:left;color:#A0AEC0;font-size:.75rem;font-weight:700;letter-spacing:.08em;margin:18px 0 8px}
-        #setup-card input{width:100%;background:rgba(255,255,255,.04);border:1px solid var(--border-glass);color:#fff;padding:12px 14px;border-radius:10px;font-size:.95rem;outline:none}
-        #setup-card input:focus{border-color:var(--primary-neon)}
-        .role-toggle{display:flex;gap:8px;margin-top:8px}
-        .role-toggle button{flex:1;padding:12px;border-radius:10px;border:1px solid var(--border-glass);background:rgba(255,255,255,.03);color:#A0AEC0;font-weight:700;font-size:.8rem;cursor:pointer}
-        .role-toggle button.active{border-color:var(--primary-neon);color:var(--primary-neon);background:rgba(0,198,255,.08)}
-        #enter-btn{width:100%;margin-top:28px;padding:14px;border-radius:10px;border:none;background:var(--primary-neon);color:#000;font-weight:800;font-size:1rem;cursor:pointer}
-        #setup-error{color:var(--locked-red);font-size:.8rem;margin-top:12px;min-height:1.2em}
-
-        #add-student-modal,#toolkit-modal,#math-modal{position:fixed;inset:0;z-index:3000;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.8);backdrop-filter:blur(4px);padding:20px}
-        #add-student-card,#toolkit-card,#math-card{width:min(450px,95vw);background:var(--card-glass);border:1px solid var(--border-glass);border-radius:16px;padding:28px 24px}
-        #toolkit-card{width:min(600px,95vw);max-height:80vh;overflow-y:auto}
-        #add-student-card h3,#toolkit-card h3,#math-card h3{color:#fff;font-size:1.15rem;font-weight:800;margin-bottom:16px;display:flex;align-items:center;gap:8px}
-        #add-student-card h3 i,#toolkit-card h3 i,#math-card h3 i{color:var(--unlocked-green)}
-        #add-student-card p,#toolkit-card p{color:#718096;font-size:.8rem;margin-bottom:20px}
-        #add-student-card label{display:block;text-align:left;color:#A0AEC0;font-size:.75rem;font-weight:700;letter-spacing:.08em;margin:16px 0 8px}
-        .suggestions-container{position:relative;width:100%}
-        #add-student-card input,#math-input{width:100%;background:rgba(255,255,255,.04);border:1px solid var(--border-glass);color:#fff;padding:12px 14px;border-radius:10px;font-size:.95rem;outline:none;margin-bottom:8px}
-        #add-student-card input:focus,#math-input:focus{border-color:var(--unlocked-green)}
-        #email-suggestions{position:absolute;top:100%;left:0;right:0;background:#1a202c;border:1px solid var(--border-glass);border-radius:8px;margin-top:5px;max-height:150px;overflow-y:auto;z-index:100;display:none;box-shadow:0 10px 15px -3px rgba(0,0,0,.5)}
-        .suggestion-item{padding:10px 14px;color:#e2e8f0;cursor:pointer;font-size:.9rem;border-bottom:1px solid rgba(255,255,255,.05);transition:background .2s}
-        .suggestion-item:hover{background:rgba(0,198,255,.1);color:var(--primary-neon)}
-        .suggestion-item:last-child{border-bottom:none}
-        #email-list{max-height:150px;overflow-y:auto;margin:12px 0;background:rgba(255,255,255,.02);border-radius:8px;padding:8px;min-height:40px}
-        .email-tag{display:inline-flex;align-items:center;gap:6px;background:rgba(0,255,153,.1);border:1px solid var(--unlocked-green);color:var(--unlocked-green);padding:4px 10px;border-radius:20px;font-size:.8rem;margin:4px}
-        .email-tag i{cursor:pointer;font-size:.65rem}
-        .email-tag i:hover{color:#fff}
-        .btn-row{display:flex;gap:10px;margin-top:20px}
-        .btn-row button{flex:1;padding:12px;border-radius:10px;border:none;font-weight:700;font-size:.9rem;cursor:pointer}
-        #send-invites-btn,#insert-math-btn{background:var(--unlocked-green);color:#000}
-        #cancel-add-btn,#cancel-math-btn,#close-toolkit-btn{background:rgba(255,255,255,.1);color:#fff}
-        .toolkit-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;margin-top:16px}
-        .toolkit-item{background:rgba(255,255,255,.05);border:1px solid var(--border-glass);border-radius:12px;padding:16px;text-align:center;cursor:pointer;transition:all .2s;display:flex;flex-direction:column;align-items:center;gap:8px}
-        .toolkit-item:hover{background:rgba(0,198,255,.1);border-color:var(--primary-neon);transform:translateY(-2px)}
-        .toolkit-item i{font-size:1.5rem;color:var(--primary-neon)}
-        .toolkit-item span{color:#fff;font-size:.85rem;font-weight:600}
-        .toolkit-item .sub-text{color:#718096;font-size:.7rem;font-weight:400}
-
-        #spotlight-overlay{position:fixed;inset:0;z-index:950;background:radial-gradient(circle 250px at var(--sx,50%) var(--sy,50%),transparent 0%,rgba(0,0,0,0.96) 100%);pointer-events:none;display:none;transition:background .1s ease-out}
-
-        .excalidraw .App-toolbar{position:fixed!important;top:50px!important;left:70px!important;right:320px!important;z-index:997!important;background:var(--card-glass)!important;backdrop-filter:blur(16px)!important;border-radius:0 0 12px 12px!important;border:1px solid var(--border-glass)!important;border-top:none!important;padding:8px 16px!important;box-shadow:0 4px 20px rgba(0,0,0,.3)!important}
+        /* ─── TOPBAR ─────────────────────────────────────── */
+        #topbar {
+            position: fixed; top: 0; left: 0; right: 0; height: 56px; z-index: 1000;
+            display: flex; align-items: center; gap: 14px; padding: 0 20px;
+            background: var(--glass-bg); backdrop-filter: blur(20px) saturate(1.8);
+            border-bottom: 1px solid var(--glass-border);
+        }
+        #brand { display: flex; align-items: center; gap: 10px; color: var(--text-primary); font-weight: 800; font-size: 1rem; letter-spacing: -0.02em; }
+        #brand i { 
+            color: var(--accent-primary); font-size: 1.1rem;
+            filter: drop-shadow(0 0 6px rgba(167, 139, 250, 0.6));
+        }
+        #brand .sub { color: var(--text-muted); font-weight: 600; font-size: 0.7rem; margin-left: 2px; }
         
-        @media(max-width:768px){
-            #root{top:150px!important}
-            #left-sidebar{width:48px;top:50px}
-            .sidebar-btn{width:36px;height:36px;font-size:1rem}
-            .excalidraw .App-toolbar{left:60px!important;right:20px!important;top:50px!important}
-            #timer-widget{right:10px;top:60px;min-width:160px}
-            #timer-display{font-size:2rem}
-            #bg-color-popup{right:10px;top:100px;width:200px}
+        #room-pill {
+            display: flex; align-items: center; gap: 8px;
+            background: var(--glass-highlight); border: 1px solid var(--glass-border);
+            padding: 6px 14px; border-radius: 100px; color: var(--text-secondary);
+            font-size: 0.75rem; font-family: 'JetBrains Mono', monospace;
+        }
+        #room-pill b { color: var(--accent-tertiary); letter-spacing: 0.03em; }
+        
+        #online-students {
+            display: flex; align-items: center; gap: 6px;
+            background: rgba(74, 222, 128, 0.1); border: 1px solid rgba(74, 222, 128, 0.25);
+            padding: 6px 14px; border-radius: 100px; color: var(--accent-success);
+            font-size: 0.75rem; font-weight: 700;
+        }
+        
+        #lock-btn {
+            display: flex; align-items: center; gap: 6px;
+            border: 1px solid rgba(251, 113, 133, 0.3); color: var(--accent-danger);
+            background: rgba(251, 113, 133, 0.08); font-weight: 700; font-size: 0.75rem;
+            padding: 7px 14px; border-radius: var(--radius-sm); cursor: pointer;
+            transition: var(--transition-bounce);
+        }
+        #lock-btn:hover { transform: scale(1.05); background: rgba(251, 113, 133, 0.15); }
+        #lock-btn.unlocked { 
+            border-color: rgba(74, 222, 128, 0.3); color: var(--accent-success); 
+            background: rgba(74, 222, 128, 0.08); 
+        }
+        #lock-btn.unlocked:hover { background: rgba(74, 222, 128, 0.15); }
+        
+        #invite-btn, #add-student-btn, #exit-btn {
+            display: flex; align-items: center; gap: 6px;
+            background: rgba(167, 139, 250, 0.1); border: 1px solid rgba(167, 139, 250, 0.25);
+            color: var(--accent-primary); font-weight: 700; font-size: 0.75rem;
+            padding: 7px 14px; border-radius: var(--radius-sm); cursor: pointer;
+            text-decoration: none; transition: var(--transition-bounce);
+        }
+        #invite-btn:hover, #add-student-btn:hover { transform: scale(1.05); background: rgba(167, 139, 250, 0.2); }
+        #add-student-btn { 
+            background: rgba(74, 222, 128, 0.1); border-color: rgba(74, 222, 128, 0.25); 
+            color: var(--accent-success); 
+        }
+        #add-student-btn:hover { background: rgba(74, 222, 128, 0.2); }
+        #exit-btn { background: transparent; border-color: var(--glass-border); color: var(--text-muted); }
+        #exit-btn:hover { color: var(--text-primary); background: var(--glass-highlight); }
+        
+        #status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--text-muted); transition: var(--transition-smooth); }
+        #status-dot.connected { background: var(--accent-success); box-shadow: 0 0 10px var(--accent-success); }
+        #status-dot.connecting { background: var(--accent-warning); animation: pulse-dot 1.5s infinite; }
+        #status-dot.error { background: var(--accent-danger); }
+        @keyframes pulse-dot { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+        
+        #locked-banner {
+            position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); z-index: 1000;
+            display: none; align-items: center; gap: 10px;
+            background: rgba(251, 113, 133, 0.12); border: 1px solid rgba(251, 113, 133, 0.25);
+            color: var(--text-primary); padding: 12px 24px; border-radius: 100px;
+            font-size: 0.8rem; font-weight: 700; backdrop-filter: blur(16px);
+            box-shadow: 0 4px 20px rgba(251, 113, 133, 0.15);
+        }
+        #locked-banner i { color: var(--accent-danger); }
+
+        /* ─── LEFT SIDEBAR ───────────────────────────────── */
+        #left-sidebar {
+            position: fixed; left: 0; top: 56px; bottom: 0; width: 58px;
+            background: var(--glass-bg); border-right: 1px solid var(--glass-border);
+            backdrop-filter: blur(20px) saturate(1.8); z-index: 1100;
+            display: flex; flex-direction: column; align-items: center;
+            padding: 16px 0; gap: 6px;
+        }
+        .sidebar-btn {
+            width: 42px; height: 42px; border-radius: var(--radius-md);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.05rem; border: 1px solid transparent;
+            background: transparent; color: var(--text-muted);
+            cursor: pointer; transition: var(--transition-bounce);
+            position: relative; overflow: hidden;
+        }
+        .sidebar-btn::before {
+            content: ''; position: absolute; inset: 0; border-radius: inherit;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            opacity: 0; transition: opacity 0.3s ease; z-index: -1;
+        }
+        .sidebar-btn:hover { 
+            color: var(--text-primary); transform: scale(1.1); 
+            background: var(--glass-highlight); border-color: var(--glass-border);
+        }
+        .sidebar-btn.active { 
+            color: #fff; border-color: transparent; 
+            box-shadow: 0 0 16px rgba(167, 139, 250, 0.4);
+        }
+        .sidebar-btn.active::before { opacity: 1; }
+        .sidebar-divider { width: 28px; height: 1px; background: var(--glass-border); margin: 6px 0; }
+
+        /* Tooltip on hover */
+        .sidebar-btn[title]:hover::after {
+            content: attr(title); position: absolute; left: 54px; top: 50%;
+            transform: translateY(-50%); padding: 6px 12px; border-radius: var(--radius-sm);
+            background: var(--bg-light); border: 1px solid var(--glass-border);
+            color: var(--text-primary); font-size: 0.7rem; font-weight: 700;
+            white-space: nowrap; z-index: 9999; pointer-events: none;
+            box-shadow: var(--shadow-card);
+        }
+
+        /* ─── RIGHT PANELS ───────────────────────────────── */
+        #right-panels { position: fixed; right: 20px; top: 76px; z-index: 1100; display: flex; flex-direction: column; gap: 14px; }
+        
+        #timer-widget {
+            background: var(--glass-bg); border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg); padding: 18px; min-width: 210px;
+            backdrop-filter: blur(20px) saturate(1.8);
+            box-shadow: var(--shadow-card); display: none; flex-direction: column; align-items: center;
+            animation: slideInRight 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        @keyframes slideInRight { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
+        
+        #timer-display {
+            font-size: 2.8rem; font-weight: 800; color: var(--accent-primary);
+            font-family: 'JetBrains Mono', monospace; letter-spacing: 3px;
+            margin-bottom: 12px; text-shadow: 0 0 20px rgba(167, 139, 250, 0.4);
+        }
+        #timer-display.warning { color: var(--accent-warning); text-shadow: 0 0 20px rgba(251, 191, 36, 0.4); }
+        #timer-display.danger { color: var(--accent-danger); text-shadow: 0 0 20px rgba(251, 113, 133, 0.4); animation: pulse-timer 1s infinite; }
+        @keyframes pulse-timer { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.7; transform: scale(0.97); } }
+        
+        .timer-controls { display: flex; gap: 8px; width: 100%; margin-bottom: 12px; }
+        .timer-btn {
+            flex: 1; padding: 8px; border-radius: var(--radius-sm); border: none;
+            background: var(--glass-highlight); color: var(--text-primary);
+            font-weight: 700; font-size: 0.7rem; cursor: pointer;
+            transition: var(--transition-bounce); font-family: 'Nunito', sans-serif;
+        }
+        .timer-btn:hover { transform: scale(1.08); }
+        .timer-btn.start { background: var(--accent-success); color: #0f0c29; }
+        .timer-btn.pause { background: var(--accent-warning); color: #0f0c29; }
+        .timer-btn.reset { background: var(--accent-danger); color: #fff; }
+        
+        .timer-inputs { display: flex; gap: 6px; width: 100%; align-items: center; }
+        .timer-inputs input {
+            width: 100%; background: var(--glass-highlight); border: 1px solid var(--glass-border);
+            color: var(--text-primary); padding: 8px; border-radius: var(--radius-sm);
+            text-align: center; font-size: 0.85rem; font-family: 'JetBrains Mono', monospace;
+            transition: var(--transition-smooth);
+        }
+        .timer-inputs input:focus { outline: none; border-color: var(--accent-primary); box-shadow: 0 0 8px rgba(167, 139, 250, 0.3); }
+        .timer-inputs span { color: var(--text-muted); font-weight: 800; font-family: 'JetBrains Mono', monospace; }
+
+        /* ─── COLOR POPUP (z-index: 2000) ────────────────── */
+        #bg-color-popup {
+            display: none; position: fixed; right: 90px; top: 76px; z-index: 2000 !important;
+            background: var(--glass-bg); border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg); backdrop-filter: blur(24px) saturate(1.8);
+            box-shadow: var(--shadow-card); width: 260px;
+            animation: popIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        @keyframes popIn { from { opacity: 0; transform: scale(0.9) translateY(-10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+        
+        .popup-header {
+            display: flex; align-items: center; gap: 10px; padding: 14px 16px;
+            border-bottom: 1px solid var(--glass-border); cursor: move;
+            color: var(--text-primary); font-size: 0.85rem; font-weight: 800;
+            background: var(--glass-highlight); border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+            user-select: none; letter-spacing: -0.01em;
+        }
+        .popup-header i { color: var(--accent-primary); font-size: 0.8rem; }
+        .popup-content { padding: 18px; }
+        
+        .color-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 14px; }
+        .color-swatch {
+            width: 100%; aspect-ratio: 1; border-radius: var(--radius-sm); cursor: pointer;
+            border: 2px solid rgba(255, 255, 255, 0.08);
+            transition: var(--transition-bounce);
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+        }
+        .color-swatch:hover { transform: scale(1.2) rotate(3deg); border-color: rgba(255,255,255,0.4); z-index: 1; }
+        .color-swatch.selected { 
+            border-color: var(--accent-primary) !important; 
+            box-shadow: 0 0 12px rgba(167, 139, 250, 0.5);
+            transform: scale(1.1);
+        }
+        
+        .custom-color-row {
+            display: flex; align-items: center; gap: 12px;
+            border-top: 1px solid var(--glass-border); padding-top: 14px;
+        }
+        .custom-color-row span { color: var(--text-secondary); font-size: 0.75rem; font-weight: 700; white-space: nowrap; }
+        #custom-bg-picker {
+            flex: 1; height: 38px; border: 2px solid var(--glass-border);
+            border-radius: var(--radius-sm); cursor: pointer; background: transparent; padding: 2px;
+            transition: var(--transition-smooth);
+        }
+        #custom-bg-picker:hover { border-color: var(--accent-primary); }
+
+        /* ─── SETUP SCREEN ───────────────────────────────── */
+        #setup-screen {
+            position: fixed; inset: 0; z-index: 3000;
+            display: flex; align-items: center; justify-content: center;
+            background: linear-gradient(135deg, var(--bg-deep) 0%, var(--bg-mid) 50%, var(--bg-light) 100%);
+            padding: 20px;
+        }
+        #setup-card {
+            width: min(440px, 95vw); background: var(--glass-bg);
+            border: 1px solid var(--glass-border); border-radius: var(--radius-xl);
+            padding: 40px 32px; text-align: center;
+            backdrop-filter: blur(24px) saturate(1.8);
+            box-shadow: var(--shadow-card), var(--shadow-glow);
+            animation: floatUp 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        @keyframes floatUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        
+        #setup-card h1 { 
+            color: var(--text-primary); font-size: 1.8rem; font-weight: 800; 
+            margin-bottom: 6px; letter-spacing: -0.03em;
+        }
+        #setup-card h1 span { 
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        #setup-card p.tagline { color: var(--text-muted); font-size: 0.8rem; margin-bottom: 32px; font-weight: 600; letter-spacing: 0.05em; }
+        #setup-card label { display: block; text-align: left; color: var(--text-secondary); font-size: 0.7rem; font-weight: 800; letter-spacing: 0.08em; margin: 20px 0 8px; text-transform: uppercase; }
+        #setup-card input {
+            width: 100%; background: var(--glass-highlight); border: 1px solid var(--glass-border);
+            color: var(--text-primary); padding: 14px 16px; border-radius: var(--radius-md);
+            font-size: 1rem; outline: none; transition: var(--transition-smooth); font-weight: 600;
+        }
+        #setup-card input:focus { border-color: var(--accent-primary); box-shadow: 0 0 12px rgba(167, 139, 250, 0.25); }
+        #setup-card input::placeholder { color: var(--text-muted); font-weight: 400; }
+        
+        .role-toggle { display: flex; gap: 10px; margin-top: 8px; }
+        .role-toggle button {
+            flex: 1; padding: 14px; border-radius: var(--radius-md);
+            border: 1px solid var(--glass-border); background: var(--glass-highlight);
+            color: var(--text-muted); font-weight: 700; font-size: 0.85rem;
+            cursor: pointer; transition: var(--transition-bounce);
+        }
+        .role-toggle button:hover { transform: scale(1.03); }
+        .role-toggle button.active {
+            border-color: var(--accent-primary); color: var(--text-primary);
+            background: linear-gradient(135deg, rgba(167,139,250,0.15), rgba(244,114,182,0.1));
+            box-shadow: 0 0 16px rgba(167, 139, 250, 0.2);
+        }
+        
+        #enter-btn {
+            width: 100%; margin-top: 32px; padding: 16px; border-radius: var(--radius-md);
+            border: none; font-weight: 800; font-size: 1rem; cursor: pointer;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            color: #fff; letter-spacing: 0.02em;
+            transition: var(--transition-bounce);
+            box-shadow: 0 4px 20px rgba(167, 139, 250, 0.3);
+        }
+        #enter-btn:hover { transform: scale(1.03) translateY(-2px); box-shadow: 0 8px 30px rgba(167, 139, 250, 0.4); }
+        #enter-btn:active { transform: scale(0.98); }
+        #setup-error { color: var(--accent-danger); font-size: 0.8rem; margin-top: 14px; min-height: 1.2em; font-weight: 700; }
+
+        /* ─── MODALS ─────────────────────────────────────── */
+        #add-student-modal, #toolkit-modal, #math-modal {
+            position: fixed; inset: 0; z-index: 4000;
+            display: none; align-items: center; justify-content: center;
+            background: rgba(15, 12, 41, 0.85); backdrop-filter: blur(8px); padding: 20px;
+            animation: fadeIn 0.2s ease;
+        }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        
+        #add-student-card, #toolkit-card, #math-card {
+            width: min(460px, 95vw); background: var(--glass-bg);
+            border: 1px solid var(--glass-border); border-radius: var(--radius-xl);
+            padding: 32px 28px; backdrop-filter: blur(24px) saturate(1.8);
+            box-shadow: var(--shadow-card), var(--shadow-glow);
+            animation: popIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        #toolkit-card { width: min(620px, 95vw); max-height: 80vh; overflow-y: auto; }
+        
+        #add-student-card h3, #toolkit-card h3, #math-card h3 {
+            color: var(--text-primary); font-size: 1.2rem; font-weight: 800;
+            margin-bottom: 8px; display: flex; align-items: center; gap: 10px;
+            letter-spacing: -0.02em;
+        }
+        #add-student-card h3 i, #toolkit-card h3 i, #math-card h3 i { color: var(--accent-success); }
+        #add-student-card p, #toolkit-card p { color: var(--text-muted); font-size: 0.8rem; margin-bottom: 24px; font-weight: 600; }
+        #add-student-card label { display: block; text-align: left; color: var(--text-secondary); font-size: 0.7rem; font-weight: 800; letter-spacing: 0.08em; margin: 18px 0 8px; text-transform: uppercase; }
+        
+        .suggestions-container { position: relative; width: 100%; }
+        #add-student-card input, #math-input {
+            width: 100%; background: var(--glass-highlight); border: 1px solid var(--glass-border);
+            color: var(--text-primary); padding: 14px 16px; border-radius: var(--radius-md);
+            font-size: 0.95rem; outline: none; margin-bottom: 10px; font-weight: 600;
+            transition: var(--transition-smooth);
+        }
+        #add-student-card input:focus, #math-input:focus { border-color: var(--accent-success); box-shadow: 0 0 12px rgba(74, 222, 128, 0.2); }
+        
+        #email-suggestions {
+            position: absolute; top: 100%; left: 0; right: 0;
+            background: var(--bg-light); border: 1px solid var(--glass-border);
+            border-radius: var(--radius-md); margin-top: 6px; max-height: 150px;
+            overflow-y: auto; z-index: 100; display: none;
+            box-shadow: var(--shadow-card);
+        }
+        .suggestion-item { padding: 12px 16px; color: var(--text-primary); cursor: pointer; font-size: 0.85rem; border-bottom: 1px solid var(--glass-border); transition: var(--transition-smooth); font-weight: 600; }
+        .suggestion-item:hover { background: rgba(167, 139, 250, 0.1); color: var(--accent-primary); }
+        .suggestion-item:last-child { border-bottom: none; }
+        
+        #email-list { max-height: 150px; overflow-y: auto; margin: 14px 0; background: var(--glass-highlight); border-radius: var(--radius-md); padding: 10px; min-height: 44px; }
+        .email-tag {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: rgba(74, 222, 128, 0.1); border: 1px solid rgba(74, 222, 128, 0.25);
+            color: var(--accent-success); padding: 5px 12px; border-radius: 100px;
+            font-size: 0.75rem; margin: 4px; font-weight: 700;
+            transition: var(--transition-bounce);
+        }
+        .email-tag:hover { transform: scale(1.05); }
+        .email-tag i { cursor: pointer; font-size: 0.6rem; opacity: 0.7; transition: var(--transition-smooth); }
+        .email-tag i:hover { opacity: 1; color: var(--accent-danger); }
+        
+        .btn-row { display: flex; gap: 10px; margin-top: 24px; }
+        .btn-row button {
+            flex: 1; padding: 14px; border-radius: var(--radius-md); border: none;
+            font-weight: 800; font-size: 0.9rem; cursor: pointer;
+            transition: var(--transition-bounce); font-family: 'Nunito', sans-serif;
+        }
+        .btn-row button:hover { transform: scale(1.03); }
+        #send-invites-btn, #insert-math-btn { 
+            background: linear-gradient(135deg, var(--accent-success), #22d3ee); color: #0f0c29;
+            box-shadow: 0 4px 16px rgba(74, 222, 128, 0.25);
+        }
+        #cancel-add-btn, #cancel-math-btn, #close-toolkit-btn { background: var(--glass-highlight); color: var(--text-primary); border: 1px solid var(--glass-border); }
+        
+        .toolkit-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 14px; margin-top: 20px; }
+        .toolkit-item {
+            background: var(--glass-highlight); border: 1px solid var(--glass-border);
+            border-radius: var(--radius-md); padding: 20px 16px; text-align: center;
+            cursor: pointer; transition: var(--transition-bounce);
+            display: flex; flex-direction: column; align-items: center; gap: 10px;
+        }
+        .toolkit-item:hover { 
+            background: rgba(167, 139, 250, 0.1); border-color: var(--accent-primary); 
+            transform: translateY(-4px); box-shadow: 0 8px 24px rgba(167, 139, 250, 0.15);
+        }
+        .toolkit-item i { font-size: 1.6rem; color: var(--accent-primary); transition: var(--transition-bounce); }
+        .toolkit-item:hover i { transform: scale(1.15); color: var(--accent-secondary); }
+        .toolkit-item span { color: var(--text-primary); font-size: 0.85rem; font-weight: 700; }
+        .toolkit-item .sub-text { color: var(--text-muted); font-size: 0.65rem; font-weight: 600; }
+
+        /* ─── SPOTLIGHT OVERLAY ──────────────────────────── */
+        #spotlight-overlay {
+            position: fixed; inset: 0; z-index: 1500;
+            background: radial-gradient(circle 280px at var(--sx, 50%) var(--sy, 50%), transparent 0%, rgba(15, 12, 41, 0.97) 100%);
+            pointer-events: none; display: none; transition: background 0.08s ease-out;
+        }
+
+        /* ─── EXCALIDRAW TOOLBAR OVERRIDE ────────────────── */
+        .excalidraw .App-toolbar {
+            position: fixed !important; top: 56px !important; left: 76px !important; right: 320px !important;
+            z-index: 997 !important; background: var(--glass-bg) !important;
+            backdrop-filter: blur(20px) saturate(1.8) !important;
+            border-radius: 0 0 var(--radius-lg) var(--radius-lg) !important;
+            border: 1px solid var(--glass-border) !important; border-top: none !important;
+            padding: 10px 20px !important; box-shadow: var(--shadow-card) !important;
+        }
+
+        /* ─── MOBILE ─────────────────────────────────────── */
+        @media(max-width: 768px) {
+            #root { top: 150px !important; }
+            #left-sidebar { width: 50px; }
+            .sidebar-btn { width: 38px; height: 38px; font-size: 0.95rem; }
+            .excalidraw .App-toolbar { left: 60px !important; right: 20px !important; }
+            #timer-widget { right: 10px; min-width: 170px; }
+            #timer-display { font-size: 2.2rem; }
+            #bg-color-popup { right: 10px; width: 220px; }
+            .sidebar-btn[title]:hover::after { display: none; }
         }
     </style>
 </head>
 <body>
 
+    <!-- SETUP SCREEN -->
     <div id="setup-screen">
         <div id="setup-card">
             <h1>Prime<span>Board</span></h1>
@@ -153,11 +472,12 @@
             <input id="name-input" type="text" placeholder="e.g. Mr. Sharma" maxlength="40">
             <label id="room-label">Class room code</label>
             <input id="room-input" type="text" placeholder="e.g. CLASS10-PHYSICS" maxlength="30">
-            <button id="enter-btn">Enter Board</button>
+            <button id="enter-btn">Enter Board ✨</button>
             <div id="setup-error"></div>
         </div>
     </div>
 
+    <!-- TOPBAR -->
     <div id="topbar" style="display:none;">
         <div id="brand"><i class="fas fa-atom"></i> PrimeBoard <span class="sub">by Prime Spirit Mentors</span></div>
         <div id="room-pill"><span id="status-dot"></span> Room: <b id="room-pill-code">-</b></div>
@@ -168,8 +488,9 @@
         <a id="exit-btn" href="../index.html" style="margin-left:auto;"><i class="fas fa-home"></i></a>
     </div>
 
-    <div id="locked-banner"><i class="fas fa-lock"></i> Your teacher has locked drawing — you can still pan and zoom to follow along.</div>
+    <div id="locked-banner"><i class="fas fa-lock"></i> Your teacher has locked drawing — you can still pan and zoom.</div>
 
+    <!-- LEFT SIDEBAR -->
     <div id="left-sidebar" style="display:none;">
         <button class="sidebar-btn" id="btn-toolkit" title="Smart Toolkit"><i class="fas fa-graduation-cap"></i></button>
         <button class="sidebar-btn" id="btn-spotlight" title="Fog of War"><i class="fas fa-lightbulb"></i></button>
@@ -181,6 +502,7 @@
         <button class="sidebar-btn" id="btn-theme" title="Theme"><i class="fas fa-palette"></i></button>
     </div>
 
+    <!-- RIGHT PANELS -->
     <div id="right-panels">
         <div id="timer-widget">
             <div id="timer-display">05:00</div>
@@ -197,21 +519,14 @@
         </div>
     </div>
 
+    <!-- SPOTLIGHT OVERLAY -->
     <div id="spotlight-overlay"></div>
 
+    <!-- COLOR POPUP -->
     <div id="bg-color-popup">
         <div class="popup-header"><i class="fas fa-grip-vertical"></i> Background Color</div>
         <div class="popup-content">
-            <div class="color-grid">
-                <div class="color-swatch" style="background:#090D1A !important;" data-color="#090D1A" title="Dark Blue"></div>
-                <div class="color-swatch" style="background:#1e1e1e !important;" data-color="#1e1e1e" title="Dark Gray"></div>
-                <div class="color-swatch" style="background:#ffffff !important;" data-color="#ffffff" title="White"></div>
-                <div class="color-swatch" style="background:#f4f4f4 !important;" data-color="#f4f4f4" title="Light Gray"></div>
-                <div class="color-swatch" style="background:#fff9c4 !important;" data-color="#fff9c4" title="Yellow"></div>
-                <div class="color-swatch" style="background:#e3f2fd !important;" data-color="#e3f2fd" title="Light Blue"></div>
-                <div class="color-swatch" style="background:#e8f5e9 !important;" data-color="#e8f5e9" title="Light Green"></div>
-                <div class="color-swatch" style="background:#000000 !important;" data-color="#000000" title="Black"></div>
-            </div>
+            <div class="color-grid" id="color-grid"></div>
             <div class="custom-color-row">
                 <span>Custom:</span>
                 <input type="color" id="custom-bg-picker" value="#090D1A">
@@ -219,6 +534,7 @@
         </div>
     </div>
 
+    <!-- TOOLKIT MODAL -->
     <div id="toolkit-modal">
         <div id="toolkit-card">
             <h3><i class="fas fa-graduation-cap"></i> Smart Educational Toolkit</h3>
@@ -235,12 +551,13 @@
         </div>
     </div>
 
+    <!-- MATH MODAL -->
     <div id="math-modal">
         <div id="math-card">
             <h3><i class="fas fa-square-root-alt"></i> Insert LaTeX Math Equation</h3>
-            <p style="color:#718096;font-size:.8rem;margin-bottom:12px;">Type LaTeX code (e.g., \frac{a}{b}, \sum_{i=1}^{n})</p>
+            <p style="color:var(--text-muted);font-size:.8rem;margin-bottom:12px;font-weight:600;">Type LaTeX code (e.g., \frac{a}{b}, \sum_{i=1}^{n})</p>
             <textarea id="math-input" placeholder="\frac{-b \pm \sqrt{b^2-4ac}}{2a}"></textarea>
-            <div id="math-preview" style="margin-top:16px;padding:16px;background:rgba(255,255,255,.05);border-radius:10px;min-height:60px;color:#fff;"></div>
+            <div id="math-preview" style="margin-top:16px;padding:16px;background:var(--glass-highlight);border-radius:var(--radius-md);min-height:60px;color:var(--text-primary);border:1px solid var(--glass-border);"></div>
             <div class="btn-row">
                 <button id="cancel-math-btn">Cancel</button>
                 <button id="insert-math-btn">Insert Equation</button>
@@ -248,6 +565,7 @@
         </div>
     </div>
 
+    <!-- ADD STUDENT MODAL -->
     <div id="add-student-modal">
         <div id="add-student-card">
             <h3><i class="fas fa-user-plus"></i> Add Students by Email</h3>
@@ -273,279 +591,408 @@
         import * as ExcalidrawLib from "https://esm.sh/@excalidraw/excalidraw@0.18.0/dist/dev/index.js?external=react,react-dom";
         const { Excalidraw } = ExcalidrawLib;
 
+        // ─── UTILITIES ────────────────────────────────────────
         function randomRoomCode() {
             const w = ['MAPLE','RIVER','COMET','TIGER','ORBIT','PRISM','EAGLE','DELTA'][Math.floor(Math.random()*8)];
             return `${w}-${Math.floor(100+Math.random()*900)}`;
         }
         function getQueryParam(n) { return new URLSearchParams(window.location.search).get(n); }
         function createEl(type,x,y,width,height,extra={}) {
-            return {type,x,y,width,height,angle:0,strokeColor:"#1e1e1e",backgroundColor:"transparent",fillStyle:"hachure",strokeWidth:1,roughness:1,opacity:100,groupIds:[],roundness:type==="rectangle"||type==="ellipse"?{type:3}:null,seed:Math.floor(Math.random()*2e9),version:1,versionNonce:Math.floor(Math.random()*2e9),isDeleted:false,boundElements:null,updated:Date.now(),link:null,locked:false,...extra};
+            return {type,x,y,width,height,angle:0,strokeColor:"#a78bfa",backgroundColor:"transparent",fillStyle:"hachure",strokeWidth:1,roughness:1,opacity:100,groupIds:[],roundness:type==="rectangle"||type==="ellipse"?{type:3}:null,seed:Math.floor(Math.random()*2e9),version:1,versionNonce:Math.floor(Math.random()*2e9),isDeleted:false,boundElements:null,updated:Date.now(),link:null,locked:false,...extra};
         }
 
-        const setupScreen=document.getElementById('setup-screen'),roleTeacherBtn=document.getElementById('role-teacher'),roleStudentBtn=document.getElementById('role-student'),nameInput=document.getElementById('name-input'),roomInput=document.getElementById('room-input'),roomLabel=document.getElementById('room-label'),enterBtn=document.getElementById('enter-btn'),setupError=document.getElementById('setup-error');
+        // ─── SETUP SCREEN LOGIC ───────────────────────────────
+        const setupScreen=document.getElementById('setup-screen');
+        const roleTeacherBtn=document.getElementById('role-teacher');
+        const roleStudentBtn=document.getElementById('role-student');
+        const nameInput=document.getElementById('name-input');
+        const roomInput=document.getElementById('room-input');
+        const roomLabel=document.getElementById('room-label');
+        const enterBtn=document.getElementById('enter-btn');
+        const setupError=document.getElementById('setup-error');
         let selectedRole='teacher';
+
         const inviteRoom=getQueryParam('room');
-        if(inviteRoom){roomInput.value=inviteRoom;selectedRole='student';roleStudentBtn.classList.add('active');roleTeacherBtn.classList.remove('active');roomLabel.textContent='Class room code (from your invite link)';}
+        if(inviteRoom){
+            roomInput.value=inviteRoom;selectedRole='student';
+            roleStudentBtn.classList.add('active');roleTeacherBtn.classList.remove('active');
+            roomLabel.textContent='Class room code (from your invite link)';
+        }
         roleTeacherBtn.addEventListener('click',()=>{selectedRole='teacher';roleTeacherBtn.classList.add('active');roleStudentBtn.classList.remove('active');});
         roleStudentBtn.addEventListener('click',()=>{selectedRole='student';roleStudentBtn.classList.add('active');roleTeacherBtn.classList.remove('active');});
         enterBtn.addEventListener('click',()=>{
-            const name=nameInput.value.trim();let room=roomInput.value.trim().toUpperCase().replace(/\s+/g,'-');
+            const name=nameInput.value.trim();
+            let room=roomInput.value.trim().toUpperCase().replace(/\s+/g,'-');
             if(!name){setupError.textContent='Please enter your name.';return;}
             if(selectedRole==='teacher'&&!room)room=randomRoomCode();
             if(!room){setupError.textContent='Please enter the room code.';return;}
-            setupError.textContent='';setupScreen.style.display='none';
+            setupError.textContent='';
+            setupScreen.style.display='none';
             document.getElementById('topbar').style.display='flex';
             document.getElementById('left-sidebar').style.display='flex';
             startBoard({name,role:selectedRole,room});
         });
 
+        // ─── MAIN BOARD FUNCTION ──────────────────────────────
         function startBoard({name,role,room}) {
             document.getElementById('room-pill-code').textContent=room;
-            const lockBtn=document.getElementById('lock-btn'),lockBtnText=document.getElementById('lock-btn-text'),inviteBtn=document.getElementById('invite-btn'),addStudentBtn=document.getElementById('add-student-btn'),onlineStudents=document.getElementById('online-students'),studentCount=document.getElementById('student-count'),statusDot=document.getElementById('status-dot'),lockedBanner=document.getElementById('locked-banner');
+            const lockBtn=document.getElementById('lock-btn');
+            const lockBtnText=document.getElementById('lock-btn-text');
+            const inviteBtn=document.getElementById('invite-btn');
+            const addStudentBtn=document.getElementById('add-student-btn');
+            const onlineStudents=document.getElementById('online-students');
+            const studentCount=document.getElementById('student-count');
+            const statusDot=document.getElementById('status-dot');
+            const lockedBanner=document.getElementById('locked-banner');
 
-            if(role==='teacher'){lockBtn.style.display='flex';inviteBtn.style.display='flex';addStudentBtn.style.display='flex';onlineStudents.style.display='flex';}
-            else{onlineStudents.style.display='flex';}
+            if(role==='teacher'){
+                lockBtn.style.display='flex';inviteBtn.style.display='flex';
+                addStudentBtn.style.display='flex';onlineStudents.style.display='flex';
+            } else {
+                onlineStudents.style.display='flex';
+            }
 
             const inviteUrl=`${window.location.origin}${window.location.pathname}?room=${encodeURIComponent(room)}`;
-            inviteBtn.addEventListener('click',()=>{navigator.clipboard.writeText(inviteUrl).then(()=>{const o=inviteBtn.innerHTML;inviteBtn.innerHTML='<i class="fas fa-check"></i> <span>Copied!</span>';setTimeout(()=>{inviteBtn.innerHTML=o;},1800);});});
+            inviteBtn.addEventListener('click',()=>{
+                navigator.clipboard.writeText(inviteUrl).then(()=>{
+                    const o=inviteBtn.innerHTML;
+                    inviteBtn.innerHTML='<i class="fas fa-check"></i> <span>Copied!</span>';
+                    setTimeout(()=>{inviteBtn.innerHTML=o;},1800);
+                });
+            });
 
             let excalidrawAPI=null;
             let isRemoteUpdate=false;
             let lastSendTime=0;
 
-            // FUNCTION TO DESELECT EXCALIDRAW TOOLS
-            function deselectExcalidrawTools() {
-                if (excalidrawAPI) {
+            // ═══════════════════════════════════════════════════
+            // CORE FIX: Deselect Excalidraw drawing tools
+            // ═══════════════════════════════════════════════════
+            function deselectTools() {
+                if (!excalidrawAPI) return;
+                try {
                     excalidrawAPI.setActiveTool({ type: "selection" });
+                } catch(e) {
+                    try {
+                        excalidrawAPI.updateScene({
+                            appState: { activeTool: { type: "selection", locked: false } }
+                        });
+                    } catch(e2) { console.warn('Could not deselect tool', e2); }
                 }
             }
 
-            // ===== FOG OF WAR =====
-            const btnSpotlight = document.getElementById('btn-spotlight');
-            const spotlightOverlay = document.getElementById('spotlight-overlay');
-            let isSpotlightActive = false, lastSpotlightSend = 0;
-            
-            btnSpotlight.addEventListener('click', () => {
-                isSpotlightActive = !isSpotlightActive;
-                btnSpotlight.classList.toggle('active', isSpotlightActive);
-                
-                if (role === 'teacher') {
-                    sendMessage({ type: 'spotlight-update', active: isSpotlightActive });
-                    if (isSpotlightActive) {
-                        document.addEventListener('mousemove', handleTeacherMouse);
-                        spotlightOverlay.style.display = 'block';
+            // ═══════════════════════════════════════════════════
+            // FOG OF WAR / SPOTLIGHT
+            // ═══════════════════════════════════════════════════
+            const btnSpotlight=document.getElementById('btn-spotlight');
+            const spotlightOverlay=document.getElementById('spotlight-overlay');
+            let isSpotlightActive=false, lastSpotlightSend=0;
+
+            btnSpotlight.addEventListener('click',()=>{
+                deselectTools();
+                isSpotlightActive=!isSpotlightActive;
+                btnSpotlight.classList.toggle('active',isSpotlightActive);
+                if(role==='teacher'){
+                    sendMessage({type:'spotlight-update',active:isSpotlightActive});
+                    if(isSpotlightActive){
+                        document.addEventListener('mousemove',handleTeacherMouse);
+                        spotlightOverlay.style.display='block';
                     } else {
-                        document.removeEventListener('mousemove', handleTeacherMouse);
-                        spotlightOverlay.style.display = 'none';
+                        document.removeEventListener('mousemove',handleTeacherMouse);
+                        spotlightOverlay.style.display='none';
                     }
                 }
             });
-            
-            function handleTeacherMouse(e) {
-                const now = Date.now();
-                if (now - lastSpotlightSend > 33) { 
-                    lastSpotlightSend = now; 
-                    sendMessage({ type: 'spotlight-update', active: true, x: e.clientX, y: e.clientY });
+
+            function handleTeacherMouse(e){
+                const now=Date.now();
+                if(now-lastSpotlightSend>33){
+                    lastSpotlightSend=now;
+                    sendMessage({type:'spotlight-update',active:true,x:e.clientX,y:e.clientY});
                 }
             }
 
-            // ===== BACKGROUND COLOR =====
-            const btnBgColor = document.getElementById('btn-bg-color');
-            const bgColorPopup = document.getElementById('bg-color-popup');
-            const popupHeader = bgColorPopup.querySelector('.popup-header');
-            const customBgPicker = document.getElementById('custom-bg-picker');
-            const colorSwatches = document.querySelectorAll('.color-swatch');
-            let isDragging = false, dragOffsetX = 0, dragOffsetY = 0;
-            
-            btnBgColor.addEventListener('click', (e) => { 
-                e.stopPropagation(); 
-                deselectExcalidrawTools(); // FIX: Deselect pen when opening colors
-                bgColorPopup.style.display = bgColorPopup.style.display === 'block' ? 'none' : 'block';
-            });
-            
-            document.addEventListener('click', (e) => { 
-                if (!bgColorPopup.contains(e.target) && e.target !== btnBgColor) {
-                    bgColorPopup.style.display = 'none';
-                }
-            });
+            // ═══════════════════════════════════════════════════
+            // BACKGROUND COLOR - JS Generated Swatches
+            // ═══════════════════════════════════════════════════
+            const btnBgColor=document.getElementById('btn-bg-color');
+            const bgColorPopup=document.getElementById('bg-color-popup');
+            const popupHeader=bgColorPopup.querySelector('.popup-header');
+            const customBgPicker=document.getElementById('custom-bg-picker');
+            const colorGrid=document.getElementById('color-grid');
+            let isDragging=false, dragOffsetX=0, dragOffsetY=0;
 
-            function setBackgroundColor(color) {
-                if (excalidrawAPI) {
-                    excalidrawAPI.updateScene({ appState: { viewBackgroundColor: color } });
-                    customBgPicker.value = color;
-                    colorSwatches.forEach(swatch => {
-                        swatch.classList.remove('selected');
-                        if (swatch.getAttribute('data-color') === color) {
-                            swatch.classList.add('selected');
-                        }
-                    });
-                }
-            }
+            const COLORS = [
+                {hex:'#0f0c29', name:'Deep Purple'},
+                {hex:'#1e1b4b', name:'Indigo'},
+                {hex:'#ffffff', name:'White'},
+                {hex:'#f1f5f9', name:'Cloud'},
+                {hex:'#fef9c3', name:'Butter'},
+                {hex:'#dbeafe', name:'Sky'},
+                {hex:'#dcfce7', name:'Mint'},
+                {hex:'#000000', name:'Midnight'}
+            ];
 
-            colorSwatches.forEach(swatch => {
+            COLORS.forEach(c => {
+                const swatch = document.createElement('div');
+                swatch.className = 'color-swatch';
+                swatch.style.backgroundColor = c.hex;
+                swatch.title = c.name;
+                swatch.dataset.color = c.hex;
                 swatch.addEventListener('click', (e) => {
                     e.stopPropagation();
-                    setBackgroundColor(swatch.getAttribute('data-color'));
+                    e.preventDefault();
+                    applyBackgroundColor(c.hex);
                 });
+                colorGrid.appendChild(swatch);
             });
 
-            customBgPicker.addEventListener('input', (e) => {
-                setBackgroundColor(e.target.value);
+            function applyBackgroundColor(color) {
+                if (!excalidrawAPI) return;
+                excalidrawAPI.updateScene({ appState: { viewBackgroundColor: color } });
+                customBgPicker.value = color;
+                colorGrid.querySelectorAll('.color-swatch').forEach(s => {
+                    s.classList.toggle('selected', s.dataset.color === color);
+                });
+            }
+
+            btnBgColor.addEventListener('click',(e)=>{
+                e.stopPropagation();
+                deselectTools();
+                bgColorPopup.style.display = bgColorPopup.style.display==='block' ? 'none' : 'block';
             });
 
-            popupHeader.addEventListener('mousedown', (e) => {
-                isDragging = true; 
-                const rect = bgColorPopup.getBoundingClientRect();
-                dragOffsetX = e.clientX - rect.left; 
-                dragOffsetY = e.clientY - rect.top;
-                bgColorPopup.style.transition = 'none'; 
-                bgColorPopup.style.transform = 'none';
-                bgColorPopup.style.left = rect.left + 'px'; 
-                bgColorPopup.style.top = rect.top + 'px';
-            });
-            
-            document.addEventListener('mousemove', (e) => { 
-                if (!isDragging) return; 
-                e.preventDefault(); 
-                bgColorPopup.style.left = `${e.clientX - dragOffsetX}px`; 
-                bgColorPopup.style.top = `${e.clientY - dragOffsetY}px`; 
-            });
-            
-            document.addEventListener('mouseup', () => { 
-                if (isDragging) { isDragging = false; bgColorPopup.style.transition = 'background 0.1s ease-out'; } 
+            document.addEventListener('click',(e)=>{
+                if(!bgColorPopup.contains(e.target) && e.target!==btnBgColor){
+                    bgColorPopup.style.display='none';
+                }
             });
 
-            // ===== TIMER =====
-            const timerWidget=document.getElementById('timer-widget'),timerDisplay=document.getElementById('timer-display'),timerStartBtn=document.getElementById('timer-start'),timerPauseBtn=document.getElementById('timer-pause'),timerResetBtn=document.getElementById('timer-reset'),timerMinInput=document.getElementById('timer-min'),timerSecInput=document.getElementById('timer-sec'),timerControls=document.getElementById('timer-controls-container'),timerInputs=document.getElementById('timer-inputs-container');
+            customBgPicker.addEventListener('input',(e)=>{ applyBackgroundColor(e.target.value); });
+            customBgPicker.addEventListener('click',(e)=>e.stopPropagation());
+
+            popupHeader.addEventListener('mousedown',(e)=>{
+                isDragging=true;
+                const rect=bgColorPopup.getBoundingClientRect();
+                dragOffsetX=e.clientX-rect.left;
+                dragOffsetY=e.clientY-rect.top;
+                bgColorPopup.style.transition='none';
+                bgColorPopup.style.transform='none';
+                bgColorPopup.style.left=rect.left+'px';
+                bgColorPopup.style.top=rect.top+'px';
+            });
+            document.addEventListener('mousemove',(e)=>{
+                if(!isDragging)return;
+                e.preventDefault();
+                bgColorPopup.style.left=`${e.clientX-dragOffsetX}px`;
+                bgColorPopup.style.top=`${e.clientY-dragOffsetY}px`;
+            });
+            document.addEventListener('mouseup',()=>{
+                if(isDragging){isDragging=false;bgColorPopup.style.transition='';}
+            });
+
+            // ═══════════════════════════════════════════════════
+            // TIMER
+            // ═══════════════════════════════════════════════════
+            const timerWidget=document.getElementById('timer-widget');
+            const timerDisplay=document.getElementById('timer-display');
+            const timerStartBtn=document.getElementById('timer-start');
+            const timerPauseBtn=document.getElementById('timer-pause');
+            const timerResetBtn=document.getElementById('timer-reset');
+            const timerMinInput=document.getElementById('timer-min');
+            const timerSecInput=document.getElementById('timer-sec');
+            const timerControls=document.getElementById('timer-controls-container');
+            const timerInputs=document.getElementById('timer-inputs-container');
             let timerInterval=null,timeLeft=300,isTimerRunning=false;
-            
+
             document.getElementById('btn-timer').addEventListener('click',()=>{
-                deselectExcalidrawTools(); // FIX: Deselect pen when opening timer
+                deselectTools();
                 timerWidget.style.display=timerWidget.style.display==='flex'?'none':'flex';
             });
-            
             if(role!=='teacher'){timerControls.style.display='none';timerInputs.style.display='none';}
+
             function formatTime(s){return `${Math.floor(s/60).toString().padStart(2,'0')}:${(s%60).toString().padStart(2,'0')}`;}
-            function updateTimerDisplay(){timerDisplay.textContent=formatTime(timeLeft);timerDisplay.className='';if(timeLeft<=10&&timeLeft>0)timerDisplay.classList.add('danger');else if(timeLeft<=60&&timeLeft>10)timerDisplay.classList.add('warning');}
+            function updateTimerDisplay(){
+                timerDisplay.textContent=formatTime(timeLeft);
+                timerDisplay.className='';
+                if(timeLeft<=10&&timeLeft>0)timerDisplay.classList.add('danger');
+                else if(timeLeft<=60&&timeLeft>10)timerDisplay.classList.add('warning');
+            }
             function startTimerLocal(){if(isTimerRunning)return;isTimerRunning=true;timerInterval=setInterval(()=>{if(timeLeft>0){timeLeft--;updateTimerDisplay();}else{clearInterval(timerInterval);isTimerRunning=false;}},1000);}
             function pauseTimerLocal(){clearInterval(timerInterval);isTimerRunning=false;}
             function resetTimerLocal(){pauseTimerLocal();timeLeft=(parseInt(timerMinInput.value)||0)*60+(parseInt(timerSecInput.value)||0);updateTimerDisplay();}
-            if(role==='teacher'){timerStartBtn.addEventListener('click',()=>{if(timeLeft===0)resetTimerLocal();startTimerLocal();sendMessage({type:'timer-update',action:'start',timeLeft});});timerPauseBtn.addEventListener('click',()=>{pauseTimerLocal();sendMessage({type:'timer-update',action:'pause',timeLeft});});timerResetBtn.addEventListener('click',()=>{resetTimerLocal();sendMessage({type:'timer-update',action:'reset',timeLeft});});timerMinInput.addEventListener('change',resetTimerLocal);timerSecInput.addEventListener('change',resetTimerLocal);}
+
+            if(role==='teacher'){
+                timerStartBtn.addEventListener('click',()=>{if(timeLeft===0)resetTimerLocal();startTimerLocal();sendMessage({type:'timer-update',action:'start',timeLeft});});
+                timerPauseBtn.addEventListener('click',()=>{pauseTimerLocal();sendMessage({type:'timer-update',action:'pause',timeLeft});});
+                timerResetBtn.addEventListener('click',()=>{resetTimerLocal();sendMessage({type:'timer-update',action:'reset',timeLeft});});
+                timerMinInput.addEventListener('change',resetTimerLocal);
+                timerSecInput.addEventListener('change',resetTimerLocal);
+            }
             updateTimerDisplay();
 
-            // ===== TOOLKIT =====
+            // ═══════════════════════════════════════════════════
+            // SMART TOOLKIT
+            // ═══════════════════════════════════════════════════
             const toolkitModal=document.getElementById('toolkit-modal');
             document.getElementById('btn-toolkit').addEventListener('click',()=>{
-                deselectExcalidrawTools(); // FIX: Deselect pen when opening toolkit
+                deselectTools();
                 toolkitModal.style.display='flex';
             });
             document.getElementById('close-toolkit-btn').addEventListener('click',()=>{toolkitModal.style.display='none';});
-            
-            document.querySelectorAll('.toolkit-item').forEach(item => {
-                item.addEventListener('click', () => {
-                    applyToolkit(item.getAttribute('data-tool'));
-                });
+
+            document.querySelectorAll('.toolkit-item').forEach(item=>{
+                item.addEventListener('click',()=>{applyToolkit(item.dataset.tool);});
             });
 
             function applyToolkit(type){
-                if(!excalidrawAPI) return;
+                if(!excalidrawAPI)return;
                 const elements=excalidrawAPI.getSceneElements();
-                let n=[];
-                const sx=100,sy=100;
-                
+                let n=[];const sx=100,sy=100;
+
                 if(type==='grid'){
                     const a=excalidrawAPI.getAppState();
                     excalidrawAPI.updateScene({appState:{gridSize:a.gridSize?0:20}});
-                    toolkitModal.style.display='none';
-                    return;
-                }
-                else if(type==='chem-benzene'){
-                    n.push(createEl('diamond',sx,sy,100,100,{strokeColor:"#00C6FF",strokeWidth:2}));
-                    n.push(createEl('text',sx+20,sy+40,60,20,{text:"C₆H",fontSize:20,strokeColor:"#fff"}));
-                }
-                else if(type==='bio-cell'){
-                    n.push(createEl('ellipse',sx,sy,200,150,{strokeColor:"#00FF99",backgroundColor:"rgba(0,255,153,0.1)",fillStyle:"solid"}));
-                    n.push(createEl('ellipse',sx+70,sy+50,60,50,{strokeColor:"#FF4757",backgroundColor:"rgba(255,71,87,0.2)",fillStyle:"solid"}));
-                    n.push(createEl('text',sx+80,sy+70,40,20,{text:"Nucleus",fontSize:14,strokeColor:"#fff"}));
-                }
-                else if(type==='physics-circuit'){
-                    n.push(createEl('rectangle',sx,sy+40,20,40,{strokeColor:"#FFCD38"}));
-                    n.push(createEl('line',sx+20,sy+60,100,0,{strokeColor:"#fff",points:[[0,0],[100,0]]}));
-                    n.push(createEl('rectangle',sx+120,sy+40,40,40,{strokeColor:"#00C6FF"}));
-                    n.push(createEl('line',sx+160,sy+60,100,0,{strokeColor:"#fff",points:[[0,0],[100,0]]}));
-                    n.push(createEl('line',sx+260,sy+60,0,-100,{strokeColor:"#fff",points:[[0,0],[0,-100]]}));
-                    n.push(createEl('line',sx+260,sy-40,-260,0,{strokeColor:"#fff",points:[[0,0],[-260,0]]}));
-                }
-                else if(type==='history-timeline'){
-                    n.push(createEl('line',sx,sy+50,400,0,{strokeColor:"#00C6FF",strokeWidth:3,points:[[0,0],[400,0]]}));
+                } else if(type==='chem-benzene'){
+                    n.push(createEl('diamond',sx,sy,100,100,{strokeColor:"#a78bfa",strokeWidth:2}));
+                    n.push(createEl('text',sx+20,sy+40,60,20,{text:"C₆H₆",fontSize:20,strokeColor:"#f1f5f9"}));
+                } else if(type==='bio-cell'){
+                    n.push(createEl('ellipse',sx,sy,200,150,{strokeColor:"#4ade80",backgroundColor:"rgba(74,222,128,0.1)",fillStyle:"solid"}));
+                    n.push(createEl('ellipse',sx+70,sy+50,60,50,{strokeColor:"#fb7185",backgroundColor:"rgba(251,113,133,0.2)",fillStyle:"solid"}));
+                    n.push(createEl('text',sx+80,sy+70,40,20,{text:"Nucleus",fontSize:14,strokeColor:"#f1f5f9"}));
+                } else if(type==='physics-circuit'){
+                    n.push(createEl('rectangle',sx,sy+40,20,40,{strokeColor:"#fbbf24"}));
+                    n.push(createEl('line',sx+20,sy+60,100,0,{strokeColor:"#f1f5f9",points:[[0,0],[100,0]]}));
+                    n.push(createEl('rectangle',sx+120,sy+40,40,40,{strokeColor:"#38bdf8"}));
+                    n.push(createEl('line',sx+160,sy+60,100,0,{strokeColor:"#f1f5f9",points:[[0,0],[100,0]]}));
+                    n.push(createEl('line',sx+260,sy+60,0,-100,{strokeColor:"#f1f5f9",points:[[0,0],[0,-100]]}));
+                    n.push(createEl('line',sx+260,sy-40,-260,0,{strokeColor:"#f1f5f9",points:[[0,0],[-260,0]]}));
+                } else if(type==='history-timeline'){
+                    n.push(createEl('line',sx,sy+50,400,0,{strokeColor:"#a78bfa",strokeWidth:3,points:[[0,0],[400,0]]}));
                     for(let i=0;i<3;i++){
-                        n.push(createEl('ellipse',sx+(i*150),sy+40,20,20,{strokeColor:"#FF4757",backgroundColor:"#FF4757",fillStyle:"solid"}));
-                        n.push(createEl('text',sx+(i*150)-20,sy+80,60,20,{text:`Event ${i+1}`,fontSize:16,strokeColor:"#fff"}));
+                        n.push(createEl('ellipse',sx+(i*150),sy+40,20,20,{strokeColor:"#f472b6",backgroundColor:"#f472b6",fillStyle:"solid"}));
+                        n.push(createEl('text',sx+(i*150)-20,sy+80,60,20,{text:`Event ${i+1}`,fontSize:16,strokeColor:"#f1f5f9"}));
                     }
+                } else if(type==='code-block'){
+                    n.push(createEl('rectangle',sx,sy,300,150,{strokeColor:"#1e1b4b",backgroundColor:"#1e1b4b",fillStyle:"solid",roundness:{type:3}}));
+                    n.push(createEl('text',sx+10,sy+10,280,130,{text:"def hello():\n  print('Hello World')",fontSize:14,fontFamily:3,strokeColor:"#4ade80"}));
                 }
-                else if(type==='code-block'){
-                    n.push(createEl('rectangle',sx,sy,300,150,{strokeColor:"#1e1e1e",backgroundColor:"#1e1e1e",fillStyle:"solid",roundness:{type:3}}));
-                    n.push(createEl('text',sx+10,sy+10,280,130,{text:"def hello():\n  print('Hello World')",fontSize:14,fontFamily:3,strokeColor:"#00FF99"}));
-                }
-                
-                if(n.length>0){ excalidrawAPI.updateScene({elements:[...elements,...n]}); }
+                if(n.length>0) excalidrawAPI.updateScene({elements:[...elements,...n]});
                 toolkitModal.style.display='none';
             }
 
-            // ===== MATH =====
-            const mathModal=document.getElementById('math-modal'),mathInput=document.getElementById('math-input'),mathPreview=document.getElementById('math-preview');
+            // ═══════════════════════════════════════════════════
+            // MATH EQUATION
+            // ═══════════════════════════════════════════════════
+            const mathModal=document.getElementById('math-modal');
+            const mathInput=document.getElementById('math-input');
+            const mathPreview=document.getElementById('math-preview');
+
             document.getElementById('btn-math').addEventListener('click',()=>{
-                deselectExcalidrawTools(); // FIX: Deselect pen when opening math
+                deselectTools();
                 mathModal.style.display='flex';mathInput.value='';mathPreview.innerHTML='';
             });
             document.getElementById('cancel-math-btn').addEventListener('click',()=>{mathModal.style.display='none';});
-            mathInput.addEventListener('input',()=>{try{katex.render(mathInput.value,mathPreview,{throwOnError:false,displayMode:true});}catch(e){mathPreview.textContent='Invalid LaTeX';}});
-            document.getElementById('insert-math-btn').addEventListener('click',()=>{if(mathInput.value&&excalidrawAPI){const e=excalidrawAPI.getSceneElements();e.push(createEl('text',150,150,200,50,{text:mathInput.value,fontSize:24,strokeColor:"#fff"}));excalidrawAPI.updateScene({elements:e});}mathModal.style.display='none';});
-
-            // ===== THEME =====
-            let currentTheme='dark';
-            document.getElementById('btn-theme').addEventListener('click',()=>{
-                currentTheme=currentTheme==='dark'?'light':'dark';
-                if(excalidrawAPI){ excalidrawAPI.updateScene({appState:{theme:currentTheme}}); }
+            mathInput.addEventListener('input',()=>{
+                try{katex.render(mathInput.value,mathPreview,{throwOnError:false,displayMode:true});}
+                catch(e){mathPreview.textContent='Invalid LaTeX';}
+            });
+            document.getElementById('insert-math-btn').addEventListener('click',()=>{
+                if(mathInput.value&&excalidrawAPI){
+                    const e=excalidrawAPI.getSceneElements();
+                    e.push(createEl('text',150,150,200,50,{text:mathInput.value,fontSize:24,strokeColor:"#f1f5f9"}));
+                    excalidrawAPI.updateScene({elements:e});
+                }
+                mathModal.style.display='none';
             });
 
-            // ===== EMAIL =====
-            const addStudentModal=document.getElementById('add-student-modal'),emailInput=document.getElementById('email-input'),emailSuggestions=document.getElementById('email-suggestions'),emailList=document.getElementById('email-list');
+            // ═══════════════════════════════════════════════════
+            // THEME TOGGLE
+            // ═══════════════════════════════════════════════════
+            let currentTheme='dark';
+            document.getElementById('btn-theme').addEventListener('click',()=>{
+                deselectTools();
+                currentTheme=currentTheme==='dark'?'light':'dark';
+                if(excalidrawAPI) excalidrawAPI.updateScene({appState:{theme:currentTheme}});
+            });
+
+            // ═══════════════════════════════════════════════════
+            // EMAIL INVITES
+            // ═══════════════════════════════════════════════════
+            const addStudentModal=document.getElementById('add-student-modal');
+            const emailInput=document.getElementById('email-input');
+            const emailSuggestions=document.getElementById('email-suggestions');
+            const emailList=document.getElementById('email-list');
             let emailTags=[],savedEmails=JSON.parse(localStorage.getItem('primeboard_saved_emails')||'[]');
+
             addStudentBtn.addEventListener('click',()=>{addStudentModal.style.display='flex';});
-            document.getElementById('cancel-add-btn').addEventListener('click',()=>{addStudentModal.style.display='none';emailTags=[];updateEmailList();emailInput.value='';emailSuggestions.style.display='none';});
+            document.getElementById('cancel-add-btn').addEventListener('click',()=>{
+                addStudentModal.style.display='none';emailTags=[];updateEmailList();
+                emailInput.value='';emailSuggestions.style.display='none';
+            });
             emailInput.addEventListener('keypress',(e)=>{if(e.key==='Enter'||e.key===','){e.preventDefault();parseAndAddEmails();}});
-            emailInput.addEventListener('input',(e)=>{const q=e.target.value.trim().toLowerCase();if(!q||savedEmails.length===0){emailSuggestions.style.display='none';return;}const m=savedEmails.filter(em=>em.toLowerCase().includes(q)&&!emailTags.includes(em));if(m.length===0){emailSuggestions.style.display='none';return;}emailSuggestions.innerHTML=m.map(em=>`<div class="suggestion-item" onclick="selectSuggestion('${em}')">${em}</div>`).join('');emailSuggestions.style.display='block';});
-            window.selectSuggestion=function(em){if(!emailTags.includes(em)){emailTags.push(em);updateEmailList();}emailInput.value='';emailSuggestions.style.display='none';};
-            function parseAndAddEmails(){const emails=emailInput.value.split(/[,\s]+/).filter(e=>e.trim());emails.forEach(em=>{const c=em.trim().toLowerCase();if(c.includes('@')&&!emailTags.includes(c))emailTags.push(c);});updateEmailList();emailInput.value='';emailSuggestions.style.display='none';}
-            function updateEmailList(){if(emailTags.length===0)emailList.innerHTML='<span style="color:#718096;font-size:.75rem;">No emails added yet</span>';else emailList.innerHTML=emailTags.map(em=>`<span class="email-tag">${em} <i class="fas fa-times" onclick="removeEmail('${em}')"></i></span>`).join('');}
+            emailInput.addEventListener('input',(e)=>{
+                const q=e.target.value.trim().toLowerCase();
+                if(!q||savedEmails.length===0){emailSuggestions.style.display='none';return;}
+                const m=savedEmails.filter(em=>em.toLowerCase().includes(q)&&!emailTags.includes(em));
+                if(m.length===0){emailSuggestions.style.display='none';return;}
+                emailSuggestions.innerHTML=m.map(em=>`<div class="suggestion-item" onclick="selectSuggestion('${em}')">${em}</div>`).join('');
+                emailSuggestions.style.display='block';
+            });
+            window.selectSuggestion=function(em){
+                if(!emailTags.includes(em)){emailTags.push(em);updateEmailList();}
+                emailInput.value='';emailSuggestions.style.display='none';
+            };
+            function parseAndAddEmails(){
+                const emails=emailInput.value.split(/[,\s]+/).filter(e=>e.trim());
+                emails.forEach(em=>{const c=em.trim().toLowerCase();if(c.includes('@')&&!emailTags.includes(c))emailTags.push(c);});
+                updateEmailList();emailInput.value='';emailSuggestions.style.display='none';
+            }
+            function updateEmailList(){
+                if(emailTags.length===0)emailList.innerHTML='<span style="color:var(--text-muted);font-size:.75rem;font-weight:600;">No emails added yet</span>';
+                else emailList.innerHTML=emailTags.map(em=>`<span class="email-tag">${em} <i class="fas fa-times" onclick="removeEmail('${em}')"></i></span>`).join('');
+            }
             window.removeEmail=function(em){emailTags=emailTags.filter(e=>e!==em);updateEmailList();};
             updateEmailList();
-            document.getElementById('send-invites-btn').addEventListener('click',()=>{parseAndAddEmails();if(emailTags.length===0){alert('Please add at least one email address');return;}emailTags.forEach(em=>{if(!savedEmails.includes(em))savedEmails.push(em);});if(savedEmails.length>20)savedEmails=savedEmails.slice(-20);localStorage.setItem('primeboard_saved_emails',JSON.stringify(savedEmails));sendMessage({type:'email-invites',room,emails:emailTags,inviteUrl,teacherName:name});alert('Invite request sent to server!');addStudentModal.style.display='none';emailTags=[];updateEmailList();emailInput.value='';});
 
-            // ===== LOCK =====
+            document.getElementById('send-invites-btn').addEventListener('click',()=>{
+                parseAndAddEmails();
+                if(emailTags.length===0){alert('Please add at least one email address');return;}
+                emailTags.forEach(em=>{if(!savedEmails.includes(em))savedEmails.push(em);});
+                if(savedEmails.length>20)savedEmails=savedEmails.slice(-20);
+                localStorage.setItem('primeboard_saved_emails',JSON.stringify(savedEmails));
+                sendMessage({type:'email-invites',room,emails:emailTags,inviteUrl,teacherName:name});
+                alert('Invite request sent to server!');
+                addStudentModal.style.display='none';emailTags=[];updateEmailList();emailInput.value='';
+            });
+
+            // ═══════════════════════════════════════════════════
+            // LOCK / UNLOCK
+            // ═══════════════════════════════════════════════════
             let locked=false;
             function applyLockUI(){
                 if(role==='teacher'){
                     lockBtn.classList.toggle('unlocked',!locked);
                     lockBtnText.textContent=locked?'Drawing Locked':'Drawing Unlocked';
                     lockBtn.querySelector('i').className=locked?'fas fa-lock':'fas fa-lock-open';
-                }else{ lockedBanner.style.display=locked?'flex':'none'; }
-            }
-            lockBtn.addEventListener('click',()=>{
-                locked=!locked; applyLockUI(); sendMessage({type:'set-lock',locked});
-                if(role==='teacher'){ setExcalidrawViewMode(false); }
-            });
-
-            function setExcalidrawViewMode(viewOnly){
-                if(excalidrawAPI){
-                    excalidrawAPI.updateScene({ appState: { viewModeEnabled: viewOnly, activeTool: viewOnly ? { type: 'selection', locked: true } : { type: 'selection', locked: false } } });
+                } else {
+                    lockedBanner.style.display=locked?'flex':'none';
                 }
             }
+            lockBtn.addEventListener('click',()=>{
+                locked=!locked;applyLockUI();
+                sendMessage({type:'set-lock',locked});
+                if(role==='teacher') setExcalidrawViewMode(false);
+            });
+            function setExcalidrawViewMode(viewOnly){
+                if(excalidrawAPI) excalidrawAPI.updateScene({appState:{viewModeEnabled:viewOnly}});
+            }
 
-            // ===== EXCALIDRAW =====
+            // ═══════════════════════════════════════════════════
+            // EXCALIDRAW RENDER
+            // ═══════════════════════════════════════════════════
             function App(){
-                const onChange=useCallback((elements,appState,files)=>{
+                const onChange=useCallback((elements,appState)=>{
                     if(!isRemoteUpdate){
                         const now=Date.now();
                         if(now-lastSendTime>=50){
@@ -556,15 +1003,17 @@
                     isRemoteUpdate=false;
                 },[]);
                 return React.createElement(Excalidraw,{
-                    excalidrawAPI:(api)=>{ excalidrawAPI=api; },
-                    onChange, theme:'dark', name:`PrimeBoard - ${room}`,
+                    excalidrawAPI:(api)=>{excalidrawAPI=api;},
+                    onChange,theme:'dark',name:`PrimeBoard - ${room}`,
                     UIOptions:{canvasActions:{loadScene:false,saveToActiveFile:false,export:{saveFileToDisk:false}}},
                     initialData:{appState:{viewModeEnabled:role==='student'&&locked}}
                 });
             }
             ReactDOM.createRoot(document.getElementById('root')).render(React.createElement(App));
 
-            // ===== WEBSOCKET =====
+            // ═══════════════════════════════════════════════════
+            // WEBSOCKET CONNECTION
+            // ═══════════════════════════════════════════════════
             let socket=null;
             function connect(){
                 statusDot.className='connecting';
@@ -572,11 +1021,30 @@
                 socket.addEventListener('open',()=>{statusDot.className='connected';sendMessage({type:'join',room,role,name});});
                 socket.addEventListener('message',(event)=>{
                     const data=JSON.parse(event.data);
-                    if(data.type==='state'||data.type==='lock-changed'){ locked=data.locked; applyLockUI(); if(role==='student'){ setExcalidrawViewMode(locked); } }
-                    if(data.type==='scene-update'&&excalidrawAPI){ isRemoteUpdate=true; excalidrawAPI.updateScene({elements:data.elements}); }
+                    if(data.type==='state'||data.type==='lock-changed'){
+                        locked=data.locked;applyLockUI();
+                        if(role==='student')setExcalidrawViewMode(locked);
+                    }
+                    if(data.type==='scene-update'&&excalidrawAPI){
+                        isRemoteUpdate=true;
+                        excalidrawAPI.updateScene({elements:data.elements});
+                    }
                     if(data.type==='roster'&&data.users)studentCount.textContent=data.users.length;
-                    if(data.type==='timer-update'){timeLeft=data.timeLeft;updateTimerDisplay();if(data.action==='start'&&!isTimerRunning)startTimerLocal();if(data.action==='pause')pauseTimerLocal();if(data.action==='reset'){pauseTimerLocal();timeLeft=data.timeLeft;updateTimerDisplay();}}
-                    if(data.type==='spotlight-update'){if(data.active){spotlightOverlay.style.display='block';spotlightOverlay.style.setProperty('--sx',`${data.x}px`);spotlightOverlay.style.setProperty('--sy',`${data.y}px`);}else{spotlightOverlay.style.display='none';}}
+                    if(data.type==='timer-update'){
+                        timeLeft=data.timeLeft;updateTimerDisplay();
+                        if(data.action==='start'&&!isTimerRunning)startTimerLocal();
+                        if(data.action==='pause')pauseTimerLocal();
+                        if(data.action==='reset'){pauseTimerLocal();timeLeft=data.timeLeft;updateTimerDisplay();}
+                    }
+                    if(data.type==='spotlight-update'){
+                        if(data.active){
+                            spotlightOverlay.style.display='block';
+                            spotlightOverlay.style.setProperty('--sx',`${data.x}px`);
+                            spotlightOverlay.style.setProperty('--sy',`${data.y}px`);
+                        } else {
+                            spotlightOverlay.style.display='none';
+                        }
+                    }
                 });
                 socket.addEventListener('close',()=>{statusDot.className='connecting';setTimeout(connect,2000);});
                 socket.addEventListener('error',()=>{statusDot.className='error';});
