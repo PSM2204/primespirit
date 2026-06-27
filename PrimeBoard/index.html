@@ -65,6 +65,13 @@
         }
         #root { position: absolute; top: 110px; left: 0; right: 0; bottom: 0; }
 
+        /* ── HIDE EXCALIDRAW DEFAULT PROPERTIES PANEL ── */
+        .excalidraw .Island.App-toolbar-content > div:last-child,
+        .excalidraw .panelColumn,
+        .excalidraw [class*="properties"] {
+            display: none !important;
+        }
+
         /* ── TOPBAR ─────────────────────────────────────── */
         #topbar {
             position: fixed; top: 0; left: 0; right: 0; height: 56px; z-index: 1000;
@@ -140,7 +147,7 @@
         }
         #locked-banner i { color: var(--accent-danger); }
 
-        /* ── LEFT SIDEBAR ───────────────────────────────── */
+        /* ─ LEFT SIDEBAR ───────────────────────────────── */
         #left-sidebar {
             position: fixed; left: 0; top: 56px; bottom: 0; width: 58px;
             background: var(--glass-bg); border-right: 1px solid var(--glass-border);
@@ -224,39 +231,109 @@
         .timer-inputs input:focus { outline: none; border-color: var(--accent-primary); box-shadow: 0 0 8px rgba(167, 139, 250, 0.3); }
         .timer-inputs span { color: var(--text-muted); font-weight: 800; font-family: 'JetBrains Mono', monospace; }
 
-        /* ─ MIRO-STYLE COLOR PICKER ───────────────────── */
-        #miro-color-picker {
-            display: none;
+        /* ─ DRAGGABLE PROPERTIES PANEL (Miro/Figma Style) ── */
+        #properties-panel {
             position: fixed;
-            left: 70px;
-            top: 120px;
             z-index: 10000 !important;
-            background: #fff;
+            background: #ffffff;
             border-radius: 12px;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2), 0 2px 8px rgba(0, 0, 0, 0.1);
             width: 280px;
-            padding: 16px;
+            max-height: 80vh;
+            overflow-y: auto;
+            display: none;
             animation: popIn 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+            touch-action: none;
         }
         @keyframes popIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
         
-        .miro-color-section {
+        #properties-panel.minimized {
+            max-height: 48px;
+            overflow: hidden;
+        }
+        
+        #properties-panel.minimized .panel-content {
+            display: none;
+        }
+        
+        .panel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 14px;
+            background: #f8fafc;
+            border-bottom: 1px solid #e2e8f0;
+            border-radius: 12px 12px 0 0;
+            cursor: grab;
+            user-select: none;
+            touch-action: none;
+        }
+        .panel-header:active {
+            cursor: grabbing;
+        }
+        .panel-header-title {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #475569;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .panel-header-title i {
+            color: #94a3b8;
+            font-size: 0.7rem;
+        }
+        .panel-header-controls {
+            display: flex;
+            gap: 4px;
+        }
+        .panel-header-btn {
+            width: 24px;
+            height: 24px;
+            border-radius: 6px;
+            border: none;
+            background: transparent;
+            color: #94a3b8;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            transition: all 0.2s ease;
+        }
+        .panel-header-btn:hover {
+            background: #e2e8f0;
+            color: #475569;
+        }
+        .panel-header-btn.close:hover {
+            background: #fee2e2;
+            color: #ef4444;
+        }
+        
+        .panel-content {
+            padding: 16px;
+        }
+        
+        .panel-section {
             margin-bottom: 16px;
         }
-        .miro-color-section-title {
-            font-size: 0.75rem;
+        .panel-section-title {
+            font-size: 0.7rem;
             font-weight: 700;
             color: #64748b;
             margin-bottom: 10px;
             text-transform: uppercase;
             letter-spacing: 0.05em;
         }
-        .miro-color-grid {
+        
+        .color-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
+            gap: 8px;
         }
-        .miro-color-swatch {
+        .color-swatch {
             width: 100%;
             aspect-ratio: 1;
             border-radius: 50%;
@@ -266,15 +343,15 @@
             position: relative;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
-        .miro-color-swatch:hover {
+        .color-swatch:hover {
             transform: scale(1.15);
             box-shadow: 0 4px 12px rgba(0,0,0,0.2);
         }
-        .miro-color-swatch.selected {
+        .color-swatch.selected {
             border-color: #3b82f6;
             box-shadow: 0 0 0 2px #fff, 0 0 0 4px #3b82f6;
         }
-        .miro-color-swatch.selected::after {
+        .color-swatch.selected::after {
             content: '✓';
             position: absolute;
             inset: 0;
@@ -282,21 +359,46 @@
             align-items: center;
             justify-content: center;
             color: #fff;
-            font-size: 1rem;
+            font-size: 0.9rem;
             font-weight: 800;
             text-shadow: 0 1px 2px rgba(0,0,0,0.3);
         }
         
-        .miro-stroke-slider {
+        .stroke-slider {
             width: 100%;
-            margin: 12px 0;
+            margin: 8px 0;
             -webkit-appearance: none;
             height: 4px;
             border-radius: 2px;
             background: #e2e8f0;
             outline: none;
         }
-        .miro-stroke-slider::-webkit-slider-thumb {
+        .stroke-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #3b82f6;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(59, 130, 246, 0.4);
+        }
+        .stroke-value {
+            font-size: 0.75rem;
+            color: #64748b;
+            font-weight: 600;
+            text-align: right;
+        }
+        
+        .opacity-slider {
+            width: 100%;
+            margin: 8px 0;
+            -webkit-appearance: none;
+            height: 4px;
+            border-radius: 2px;
+            background: linear-gradient(to right, transparent, #3b82f6);
+            outline: none;
+        }
+        .opacity-slider::-webkit-slider-thumb {
             -webkit-appearance: none;
             width: 18px;
             height: 18px;
@@ -306,27 +408,70 @@
             box-shadow: 0 2px 6px rgba(59, 130, 246, 0.4);
         }
         
-        .miro-add-color-btn {
+        .layer-controls {
+            display: flex;
+            gap: 6px;
+        }
+        .layer-btn {
+            flex: 1;
+            padding: 8px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            background: #fff;
+            color: #475569;
+            cursor: pointer;
+            font-size: 0.75rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+        }
+        .layer-btn:hover {
+            background: #f1f5f9;
+            border-color: #cbd5e1;
+        }
+        .layer-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+        
+        .add-color-btn {
             width: 100%;
             padding: 10px;
             border: 2px dashed #cbd5e1;
             border-radius: 50%;
             background: transparent;
             cursor: pointer;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             color: #94a3b8;
             transition: all 0.2s ease;
             display: flex;
             align-items: center;
             justify-content: center;
+            aspect-ratio: 1;
         }
-        .miro-add-color-btn:hover {
+        .add-color-btn:hover {
             border-color: #3b82f6;
             color: #3b82f6;
             background: rgba(59, 130, 246, 0.05);
         }
+        
+        .no-selection {
+            text-align: center;
+            padding: 24px 16px;
+            color: #94a3b8;
+            font-size: 0.85rem;
+        }
+        .no-selection i {
+            font-size: 2rem;
+            margin-bottom: 8px;
+            display: block;
+            color: #cbd5e1;
+        }
 
-        /* ── FOG OF WAR - DRAGGABLE SPOTLIGHT ──────────── */
+        /* ── FOG OF WAR - DRAGGABLE SPOTLIGHT ─────────── */
         #spotlight-overlay {
             position: fixed; inset: 0; z-index: 1500;
             background: radial-gradient(circle 280px at var(--sx, 50%) var(--sy, 50%), transparent 0%, rgba(15, 12, 41, 0.97) 100%);
@@ -354,7 +499,7 @@
         #spotlight-handle:active { cursor: grabbing; transform: translate(-50%, -50%) scale(0.9); }
         #spotlight-handle i { pointer-events: none; }
 
-        /* ── SETUP SCREEN ──────────────────────────────── */
+        /* ─ SETUP SCREEN ──────────────────────────────── */
         #setup-screen {
             position: fixed; inset: 0; z-index: 3000;
             display: flex; align-items: center; justify-content: center;
@@ -521,7 +666,7 @@
             .excalidraw .App-toolbar { left: 60px !important; right: 20px !important; }
             #timer-widget { right: 10px; min-width: 170px; }
             #timer-display { font-size: 2.2rem; }
-            #miro-color-picker { left: 60px; width: 240px; }
+            #properties-panel { width: 240px; }
             .sidebar-btn[title]:hover::after { display: none; }
         }
     </style>
@@ -592,27 +737,28 @@
     <div id="spotlight-overlay"></div>
     <div id="spotlight-handle"><i class="fas fa-crosshairs"></i></div>
 
-    <!-- MIRO-STYLE COLOR PICKER -->
-    <div id="miro-color-picker">
-        <div class="miro-color-section">
-            <div class="miro-color-section-title">Quick Colors</div>
-            <div class="miro-color-grid" id="quick-colors"></div>
+    <!-- DRAGGABLE PROPERTIES PANEL (Miro/Figma Style) -->
+    <div id="properties-panel">
+        <div class="panel-header" id="panel-header">
+            <div class="panel-header-title">
+                <i class="fas fa-grip-vertical"></i>
+                <span>Properties</span>
+            </div>
+            <div class="panel-header-controls">
+                <button class="panel-header-btn" id="panel-minimize" title="Minimize">
+                    <i class="fas fa-minus"></i>
+                </button>
+                <button class="panel-header-btn" id="panel-reset" title="Reset position (double-click header)">
+                    <i class="fas fa-compress"></i>
+                </button>
+                <button class="panel-header-btn close" id="panel-close" title="Close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
         </div>
-        
-        <div class="miro-color-section">
-            <div class="miro-color-section-title">All Colors</div>
-            <div class="miro-color-grid" id="all-colors"></div>
+        <div class="panel-content" id="panel-content">
+            <!-- Content dynamically populated -->
         </div>
-        
-        <div class="miro-color-section">
-            <div class="miro-color-section-title">Stroke Width</div>
-            <input type="range" class="miro-stroke-slider" id="stroke-width-slider" min="1" max="20" value="2">
-        </div>
-        
-        <button class="miro-add-color-btn" id="add-custom-color" title="Add custom color">
-            <i class="fas fa-plus"></i>
-        </button>
-        <input type="color" id="custom-color-input" style="display:none;">
     </div>
 
     <!-- TOOLKIT MODAL -->
@@ -756,16 +902,25 @@
                 }
             }
 
+            // ═════════════════════════════════════════════
+            // DRAGGABLE PROPERTIES PANEL
             // ══════════════════════════════════════════════
-            // MIRO-STYLE COLOR PICKER
-            // ═══════════════════════════════════════════════
-            const miroColorPicker = document.getElementById('miro-color-picker');
-            const quickColorsGrid = document.getElementById('quick-colors');
-            const allColorsGrid = document.getElementById('all-colors');
-            const strokeWidthSlider = document.getElementById('stroke-width-slider');
-            const addCustomColorBtn = document.getElementById('add-custom-color');
-            const customColorInput = document.getElementById('custom-color-input');
+            const propertiesPanel = document.getElementById('properties-panel');
+            const panelHeader = document.getElementById('panel-header');
+            const panelContent = document.getElementById('panel-content');
+            const panelMinimize = document.getElementById('panel-minimize');
+            const panelReset = document.getElementById('panel-reset');
+            const panelClose = document.getElementById('panel-close');
             
+            // Panel state
+            let panelPosition = { x: 0, y: 0 };
+            let isPanelDragging = false;
+            let dragStartX = 0, dragStartY = 0;
+            let panelStartX = 0, panelStartY = 0;
+            let isPanelMinimized = false;
+            let selectedElement = null;
+            
+            // Color palettes
             const QUICK_COLORS = ['#000000', '#ffffff', '#ef4444', '#f97316', '#eab308', '#22c55e', '#3b82f6', '#a855f7'];
             const ALL_COLORS = [
                 '#fef3c7', '#fde68a', '#fcd34d', '#fbbf24',
@@ -777,88 +932,346 @@
                 '#fbcfe8', '#f9a8d4', '#f472b6', '#ec4899'
             ];
             
-            let selectedColor = '#a78bfa';
-            let selectedStrokeWidth = 2;
-
-            // Create quick color swatches
-            QUICK_COLORS.forEach(color => {
-                const swatch = document.createElement('div');
-                swatch.className = 'miro-color-swatch';
-                swatch.style.backgroundColor = color;
-                swatch.dataset.color = color;
-                if (color === '#ffffff') {
-                    swatch.style.border = '2px solid #e2e8f0';
-                }
-                swatch.addEventListener('click', () => selectColor(color, swatch));
-                quickColorsGrid.appendChild(swatch);
-            });
-
-            // Create all colors swatches
-            ALL_COLORS.forEach(color => {
-                const swatch = document.createElement('div');
-                swatch.className = 'miro-color-swatch';
-                swatch.style.backgroundColor = color;
-                swatch.dataset.color = color;
-                swatch.addEventListener('click', () => selectColor(color, swatch));
-                allColorsGrid.appendChild(swatch);
-            });
-
-            function selectColor(color, swatchElement) {
-                selectedColor = color;
-                
-                // Update all swatches
-                document.querySelectorAll('.miro-color-swatch').forEach(s => {
-                    s.classList.remove('selected');
-                });
-                
-                // Mark selected
-                if (swatchElement) {
-                    swatchElement.classList.add('selected');
-                }
-                
-                // Apply to Excalidraw
-                if (excalidrawAPI) {
-                    const appState = excalidrawAPI.getAppState();
-                    excalidrawAPI.updateScene({
-                        appState: {
-                            currentItemStrokeColor: color,
-                            currentItemBackgroundColor: color,
-                        }
-                    });
-                }
+            // Storage key for position memory
+            const STORAGE_KEY = `primeboard_panel_pos_${room}`;
+            
+            // Load saved position
+            function loadPanelPosition() {
+                try {
+                    const saved = localStorage.getItem(STORAGE_KEY);
+                    if (saved) {
+                        const pos = JSON.parse(saved);
+                        // Validate position is within viewport
+                        const maxX = window.innerWidth - 280;
+                        const maxY = window.innerHeight - 400;
+                        panelPosition.x = Math.max(0, Math.min(pos.x, maxX));
+                        panelPosition.y = Math.max(56, Math.min(pos.y, maxY));
+                        return true;
+                    }
+                } catch(e) {}
+                return false;
             }
-
-            // Stroke width slider
-            strokeWidthSlider.addEventListener('input', (e) => {
-                selectedStrokeWidth = parseInt(e.target.value);
-                if (excalidrawAPI) {
-                    excalidrawAPI.updateScene({
-                        appState: {
-                            currentItemStrokeWidth: selectedStrokeWidth
-                        }
-                    });
+            
+            // Save position
+            function savePanelPosition() {
+                try {
+                    localStorage.setItem(STORAGE_KEY, JSON.stringify(panelPosition));
+                } catch(e) {}
+            }
+            
+            // Smart default positioning (away from left toolbar)
+            function getDefaultPosition() {
+                const leftToolbarWidth = 70;
+                const panelWidth = 280;
+                const panelHeight = 400;
+                
+                // Default: right side, below topbar
+                let x = window.innerWidth - panelWidth - 20;
+                let y = 80;
+                
+                // On small screens, position at bottom-right
+                if (window.innerWidth < 768) {
+                    x = window.innerWidth - panelWidth - 10;
+                    y = window.innerHeight - panelHeight - 20;
                 }
-            });
-
-            // Custom color picker
-            addCustomColorBtn.addEventListener('click', () => {
-                customColorInput.click();
+                
+                return { x: Math.max(leftToolbarWidth, x), y: Math.max(56, y) };
+            }
+            
+            // Apply position to panel
+            function applyPanelPosition() {
+                propertiesPanel.style.left = `${panelPosition.x}px`;
+                propertiesPanel.style.top = `${panelPosition.y}px`;
+            }
+            
+            // Boundary checking
+            function clampPosition(x, y) {
+                const panelWidth = propertiesPanel.offsetWidth || 280;
+                const panelHeight = propertiesPanel.offsetHeight || 400;
+                const maxX = window.innerWidth - panelWidth;
+                const maxY = window.innerHeight - panelHeight;
+                
+                return {
+                    x: Math.max(0, Math.min(x, maxX)),
+                    y: Math.max(56, Math.min(y, maxY))
+                };
+            }
+            
+            // Mouse drag handlers
+            panelHeader.addEventListener('mousedown', (e) => {
+                if (e.target.closest('.panel-header-btn')) return;
+                isPanelDragging = true;
+                dragStartX = e.clientX;
+                dragStartY = e.clientY;
+                panelStartX = panelPosition.x;
+                panelStartY = panelPosition.y;
+                propertiesPanel.style.transition = 'none';
+                e.preventDefault();
             });
             
-            customColorInput.addEventListener('input', (e) => {
-                selectColor(e.target.value, null);
+            // Touch drag handlers
+            panelHeader.addEventListener('touchstart', (e) => {
+                if (e.target.closest('.panel-header-btn')) return;
+                isPanelDragging = true;
+                const touch = e.touches[0];
+                dragStartX = touch.clientX;
+                dragStartY = touch.clientY;
+                panelStartX = panelPosition.x;
+                panelStartY = panelPosition.y;
+                propertiesPanel.style.transition = 'none';
+            }, { passive: true });
+            
+            document.addEventListener('mousemove', (e) => {
+                if (!isPanelDragging) return;
+                const dx = e.clientX - dragStartX;
+                const dy = e.clientY - dragStartY;
+                const newPos = clampPosition(panelStartX + dx, panelStartY + dy);
+                panelPosition.x = newPos.x;
+                panelPosition.y = newPos.y;
+                applyPanelPosition();
             });
-
-            // Close color picker when clicking outside
-            document.addEventListener('click', (e) => {
-                if (!miroColorPicker.contains(e.target) && !e.target.closest('.excalidraw')) {
-                    miroColorPicker.style.display = 'none';
+            
+            document.addEventListener('touchmove', (e) => {
+                if (!isPanelDragging) return;
+                const touch = e.touches[0];
+                const dx = touch.clientX - dragStartX;
+                const dy = touch.clientY - dragStartY;
+                const newPos = clampPosition(panelStartX + dx, panelStartY + dy);
+                panelPosition.x = newPos.x;
+                panelPosition.y = newPos.y;
+                applyPanelPosition();
+            }, { passive: true });
+            
+            document.addEventListener('mouseup', () => {
+                if (isPanelDragging) {
+                    isPanelDragging = false;
+                    propertiesPanel.style.transition = '';
+                    savePanelPosition();
                 }
             });
-
-            // ═══════════════════════════════════════════════
+            
+            document.addEventListener('touchend', () => {
+                if (isPanelDragging) {
+                    isPanelDragging = false;
+                    propertiesPanel.style.transition = '';
+                    savePanelPosition();
+                }
+            });
+            
+            // Double-click header to reset position
+            panelHeader.addEventListener('dblclick', (e) => {
+                if (e.target.closest('.panel-header-btn')) return;
+                const defaultPos = getDefaultPosition();
+                panelPosition.x = defaultPos.x;
+                panelPosition.y = defaultPos.y;
+                applyPanelPosition();
+                savePanelPosition();
+            });
+            
+            // Minimize/Maximize
+            panelMinimize.addEventListener('click', () => {
+                isPanelMinimized = !isPanelMinimized;
+                propertiesPanel.classList.toggle('minimized', isPanelMinimized);
+                panelMinimize.innerHTML = isPanelMinimized ? '<i class="fas fa-plus"></i>' : '<i class="fas fa-minus"></i>';
+            });
+            
+            // Reset position
+            panelReset.addEventListener('click', () => {
+                const defaultPos = getDefaultPosition();
+                panelPosition.x = defaultPos.x;
+                panelPosition.y = defaultPos.y;
+                applyPanelPosition();
+                savePanelPosition();
+            });
+            
+            // Close panel
+            panelClose.addEventListener('click', () => {
+                propertiesPanel.style.display = 'none';
+                selectedElement = null;
+            });
+            
+            // Render panel content based on selected element
+            function renderPanelContent() {
+                if (!selectedElement) {
+                    panelContent.innerHTML = `
+                        <div class="no-selection">
+                            <i class="fas fa-mouse-pointer"></i>
+                            <div>Select an element to edit its properties</div>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                const el = selectedElement;
+                const strokeColor = el.strokeColor || '#000000';
+                const backgroundColor = el.backgroundColor || 'transparent';
+                const strokeWidth = el.strokeWidth || 2;
+                const opacity = (el.opacity || 100) / 100;
+                
+                let html = '';
+                
+                // Stroke Color Section
+                html += `
+                    <div class="panel-section">
+                        <div class="panel-section-title">Stroke Color</div>
+                        <div class="color-grid">
+                            ${QUICK_COLORS.map(c => `
+                                <div class="color-swatch ${c === strokeColor ? 'selected' : ''}" 
+                                     style="background-color: ${c}; ${c === '#ffffff' ? 'border: 2px solid #e2e8f0;' : ''}"
+                                     data-color="${c}" data-type="stroke"></div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+                
+                // Background Color Section
+                html += `
+                    <div class="panel-section">
+                        <div class="panel-section-title">Background</div>
+                        <div class="color-grid">
+                            <div class="color-swatch ${backgroundColor === 'transparent' ? 'selected' : ''}" 
+                                 style="background: repeating-conic-gradient(#e2e8f0 0% 25%, transparent 0% 50%) 50% / 12px 12px; border: 2px solid #cbd5e1;"
+                                 data-color="transparent" data-type="background"></div>
+                            ${ALL_COLORS.slice(0, 7).map(c => `
+                                <div class="color-swatch ${c === backgroundColor ? 'selected' : ''}" 
+                                     style="background-color: ${c}"
+                                     data-color="${c}" data-type="background"></div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+                
+                // Stroke Width Section
+                html += `
+                    <div class="panel-section">
+                        <div class="panel-section-title">Stroke Width</div>
+                        <input type="range" class="stroke-slider" id="stroke-slider" min="1" max="20" value="${strokeWidth}">
+                        <div class="stroke-value">${strokeWidth}px</div>
+                    </div>
+                `;
+                
+                // Opacity Section
+                html += `
+                    <div class="panel-section">
+                        <div class="panel-section-title">Opacity</div>
+                        <input type="range" class="opacity-slider" id="opacity-slider" min="0" max="100" value="${opacity * 100}">
+                        <div class="stroke-value">${Math.round(opacity * 100)}%</div>
+                    </div>
+                `;
+                
+                // Layer Controls
+                html += `
+                    <div class="panel-section">
+                        <div class="panel-section-title">Layers</div>
+                        <div class="layer-controls">
+                            <button class="layer-btn" id="layer-forward" title="Bring forward">
+                                <i class="fas fa-arrow-up"></i> Forward
+                            </button>
+                            <button class="layer-btn" id="layer-backward" title="Send backward">
+                                <i class="fas fa-arrow-down"></i> Back
+                            </button>
+                        </div>
+                    </div>
+                `;
+                
+                panelContent.innerHTML = html;
+                
+                // Attach event listeners to new elements
+                panelContent.querySelectorAll('.color-swatch').forEach(swatch => {
+                    swatch.addEventListener('click', () => {
+                        const color = swatch.dataset.color;
+                        const type = swatch.dataset.type;
+                        applyPropertyChange(type === 'stroke' ? 'strokeColor' : 'backgroundColor', color);
+                        
+                        // Update selected state
+                        panelContent.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('selected'));
+                        swatch.classList.add('selected');
+                    });
+                });
+                
+                const strokeSlider = document.getElementById('stroke-slider');
+                if (strokeSlider) {
+                    strokeSlider.addEventListener('input', (e) => {
+                        const val = parseInt(e.target.value);
+                        e.target.nextElementSibling.textContent = `${val}px`;
+                        applyPropertyChange('strokeWidth', val);
+                    });
+                }
+                
+                const opacitySlider = document.getElementById('opacity-slider');
+                if (opacitySlider) {
+                    opacitySlider.addEventListener('input', (e) => {
+                        const val = parseInt(e.target.value);
+                        e.target.nextElementSibling.textContent = `${val}%`;
+                        applyPropertyChange('opacity', val);
+                    });
+                }
+                
+                const layerForward = document.getElementById('layer-forward');
+                const layerBackward = document.getElementById('layer-backward');
+                if (layerForward && layerBackward) {
+                    layerForward.addEventListener('click', () => changeLayerOrder(1));
+                    layerBackward.addEventListener('click', () => changeLayerOrder(-1));
+                }
+            }
+            
+            // Apply property change to selected element
+            function applyPropertyChange(property, value) {
+                if (!selectedElement || !excalidrawAPI) return;
+                
+                const elements = excalidrawAPI.getSceneElements();
+                const updatedElements = elements.map(el => {
+                    if (el.id === selectedElement.id) {
+                        let newVal = value;
+                        if (property === 'opacity') {
+                            newVal = parseInt(value);
+                        }
+                        return { ...el, [property]: newVal, updated: Date.now() };
+                    }
+                    return el;
+                });
+                
+                excalidrawAPI.updateScene({ elements: updatedElements });
+                selectedElement = updatedElements.find(el => el.id === selectedElement.id);
+            }
+            
+            // Change layer order
+            function changeLayerOrder(direction) {
+                if (!selectedElement || !excalidrawAPI) return;
+                
+                const elements = excalidrawAPI.getSceneElements();
+                const idx = elements.findIndex(el => el.id === selectedElement.id);
+                if (idx === -1) return;
+                
+                const newIdx = idx + direction;
+                if (newIdx < 0 || newIdx >= elements.length) return;
+                
+                // Swap elements
+                const temp = elements[idx];
+                elements[idx] = elements[newIdx];
+                elements[newIdx] = temp;
+                
+                excalidrawAPI.updateScene({ elements });
+            }
+            
+            // Show panel and position it
+            function showPropertiesPanel() {
+                propertiesPanel.style.display = 'block';
+                
+                // Load saved position or use default
+                if (!loadPanelPosition()) {
+                    const defaultPos = getDefaultPosition();
+                    panelPosition.x = defaultPos.x;
+                    panelPosition.y = defaultPos.y;
+                }
+                
+                applyPanelPosition();
+                renderPanelContent();
+            }
+            
+            // ══════════════════════════════════════════════
             // FOG OF WAR - DRAGGABLE SPOTLIGHT
-            // ═══════════════════════════════════════════════
+            // ══════════════════════════════════════════════
             const btnSpotlight=document.getElementById('btn-spotlight');
             const spotlightOverlay=document.getElementById('spotlight-overlay');
             const spotlightHandle=document.getElementById('spotlight-handle');
@@ -920,7 +1333,7 @@
 
             // ══════════════════════════════════════════════
             // TIMER
-            // ═══════════════════════════════════════════════
+            // ══════════════════════════════════════════════
             const timerWidget=document.getElementById('timer-widget');
             const timerDisplay=document.getElementById('timer-display');
             const timerStartBtn=document.getElementById('timer-start');
@@ -958,9 +1371,9 @@
             }
             updateTimerDisplay();
 
-            // ═══════════════════════════════════════════════
+            // ══════════════════════════════════════════════
             // SMART TOOLKIT
-            // ═══════════════════════════════════════════════
+            // ══════════════════════════════════════════════
             const toolkitModal=document.getElementById('toolkit-modal');
             document.getElementById('btn-toolkit').addEventListener('click',()=>{
                 deselectTools();
@@ -1008,9 +1421,9 @@
                 toolkitModal.style.display='none';
             }
 
-            // ═══════════════════════════════════════════════
+            // ═════════════════════════════════════════════
             // MATH EQUATION
-            // ═══════════════════════════════════════════════
+            // ═════════════════════════════════════════════
             const mathModal=document.getElementById('math-modal');
             const mathInput=document.getElementById('math-input');
             const mathPreview=document.getElementById('math-preview');
@@ -1033,7 +1446,7 @@
                 mathModal.style.display='none';
             });
 
-            // ═══════════════════════════════════════════════
+            // ══════════════════════════════════════════════
             // THEME TOGGLE
             // ══════════════════════════════════════════════
             let currentTheme='dark';
@@ -1043,9 +1456,9 @@
                 if(excalidrawAPI) excalidrawAPI.updateScene({appState:{theme:currentTheme}});
             });
 
-            // ═══════════════════════════════════════════════
+            // ══════════════════════════════════════════════
             // EMAIL INVITES
-            // ═══════════════════════════════════════════════
+            // ═════════════════════════════════════════════
             const addStudentModal=document.getElementById('add-student-modal');
             const emailInput=document.getElementById('email-input');
             const emailSuggestions=document.getElementById('email-suggestions');
@@ -1117,9 +1530,9 @@
 
             // ══════════════════════════════════════════════
             // EXCALIDRAW RENDER
-            // ═══════════════════════════════════════════════
+            // ══════════════════════════════════════════════
             function App(){
-                const onChange=useCallback((elements,appState)=>{
+                const onChange=useCallback((elements,appState,files)=>{
                     if(!isRemoteUpdate){
                         const now=Date.now();
                         if(now-lastSendTime>=50){
@@ -1128,30 +1541,72 @@
                         }
                     }
                     isRemoteUpdate=false;
+                    
+                    // Check for selected elements and update properties panel
+                    if (excalidrawAPI) {
+                        const selected = excalidrawAPI.getSceneElements().filter(el => {
+                            // Excalidraw marks selected elements internally
+                            // We use appState to check selection
+                            return false; // Will be handled via appState
+                        });
+                    }
                 },[]);
+                
                 return React.createElement(Excalidraw,{
                     excalidrawAPI:(api)=>{
                         excalidrawAPI=api;
-                        // Initialize with selected color
-                        if (api) {
-                            api.updateScene({
-                                appState: {
-                                    currentItemStrokeColor: selectedColor,
-                                    currentItemStrokeWidth: selectedStrokeWidth
-                                }
-                            });
-                        }
                     },
-                    onChange,theme:'dark',name:`PrimeBoard - ${room}`,
-                    UIOptions:{canvasActions:{loadScene:false,saveToActiveFile:false,export:{saveFileToDisk:false}}},
-                    initialData:{appState:{viewModeEnabled:role==='student'&&locked}}
+                    onChange,
+                    theme:'dark',
+                    name:`PrimeBoard - ${room}`,
+                    UIOptions:{
+                        canvasActions:{loadScene:false,saveToActiveFile:false,export:{saveFileToDisk:false}},
+                        toolbarPosition: 'top'
+                    },
+                    initialData:{appState:{viewModeEnabled:role==='student'&&locked}},
+                    onPointerUpdate: (payload) => {
+                        // Track pointer updates for selection detection
+                    }
                 });
             }
             ReactDOM.createRoot(document.getElementById('root')).render(React.createElement(App));
 
-            // ═══════════════════════════════════════════════
+            // ══════════════════════════════════════════════
+            // SELECTION TRACKING - Show properties panel when element selected
+            // ══════════════════════════════════════════════
+            let lastSelectedCount = 0;
+            
+            // Poll for selected elements (Excalidraw doesn't expose selection directly)
+            setInterval(() => {
+                if (!excalidrawAPI) return;
+                
+                try {
+                    const appState = excalidrawAPI.getAppState();
+                    const elements = excalidrawAPI.getSceneElements();
+                    
+                    // Find selected elements (those with selected property or via appState)
+                    const selected = elements.filter(el => el.selected || (appState.selectedElementIds && appState.selectedElementIds[el.id]));
+                    
+                    if (selected.length > 0) {
+                        selectedElement = selected[0];
+                        if (propertiesPanel.style.display !== 'block') {
+                            showPropertiesPanel();
+                        } else {
+                            renderPanelContent();
+                        }
+                    } else if (selected.length === 0 && lastSelectedCount > 0) {
+                        // Deselection - keep panel open but show "no selection" state
+                        selectedElement = null;
+                        renderPanelContent();
+                    }
+                    
+                    lastSelectedCount = selected.length;
+                } catch(e) {}
+            }, 300);
+
+            // ══════════════════════════════════════════════
             // WEBSOCKET CONNECTION
-            // ═══════════════════════════════════════════════
+            // ══════════════════════════════════════════════
             let socket=null;
             function connect(){
                 statusDot.className='connecting';
