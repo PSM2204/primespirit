@@ -65,7 +65,21 @@
         }
         #root { position: absolute; top: 110px; left: 0; right: 0; bottom: 0; }
 
-        /* ─── TOPBAR ─────────────────────────────────────── */
+        /* ─── HIDE EXCALIDRAW PROPERTIES PANEL ─────────────────────────────── */
+        /* This hides the stroke/fill/width/opacity/layers panel that appears when you click a tool */
+        .excalidraw .App-toolbar-content > div:not(:first-child),
+        .excalidraw .panelColumn,
+        .excalidraw .Island.App-toolbar-content > div:last-child {
+            display: none !important;
+        }
+        
+        /* Also hide any floating properties panel */
+        .excalidraw .properties-panel,
+        .excalidraw [class*="properties"] {
+            display: none !important;
+        }
+
+        /* ── TOPBAR ─────────────────────────────────────── */
         #topbar {
             position: fixed; top: 0; left: 0; right: 0; height: 56px; z-index: 1000;
             display: flex; align-items: center; gap: 14px; padding: 0 20px;
@@ -301,7 +315,7 @@
         }
         #custom-bg-picker:hover { border-color: var(--accent-primary); }
 
-        /* ─── SETUP SCREEN ──────────────────────────────── */
+        /* ─── SETUP SCREEN ─────────────────────────────── */
         #setup-screen {
             position: fixed; inset: 0; z-index: 3000;
             display: flex; align-items: center; justify-content: center;
@@ -467,7 +481,7 @@
             padding: 10px 20px !important; box-shadow: var(--shadow-card) !important;
         }
 
-        /* ─── MOBILE ─────────────────────────────────────── */
+        /* ── MOBILE ─────────────────────────────────────── */
         @media(max-width: 768px) {
             #root { top: 150px !important; }
             #left-sidebar { width: 50px; }
@@ -546,7 +560,7 @@
     <!-- SPOTLIGHT OVERLAY -->
     <div id="spotlight-overlay"></div>
 
-    <!-- COLOR POPUP - REDESIGNED WITH CLOSE BUTTON -->
+    <!-- COLOR POPUP -->
     <div id="bg-color-popup">
         <div class="popup-header">
             <div class="popup-header-left">
