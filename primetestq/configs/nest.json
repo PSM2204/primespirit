@@ -1,0 +1,8 @@
+{
+  "examId": "nest",
+  "examName": "NEST CBT",
+  "totalQuestions": 80,
+  "durationMinutes": 180,
+  "correctMarks": 3,
+  "negativeMarks": 1
+}
