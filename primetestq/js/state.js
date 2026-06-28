@@ -1,0 +1,100 @@
+import { PrimeDB } from './auth.js';
+
+export const ExamState = {
+    stream: '', config: null, activeQuestionIndex: 0, timerSecondsLeft: 10800,
+    totalQuestions: 0, questionsData: [], userResponses: {}, questionStatuses: {},
+    posMark: 4, negMark: 1, warnings: 0
+};
+
+export async function loadExamConfig(examId) {
+    try {
+        const res = await fetch(`./configs/${examId}.json`);
+        const config = await res.json();
+        ExamState.config = config;
+        ExamState.stream = examId;
+        ExamState.totalQuestions = config.totalQuestions;
+        ExamState.timerSecondsLeft = config.durationMinutes * 60;
+        ExamState.posMark = config.correctMarks;
+        ExamState.negMark = config.negativeMarks;
+    } catch (e) {
+        console.warn("Config not found, using defaults.");
+        ExamState.stream = examId; ExamState.totalQuestions = 90;
+        ExamState.timerSecondsLeft = 10800; ExamState.posMark = 4; ExamState.negMark = 1;
+    }
+
+    let questions = [];
+    try { questions = await PrimeDB.getQuestions(examId); } catch(e) {}
+
+    if (!questions || questions.length === 0) {
+        try {
+            const res = await fetch(`./questions/${examId}.json`);
+            questions = await res.json();
+        } catch (e) {
+            console.warn("Static questions not found, generating smart mock data.");
+            questions = generateMockDataset(examId);
+        }
+    }
+
+    ExamState.questionsData = questions;
+    ExamState.userResponses = {};
+    ExamState.questionStatuses = {};
+    questions.forEach(q => ExamState.questionStatuses[q.id] = 'unvisited');
+}
+
+function generateMockDataset(stream) {
+    const dataset = [];
+    const track = stream.toLowerCase().trim();
+
+    for (let i = 1; i <= ExamState.totalQuestions; i++) {
+        let subjectLabel = "GENERAL COGNITION";
+        let questionText = `[${stream.toUpperCase()}] Evaluation parameter index ${i}.`;
+        let optionsArray = ["Option A", "Option B", "Option C", "Option D"];
+        let correctOptionIndex = Math.floor(Math.random() * 4);
+
+        if (track.includes('neet')) {
+            if (i <= 45) subjectLabel = "PHYSICS";
+            else if (i <= 90) subjectLabel = "CHEMISTRY";
+            else if (i <= 135) subjectLabel = "BOTANY";
+            else subjectLabel = "ZOOLOGY";
+            questionText = `[NEET ASSESSMENT // ${subjectLabel} Q.${i}] Medical entrance level matrix analysis.`;
+        } 
+        else if (track.includes('jee')) {
+            if (i <= 30) subjectLabel = "PHYSICS";
+            else if (i <= 60) subjectLabel = "CHEMISTRY";
+            else subjectLabel = "MATHEMATICS";
+            questionText = `[JEE MAIN EVALUATION // ${subjectLabel} Q.${i}] Core analytical engineering vector alignment.`;
+        } 
+        else if (track.includes('cuet')) {
+            if (i <= 25) subjectLabel = "DOMAIN PHYSICS";
+            else subjectLabel = "DOMAIN MATHEMATICS";
+            questionText = `[CUET UG ADMISSION // ${subjectLabel} Q.${i}] Higher secondary verification matrix.`;
+        } 
+        else if (track.includes('iat') || track.includes('nest')) {
+            if (i <= 15 || (track.includes('nest') && i <= 20)) subjectLabel = "PHYSICS";
+            else if (i <= 30 || (track.includes('nest') && i <= 40)) subjectLabel = "CHEMISTRY";
+            else if (i <= 45 || (track.includes('nest') && i <= 60)) subjectLabel = "MATHEMATICS";
+            else subjectLabel = "BIOLOGY";
+            questionText = `[RESEARCH APTITUDE // ${subjectLabel} Q.${i}] Conceptual advanced science derivatives.`;
+        }
+        else if (track.match(/class(6|7|8|9|10)/)) {
+            if (i <= (ExamState.totalQuestions / 2)) subjectLabel = "MATHEMATICS";
+            else subjectLabel = "SCIENCE";
+            questionText = `[${track.toUpperCase()} SCHOOL LEVEL // ${subjectLabel} Q.${i}] Foundation logic assessment.`;
+        }
+        else if (track.match(/class(11|12)/)) {
+            subjectLabel = "PHYSICS";
+            questionText = `[${track.toUpperCase()} SCHOOL LEVEL // ${subjectLabel} Q.${i}] Advanced mechanics assessment.`;
+        }
+
+        dataset.push({
+            id: i,
+            subject: subjectLabel,
+            text: questionText,
+            options: optionsArray,
+            correct: correctOptionIndex
+        });
+        
+        ExamState.questionStatuses[i] = 'unvisited';
+    }
+    return dataset;
+}
