@@ -58,7 +58,7 @@
             --transition-smooth: all 0.25s ease;
         }
         
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Nunit00', system-ui, sans-serif; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Nunito', system-ui, sans-serif; }
         html, body { 
             background: linear-gradient(135deg, var(--bg-deep) 0%, var(--bg-mid) 50%, var(--bg-light) 100%);
             height: 100%; overflow: hidden; 
@@ -84,7 +84,8 @@
             color: var(--accent-primary); font-size: 1.1rem;
             filter: drop-shadow(0 0 6px rgba(167, 139, 250, 0.6));
         }
-        #brand .sub { color: var(--text-muted); font-weight: 600; font-size: 0.7rem; margin-left: 2px; }
+        #brand .sub { color: var(--text-muted); font-weight: 600; font-size: 0.7rem; margin-left: 2px; display: none; }
+        @media(min-width:768px){#brand .sub{display:inline}}
         
         #room-pill {
             display: flex; align-items: center; gap: 8px;
@@ -142,7 +143,7 @@
             display: none; align-items: center; gap: 10px;
             background: rgba(251, 113, 133, 0.12); border: 1px solid rgba(251, 113, 133, 0.25);
             color: var(--text-primary); padding: 12px 24px; border-radius: 100px;
-            font-size: 0.8rem; font-weight: 700; backdrop-filter: blur(16px);
+            font-size: 0.8rem; font-weight: 700; backdrop-filter: blur(10px);
             box-shadow: 0 4px 20px rgba(251, 113, 133, 0.15);
         }
         #locked-banner i { color: var(--accent-danger); }
@@ -231,396 +232,97 @@
         .timer-inputs input:focus { outline: none; border-color: var(--accent-primary); box-shadow: 0 0 8px rgba(167, 139, 250, 0.3); }
         .timer-inputs span { color: var(--text-muted); font-weight: 800; font-family: 'JetBrains Mono', monospace; }
 
-        /* ─ ADVANCED PEN SETTINGS PANEL (Miro/Figma Style) ── */
-        #pen-settings-panel {
-            position: fixed;
-            z-index: 10000 !important;
-            background: #ffffff;
-            border-radius: 12px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2), 0 2px 8px rgba(0, 0, 0, 0.1);
-            width: 320px;
-            max-height: 85vh;
-            overflow-y: auto;
+        /* ── BACKGROUND COLOR POPUP (FIXED POSITION) ────────────────── */
+        #bg-color-popup {
             display: none;
+            position: fixed;
+            right: 20px; /* Moved to right side */
+            top: 76px;  /* Below topbar */
+            z-index: 10000 !important; /* Highest z-index */
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            backdrop-filter: blur(20px) saturate(1.8);
+            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255,255,255,0.05);
+            width: 240px;
             animation: popIn 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
-            touch-action: none;
         }
         @keyframes popIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
         
-        #pen-settings-panel.minimized {
-            max-height: 48px;
-            overflow: hidden;
-        }
-        
-        .pen-panel-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 12px 14px;
-            background: #f8fafc;
-            border-bottom: 1px solid #e2e8f0;
-            border-radius: 12px 12px 0 0;
-            cursor: grab;
+        .popup-header {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--glass-border);
+            cursor: move; /* Draggable handle */
+            color: var(--text-primary);
+            font-size: 0.85rem;
+            font-weight: 800;
+            background: var(--glass-highlight);
+            border-radius: var(--radius-lg) var(--radius-lg) 0 0;
             user-select: none;
-            touch-action: none;
+            letter-spacing: -0.01em;
         }
-        .pen-panel-header:active {
-            cursor: grabbing;
+        .popup-header-left { display: flex; align-items: center; gap: 10px; }
+        .popup-header i { color: var(--accent-primary); font-size: 0.8rem; }
+        .popup-close-btn {
+            background: transparent; border: none; color: var(--text-muted);
+            cursor: pointer; font-size: 1rem; padding: 4px 8px; border-radius: var(--radius-sm);
+            transition: var(--transition-smooth);
         }
-        .pen-panel-header-title {
-            font-size: 0.75rem;
-            font-weight: 700;
-            color: #475569;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .pen-panel-header-title i {
-            color: #94a3b8;
-            font-size: 0.7rem;
-        }
-        .pen-panel-header-controls {
-            display: flex;
-            gap: 4px;
-        }
-        .pen-panel-header-btn {
-            width: 24px;
-            height: 24px;
-            border-radius: 6px;
-            border: none;
-            background: transparent;
-            color: #94a3b8;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.7rem;
-            transition: all 0.2s ease;
-        }
-        .pen-panel-header-btn:hover {
-            background: #e2e8f0;
-            color: #475569;
-        }
-        .pen-panel-header-btn.close:hover {
-            background: #fee2e2;
-            color: #ef4444;
-        }
+        .popup-close-btn:hover { color: var(--accent-danger); background: rgba(251, 113, 133, 0.1); }
         
-        .pen-panel-content {
-            padding: 16px;
-        }
+        .popup-content { padding: 18px; }
         
-        .pen-section {
-            margin-bottom: 16px;
-        }
-        .pen-section-title {
-            font-size: 0.7rem;
-            font-weight: 700;
-            color: #64748b;
-            margin-bottom: 10px;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-        
-        /* Pen Types */
-        .pen-type-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 8px;
-        }
-        .pen-type-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 12px 8px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            text-align: center;
-            font-size: 0.65rem;
-            color: #64748b;
-        }
-        .pen-type-item:hover {
-            background: #f1f5f9;
-            color: #1e293b;
-            transform: translateY(-2px);
-        }
-        .pen-type-item.active {
-            background: #e0e7ff;
-            color: #4338ca;
-            border: 1px solid #cbd5e1;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        }
-        .pen-type-icon {
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 6px;
-            font-size: 0.9rem;
-        }
-        .pen-type-item.normal .pen-type-icon { background: #e2e8f0; color: #475569; }
-        .pen-type-item.fountain .pen-type-icon { background: #fef3c7; color: #92400e; }
-        .pen-type-item.marker .pen-type-icon { background: #fee2e2; color: #dc2626; }
-        .pen-type-item.highlighter .pen-type-icon { background: #fde68a; color: #92400e; }
-        .pen-type-item.calligraphy .pen-type-icon { background: #e0f2fe; color: #0ea5e9; }
-        .pen-type-item.pencil .pen-type-icon { background: #f0fdf4; color: #16a34a; }
-        .pen-type-item.brush .pen-type-icon { background: #fcd34d; color: #92400e; }
-        
-        /* Thickness Controls */
-        .thickness-grid {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 8px;
-        }
-        .thickness-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 10px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            font-size: 0.65rem;
-            color: #64748b;
-        }
-        .thickness-item:hover {
-            background: #f1f5f9;
-            color: #1e293b;
-        }
-        .thickness-item.active {
-            background: #e0e7ff;
-            color: #4338ca;
-            border: 1px solid #cbd5e1;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        }
-        .thickness-line {
-            width: 24px;
-            height: 2px;
-            border-radius: 1px;
-            margin-bottom: 6px;
-        }
-        .thickness-item:nth-child(1) .thickness-line { background: #e2e8f0; height: 1px; }
-        .thickness-item:nth-child(2) .thickness-line { background: #e2e8f0; height: 2px; }
-        .thickness-item:nth-child(3) .thickness-line { background: #e2e8f0; height: 4px; }
-        .thickness-item:nth-child(4) .thickness-line { background: #e2e8f0; height: 8px; }
-        .thickness-item:nth-child(5) .thickness-line { background: #e2e8f0; height: 12px; }
-        
-        /* Color System */
-        .color-section {
+        .color-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 8px;
+            gap: 10px;
+            margin-bottom: 12px;
         }
         .color-swatch {
-            width: 100%;
-            aspect-ratio: 1;
-            border-radius: 50%;
-            cursor: pointer;
-            border: 2px solid transparent;
-            transition: all 0.2s ease;
-            position: relative;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            width: 100%; aspect-ratio: 1; border-radius: var(--radius-sm);
+            cursor: pointer; border: 3px solid rgba(255, 255, 255, 0.15);
+            transition: var(--transition-bounce);
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
         }
-        .color-swatch:hover {
-            transform: scale(1.15);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        .color-swatch:hover { 
+            transform: scale(1.15) rotate(3deg); 
+            border-color: rgba(255,255,255,0.4); 
+            z-index: 1;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
         }
-        .color-swatch.selected {
-            border-color: #3b82f6;
-            box-shadow: 0 0 0 2px #fff, 0 0 0 4px #3b82f6;
+        .color-swatch.selected { 
+            border-color: var(--accent-primary) !important; 
+            box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.3), 0 4px 12px rgba(0,0,0,0.3);
+            transform: scale(1.1);
         }
         .color-swatch.selected::after {
-            content: '✓';
-            position: absolute;
-            inset: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #fff;
-            font-size: 0.9rem;
-            font-weight: 800;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+            content: '✓'; position: absolute; inset: 0;
+            display: flex; align-items: center; justify-content: center;
+            color: #fff; font-size: 1.2rem; font-weight: 800;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.5);
         }
         
-        .recent-colors, .favorite-colors {
-            display: grid;
-            grid-template-columns: repeat(6, 1fr);
-            gap: 6px;
-            margin-top: 8px;
+        .custom-color-row {
+            display: flex; align-items: center; gap: 12px;
+            border-top: 1px solid var(--glass-border);
+            padding-top: 14px;
         }
-        
-        .color-add-btn {
-            width: 100%;
-            padding: 10px;
-            border: 2px dashed #cbd5e1;
-            border-radius: 50%;
-            background: transparent;
-            cursor: pointer;
-            font-size: 1.1rem;
-            color: #94a3b8;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            aspect-ratio: 1;
-        }
-        .color-add-btn:hover {
-            border-color: #3b82f6;
-            color: #3b82f6;
-            background: rgba(59, 130, 246, 0.05);
-        }
-        
-        .color-picker-controls {
-            display: flex;
-            gap: 8px;
-            margin-top: 12px;
-        }
-        .color-input {
-            flex: 1;
-            padding: 8px 12px;
-            border: 1px solid #cbd5e1;
-            border-radius: 6px;
+        .custom-color-row span {
+            color: var(--text-secondary);
             font-size: 0.75rem;
-            background: #f8fafc;
+            font-weight: 700;
+            white-space: nowrap;
         }
-        .color-input:focus {
-            outline: none;
-            border-color: #3b82f6;
-            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+        #custom-bg-picker {
+            flex: 1; height: 38px; border: 2px solid var(--glass-border);
+            border-radius: var(--radius-sm); cursor: pointer; background: transparent;
+            padding: 2px;
+            transition: var(--transition-smooth);
         }
-        
-        /* Eyedropper Tool */
-        .eyedropper-container {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 12px;
-            background: #f8fafc;
-            border-radius: 8px;
-            margin-top: 16px;
-        }
-        .eyedropper-btn {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: #e2e8f0;
-            border: 1px solid #cbd5e1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        .eyedropper-btn:hover {
-            background: #f1f5f9;
-            transform: scale(1.05);
-        }
-        .eyedropper-btn.active {
-            background: #e0e7ff;
-            border-color: #3b82f6;
-            box-shadow: 0 0 0 2px #fff, 0 0 0 4px #3b82f6;
-        }
-        .eyedropper-preview {
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            border: 1px solid #cbd5e1;
-        }
-        .eyedropper-label {
-            font-size: 0.7rem;
-            color: #64748b;
-            flex: 1;
-        }
-        
-        /* Stroke Style */
-        .stroke-style-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 8px;
-        }
-        .stroke-style-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 10px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            font-size: 0.65rem;
-            color: #64748b;
-        }
-        .stroke-style-item:hover {
-            background: #f1f5f9;
-            color: #1e293b;
-        }
-        .stroke-style-item.active {
-            background: #e0e7ff;
-            color: #4338ca;
-            border: 1px solid #cbd5e1;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        }
-        .stroke-style-line {
-            width: 24px;
-            height: 2px;
-            border-radius: 1px;
-            margin-bottom: 6px;
-        }
-        .stroke-style-item.solid .stroke-style-line { background: #e2e8f0; }
-        .stroke-style-item.dashed .stroke-style-line { background: repeating-linear-gradient(90deg, #e2e8f0, #e2e8f0 4px, transparent 4px, transparent 8px); }
-        .stroke-style-item.dotted .stroke-style-line { background: radial-gradient(circle at center, #e2e8f0 2px, transparent 2px) 0 0 / 6px 6px; }
-        .stroke-style-item.wavy .stroke-style-line { background: url("data:image/svg+xml,%3Csvg width='24' height='2' viewBox='0 0 24 2' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0,1 Q4,0 8,1 T16,1 T24,1' stroke='%23e2e8f0' stroke-width='2' fill='none'/%3E%3C/svg%3E") no-repeat; }
-        
-        /* Real-time Preview */
-        .preview-section {
-            margin-top: 16px;
-            padding: 12px;
-            background: #f8fafc;
-            border-radius: 8px;
-        }
-        .preview-canvas {
-            width: 100%;
-            height: 60px;
-            background: #f1f5f9;
-            border-radius: 6px;
-            position: relative;
-            overflow: hidden;
-        }
-        .preview-stroke {
-            position: absolute;
-            bottom: 12px;
-            left: 16px;
-            height: 2px;
-            background: #3b82f6;
-            border-radius: 1px;
-            transition: all 0.2s ease;
-        }
-        .preview-stroke.thin { height: 2px; }
-        .preview-stroke.medium { height: 4px; }
-        .preview-stroke.thick { height: 8px; }
-        .preview-stroke.extra-thick { height: 12px; }
-        .preview-stroke.highlighter { opacity: 0.5; background: #f59e0b; }
-        .preview-stroke.brush { height: 10px; background: #f59e0b; border-radius: 10px; }
-        
-        /* No Selection State */
-        .no-selection {
-            text-align: center;
-            padding: 24px 16px;
-            color: #94a3b8;
-            font-size: 0.85rem;
-        }
-        .no-selection i {
-            font-size: 2rem;
-            margin-bottom: 8px;
-            display: block;
-            color: #cbd5e1;
-        }
+        #custom-bg-picker:hover { border-color: var(--accent-primary); }
 
-        /* ── FOG OF WAR - DRAGGABLE SPOTLIGHT ─────────── */
+        /* ── FOG OF WAR OVERLAY ─────────────────────────── */
         #spotlight-overlay {
             position: fixed; inset: 0; z-index: 1500;
             background: radial-gradient(circle 280px at var(--sx, 50%) var(--sy, 50%), transparent 0%, rgba(15, 12, 41, 0.97) 100%);
@@ -628,31 +330,23 @@
         }
         
         #spotlight-handle {
-            position: fixed;
-            width: 40px; height: 40px;
-            border-radius: 50%;
-            background: rgba(167, 139, 250, 0.3);
-            border: 2px solid var(--accent-primary);
-            box-shadow: 0 0 20px rgba(167, 139, 250, 0.5);
-            cursor: grab;
-            z-index: 1501;
-            display: none;
-            align-items: center; justify-content: center;
-            color: #fff; font-size: 1.2rem;
-            transition: transform 0.2s ease;
-            left: var(--hx, 50%);
-            top: var(--hy, 50%);
+            position: fixed; width: 40px; height: 40px; border-radius: 50%;
+            background: rgba(167, 139, 250, 0.3); border: 2px solid var(--accent-primary);
+            box-shadow: 0 0 20px rgba(167, 139, 250, 0.5); cursor: grab; z-index: 1501;
+            display: none; align-items: center; justify-content: center;
+            color: #fff; font-size: 1.2rem; transition: transform 0.2s ease;
+            left: var(--hx, 50%); top: var(--hy, 50%);
             transform: translate(-50%, -50%);
         }
         #spotlight-handle:hover { transform: translate(-50%, -50%) scale(1.2); }
         #spotlight-handle:active { cursor: grabbing; transform: translate(-50%, -50%) scale(0.9); }
         #spotlight-handle i { pointer-events: none; }
 
-        /* ─ SETUP SCREEN ──────────────────────────────── */
+        /* ── SETUP SCREEN ──────────────────────────────── */
         #setup-screen {
             position: fixed; inset: 0; z-index: 3000;
             display: flex; align-items: center; justify-content: center;
-            background: linear-gradient(135deg, var(--bg-deep) 0%, var(--bg-mid) 50%, var(--bg-light) 100%);
+            background: radial-gradient(circle at center, #0F172A 0%, #050811 100%);
             padding: 20px;
         }
         #setup-card {
@@ -678,7 +372,7 @@
         #setup-card input {
             width: 100%; background: var(--glass-highlight); border: 1px solid var(--glass-border);
             color: var(--text-primary); padding: 14px 16px; border-radius: var(--radius-md);
-            font-size: 1rem; outline: none; transition: var(--transition-smooth); font-weight: 600;
+            font-size: 1rem; outline: none; margin-bottom: 8px; font-weight: 600;
         }
         #setup-card input:focus { border-color: var(--accent-primary); box-shadow: 0 0 12px rgba(167, 139, 250, 0.25); }
         #setup-card input::placeholder { color: var(--text-muted); font-weight: 400; }
@@ -752,20 +446,20 @@
             overflow-y: auto; z-index: 100; display: none;
             box-shadow: var(--shadow-card);
         }
-        .suggestion-item { padding: 12px 16px; color: var(--text-primary); cursor: pointer; font-size: 0.85rem; border-bottom: 1px solid var(--glass-border); transition: var(--transition-smooth); font-weight: 600; }
+        .suggestion-item { padding: 12px 16px; color: var(--text-primary); cursor: pointer; font-size: 0.9rem; border-bottom: 1px solid var(--glass-border); transition: var(--transition-smooth); font-weight: 600; }
         .suggestion-item:hover { background: rgba(167, 139, 250, 0.1); color: var(--accent-primary); }
         .suggestion-item:last-child { border-bottom: none; }
         
         #email-list { max-height: 150px; overflow-y: auto; margin: 14px 0; background: var(--glass-highlight); border-radius: var(--radius-md); padding: 10px; min-height: 44px; }
         .email-tag {
             display: inline-flex; align-items: center; gap: 8px;
-            background: rgba(74, 222, 128, 0.1); border: 1px solid rgba(74, 222, 128, 0.25);
+            background: rgba(74, 222, 128, 0.1); border: 1px solid var(--accent-success);
             color: var(--accent-success); padding: 5px 12px; border-radius: 100px;
             font-size: 0.75rem; margin: 4px; font-weight: 700;
             transition: var(--transition-bounce);
         }
         .email-tag:hover { transform: scale(1.05); }
-        .email-tag i { cursor: pointer; font-size: 0.6rem; opacity: 0.7; transition: var(--transition-smooth); }
+        .email-tag i { cursor: pointer; font-size: 0.65rem; opacity: 0.7; transition: var(--transition-smooth); }
         .email-tag i:hover { opacity: 1; color: var(--accent-danger); }
         
         .btn-row { display: flex; gap: 10px; margin-top: 24px; }
@@ -779,11 +473,11 @@
             background: linear-gradient(135deg, var(--accent-success), #22d3ee); color: #0f0c29;
             box-shadow: 0 4px 16px rgba(74, 222, 128, 0.25);
         }
-        #cancel-add-btn, #cancel-math-btn, #close-toolkit-btn { background: var(--glass-highlight); color: var(--text-primary); border: 1px solid var(--glass-border); }
+        #cancel-add-btn, #cancel-math-btn, #close-toolkit-btn { background: rgba(255,255,255,.1); color: var(--text-primary); border: 1px solid var(--glass-border); }
         
         .toolkit-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 14px; margin-top: 20px; }
         .toolkit-item {
-            background: var(--glass-highlight); border: 1px solid var(--glass-border);
+            background: rgba(255,255,255,.05); border: 1px solid var(--glass-border);
             border-radius: var(--radius-md); padding: 20px 16px; text-align: center;
             cursor: pointer; transition: var(--transition-bounce);
             display: flex; flex-direction: column; align-items: center; gap: 10px;
@@ -797,7 +491,7 @@
         .toolkit-item span { color: var(--text-primary); font-size: 0.85rem; font-weight: 700; }
         .toolkit-item .sub-text { color: var(--text-muted); font-size: 0.65rem; font-weight: 600; }
 
-        /* ── EXCALIDRAW TOOLBAR ────────────────────────── */
+        /* ── EXCALIDRAW TOOLBAR OVERRIDE ────────────────── */
         .excalidraw .App-toolbar {
             position: fixed !important; top: 56px !important; left: 76px !important; right: 320px !important;
             z-index: 997 !important; background: var(--glass-bg) !important;
@@ -815,10 +509,7 @@
             .excalidraw .App-toolbar { left: 60px !important; right: 20px !important; }
             #timer-widget { right: 10px; min-width: 170px; }
             #timer-display { font-size: 2.2rem; }
-            #pen-settings-panel { width: 280px; }
-            .pen-type-grid { grid-template-columns: repeat(2, 1fr); }
-            .thickness-grid { grid-template-columns: repeat(3, 1fr); }
-            .color-section, .recent-colors, .favorite-colors { grid-template-columns: repeat(3, 1fr); }
+            #bg-color-popup { right: 10px; width: 200px; }
             .sidebar-btn[title]:hover::after { display: none; }
         }
     </style>
@@ -839,7 +530,7 @@
             <input id="name-input" type="text" placeholder="e.g. Mr. Sharma" maxlength="40">
             <label id="room-label">Class room code</label>
             <input id="room-input" type="text" placeholder="e.g. CLASS10-PHYSICS" maxlength="30">
-            <button id="enter-btn">Enter Board </button>
+            <button id="enter-btn">Enter Board ✨</button>
             <div id="setup-error"></div>
         </div>
     </div>
@@ -865,6 +556,7 @@
         <button class="sidebar-btn" id="btn-timer" title="Timer"><i class="fas fa-stopwatch"></i></button>
         <button class="sidebar-btn" id="btn-math" title="Math Equation"><i class="fas fa-square-root-alt"></i></button>
         <div class="sidebar-divider"></div>
+        <button class="sidebar-btn" id="btn-bg-color" title="Background Color"><i class="fas fa-fill-drip"></i></button>
         <button class="sidebar-btn" id="btn-theme" title="Theme"><i class="fas fa-palette"></i></button>
     </div>
 
@@ -873,9 +565,9 @@
         <div id="timer-widget">
             <div id="timer-display">05:00</div>
             <div class="timer-controls" id="timer-controls-container">
-                <button class="timer-btn start" id="timer-start"><i class="fas fa-play"></i></button>
-                <button class="timer-btn pause" id="timer-pause"><i class="fas fa-pause"></i></button>
-                <button class="timer-btn reset" id="timer-reset"><i class="fas fa-redo"></i></button>
+                <button class="timer-btn start" id="timer-start"><i class="fas fa-play"></i> Start</button>
+                <button class="timer-btn pause" id="timer-pause"><i class="fas fa-pause"></i> Pause</button>
+                <button class="timer-btn reset" id="timer-reset"><i class="fas fa-redo"></i> Reset</button>
             </div>
             <div class="timer-inputs" id="timer-inputs-container">
                 <input type="number" id="timer-min" placeholder="Min" min="0" max="99" value="5">
@@ -889,27 +581,23 @@
     <div id="spotlight-overlay"></div>
     <div id="spotlight-handle"><i class="fas fa-crosshairs"></i></div>
 
-    <!-- ADVANCED PEN SETTINGS PANEL -->
-    <div id="pen-settings-panel">
-        <div class="pen-panel-header" id="pen-panel-header">
-            <div class="pen-panel-header-title">
-                <i class="fas fa-pen-fancy"></i>
-                <span>Pen Settings</span>
+    <!-- BACKGROUND COLOR POPUP (FIXED POSITION) -->
+    <div id="bg-color-popup">
+        <div class="popup-header">
+            <div class="popup-header-left">
+                <i class="fas fa-grip-vertical"></i>
+                <span>Background Color</span>
             </div>
-            <div class="pen-panel-header-controls">
-                <button class="pen-panel-header-btn" id="pen-minimize" title="Minimize">
-                    <i class="fas fa-minus"></i>
-                </button>
-                <button class="pen-panel-header-btn" id="pen-reset" title="Reset position">
-                    <i class="fas fa-compress"></i>
-                </button>
-                <button class="pen-panel-header-btn close" id="pen-close" title="Close">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
+            <button class="popup-close-btn" id="popup-close-btn" title="Close">
+                <i class="fas fa-times"></i>
+            </button>
         </div>
-        <div class="pen-panel-content" id="pen-panel-content">
-            <!-- Content dynamically populated -->
+        <div class="popup-content">
+            <div class="color-grid" id="color-grid"></div>
+            <div class="custom-color-row">
+                <span>Custom:</span>
+                <input type="color" id="custom-bg-picker" value="#090D1A">
+            </div>
         </div>
     </div>
 
@@ -979,6 +667,7 @@
             return {type,x,y,width,height,angle:0,strokeColor:"#a78bfa",backgroundColor:"transparent",fillStyle:"hachure",strokeWidth:1,roughness:1,opacity:100,groupIds:[],roundness:type==="rectangle"||type==="ellipse"?{type:3}:null,seed:Math.floor(Math.random()*2e9),version:1,versionNonce:Math.floor(Math.random()*2e9),isDeleted:false,boundElements:null,updated:Date.now(),link:null,locked:false,...extra};
         }
 
+        // SETUP
         const setupScreen=document.getElementById('setup-screen');
         const roleTeacherBtn=document.getElementById('role-teacher');
         const roleStudentBtn=document.getElementById('role-student');
@@ -1054,615 +743,10 @@
                 }
             }
 
-            // ══════════════════════════════════════════════
-            // ADVANCED PEN SETTINGS PANEL
-            // ══════════════════════════════════════════════
-            const penSettingsPanel = document.getElementById('pen-settings-panel');
-            const penPanelHeader = document.getElementById('pen-panel-header');
-            const penPanelContent = document.getElementById('pen-panel-content');
-            const penMinimize = document.getElementById('pen-minimize');
-            const penReset = document.getElementById('pen-reset');
-            const penClose = document.getElementById('pen-close');
-            
-            // Panel state
-            let panelPosition = { x: 0, y: 0 };
-            let isPanelDragging = false;
-            let dragStartX = 0, dragStartY = 0;
-            let panelStartX = 0, panelStartY = 0;
-            let isPanelMinimized = false;
-            let selectedElement = null;
-            
-            // Pen preferences storage
-            const STORAGE_KEY = `primeboard_pen_prefs_${room}`;
-            
-            // Load saved preferences
-            function loadPenPreferences() {
-                try {
-                    const saved = localStorage.getItem(STORAGE_KEY);
-                    if (saved) {
-                        const prefs = JSON.parse(saved);
-                        return prefs;
-                    }
-                } catch(e) {}
-                return {
-                    penType: 'normal',
-                    thickness: 'medium',
-                    strokeColor: '#a78bfa',
-                    fillColor: 'transparent',
-                    opacity: 100,
-                    strokeStyle: 'solid'
-                };
-            }
-            
-            // Save preferences
-            function savePenPreferences(prefs) {
-                try {
-                    localStorage.setItem(STORAGE_KEY, JSON.stringify(prefs));
-                } catch(e) {}
-            }
-            
-            // Current pen settings
-            let currentPrefs = loadPenPreferences();
-            
-            // Smart default positioning
-            function getDefaultPosition() {
-                const leftToolbarWidth = 70;
-                const panelWidth = 320;
-                const panelHeight = 600;
-                
-                let x, y;
-                if (window.innerWidth < 768) {
-                    x = window.innerWidth - panelWidth - 10;
-                    y = window.innerHeight - panelHeight - 20;
-                } else {
-                    x = window.innerWidth - panelWidth - 20;
-                    y = 80;
-                }
-                
-                return { x: Math.max(leftToolbarWidth, x), y: Math.max(56, y) };
-            }
-            
-            // Apply position
-            function applyPanelPosition() {
-                penSettingsPanel.style.left = `${panelPosition.x}px`;
-                penSettingsPanel.style.top = `${panelPosition.y}px`;
-            }
-            
-            // Boundary checking
-            function clampPosition(x, y) {
-                const panelWidth = penSettingsPanel.offsetWidth || 320;
-                const panelHeight = penSettingsPanel.offsetHeight || 600;
-                const maxX = window.innerWidth - panelWidth;
-                const maxY = window.innerHeight - panelHeight;
-                
-                return {
-                    x: Math.max(0, Math.min(x, maxX)),
-                    y: Math.max(56, Math.min(y, maxY))
-                };
-            }
-            
-            // Mouse drag handlers
-            penPanelHeader.addEventListener('mousedown', (e) => {
-                if (e.target.closest('.pen-panel-header-btn')) return;
-                isPanelDragging = true;
-                dragStartX = e.clientX;
-                dragStartY = e.clientY;
-                panelStartX = panelPosition.x;
-                panelStartY = panelPosition.y;
-                penSettingsPanel.style.transition = 'none';
-                e.preventDefault();
-            });
-            
-            // Touch drag handlers
-            penPanelHeader.addEventListener('touchstart', (e) => {
-                if (e.target.closest('.pen-panel-header-btn')) return;
-                isPanelDragging = true;
-                const touch = e.touches[0];
-                dragStartX = touch.clientX;
-                dragStartY = touch.clientY;
-                panelStartX = panelPosition.x;
-                panelStartY = panelPosition.y;
-                penSettingsPanel.style.transition = 'none';
-            }, { passive: true });
-            
-            document.addEventListener('mousemove', (e) => {
-                if (!isPanelDragging) return;
-                const dx = e.clientX - dragStartX;
-                const dy = e.clientY - dragStartY;
-                const newPos = clampPosition(panelStartX + dx, panelStartY + dy);
-                panelPosition.x = newPos.x;
-                panelPosition.y = newPos.y;
-                applyPanelPosition();
-            });
-            
-            document.addEventListener('touchmove', (e) => {
-                if (!isPanelDragging) return;
-                const touch = e.touches[0];
-                const dx = touch.clientX - dragStartX;
-                const dy = touch.clientY - dragStartY;
-                const newPos = clampPosition(panelStartX + dx, panelStartY + dy);
-                panelPosition.x = newPos.x;
-                panelPosition.y = newPos.y;
-                applyPanelPosition();
-            }, { passive: true });
-            
-            document.addEventListener('mouseup', () => {
-                if (isPanelDragging) {
-                    isPanelDragging = false;
-                    penSettingsPanel.style.transition = '';
-                    savePanelPosition();
-                }
-            });
-            
-            document.addEventListener('touchend', () => {
-                if (isPanelDragging) {
-                    isPanelDragging = false;
-                    penSettingsPanel.style.transition = '';
-                    savePanelPosition();
-                }
-            });
-            
-            // Double-click header to reset position
-            penPanelHeader.addEventListener('dblclick', (e) => {
-                if (e.target.closest('.pen-panel-header-btn')) return;
-                const defaultPos = getDefaultPosition();
-                panelPosition.x = defaultPos.x;
-                panelPosition.y = defaultPos.y;
-                applyPanelPosition();
-                savePanelPosition();
-            });
-            
-            // Minimize/Maximize
-            penMinimize.addEventListener('click', () => {
-                isPanelMinimized = !isPanelMinimized;
-                penSettingsPanel.classList.toggle('minimized', isPanelMinimized);
-                penMinimize.innerHTML = isPanelMinimized ? '<i class="fas fa-plus"></i>' : '<i class="fas fa-minus"></i>';
-            });
-            
-            // Reset position
-            penReset.addEventListener('click', () => {
-                const defaultPos = getDefaultPosition();
-                panelPosition.x = defaultPos.x;
-                panelPosition.y = defaultPos.y;
-                applyPanelPosition();
-                savePanelPosition();
-            });
-            
-            // Close panel
-            penClose.addEventListener('click', () => {
-                penSettingsPanel.style.display = 'none';
-                selectedElement = null;
-            });
-            
-            // Save panel position
-            function savePanelPosition() {
-                try {
-                    localStorage.setItem(`primeboard_panel_pos_${room}`, JSON.stringify(panelPosition));
-                } catch(e) {}
-            }
-            
-            // Load panel position
-            function loadPanelPosition() {
-                try {
-                    const saved = localStorage.getItem(`primeboard_panel_pos_${room}`);
-                    if (saved) {
-                        const pos = JSON.parse(saved);
-                        panelPosition.x = pos.x;
-                        panelPosition.y = pos.y;
-                        return true;
-                    }
-                } catch(e) {}
-                return false;
-            }
-            
-            // Render panel content
-            function renderPenPanelContent() {
-                if (!selectedElement) {
-                    penPanelContent.innerHTML = `
-                        <div class="no-selection">
-                            <i class="fas fa-pen-fancy"></i>
-                            <div>Select an element or use the pen tool to customize</div>
-                        </div>
-                    `;
-                    return;
-                }
-                
-                const el = selectedElement;
-                const strokeColor = el.strokeColor || currentPrefs.strokeColor;
-                const fillColor = el.backgroundColor || currentPrefs.fillColor;
-                const strokeWidth = el.strokeWidth || parseInt(currentPrefs.thickness === 'extra-thin' ? '1' : 
-                                                          currentPrefs.thickness === 'thin' ? '2' :
-                                                          currentPrefs.thickness === 'medium' ? '4' :
-                                                          currentPrefs.thickness === 'thick' ? '8' : '12');
-                const opacity = (el.opacity || currentPrefs.opacity) / 100;
-                const penType = currentPrefs.penType;
-                const strokeStyle = currentPrefs.strokeStyle;
-                
-                let html = '';
-                
-                // Pen Type Section
-                html += `
-                    <div class="pen-section">
-                        <div class="pen-section-title">Pen Type</div>
-                        <div class="pen-type-grid">
-                            <div class="pen-type-item ${penType === 'normal' ? 'active' : ''}" data-type="normal">
-                                <div class="pen-type-icon">✏️</div>
-                                <div>Normal</div>
-                            </div>
-                            <div class="pen-type-item ${penType === 'fountain' ? 'active' : ''}" data-type="fountain">
-                                <div class="pen-type-icon">🖋️</div>
-                                <div>Fountain</div>
-                            </div>
-                            <div class="pen-type-item ${penType === 'marker' ? 'active' : ''}" data-type="marker">
-                                <div class="pen-type-icon">🖍️</div>
-                                <div>Marker</div>
-                            </div>
-                            <div class="pen-type-item ${penType === 'highlighter' ? 'active' : ''}" data-type="highlighter">
-                                <div class="pen-type-icon">🟡</div>
-                                <div>Highlighter</div>
-                            </div>
-                            <div class="pen-type-item ${penType === 'calligraphy' ? 'active' : ''}" data-type="calligraphy">
-                                <div class="pen-type-icon">✒️</div>
-                                <div>Calligraphy</div>
-                            </div>
-                            <div class="pen-type-item ${penType === 'pencil' ? 'active' : ''}" data-type="pencil">
-                                <div class="pen-type-icon">✏️</div>
-                                <div>Pencil</div>
-                            </div>
-                            <div class="pen-type-item ${penType === 'brush' ? 'active' : ''}" data-type="brush">
-                                <div class="pen-type-icon">🖌️</div>
-                                <div>Brush</div>
-                            </div>
-                        </div>
-                    </div>
-                `;
-                
-                // Thickness Section
-                html += `
-                    <div class="pen-section">
-                        <div class="pen-section-title">Thickness</div>
-                        <div class="thickness-grid">
-                            <div class="thickness-item ${currentPrefs.thickness === 'extra-thin' ? 'active' : ''}" data-thickness="extra-thin">
-                                <div class="thickness-line"></div>
-                                <div>Extra Thin</div>
-                            </div>
-                            <div class="thickness-item ${currentPrefs.thickness === 'thin' ? 'active' : ''}" data-thickness="thin">
-                                <div class="thickness-line"></div>
-                                <div>Thin</div>
-                            </div>
-                            <div class="thickness-item ${currentPrefs.thickness === 'medium' ? 'active' : ''}" data-thickness="medium">
-                                <div class="thickness-line"></div>
-                                <div>Medium</div>
-                            </div>
-                            <div class="thickness-item ${currentPrefs.thickness === 'thick' ? 'active' : ''}" data-thickness="thick">
-                                <div class="thickness-line"></div>
-                                <div>Thick</div>
-                            </div>
-                            <div class="thickness-item ${currentPrefs.thickness === 'extra-thick' ? 'active' : ''}" data-thickness="extra-thick">
-                                <div class="thickness-line"></div>
-                                <div>Extra Thick</div>
-                            </div>
-                        </div>
-                    </div>
-                `;
-                
-                // Stroke Style
-                html += `
-                    <div class="pen-section">
-                        <div class="pen-section-title">Stroke Style</div>
-                        <div class="stroke-style-grid">
-                            <div class="stroke-style-item ${strokeStyle === 'solid' ? 'active' : ''}" data-style="solid">
-                                <div class="stroke-style-line"></div>
-                                <div>Solid</div>
-                            </div>
-                            <div class="stroke-style-item ${strokeStyle === 'dashed' ? 'active' : ''}" data-style="dashed">
-                                <div class="stroke-style-line"></div>
-                                <div>Dashed</div>
-                            </div>
-                            <div class="stroke-style-item ${strokeStyle === 'dotted' ? 'active' : ''}" data-style="dotted">
-                                <div class="stroke-style-line"></div>
-                                <div>Dotted</div>
-                            </div>
-                            <div class="stroke-style-item ${strokeStyle === 'wavy' ? 'active' : ''}" data-style="wavy">
-                                <div class="stroke-style-line"></div>
-                                <div>Wavy</div>
-                            </div>
-                        </div>
-                    </div>
-                `;
-                
-                // Color System
-                html += `
-                    <div class="pen-section">
-                        <div class="pen-section-title">Stroke Color</div>
-                        <div class="color-section">
-                            ${['#000000', '#ffffff', '#ef4444', '#f97316', '#eab308', '#22c55e', '#3b82f6', '#a855f7'].map(c => `
-                                <div class="color-swatch ${c === strokeColor ? 'selected' : ''}" 
-                                     style="background-color: ${c};"
-                                     data-color="${c}" data-type="stroke"></div>
-                            `).join('')}
-                        </div>
-                        
-                        <div class="recent-colors" id="recent-colors">
-                            <!-- Recent colors will be populated -->
-                        </div>
-                        
-                        <div class="favorite-colors" id="favorite-colors">
-                            <!-- Favorite colors will be populated -->
-                        </div>
-                        
-                        <div class="color-add-btn" id="add-custom-color" title="Add custom color">
-                            <i class="fas fa-plus"></i>
-                        </div>
-                        <div class="color-picker-controls">
-                            <input type="text" class="color-input" id="hex-color-input" value="${strokeColor}" placeholder="#a78bfa">
-                            <input type="color" id="color-picker" value="${strokeColor}">
-                        </div>
-                    </div>
-                `;
-                
-                // Fill Color
-                html += `
-                    <div class="pen-section">
-                        <div class="pen-section-title">Fill Color</div>
-                        <div class="color-section">
-                            <div class="color-swatch ${fillColor === 'transparent' ? 'selected' : ''}" 
-                                 style="background: repeating-conic-gradient(#e2e8f0 0% 25%, transparent 0% 50%) 50% / 12px 12px; border: 2px solid #cbd5e1;"
-                                 data-color="transparent" data-type="fill"></div>
-                            ${['#fef3c7', '#fde68a', '#fcd34d', '#fbbf24', '#fed7aa', '#fdba74', '#fb923c', '#f97316'].slice(0,7).map(c => `
-                                <div class="color-swatch ${c === fillColor ? 'selected' : ''}" 
-                                     style="background-color: ${c}"
-                                     data-color="${c}" data-type="fill"></div>
-                            `).join('')}
-                        </div>
-                    </div>
-                `;
-                
-                // Opacity
-                html += `
-                    <div class="pen-section">
-                        <div class="pen-section-title">Opacity</div>
-                        <input type="range" class="opacity-slider" id="opacity-slider" min="0" max="100" value="${opacity * 100}">
-                        <div class="stroke-value">${Math.round(opacity * 100)}%</div>
-                    </div>
-                `;
-                
-                // Eyedropper Tool
-                html += `
-                    <div class="eyedropper-container">
-                        <div class="eyedropper-btn" id="eyedropper-btn">
-                            <i class="fas fa-eye-dropper"></i>
-                        </div>
-                        <div class="eyedropper-preview" id="eyedropper-preview" style="background-color: ${strokeColor};"></div>
-                        <div class="eyedropper-label">Eyedropper: Click any object to pick its color</div>
-                    </div>
-                `;
-                
-                // Real-time Preview
-                html += `
-                    <div class="preview-section">
-                        <div class="pen-section-title">Preview</div>
-                        <div class="preview-canvas">
-                            <div class="preview-stroke ${currentPrefs.thickness} ${currentPrefs.penType} ${currentPrefs.strokeStyle}" 
-                                 style="background-color: ${strokeColor}; opacity: ${opacity}; width: 120px;"></div>
-                        </div>
-                    </div>
-                `;
-                
-                penPanelContent.innerHTML = html;
-                
-                // Attach event listeners
-                penPanelContent.querySelectorAll('.pen-type-item').forEach(item => {
-                    item.addEventListener('click', () => {
-                        const type = item.dataset.type;
-                        currentPrefs.penType = type;
-                        updatePreview();
-                        savePenPreferences(currentPrefs);
-                        applyPenSettings();
-                    });
-                });
-                
-                penPanelContent.querySelectorAll('.thickness-item').forEach(item => {
-                    item.addEventListener('click', () => {
-                        const thickness = item.dataset.thickness;
-                        currentPrefs.thickness = thickness;
-                        updatePreview();
-                        savePenPreferences(currentPrefs);
-                        applyPenSettings();
-                    });
-                });
-                
-                penPanelContent.querySelectorAll('.stroke-style-item').forEach(item => {
-                    item.addEventListener('click', () => {
-                        const style = item.dataset.style;
-                        currentPrefs.strokeStyle = style;
-                        updatePreview();
-                        savePenPreferences(currentPrefs);
-                        applyPenSettings();
-                    });
-                });
-                
-                penPanelContent.querySelectorAll('.color-swatch').forEach(swatch => {
-                    swatch.addEventListener('click', () => {
-                        const color = swatch.dataset.color;
-                        const type = swatch.dataset.type;
-                        if (type === 'stroke') {
-                            currentPrefs.strokeColor = color;
-                            document.getElementById('hex-color-input').value = color;
-                            document.getElementById('color-picker').value = color;
-                        } else {
-                            currentPrefs.fillColor = color;
-                        }
-                        updatePreview();
-                        savePenPreferences(currentPrefs);
-                        applyPenSettings();
-                        
-                        // Update selected state
-                        penPanelContent.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('selected'));
-                        swatch.classList.add('selected');
-                    });
-                });
-                
-                const hexInput = document.getElementById('hex-color-input');
-                const colorPicker = document.getElementById('color-picker');
-                
-                hexInput.addEventListener('change', (e) => {
-                    const val = e.target.value;
-                    if (/^#[0-9A-F]{6}$/i.test(val)) {
-                        currentPrefs.strokeColor = val;
-                        colorPicker.value = val;
-                        updatePreview();
-                        savePenPreferences(currentPrefs);
-                        applyPenSettings();
-                    }
-                });
-                
-                colorPicker.addEventListener('input', (e) => {
-                    const val = e.target.value;
-                    currentPrefs.strokeColor = val;
-                    hexInput.value = val;
-                    updatePreview();
-                    savePenPreferences(currentPrefs);
-                    applyPenSettings();
-                });
-                
-                const opacitySlider = document.getElementById('opacity-slider');
-                if (opacitySlider) {
-                    opacitySlider.addEventListener('input', (e) => {
-                        const val = parseInt(e.target.value);
-                        currentPrefs.opacity = val;
-                        e.target.nextElementSibling.textContent = `${val}%`;
-                        updatePreview();
-                        savePenPreferences(currentPrefs);
-                        applyPenSettings();
-                    });
-                }
-                
-                const eyedropperBtn = document.getElementById('eyedropper-btn');
-                const eyedropperPreview = document.getElementById('eyedropper-preview');
-                
-                eyedropperBtn.addEventListener('click', () => {
-                    eyedropperBtn.classList.toggle('active');
-                    if (eyedropperBtn.classList.contains('active')) {
-                        document.body.style.cursor = 'crosshair';
-                        document.addEventListener('click', onCanvasClick, true);
-                    } else {
-                        document.body.style.cursor = '';
-                        document.removeEventListener('click', onCanvasClick, true);
-                    }
-                });
-                
-                function onCanvasClick(e) {
-                    if (!excalidrawAPI) return;
-                    
-                    // Check if click is on canvas
-                    const canvas = document.querySelector('.excalidraw canvas');
-                    if (canvas && canvas.contains(e.target)) {
-                        // Get element under cursor
-                        const elements = excalidrawAPI.getSceneElements();
-                        const rect = canvas.getBoundingClientRect();
-                        const x = e.clientX - rect.left;
-                        const y = e.clientY - rect.top;
-                        
-                        // Find element at position
-                        for (const el of elements) {
-                            if (el.x <= x && x <= el.x + el.width && el.y <= y && y <= el.y + el.height) {
-                                const strokeColor = el.strokeColor || '#000000';
-                                const fillColor = el.backgroundColor || 'transparent';
-                                
-                                currentPrefs.strokeColor = strokeColor;
-                                currentPrefs.fillColor = fillColor;
-                                
-                                document.getElementById('hex-color-input').value = strokeColor;
-                                document.getElementById('color-picker').value = strokeColor;
-                                eyedropperPreview.style.backgroundColor = strokeColor;
-                                
-                                updatePreview();
-                                savePenPreferences(currentPrefs);
-                                applyPenSettings();
-                                
-                                break;
-                            }
-                        }
-                    }
-                    
-                    // Reset eyedropper
-                    eyedropperBtn.classList.remove('active');
-                    document.body.style.cursor = '';
-                    document.removeEventListener('click', onCanvasClick, true);
-                }
-            }
-            
-            // Update preview based on current settings
-            function updatePreview() {
-                const preview = document.querySelector('.preview-stroke');
-                if (!preview) return;
-                
-                preview.className = 'preview-stroke';
-                preview.classList.add(currentPrefs.thickness);
-                preview.classList.add(currentPrefs.penType);
-                preview.classList.add(currentPrefs.strokeStyle);
-                preview.style.backgroundColor = currentPrefs.strokeColor;
-                preview.style.opacity = currentPrefs.opacity / 100;
-            }
-            
-            // Apply pen settings to Excalidraw
-            function applyPenSettings() {
-                if (!excalidrawAPI) return;
-                
-                const appState = excalidrawAPI.getAppState();
-                const strokeWidth = parseInt(currentPrefs.thickness === 'extra-thin' ? '1' : 
-                                          currentPrefs.thickness === 'thin' ? '2' :
-                                          currentPrefs.thickness === 'medium' ? '4' :
-                                          currentPrefs.thickness === 'thick' ? '8' : '12');
-                
-                excalidrawAPI.updateScene({
-                    appState: {
-                        currentItemStrokeColor: currentPrefs.strokeColor,
-                        currentItemBackgroundColor: currentPrefs.fillColor,
-                        currentItemStrokeWidth: strokeWidth,
-                        currentItemOpacity: currentPrefs.opacity,
-                        currentItemFillStyle: 'hachure',
-                        currentItemStrokeStyle: currentPrefs.strokeStyle === 'solid' ? 'solid' : 
-                                               currentPrefs.strokeStyle === 'dashed' ? 'dashed' : 
-                                               currentPrefs.strokeStyle === 'dotted' ? 'dotted' : 'solid'
-                    }
-                });
-            }
-            
-            // Show panel and position it
-            function showPenSettingsPanel() {
-                penSettingsPanel.style.display = 'block';
-                
-                // Load saved position or use default
-                if (!loadPanelPosition()) {
-                    const defaultPos = getDefaultPosition();
-                    panelPosition.x = defaultPos.x;
-                    panelPosition.y = defaultPos.y;
-                }
-                
-                applyPanelPosition();
-                renderPenPanelContent();
-            }
-            
-            // ══════════════════════════════════════════════
-            // FOG OF WAR - DRAGGABLE SPOTLIGHT
-            // ══════════════════════════════════════════════
+            // ===== FOG OF WAR (SPOTLIGHT) =====
             const btnSpotlight=document.getElementById('btn-spotlight');
             const spotlightOverlay=document.getElementById('spotlight-overlay');
-            const spotlightHandle=document.getElementById('spotlight-handle');
-            let isSpotlightActive=false;
-            let spotlightX=window.innerWidth/2, spotlightY=window.innerHeight/2;
-            let isDraggingSpotlight=false, dragOffsetSpotX=0, dragOffsetSpotY=0;
-
-            function updateSpotlightPosition(x, y) {
-                spotlightX = x;
-                spotlightY = y;
-                spotlightOverlay.style.setProperty('--sx', `${x}px`);
-                spotlightOverlay.style.setProperty('--sy', `${y}px`);
-                spotlightHandle.style.setProperty('--hx', `${x}px`);
-                spotlightHandle.style.setProperty('--hy', `${y}px`);
-            }
+            let isSpotlightActive=false, lastSpotlightSend=0;
 
             btnSpotlight.addEventListener('click',()=>{
                 deselectTools();
@@ -1670,8 +754,368 @@
                 btnSpotlight.classList.toggle('active',isSpotlightActive);
                 
                 if(role==='teacher'){
-                    sendMessage({type:'spotlight-update',active:isSpotlightActive,x:spotlightX,y:spotlightY});
+                    sendMessage({type:'spotlight-update',active:isSpotlightActive});
                     if(isSpotlightActive){
+                        document.addEventListener('mousemove',handleTeacherMouse);
                         spotlightOverlay.style.display='block';
-                        spotlightHandle.style.display='flex';
-                        updateSpotlightlight
+                    } else {
+                        document.removeEventListener('mousemove',handleTeacherMouse);
+                        spotlightOverlay.style.display='none';
+                    }
+                }
+            });
+
+            function handleTeacherMouse(e){
+                const now=Date.now();
+                if(now-lastSpotlightSend>33){
+                    lastSpotlightSend=now;
+                    sendMessage({type:'spotlight-update',active:true,x:e.clientX,y:e.clientY});
+                }
+            }
+
+            // ===== BACKGROUND COLOR (FIXED POSITION) =====
+            const btnBgColor = document.getElementById('btn-bg-color');
+            const bgColorPopup = document.getElementById('bg-color-popup');
+            const popupHeader = bgColorPopup.querySelector('.popup-header');
+            const popupCloseBtn = document.getElementById('popup-close-btn');
+            const customBgPicker = document.getElementById('custom-bg-picker');
+            const colorGrid = document.getElementById('color-grid');
+            let isDragging = false, dragOffsetX = 0, dragOffsetY = 0;
+
+            // Define colors
+            const COLORS = [
+                {hex:'#0f0c29', name:'Deep Purple'},
+                {hex:'#1e1b4b', name:'Indigo'},
+                {hex:'#ffffff', name:'White'},
+                {hex:'#f1f5f9', name:'Cloud'},
+                {hex:'#fef9c3', name:'Butter'},
+                {hex:'#e0f2fe', name:'Sky'},
+                {hex:'#e8f5e9', name:'Mint'},
+                {hex:'#000000', name:'Midnight'}
+            ];
+
+            // Populate color grid
+            COLORS.forEach(c => {
+                const swatch = document.createElement('div');
+                swatch.className = 'color-swatch';
+                swatch.style.backgroundColor = c.hex;
+                swatch.title = c.name;
+                swatch.dataset.color = c.hex;
+                if (c.hex === '#ffffff') swatch.style.border = '2px solid #e2e8f0';
+                swatch.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    applyBackgroundColor(c.hex);
+                });
+                colorGrid.appendChild(swatch);
+            });
+
+            function applyBackgroundColor(color) {
+                if (!excalidrawAPI) return;
+                excalidrawAPI.updateScene({ appState: { viewBackgroundColor: color } });
+                customBgPicker.value = color;
+                
+                // Update selected state
+                colorGrid.querySelectorAll('.color-swatch').forEach(s => {
+                    s.classList.remove('selected');
+                    if (s.dataset.color === color) s.classList.add('selected');
+                });
+            }
+
+            // Toggle popup
+            btnBgColor.addEventListener('click', (e) => {
+                e.stopPropagation();
+                deselectTools();
+                bgColorPopup.style.display = bgColorPopup.style.display === 'block' ? 'none' : 'block';
+            });
+
+            // Close popup when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!bgColorPopup.contains(e.target) && e.target !== btnBgColor) {
+                    bgColorPopup.style.display = 'none';
+                }
+            });
+
+            // Custom color picker
+            customBgPicker.addEventListener('input', (e) => {
+                applyBackgroundColor(e.target.value);
+            });
+            customBgPicker.addEventListener('click', (e) => e.stopPropagation());
+
+            // Drag functionality for popup
+            popupHeader.addEventListener('mousedown', (e) => {
+                if (e.target.closest('.popup-close-btn')) return;
+                isDragging = true;
+                const rect = bgColorPopup.getBoundingClientRect();
+                dragOffsetX = e.clientX - rect.left;
+                dragOffsetY = e.clientY - rect.top;
+                bgColorPopup.style.transition = 'none';
+                bgColorPopup.style.transform = 'none';
+                bgColorPopup.style.left = rect.left + 'px';
+                bgColorPopup.style.top = rect.top + 'px';
+            });
+            
+            document.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+                e.preventDefault();
+                bgColorPopup.style.left = `${e.clientX - dragOffsetX}px`;
+                bgColorPopup.style.top = `${e.clientY - dragOffsetY}px`;
+            });
+            
+            document.addEventListener('mouseup', () => {
+                if (isDragging) { isDragging = false; bgColorPopup.style.transition = ''; }
+            });
+
+            // Close button
+            popupCloseBtn.addEventListener('click', () => { bgColorPopup.style.display = 'none'; });
+
+            // ===== TIMER =====
+            const timerWidget=document.getElementById('timer-widget');
+            const timerDisplay=document.getElementById('timer-display');
+            const timerStartBtn=document.getElementById('timer-start');
+            const timerPauseBtn=document.getElementById('timer-pause');
+            const timerResetBtn=document.getElementById('timer-reset');
+            const timerMinInput=document.getElementById('timer-min');
+            const timerSecInput=document.getElementById('timer-sec');
+            const timerControls=document.getElementById('timer-controls-container');
+            const timerInputs=document.getElementById('timer-inputs-container');
+            let timerInterval=null,timeLeft=300,isTimerRunning=false;
+
+            document.getElementById('btn-timer').addEventListener('click',()=>{
+                deselectTools();
+                timerWidget.style.display=timerWidget.style.display==='flex'?'none':'flex';
+            });
+            if(role!=='teacher'){timerControls.style.display='none';timerInputs.style.display='none';}
+
+            function formatTime(s){return `${Math.floor(s/60).toString().padStart(2,'0')}:${(s%60).toString().padStart(2,'0')}`;}
+            function updateTimerDisplay(){
+                timerDisplay.textContent=formatTime(timeLeft);
+                timerDisplay.className='';
+                if(timeLeft<=10&&timeLeft>0)timerDisplay.classList.add('danger');
+                else if(timeLeft<=60&&timeLeft>10)timerDisplay.classList.add('warning');
+            }
+            function startTimerLocal(){if(isTimerRunning)return;isTimerRunning=true;timerInterval=setInterval(()=>{if(timeLeft>0){timeLeft--;updateTimerDisplay();}else{clearInterval(timerInterval);isTimerRunning=false;}},1000);}
+            function pauseTimerLocal(){clearInterval(timerInterval);isTimerRunning=false;}
+            function resetTimerLocal(){pauseTimerLocal();timeLeft=(parseInt(timerMinInput.value)||0)*60+(parseInt(timerSecInput.value)||0);updateTimerDisplay();}
+
+            if(role==='teacher'){
+                timerStartBtn.addEventListener('click',()=>{if(timeLeft===0)resetTimerLocal();startTimerLocal();sendMessage({type:'timer-update',action:'start',timeLeft});});
+                timerPauseBtn.addEventListener('click',()=>{pauseTimerLocal();sendMessage({type:'timer-update',action:'pause',timeLeft});});
+                timerResetBtn.addEventListener('click',()=>{resetTimerLocal();sendMessage({type:'timer-update',action:'reset',timeLeft});});
+                timerMinInput.addEventListener('change',resetTimerLocal);
+                timerSecInput.addEventListener('change',resetTimerLocal);
+            }
+            updateTimerDisplay();
+
+            // ===== SMART TOOLKIT =====
+            const toolkitModal=document.getElementById('toolkit-modal');
+            document.getElementById('btn-toolkit').addEventListener('click',()=>{
+                deselectTools();
+                toolkitModal.style.display='flex';
+            });
+            document.getElementById('close-toolkit-btn').addEventListener('click',()=>{toolkitModal.style.display='none';});
+
+            document.querySelectorAll('.toolkit-item').forEach(item=>{
+                item.addEventListener('click',()=>{applyToolkit(item.dataset.tool);});
+            });
+
+            function applyToolkit(type){
+                if(!excalidrawAPI)return;
+                const elements=excalidrawAPI.getSceneElements();
+                let n=[];const sx=100,sy=100;
+
+                if(type==='grid'){
+                    const a=excalidrawAPI.getAppState();
+                    excalidrawAPI.updateScene({appState:{gridSize:a.gridSize?0:20}});
+                } else if(type==='chem-benzene'){
+                    n.push(createEl('diamond',sx,sy,100,100,{strokeColor:"#a78bfa",strokeWidth:2}));
+                    n.push(createEl('text',sx+20,sy+40,60,20,{text:"C₆H₆",fontSize:20,strokeColor:"#f1f5f9"}));
+                } else if(type==='bio-cell'){
+                    n.push(createEl('ellipse',sx,sy,200,150,{strokeColor:"#4ade80",backgroundColor:"rgba(74,222,128,0.1)",fillStyle:"solid"}));
+                    n.push(createEl('ellipse',sx+70,sy+50,60,50,{strokeColor:"#fb7185",backgroundColor:"rgba(251,113,133,0.2)",fillStyle:"solid"}));
+                    n.push(createEl('text',sx+80,sy+70,40,20,{text:"Nucleus",fontSize:14,strokeColor:"#f1f5f9"}));
+                } else if(type==='physics-circuit'){
+                    n.push(createEl('rectangle',sx,sy+40,20,40,{strokeColor:"#fbbf24"}));
+                    n.push(createEl('line',sx+20,sy+60,100,0,{strokeColor:"#f1f5f9",points:[[0,0],[100,0]]}));
+                    n.push(createEl('rectangle',sx+120,sy+40,40,40,{strokeColor:"#38bdf8"}));
+                    n.push(createEl('line',sx+160,sy+60,100,0,{strokeColor:"#f1f5f9",points:[[0,0],[100,0]]}));
+                    n.push(createEl('line',sx+260,sy+60,0,-100,{strokeColor:"#f1f5f9",points:[[0,0],[0,-100]]}));
+                    n.push(createEl('line',sx+260,sy-40,-260,0,{strokeColor:"#f1f5f9",points:[[0,0],[-260,0]]}));
+                } else if(type==='history-timeline'){
+                    n.push(createEl('line',sx,sy+50,400,0,{strokeColor:"#a78bfa",strokeWidth:3,points:[[0,0],[400,0]]}));
+                    for(let i=0;i<3;i++){
+                        n.push(createEl('ellipse',sx+(i*150),sy+40,20,20,{strokeColor:"#f472b6",backgroundColor:"#f472b6",fillStyle:"solid"}));
+                        n.push(createEl('text',sx+(i*150)-20,sy+80,60,20,{text:`Event ${i+1}`,fontSize:16,strokeColor:"#f1f5f9"}));
+                    }
+                } else if(type==='code-block'){
+                    n.push(createEl('rectangle',sx,sy,300,150,{strokeColor:"#1e1b4b",backgroundColor:"#1e1b4b",fillStyle:"solid",roundness:{type:3}}));
+                    n.push(createEl('text',sx+10,sy+10,280,130,{text:"def hello():\n  print('Hello World')",fontSize:14,fontFamily:3,strokeColor:"#4ade80"}));
+                }
+                if(n.length>0) excalidrawAPI.updateScene({elements:[...elements,...n]});
+                toolkitModal.style.display='none';
+            }
+
+            // ===== MATH EQUATION =====
+            const mathModal=document.getElementById('math-modal');
+            const mathInput=document.getElementById('math-input');
+            const mathPreview=document.getElementById('math-preview');
+
+            document.getElementById('btn-math').addEventListener('click',()=>{
+                deselectTools();
+                mathModal.style.display='flex';mathInput.value='';mathPreview.innerHTML='';
+            });
+            document.getElementById('cancel-math-btn').addEventListener('click',()=>{mathModal.style.display='none';});
+            mathInput.addEventListener('input',()=>{
+                try{katex.render(mathInput.value,mathPreview,{throwOnError:false,displayMode:true});}
+                catch(e){mathPreview.textContent='Invalid LaTeX';}
+            });
+            document.getElementById('insert-math-btn').addEventListener('click',()=>{
+                if(mathInput.value&&excalidrawAPI){
+                    const e=excalidrawAPI.getSceneElements();
+                    e.push(createEl('text',150,150,200,50,{text:mathInput.value,fontSize:24,strokeColor:"#f1f5f9"}));
+                    excalidrawAPI.updateScene({elements:e});
+                }
+                mathModal.style.display='none';
+            });
+
+            // ===== THEME TOGGLE =====
+            let currentTheme='dark';
+            document.getElementById('btn-theme').addEventListener('click',()=>{
+                deselectTools();
+                currentTheme=currentTheme==='dark'?'light':'dark';
+                if(excalidrawAPI) excalidrawAPI.updateScene({appState:{theme:currentTheme}});
+            });
+
+            // ===== EMAIL INVITES =====
+            const addStudentModal=document.getElementById('add-student-modal');
+            const emailInput=document.getElementById('email-input');
+            const emailSuggestions=document.getElementById('email-suggestions');
+            const emailList=document.getElementById('email-list');
+            let emailTags=[],savedEmails=JSON.parse(localStorage.getItem('primeboard_saved_emails')||'[]');
+
+            addStudentBtn.addEventListener('click',()=>{addStudentModal.style.display='flex';});
+            document.getElementById('cancel-add-btn').addEventListener('click',()=>{
+                addStudentModal.style.display='none';emailTags=[];updateEmailList();
+                emailInput.value='';emailSuggestions.style.display='none';
+            });
+            emailInput.addEventListener('keypress',(e)=>{if(e.key==='Enter'||e.key===','){e.preventDefault();parseAndAddEmails();}});
+            emailInput.addEventListener('input',(e)=>{
+                const q=e.target.value.trim().toLowerCase();
+                if(!q||savedEmails.length===0){emailSuggestions.style.display='none';return;}
+                const m=savedEmails.filter(em=>em.toLowerCase().includes(q)&&!emailTags.includes(em));
+                if(m.length===0){emailSuggestions.style.display='none';return;}
+                emailSuggestions.innerHTML=m.map(em=>`<div class="suggestion-item" onclick="selectSuggestion('${em}')">${em}</div>`).join('');
+                emailSuggestions.style.display='block';
+            });
+            window.selectSuggestion=function(em){
+                if(!emailTags.includes(em)){emailTags.push(em);updateEmailList();}
+                emailInput.value='';emailSuggestions.style.display='none';
+            };
+            function parseAndAddEmails(){
+                const emails=emailInput.value.split(/[,\s]+/).filter(e=>e.trim());
+                emails.forEach(em=>{const c=em.trim().toLowerCase();if(c.includes('@')&&!emailTags.includes(c))emailTags.push(c);});
+                updateEmailList();emailInput.value='';emailSuggestions.style.display='none';
+            }
+            function updateEmailList(){
+                if(emailTags.length===0)emailList.innerHTML='<span style="color:var(--text-muted);font-size:.75rem;font-weight:600;">No emails added yet</span>';
+                else emailList.innerHTML=emailTags.map(em=>`<span class="email-tag">${em} <i class="fas fa-times" onclick="removeEmail('${em}')"></i></span>`).join('');
+            }
+            window.removeEmail=function(em){emailTags=emailTags.filter(e=>e!==em);updateEmailList();};
+            updateEmailList();
+
+            document.getElementById('send-invites-btn').addEventListener('click',()=>{
+                parseAndAddEmails();
+                if(emailTags.length===0){alert('Please add at least one email address');return;}
+                emailTags.forEach(em=>{if(!savedEmails.includes(em))savedEmails.push(em);});
+                if(savedEmails.length>20)savedEmails=savedEmails.slice(-20);
+                localStorage.setItem('primeboard_saved_emails',JSON.stringify(savedEmails));
+                sendMessage({type:'email-invites',room,emails:emailTags,inviteUrl,teacherName:name});
+                alert('Invite request sent to server!');
+                addStudentModal.style.display='none';emailTags=[];updateEmailList();emailInput.value='';
+            });
+
+            // ===== LOCK / UNLOCK =====
+            let locked=false;
+            function applyLockUI(){
+                if(role==='teacher'){
+                    lockBtn.classList.toggle('unlocked',!locked);
+                    lockBtnText.textContent=locked?'Drawing Locked':'Drawing Unlocked';
+                    lockBtn.querySelector('i').className=locked?'fas fa-lock':'fas fa-lock-open';
+                } else {
+                    lockedBanner.style.display=locked?'flex':'none';
+                }
+            }
+            lockBtn.addEventListener('click',()=>{
+                locked=!locked;applyLockUI();
+                sendMessage({type:'set-lock',locked});
+                if(role==='teacher') setExcalidrawViewMode(false);
+            });
+            function setExcalidrawViewMode(viewOnly){
+                if(excalidrawAPI) excalidrawAPI.updateScene({appState:{viewModeEnabled:viewOnly}});
+            }
+
+            // ===== EXCALIDRAW RENDER =====
+            function App(){
+                const onChange=useCallback((elements,appState)=>{
+                    if(!isRemoteUpdate){
+                        const now=Date.now();
+                        if(now-lastSendTime>=50){
+                            lastSendTime=now;
+                            sendMessage({type:'scene-update',elements,appState:{viewBackgroundColor:appState.viewBackgroundColor}});
+                        }
+                    }
+                    isRemoteUpdate=false;
+                },[]);
+                return React.createElement(Excalidraw,{
+                    excalidrawAPI:(api)=>{excalidrawAPI=api;},
+                    onChange,theme:'dark',name:`PrimeBoard - ${room}`,
+                    UIOptions:{canvasActions:{loadScene:false,saveToActiveFile:false,export:{saveFileToDisk:false}}},
+                    initialData:{appState:{viewModeEnabled:role==='student'&&locked}}
+                });
+            }
+            ReactDOM.createRoot(document.getElementById('root')).render(React.createElement(App));
+
+            // ===== WEBSOCKET CONNECTION =====
+            let socket=null;
+            function connect(){
+                statusDot.className='connecting';
+                socket=new WebSocket(window.PRIMEBOARD_RELAY_URL);
+                socket.addEventListener('open',()=>{statusDot.className='connected';sendMessage({type:'join',room,role,name});});
+                socket.addEventListener('message',(event)=>{
+                    const data=JSON.parse(event.data);
+                    if(data.type==='state'||data.type==='lock-changed'){
+                        locked=data.locked;applyLockUI();
+                        if(role==='student')setExcalidrawViewMode(locked);
+                    }
+                    if(data.type==='scene-update'&&excalidrawAPI){
+                        isRemoteUpdate=true;
+                        excalidrawAPI.updateScene({elements:data.elements});
+                    }
+                    if(data.type==='roster'&&data.users)studentCount.textContent=data.users.length;
+                    if(data.type==='timer-update'){
+                        timeLeft=data.timeLeft;updateTimerDisplay();
+                        if(data.action==='start'&&!isTimerRunning)startTimerLocal();
+                        if(data.action==='pause')pauseTimerLocal();
+                        if(data.action==='reset'){pauseTimerLocal();timeLeft=data.timeLeft;updateTimerDisplay();}
+                    }
+                    if(data.type==='spotlight-update'){
+                        if(data.active){
+                            spotlightOverlay.style.display='block';
+                            if(role!=='teacher') spotlightHandle.style.display='flex';
+                            spotlightOverlay.style.setProperty('--sx',`${data.x}px`);
+                            spotlightOverlay.style.setProperty('--sy',`${data.y}px`);
+                        } else {
+                            spotlightOverlay.style.display='none';
+                            spotlightHandle.style.display='none';
+                        }
+                    }
+                });
+                socket.addEventListener('close',()=>{statusDot.className='connecting';setTimeout(connect,2000);});
+                socket.addEventListener('error',()=>{statusDot.className='error';});
+            }
+            function sendMessage(payload){if(socket&&socket.readyState===WebSocket.OPEN)socket.send(JSON.stringify(payload));}
+            connect();
+        }
+    </script>
+</body>
+</html>
