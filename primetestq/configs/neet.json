@@ -1,0 +1,8 @@
+{
+  "examId": "neet",
+  "examName": "NEET UG",
+  "totalQuestions": 180,
+  "durationMinutes": 180,
+  "correctMarks": 4,
+  "negativeMarks": 1
+}
