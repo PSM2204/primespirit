@@ -1,0 +1,8 @@
+{
+  "examId": "iat",
+  "examName": "IAT CBT",
+  "totalQuestions": 60,
+  "durationMinutes": 180,
+  "correctMarks": 4,
+  "negativeMarks": 1
+}
