@@ -1,0 +1,8 @@
+{
+  "examId": "cuet",
+  "examName": "CUET UG",
+  "totalQuestions": 50,
+  "durationMinutes": 60,
+  "correctMarks": 5,
+  "negativeMarks": 1
+}
