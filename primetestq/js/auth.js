@@ -17,7 +17,6 @@ export const PrimeAuth = {
     },
     getUsers() { return JSON.parse(localStorage.getItem(this.DB_KEY_USERS) || '[]'); },
     
-    // FIX: Now returns the user object after registration
     register(name, classLevel, email, password) {
         const users = this.getUsers();
         if (users.find(u => u.email === email)) return { success: false, msg: "⚠️ Email already exists in the matrix." };
@@ -25,7 +24,6 @@ export const PrimeAuth = {
         users.push(newUser);
         localStorage.setItem(this.DB_KEY_USERS, JSON.stringify(users));
         
-        // Login immediately and return the user data
         const loginResult = this.login(email, password);
         return { success: true, user: loginResult.user };
     },
