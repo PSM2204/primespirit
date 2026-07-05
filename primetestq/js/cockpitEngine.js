@@ -34,6 +34,7 @@ export function initializeTestExecutionEngine() {
 function togglePauseTest(isPausing) {
     ExamState.isPaused = isPausing;
     setTestPauseState(isPausing);
+    
     const pauseOverlay = document.getElementById('pause-overlay');
     if (isPausing) {
         pauseOverlay.classList.remove('hidden');
@@ -130,11 +131,13 @@ function updateTelemetryCirclesUI() {
 }
 
 let clockIntervalId = null;
+
 function bootTimerInstrumentation() {
     const digitalHUD = document.getElementById('clock-digital-hud');
-    if(clockIntervalId) clearInterval(clockIntervalId);
+    if (clockIntervalId) clearInterval(clockIntervalId);
     clockIntervalId = setInterval(() => {
         if (ExamState.isPaused) return;
+        
         if (ExamState.timerSecondsLeft <= 0) {
             clearInterval(clockIntervalId);
             executeFinalSubmissionSequence();
@@ -145,7 +148,7 @@ function bootTimerInstrumentation() {
         const hrs = Math.floor(ExamState.timerSecondsLeft / 3600);
         const mins = Math.floor((ExamState.timerSecondsLeft % 3600) / 60);
         const secs = ExamState.timerSecondsLeft % 60;
-        if(digitalHUD) digitalHUD.innerText = `${String(hrs).padStart(2,'0')}:${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`;
+        if (digitalHUD) digitalHUD.innerText = `${String(hrs).padStart(2,'0')}:${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`;
     }, 1000);
 }
 
@@ -153,7 +156,6 @@ export function executeFinalSubmissionSequence() {
     clearInterval(clockIntervalId);
     let totalCorrect = 0, totalWrong = 0, totalUnanswered = 0;
     
-    // FIXED: Changed 'q = >' to 'q =>' and 'total Wrong++' to 'totalWrong++'
     ExamState.questionsData.forEach(q => {
         const studentAns = ExamState.userResponses[q.id];
         if (studentAns === undefined) totalUnanswered++;
@@ -164,10 +166,9 @@ export function executeFinalSubmissionSequence() {
     const finalScore = (totalCorrect * ExamState.posMark) - (totalWrong * ExamState.negMark);
     const maximumPossibleScore = ExamState.totalQuestions * ExamState.posMark;
 
-    // FIXED: Changed 'document.getEl ementById' to 'document.getElementById'
     document.getElementById('screen-cockpit-simulation').innerHTML = `
         <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; text-align: center;">
-            <div class="glass-panel-static" style="padding: 40px; max-width: 550px; width: 100%; background:rgba(7,11,22,0.9); flex-direction: column;">
+            <div class="glass-panel-static" style="padding: 40px; max-width: 550px; width: 100%; background:rgba(7,11,22,0.9);">
                 <h2 style="font-size: 1.8rem; font-weight: 900; margin-bottom: 5px;">Test Submitted</h2>
                 <p style="color: #A0AEC0; font-size: 0.75rem; text-transform: uppercase; margin-bottom: 20px;">Stream: ${ExamState.stream.toUpperCase()}</p>
                 <div style="font-size: 3.5rem; font-weight: 900; color: var(--accent-glow); margin-bottom: 20px;">${finalScore} <span style="font-size: 1.2rem; color: #4A5568;">/ ${maximumPossibleScore}</span></div>
