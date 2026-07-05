@@ -1,5 +1,3 @@
-console.log("🚀 Initializing PrimeAuth & PrimeDB...");
-
 export const PrimeAuth = {
     DB_KEY_USERS: 'ptq_secure_users',
     DB_KEY_SESSION: 'ptq_active_session',
