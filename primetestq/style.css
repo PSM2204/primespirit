@@ -44,9 +44,7 @@ body {
 .hidden { display: none !important; }
 .w-full { width: 100%; }
 
-/* =========================================
-ATOMIC CODES: BALANCED REVOLVING SHELLS
-========================================= */
+/* ATOMIC CODES: BALANCED REVOLVING SHELLS */
 .hub-header { position: absolute; top: 25px; left: 30px; right: 30px; display: flex; justify-content: space-between; align-items: center; z-index: 100; }
 .brand-logotype { font-weight: 900; letter-spacing: 0.15em; font-size: 0.85rem; }
 .user-profile-badge { font-size: 0.65rem; font-family: monospace; color: var(--primary-neon); border: 1px solid var(--primary-neon); padding: 5px 12px; border-radius: 20px; }
@@ -145,6 +143,15 @@ footer { position: absolute; bottom: 20px; width: 100%; text-align: center; z-in
 
 .warning-toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: rgba(255, 77, 77, 0.9); color: #fff; padding: 15px 30px; border-radius: 12px; font-weight: 700; z-index: 10000; box-shadow: 0 10px 30px rgba(255, 0, 0, 0.3); animation: slideDown 0.3s ease-out; }
 @keyframes slideDown { from { top: -50px; opacity: 0; } to { top: 20px; opacity: 1; } }
+
+/* PAUSE OVERLAY & GLOBAL ACTIONS */
+.pause-overlay {
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+    background: rgba(5, 8, 17, 0.95); backdrop-filter: blur(10px);
+    z-index: 9998; display: flex; align-items: center; justify-content: center;
+}
+#btn-cockpit-pause:hover { border-color: #FFD700; color: #FFD700; }
+#btn-cockpit-exit:hover { background: rgba(255, 77, 77, 0.1); }
 
 @media (max-width: 1200px) { .orbit-universe-wrapper { transform: translate(-50%, -50%) scale(0.75); } }
 @media (max-width: 900px) { .orbit-universe-wrapper { transform: translate(-50%, -50%) scale(0.5); } .cockpit-workstation-grid { grid-template-columns: 1fr; } .admin-grid { grid-template-columns: 1fr; } }
