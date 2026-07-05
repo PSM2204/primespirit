@@ -3,7 +3,7 @@ import { PrimeDB } from './auth.js';
 export const ExamState = {
     stream: '', config: null, activeQuestionIndex: 0, timerSecondsLeft: 10800,
     totalQuestions: 0, questionsData: [], userResponses: {}, questionStatuses: {},
-    posMark: 4, negMark: 1, warnings: 0
+    posMark: 4, negMark: 1, warnings: 0, isPaused: false
 };
 
 export async function loadExamConfig(examId) {
@@ -44,6 +44,24 @@ export async function loadExamConfig(examId) {
 function generateMockDataset(stream) {
     const dataset = [];
     const track = stream.toLowerCase().trim();
+
+    if (track.includes('neet')) {
+        ExamState.totalQuestions = 180;
+        ExamState.timerSecondsLeft = 10800; // EXACTLY 3 HOURS
+        ExamState.posMark = 4; ExamState.negMark = 1;
+    } else if (track.includes('jee')) {
+        ExamState.totalQuestions = 90;
+        ExamState.timerSecondsLeft = 10800;
+        ExamState.posMark = 4; ExamState.negMark = 1;
+    } else if (track.includes('cuet')) {
+        ExamState.totalQuestions = 50;
+        ExamState.timerSecondsLeft = 2700;
+        ExamState.posMark = 5; ExamState.negMark = 1;
+    } else if (track.includes('iat') || track.includes('nest')) {
+        ExamState.totalQuestions = track.includes('nest') ? 80 : 60;
+        ExamState.timerSecondsLeft = 10800;
+        ExamState.posMark = track.includes('nest') ? 3 : 4; ExamState.negMark = 1;
+    }
 
     for (let i = 1; i <= ExamState.totalQuestions; i++) {
         let subjectLabel = "GENERAL COGNITION";
@@ -87,13 +105,8 @@ function generateMockDataset(stream) {
         }
 
         dataset.push({
-            id: i,
-            subject: subjectLabel,
-            text: questionText,
-            options: optionsArray,
-            correct: correctOptionIndex
+            id: i, subject: subjectLabel, text: questionText, options: optionsArray, correct: correctOptionIndex
         });
-        
         ExamState.questionStatuses[i] = 'unvisited';
     }
     return dataset;
