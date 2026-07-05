@@ -1,3 +1,5 @@
+console.log("🚀 Initializing PrimeAuth & PrimeDB...");
+
 export const PrimeAuth = {
     DB_KEY_USERS: 'ptq_secure_users',
     DB_KEY_SESSION: 'ptq_active_session',
@@ -5,13 +7,7 @@ export const PrimeAuth = {
     initMentorNode() {
         const users = this.getUsers();
         if (!users.find(u => u.role === 'admin')) {
-            users.push({
-                name: "Abhinav Kashyap",
-                classLevel: "Mentor",
-                email: "mentor@primespirit.co.in",
-                password: "PrimeSpirit2026!", 
-                role: "admin"
-            });
+            users.push({ name: "Abhinav Kashyap", classLevel: "Mentor", email: "mentor@primespirit.co.in", password: "PrimeSpirit2026!", role: "admin" });
             localStorage.setItem(this.DB_KEY_USERS, JSON.stringify(users));
         }
     },
@@ -19,11 +15,10 @@ export const PrimeAuth = {
     
     register(name, classLevel, email, password) {
         const users = this.getUsers();
-        if (users.find(u => u.email === email)) return { success: false, msg: "⚠️ Email already exists in the matrix." };
+        if (users.find(u => u.email === email)) return { success: false, msg: "⚠️ Email already exists." };
         const newUser = { name, classLevel, email, password, role: 'student', joined: Date.now() };
         users.push(newUser);
         localStorage.setItem(this.DB_KEY_USERS, JSON.stringify(users));
-        
         const loginResult = this.login(email, password);
         return { success: true, user: loginResult.user };
     },
@@ -35,7 +30,7 @@ export const PrimeAuth = {
             localStorage.setItem(this.DB_KEY_SESSION, JSON.stringify(user));
             return { success: true, user };
         }
-        return { success: false, msg: "⚠️ Invalid credentials. Access denied." };
+        return { success: false, msg: "⚠️ Invalid credentials." };
     },
     getSession() {
         const session = localStorage.getItem(this.DB_KEY_SESSION);
