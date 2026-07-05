@@ -14,37 +14,130 @@
     </div>
     <div class="spotlight-shield"></div>
 
-    <div id="app-view-viewport">
-        <!-- Home Hub -->
-        <div id="screen-home-hub">
-            <div class="hub-header">
-                <div class="brand-logotype">PRIMETESTQ // MISSION CONTROL</div>
-                <div class="user-profile-badge">SECURE ATOMIC ENVIRONMENT</div>
+    <!-- 1. AUTH GATEWAY -->
+    <div id="auth-gateway" class="auth-gateway-overlay hidden">
+        <div class="auth-glass-panel">
+            <div id="auth-login-view">
+                <h2 class="auth-title">SECURE NODE ACCESS</h2>
+                <p class="auth-subtitle">Authenticate to enter the PrimeTestQ™ Cockpit</p>
+                <input type="email" id="auth-email" placeholder="Registered Email Address" class="auth-input">
+                <input type="password" id="auth-password" placeholder="Secure Account Password" class="auth-input">
+                <button id="btn-auth-login" class="btn-magnetic w-full">AUTHENTICATE LOGIN</button>
+                <p class="auth-switch">New mentee? <span id="switch-to-register" style="color: var(--accent-glow); cursor: pointer;">Create verified profile</span></p>
             </div>
-            <div class="orbit-universe-wrapper">
-                <div class="center-core-hub">
-                    <h1 style="font-size: 2rem; font-weight: 900; color: var(--primary-neon); letter-spacing: 0.1em;">PRIMECORE</h1>
-                    <p style="font-size: 0.7rem; color: #A0AEC0; margin-top: 5px;">NUCLEUS</p>
-                </div>
-                <div class="orbital-ring path-orbit-1"><div class="orbit-node" data-ecosystem="class6"><div class="glass-panel" style="--theme-color: #FFD700;"><i class="fas fa-atom"></i> Class 6th</div></div></div>
-                <div class="orbital-ring path-orbit-2"><div class="orbit-node" data-ecosystem="class7"><div class="glass-panel" style="--theme-color: #FFD700;"><i class="fas fa-atom"></i> Class 7th</div></div></div>
-                <div class="orbital-ring path-orbit-3"><div class="orbit-node" data-ecosystem="class8"><div class="glass-panel" style="--theme-color: #FFD700;"><i class="fas fa-atom"></i> Class 8th</div></div></div>
-                <div class="orbital-ring path-orbit-4"><div class="orbit-node" data-ecosystem="class9"><div class="glass-panel" style="--theme-color: #FFD700;"><i class="fas fa-atom"></i> Class 9th</div></div></div>
-                <div class="orbital-ring path-orbit-5"><div class="orbit-node" data-ecosystem="class10"><div class="glass-panel" style="--theme-color: #FFD700;"><i class="fas fa-atom"></i> Class 10th</div></div></div>
-                <div class="orbital-ring path-orbit-6"><div class="orbit-node" data-ecosystem="class11"><div class="glass-panel" style="--theme-color: #FFD700;"><i class="fas fa-atom"></i> Class 11th</div></div></div>
-                <div class="orbital-ring path-orbit-7"><div class="orbit-node" data-ecosystem="class12"><div class="glass-panel" style="--theme-color: #FFD700;"><i class="fas fa-atom"></i> Class 12th</div></div></div>
-                <div class="orbital-ring path-orbit-8"><div class="orbit-node" data-ecosystem="jee-main"><div class="glass-panel" style="--theme-color: #00C6FF;"><i class="fas fa-rocket"></i> JEE Main</div></div></div>
-                <div class="orbital-ring path-orbit-9"><div class="orbit-node" data-ecosystem="neet"><div class="glass-panel" style="--theme-color: #00FF99;"><i class="fas fa-heartbeat"></i> NEET UG</div></div></div>
-                <div class="orbital-ring path-orbit-10">
-                    <div class="orbit-node" data-ecosystem="iat"><div class="glass-panel" style="--theme-color: #9D4EDD;"><i class="fas fa-flask"></i> IAT CBT</div></div>
-                    <div class="orbit-node" data-ecosystem="nest"><div class="glass-panel" style="--theme-color: #00FFFF;"><i class="fas fa-dna"></i> NEST CBT</div></div>
-                    <div class="orbit-node" data-ecosystem="cuet"><div class="glass-panel" style="--theme-color: #FF6B6B;"><i class="fas fa-university"></i> CUET CBT</div></div>
+            <div id="auth-register-view" class="hidden">
+                <h2 class="auth-title">CREATE MENTEE PROFILE</h2>
+                <p class="auth-subtitle">Register to save analytics and unlock secure vaults</p>
+                <input type="text" id="reg-name" placeholder="Full Legal Name" class="auth-input">
+                <input type="text" id="reg-class" placeholder="Current Class / Target Exam" class="auth-input">
+                <input type="email" id="reg-email" placeholder="Email Address" class="auth-input">
+                <input type="password" id="reg-password" placeholder="Create Secure Password" class="auth-input">
+                <button id="btn-auth-register" class="btn-magnetic w-full">FINALIZE REGISTRATION</button>
+                <p class="auth-switch">Already authenticated? <span id="switch-to-login" style="color: var(--accent-glow); cursor: pointer;">Log in here</span></p>
+            </div>
+            <div id="auth-msg" class="auth-msg hidden"></div>
+        </div>
+    </div>
+
+    <!-- 2. ADMIN COCKPIT -->
+    <div id="admin-cockpit" class="admin-overlay hidden">
+        <div class="admin-header">
+            <h2>MENTOR TELEMETRY DASHBOARD</h2>
+            <button id="btn-admin-logout" class="btn-magnetic">LOGOUT</button>
+        </div>
+        <div class="admin-grid">
+            <div class="glass-panel-static admin-panel">
+                <h3>REGISTERED MENTEES</h3>
+                <div id="admin-student-list" class="admin-list"></div>
+            </div>
+            <div class="glass-panel-static admin-panel">
+                <h3>UPLOAD QUESTION MATRIX</h3>
+                <select id="admin-exam-select" class="auth-input">
+                    <option value="jee-main">JEE Main</option>
+                    <option value="neet">NEET UG</option>
+                    <option value="cuet">CUET</option>
+                    <option value="iat">IAT CBT</option>
+                    <option value="nest">NEST CBT</option>
+                </select>
+                <input type="file" id="admin-json-upload" accept=".json" class="auth-input">
+                <button id="btn-upload-json" class="btn-magnetic w-full">INJECT TO LOCAL DB</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. HOME HUB (ATOMIC MESH) -->
+    <div id="screen-home-hub" class="hidden">
+        <div class="hub-header">
+            <div class="brand-logotype">PRIMETESTQ // MISSION CONTROL</div>
+            <div class="user-profile-badge" id="user-profile-badge">MENTEE: UNKNOWN</div>
+        </div>
+        <div class="orbit-universe-wrapper">
+            <div class="center-core-hub">
+                <h1 style="font-size: 2rem; font-weight: 900; color: var(--primary-neon); letter-spacing: 0.1em;">PRIMECORE</h1>
+                <p style="font-size: 0.7rem; color: #A0AEC0; margin-top: 5px;">NUCLEUS</p>
+            </div>
+            <div class="orbital-ring path-orbit-1"><div class="orbit-node" data-ecosystem="class6"><div class="glass-panel" style="--theme-color: #FFD700;"><i class="fas fa-atom"></i> Class 6th</div></div></div>
+            <div class="orbital-ring path-orbit-2"><div class="orbit-node" data-ecosystem="class7"><div class="glass-panel" style="--theme-color: #FFD700;"><i class="fas fa-atom"></i> Class 7th</div></div></div>
+            <div class="orbital-ring path-orbit-3"><div class="orbit-node" data-ecosystem="class8"><div class="glass-panel" style="--theme-color: #FFD700;"><i class="fas fa-atom"></i> Class 8th</div></div></div>
+            <div class="orbital-ring path-orbit-4"><div class="orbit-node" data-ecosystem="class9"><div class="glass-panel" style="--theme-color: #FFD700;"><i class="fas fa-atom"></i> Class 9th</div></div></div>
+            <div class="orbital-ring path-orbit-5"><div class="orbit-node" data-ecosystem="class10"><div class="glass-panel" style="--theme-color: #FFD700;"><i class="fas fa-atom"></i> Class 10th</div></div></div>
+            <div class="orbital-ring path-orbit-6"><div class="orbit-node" data-ecosystem="class11"><div class="glass-panel" style="--theme-color: #FFD700;"><i class="fas fa-atom"></i> Class 11th</div></div></div>
+            <div class="orbital-ring path-orbit-7"><div class="orbit-node" data-ecosystem="class12"><div class="glass-panel" style="--theme-color: #FFD700;"><i class="fas fa-atom"></i> Class 12th</div></div></div>
+            <div class="orbital-ring path-orbit-8"><div class="orbit-node" data-ecosystem="jee-main"><div class="glass-panel" style="--theme-color: #00C6FF;"><i class="fas fa-rocket"></i> JEE Main</div></div></div>
+            <div class="orbital-ring path-orbit-9"><div class="orbit-node" data-ecosystem="neet"><div class="glass-panel" style="--theme-color: #00FF99;"><i class="fas fa-heartbeat"></i> NEET UG</div></div></div>
+            <div class="orbital-ring path-orbit-10">
+                <div class="orbit-node" data-ecosystem="iat"><div class="glass-panel" style="--theme-color: #9D4EDD;"><i class="fas fa-flask"></i> IAT CBT</div></div>
+                <div class="orbit-node" data-ecosystem="nest"><div class="glass-panel" style="--theme-color: #00FFFF;"><i class="fas fa-dna"></i> NEST CBT</div></div>
+                <div class="orbit-node" data-ecosystem="cuet"><div class="glass-panel" style="--theme-color: #FF6B6B;"><i class="fas fa-university"></i> CUET CBT</div></div>
+            </div>
+        </div>
+        <footer>
+            <p>PRIME SPIRIT MENTORS © 2026 // ATOMIC MODEL EVALUATION INTERFACE</p>
+            <p id="network-status-indicator" style="font-size: 0.7rem; color: var(--accent-glow); margin-top: 5px;">SECURE ENVIRONMENT SYNC ACTIVE</p>
+        </footer>
+    </div>
+
+    <!-- 4. EXAM COCKPIT -->
+    <div id="screen-cockpit-simulation" class="hidden">
+        <div class="cockpit-bar">
+            <div class="brand-logotype" id="cockpit-title-label">CBT HUD</div>
+            <div class="cockpit-global-actions" style="display:flex; gap:10px;">
+                <button id="btn-cockpit-pause" class="btn-magnetic" style="padding: 6px 16px; font-size: 0.75rem;">⏸ PAUSE</button>
+                <button id="btn-cockpit-exit" class="btn-magnetic" style="padding: 6px 16px; font-size: 0.75rem; border-color: #FF4D4D; color: #FF4D4D;">✕ EXIT</button>
+            </div>
+            <div class="instrumentation-timer-block">
+                <span id="clock-digital-hud" class="timer-numerical-display">00:00:00</span>
+            </div>
+        </div>
+        <div class="cockpit-workstation-grid">
+            <div class="question-workspace glass-panel-static">
+                <div id="hud-question-index-number" style="font-size: 0.8rem; color: var(--primary-neon); margin-bottom: 10px; font-weight: 700;">Q. 1 // SUBJECT: --</div>
+                <div id="hud-question-render-viewport" style="font-size: 1.1rem; line-height: 1.6; margin-bottom: 25px; min-height: 80px;">Loading examination matrix sheets...</div>
+                <div id="hud-options-render-viewport"></div>
+                <div class="cockpit-control-toolbar-row">
+                    <div class="left-action-cluster">
+                        <button id="btn-action-prev" class="btn-magnetic">PREVIOUS</button>
+                        <button id="btn-action-review" class="btn-magnetic" style="border-color: var(--status-review); color: var(--status-review);">MARK REVIEW</button>
+                        <button id="btn-action-clear" class="btn-magnetic">CLEAR</button>
+                    </div>
+                    <button id="btn-action-next" class="btn-magnetic" style="background: var(--primary-neon); color: #000; border-color: var(--primary-neon);">SAVE & NEXT</button>
                 </div>
             </div>
-            <footer>
-                <p>PRIME SPIRIT MENTORS © 2026 // ATOMIC MODEL EVALUATION INTERFACE</p>
-                <p id="network-status-indicator" style="font-size: 0.7rem; color: var(--accent-glow); margin-top: 5px;">SECURE ENVIRONMENT SYNC ACTIVE</p>
-            </footer>
+            <div class="telemetry-palette-panel glass-panel-static">
+                <h3 style="font-size: 0.9rem; color: #A0AEC0; margin-bottom: 15px; letter-spacing: 0.05em;">TEST TELEMETRY PALETTE</h3>
+                <div id="hud-palette-circles-grid" class="circles-status-matrix"></div>
+                <button id="btn-cockpit-submit" class="btn-magnetic w-full" style="margin-top: auto; background: rgba(255, 77, 77, 0.1); border-color: #FF4D4D; color: #FF4D4D;">SUBMIT CORE TEST</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 5. PAUSE OVERLAY -->
+    <div id="pause-overlay" class="pause-overlay hidden">
+        <div class="glass-panel-static" style="padding: 40px; text-align: center; max-width: 400px; width: 90%;">
+            <h2 style="font-size: 1.5rem; font-weight: 900; color: var(--primary-neon); margin-bottom: 10px;">TEST PAUSED</h2>
+            <p style="color: #A0AEC0; font-size: 0.8rem; margin-bottom: 20px;">Timer is frozen. Anti-cheating is temporarily suspended.</p>
+            <div id="pause-timer-display" style="font-size: 2.5rem; font-weight: 900; font-family: monospace; margin-bottom: 30px; color: #fff;">00:00:00</div>
+            <button id="btn-resume-test" class="btn-magnetic" style="background: var(--accent-glow); color: #000; border-color: var(--accent-glow); width: 100%;">▶ RESUME TEST</button>
         </div>
     </div>
 
