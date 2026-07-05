@@ -7,7 +7,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     await PrimeDB.init();
     enforceAntiCheatingProtocols();
     initializeTestExecutionEngine();
-    initializeOrbitEngine();
     
     initAuthUI();
     initAdminUI();
@@ -92,10 +91,16 @@ function checkSessionAndRoute() {
 
 function openAuthGate() { document.getElementById('auth-gateway').classList.remove('hidden'); }
 
+// FIX: Re-initializes orbit engine AFTER hub becomes visible
 function openTestQInterface(user) {
     document.getElementById('screen-home-hub').classList.remove('hidden');
     const badge = document.getElementById('user-profile-badge');
     if(badge && user) badge.innerText = `MENTEE: ${user.name.toUpperCase()}`;
+    
+    // Wait for DOM to update, then initialize orbit engine
+    setTimeout(() => {
+        initializeOrbitEngine();
+    }, 100);
 }
 
 function openAdminPanel() {
