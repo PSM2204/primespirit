@@ -1,9 +1,10 @@
-import { ExamState, loadExamConfig } from './state.js';
+import { ExamState, generateMockDataset } from './state.js';
 import { setTestPauseState } from './antiCheating.js';
 
 export function initializeTestExecutionEngine() {
-    window.addEventListener('startSimulation', async (e) => {
-        await loadExamConfig(e.detail.stream);
+    window.addEventListener('startSimulation', (e) => {
+        ExamState.stream = e.detail.stream;
+        ExamState.questionsData = generateMockDataset(e.detail.stream);
         ExamState.activeQuestionIndex = 0;
         ExamState.userResponses = {};
         ExamState.isPaused = false;
@@ -55,21 +56,26 @@ function exitTestConfirmation() {
 function renderWorkspaceQuestionItem() {
     const currentQ = ExamState.questionsData[ExamState.activeQuestionIndex];
     if (!currentQ) return;
-    if (ExamState.questionStatuses[currentQ.id] === 'unvisited') ExamState.questionStatuses[currentQ.id] = 'unanswered';
+    if (ExamState.questionStatuses[currentQ.id] === 'unvisited') {
+        ExamState.questionStatuses[currentQ.id] = 'unanswered';
+    }
 
     document.getElementById('hud-question-index-number').innerText = `Q. ${currentQ.id} // SUBJECT: ${currentQ.subject}`;
     document.getElementById('hud-question-render-viewport').innerText = currentQ.text;
 
     const optionsBox = document.getElementById('hud-options-render-viewport');
     optionsBox.innerHTML = '';
+
     currentQ.options.forEach((opt, idx) => {
         const item = document.createElement('div');
         item.className = 'option-node-item';
         if (ExamState.userResponses[currentQ.id] === idx) item.classList.add('selected');
+        
         item.innerHTML = `<span style="margin-right:12px; color:var(--primary-neon); font-weight:800;">${String.fromCharCode(65+idx)}.</span> ${opt}`;
         item.addEventListener('click', () => registerOptionSelection(currentQ.id, idx));
         optionsBox.appendChild(item);
     });
+
     updateTelemetryCirclesUI();
 }
 
@@ -108,7 +114,10 @@ function buildTelemetryPaletteHUD() {
         circle.className = 'status-circle-node unvisited';
         circle.id = `palette-node-circle-${q.id}`;
         circle.innerText = q.id;
-        circle.addEventListener('click', () => { ExamState.activeQuestionIndex = idx; renderWorkspaceQuestionItem(); });
+        circle.addEventListener('click', () => {
+            ExamState.activeQuestionIndex = idx;
+            renderWorkspaceQuestionItem();
+        });
         matrixGrid.appendChild(circle);
     });
 }
@@ -126,8 +135,13 @@ function bootTimerInstrumentation() {
     if(clockIntervalId) clearInterval(clockIntervalId);
     clockIntervalId = setInterval(() => {
         if (ExamState.isPaused) return;
-        if (ExamState.timerSecondsLeft <= 0) { clearInterval(clockIntervalId); executeFinalSubmissionSequence(); return; }
+        if (ExamState.timerSecondsLeft <= 0) {
+            clearInterval(clockIntervalId);
+            executeFinalSubmissionSequence();
+            return;
+        }
         ExamState.timerSecondsLeft--;
+
         const hrs = Math.floor(ExamState.timerSecondsLeft / 3600);
         const mins = Math.floor((ExamState.timerSecondsLeft % 3600) / 60);
         const secs = ExamState.timerSecondsLeft % 60;
@@ -138,6 +152,8 @@ function bootTimerInstrumentation() {
 export function executeFinalSubmissionSequence() {
     clearInterval(clockIntervalId);
     let totalCorrect = 0, totalWrong = 0, totalUnanswered = 0;
+    
+    // FIXED: Changed 'q = >' to 'q =>' and 'total Wrong++' to 'totalWrong++'
     ExamState.questionsData.forEach(q => {
         const studentAns = ExamState.userResponses[q.id];
         if (studentAns === undefined) totalUnanswered++;
@@ -148,16 +164,26 @@ export function executeFinalSubmissionSequence() {
     const finalScore = (totalCorrect * ExamState.posMark) - (totalWrong * ExamState.negMark);
     const maximumPossibleScore = ExamState.totalQuestions * ExamState.posMark;
 
+    // FIXED: Changed 'document.getEl ementById' to 'document.getElementById'
     document.getElementById('screen-cockpit-simulation').innerHTML = `
         <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; text-align: center;">
-            <div class="glass-panel-static" style="padding: 40px; max-width: 550px; width: 100%; background:rgba(7,11,22,0.9);">
+            <div class="glass-panel-static" style="padding: 40px; max-width: 550px; width: 100%; background:rgba(7,11,22,0.9); flex-direction: column;">
                 <h2 style="font-size: 1.8rem; font-weight: 900; margin-bottom: 5px;">Test Submitted</h2>
                 <p style="color: #A0AEC0; font-size: 0.75rem; text-transform: uppercase; margin-bottom: 20px;">Stream: ${ExamState.stream.toUpperCase()}</p>
                 <div style="font-size: 3.5rem; font-weight: 900; color: var(--accent-glow); margin-bottom: 20px;">${finalScore} <span style="font-size: 1.2rem; color: #4A5568;">/ ${maximumPossibleScore}</span></div>
                 <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; width: 100%; margin-bottom: 25px;">
-                    <div style="background: rgba(255,255,255,0.02); padding: 10px; border-radius: 8px;"><div style="font-size: 0.65rem; color: #A0AEC0;">CORRECT</div><div style="font-size: 1.1rem; font-weight: 800; color: #00FF99;">${totalCorrect}</div></div>
-                    <div style="background: rgba(255,255,255,0.02); padding: 10px; border-radius: 8px;"><div style="font-size: 0.65rem; color: #A0AEC0;">INCORRECT</div><div style="font-size: 1.1rem; font-weight: 800; color: #FF4D4D;">${totalWrong}</div></div>
-                    <div style="background: rgba(255,255,255,0.02); padding: 10px; border-radius: 8px;"><div style="font-size: 0.65rem; color: #A0AEC0;">SKIPPED</div><div style="font-size: 1.1rem; font-weight: 800; color: #718096;">${totalUnanswered}</div></div>
+                    <div style="background: rgba(255,255,255,0.02); padding: 10px; border-radius: 8px;">
+                        <div style="font-size: 0.65rem; color: #A0AEC0;">CORRECT</div>
+                        <div style="font-size: 1.1rem; font-weight: 800; color: #00FF99;">${totalCorrect}</div>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.02); padding: 10px; border-radius: 8px;">
+                        <div style="font-size: 0.65rem; color: #A0AEC0;">INCORRECT</div>
+                        <div style="font-size: 1.1rem; font-weight: 800; color: #FF4D4D;">${totalWrong}</div>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.02); padding: 10px; border-radius: 8px;">
+                        <div style="font-size: 0.65rem; color: #A0AEC0;">SKIPPED</div>
+                        <div style="font-size: 1.1rem; font-weight: 800; color: #718096;">${totalUnanswered}</div>
+                    </div>
                 </div>
                 <button onclick="window.location.reload()" style="width: 100%; padding:12px; border-radius:8px; color:#fff; font-weight:700; background: rgba(255,255,255,0.05); border:1px solid var(--border-glass); cursor:pointer;">RETURN TO ATOMIC MESH</button>
             </div>
