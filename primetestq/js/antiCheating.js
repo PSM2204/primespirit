@@ -9,6 +9,8 @@ export function setTestPauseState(paused) {
 
 export function enforceAntiCheatingProtocols() {
     document.addEventListener('contextmenu', (e) => e.preventDefault());
+    
+    // FIXED: Changed '(e) = >' to '(e) =>' and '& &' to '&&'
     document.addEventListener('keydown', (e) => {
         if (e.key === 'F12' || 
             ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'j')) ||
@@ -36,7 +38,7 @@ export function enforceAntiCheatingProtocols() {
 
     window.addEventListener('online', () => {
         const syncPill = document.getElementById('network-status-indicator');
-        if (syncPill) { syncPill.innerText = " SECURE NODE SYNC ACTIVE"; syncPill.style.color = "var(--accent-glow)"; }
+        if (syncPill) { syncPill.innerText = "🔄 SECURE NODE SYNC ACTIVE"; syncPill.style.color = "var(--accent-glow)"; }
     });
 }
 
