@@ -1,5 +1,4 @@
 import { ExamState } from './state.js';
-import { executeFinalSubmissionSequence } from './cockpitEngine.js';
 
 let isTestPaused = false;
 
@@ -10,7 +9,6 @@ export function setTestPauseState(paused) {
 export function enforceAntiCheatingProtocols() {
     document.addEventListener('contextmenu', (e) => e.preventDefault());
     
-    // FIXED: Changed '(e) = >' to '(e) =>' and '& &' to '&&'
     document.addEventListener('keydown', (e) => {
         if (e.key === 'F12' || 
             ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'j')) ||
