@@ -1,10 +1,14 @@
 import { ExamState, loadExamConfig } from './state.js';
+import { setTestPauseState } from './antiCheating.js';
 
 export function initializeTestExecutionEngine() {
     window.addEventListener('startSimulation', async (e) => {
         await loadExamConfig(e.detail.stream);
         ExamState.activeQuestionIndex = 0;
         ExamState.userResponses = {};
+        ExamState.isPaused = false;
+        setTestPauseState(false); // Activate anti-cheating
+        
         bootTimerInstrumentation();
         buildTelemetryPaletteHUD();
         renderWorkspaceQuestionItem();
@@ -15,12 +19,40 @@ export function initializeTestExecutionEngine() {
         if (e.target.id === 'btn-action-prev') saveAndNavigate(-1);
         if (e.target.id === 'btn-action-review') markQuestionForReviewMetric();
         if (e.target.id === 'btn-action-clear') clearSelectedResponseMetric();
+        
+        if (e.target.id === 'btn-cockpit-pause') togglePauseTest(true);
+        if (e.target.id === 'btn-resume-test') togglePauseTest(false);
+        if (e.target.id === 'btn-cockpit-exit') exitTestConfirmation();
+        
         if (e.target.id === 'btn-cockpit-submit') {
             if (confirm("Are you sure you want to finalize your tracking logs and submit this test?")) {
                 executeFinalSubmissionSequence();
             }
         }
     });
+}
+
+function togglePauseTest(isPausing) {
+    ExamState.isPaused = isPausing;
+    setTestPauseState(isPausing); // Tell anti-cheating to ignore tab switches
+    
+    const pauseOverlay = document.getElementById('pause-overlay');
+    if (isPausing) {
+        pauseOverlay.classList.remove('hidden');
+        document.getElementById('pause-timer-display').innerText = document.getElementById('clock-digital-hud').innerText;
+    } else {
+        pauseOverlay.classList.add('hidden');
+    }
+}
+
+function exitTestConfirmation() {
+    if (confirm("⚠️ WARNING: Exiting now will discard your current progress and return you to the Home Hub. Are you sure?")) {
+        clearInterval(clockIntervalId);
+        setTestPauseState(false);
+        document.getElementById('screen-cockpit-simulation').classList.add('hidden');
+        document.getElementById('pause-overlay').classList.add('hidden');
+        document.getElementById('screen-home-hub').classList.remove('hidden');
+    }
 }
 
 function renderWorkspaceQuestionItem() {
@@ -96,6 +128,8 @@ function bootTimerInstrumentation() {
     const digitalHUD = document.getElementById('clock-digital-hud');
     if(clockIntervalId) clearInterval(clockIntervalId);
     clockIntervalId = setInterval(() => {
+        if (ExamState.isPaused) return; // CRITICAL: Skip timer tick if paused
+        
         if (ExamState.timerSecondsLeft <= 0) { clearInterval(clockIntervalId); executeFinalSubmissionSequence(); return; }
         ExamState.timerSecondsLeft--;
         const hrs = Math.floor(ExamState.timerSecondsLeft / 3600);
