@@ -8,8 +8,8 @@ export const PrimeAuth = {
             users.push({
                 name: "Abhinav Kashyap",
                 classLevel: "Mentor",
-                email: "mentor@primespirit.co.in",
-                password: "PrimeSpirit2026!",
+                email: "primespiritmentors@gmail.com",
+                password: "Abhin@v2204",
                 role: "admin"
             });
             localStorage.setItem(this.DB_KEY_USERS, JSON.stringify(users));
