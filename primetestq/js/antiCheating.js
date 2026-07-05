@@ -1,6 +1,12 @@
 import { ExamState } from './state.js';
 import { executeFinalSubmissionSequence } from './cockpitEngine.js';
 
+let isTestPaused = false;
+
+export function setTestPauseState(paused) {
+    isTestPaused = paused;
+}
+
 export function enforceAntiCheatingProtocols() {
     document.addEventListener('contextmenu', (e) => e.preventDefault());
     document.addEventListener('keydown', (e) => {
@@ -13,7 +19,8 @@ export function enforceAntiCheatingProtocols() {
     });
 
     document.addEventListener('visibilitychange', () => {
-        if (document.hidden) {
+        // CRITICAL FIX: Ignores tab switches if the student intentionally paused the test
+        if (document.hidden && !isTestPaused) {
             ExamState.warnings = (ExamState.warnings || 0) + 1;
             showWarningToast(`⚠️ Tab Switch Detected (${ExamState.warnings}/3)`);
             
