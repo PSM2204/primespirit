@@ -71,7 +71,7 @@ function initAdminUI() {
                 await PrimeDB.saveQuestions(examId, jsonData);
                 alert(`✅ Successfully injected ${jsonData.length} questions!`);
                 fileInput.value = ''; 
-            } catch (err) { alert("️ Invalid JSON format."); }
+            } catch (err) { alert("⚠️ Invalid JSON format."); }
         };
         reader.readAsText(file);
     });
