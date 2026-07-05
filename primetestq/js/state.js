@@ -1,108 +1,56 @@
 export const ExamState = {
-    stream: '',
-    activeQuestionIndex: 0,
-    timerSecondsLeft: 5400,
-    totalQuestions: 0,
-    questionsData: [],
-    userResponses: {},
-    questionStatuses: {},
-    posMark: 4,
-    negMark: 1
+    stream: '', config: null, activeQuestionIndex: 0, timerSecondsLeft: 5400,
+    totalQuestions: 0, questionsData: [], userResponses: {}, questionStatuses: {},
+    posMark: 4, negMark: 1, warnings: 0, isPaused: false
 };
 
-export function generateMockDataset(stream) {
-    const dataset = [];
-    const track = stream.toLowerCase().trim();
-    
-    ExamState.posMark = 4;
-    ExamState.negMark = 1;
+const EXAM_CONFIG = {
+    'class6':  { duration: 90,  total: 50,  marking: [4, 1], subjects: { 'Mathematics': 25, 'Science': 25 } },
+    'class7':  { duration: 90,  total: 50,  marking: [4, 1], subjects: { 'Mathematics': 25, 'Science': 25 } },
+    'class8':  { duration: 90,  total: 50,  marking: [4, 1], subjects: { 'Mathematics': 25, 'Science': 25 } },
+    'class9':  { duration: 90,  total: 50,  marking: [4, 1], subjects: { 'Mathematics': 25, 'Science': 25 } },
+    'class10': { duration: 90,  total: 50,  marking: [4, 1], subjects: { 'Mathematics': 25, 'Science': 25 } },
+    'class11': { duration: 90,  total: 45,  marking: [4, 1], subjects: { 'Physics': 45 } },
+    'class12': { duration: 90,  total: 45,  marking: [4, 1], subjects: { 'Physics': 45 } },
+    'neet':    { duration: 180, total: 180, marking: [4, 1], subjects: { 'Physics': 45, 'Chemistry': 45, 'Botany': 45, 'Zoology': 45 } },
+    'jee':     { duration: 180, total: 90,  marking: [4, 1], subjects: { 'Physics': 30, 'Chemistry': 30, 'Mathematics': 30 } },
+    'iat':     { duration: 180, total: 60,  marking: [4, 1], subjects: { 'Physics': 15, 'Chemistry': 15, 'Mathematics': 15, 'Biology': 15 } },
+    'nest':    { duration: 180, total: 80,  marking: [3, 1], subjects: { 'Physics': 20, 'Chemistry': 20, 'Mathematics': 20, 'Biology': 20 } },
+    'cuet':    { duration: 180, total: 150, marking: [5, 1], subjects: { 'Physics': 50, 'Chemistry': 50, 'Biology': 50 } }
+};
 
-    if (track.match(/class(6|7|8|9|10)/)) {
-        ExamState.totalQuestions = 50;
-        ExamState.timerSecondsLeft = 5400;
-    } else if (track.match(/class(11|12)/)) {
-        ExamState.totalQuestions = 45; 
-        ExamState.timerSecondsLeft = 5400;
-    } else if (track.includes('neet')) {
-        ExamState.totalQuestions = 180;
-        ExamState.timerSecondsLeft = 10800;
-    } else if (track.includes('jee')) {
-        ExamState.totalQuestions = 90;
-        ExamState.timerSecondsLeft = 10800;
-    } else if (track.includes('iat')) {
-        ExamState.totalQuestions = 60;
-        ExamState.timerSecondsLeft = 10800;
-    } else if (track.includes('nest')) {
-        ExamState.totalQuestions = 80;
-        ExamState.timerSecondsLeft = 10800;
-        ExamState.posMark = 3;
-    } else if (track.includes('cuet')) {
-        ExamState.totalQuestions = 150;
-        ExamState.timerSecondsLeft = 10800;
-        ExamState.posMark = 5;
+export function loadExamConfig(examId) {
+    const track = examId.toLowerCase().trim();
+    let config = EXAM_CONFIG['class6']; 
+    for (let key in EXAM_CONFIG) {
+        if (track.includes(key)) { config = EXAM_CONFIG[key]; break; }
     }
+    ExamState.config = config;
+    ExamState.stream = examId;
+    ExamState.timerSecondsLeft = config.duration * 60;
+    ExamState.totalQuestions = config.total;
+    ExamState.posMark = config.marking[0];
+    ExamState.negMark = config.marking[1];
+}
 
-    const QuestionPool = {
-        class6: { math: { text: "Calculate LCM of 12, 18, and 24.", opt: ["A) 48", "B) 72", "C) 144", "D) 36"], ans: 1 }, science: { text: "Vitamin for preventing Scurvy?", opt: ["A) Vitamin A", "B) Vitamin B1", "C) Vitamin C", "D) Vitamin D"], ans: 2 } },
-        class7: { math: { text: "Angle double its complement?", opt: ["A) 30°", "B) 45°", "C) 60°", "D) 90°"], ans: 2 }, science: { text: "Copper carbonate to green patches?", opt: ["A) Neutralization", "B) Galvanization", "C) Corrosion", "D) Crystallization"], ans: 2 } },
-        class8: { math: { text: "Polygon with 9 diagonals?", opt: ["A) 6 sides", "B) 7 sides", "C) 8 sides", "D) 9 sides"], ans: 0 }, science: { text: "Yeast fermentation organism?", opt: ["A) Lactobacillus", "B) Rhizobium", "C) Saccharomyces cerevisiae", "D) Aspergillus"], ans: 2 } },
-        class9: { math: { text: "Rationalize 1/(7-√6)", opt: ["A) (7+√6)/43", "B) (7-√6)/43", "C) (7+√6)/5", "D) None"], ans: 0 }, science: { text: "Displacement after 1.5 rotations?", opt: ["A) 3πR", "B) 2R", "C) πR", "D) Zero"], ans: 1 } },
-        class10: { math: { text: "Root is -3, find k in (k-1)x²+kx+1", opt: ["A) 4/3", "B) -4/3", "C) 2/3", "D) 5/4"], ans: 0 }, science: { text: "Object 20cm from concave mirror f=10cm", opt: ["A) Virtual erect", "B) Real inverted same size", "C) Real inverted magnified", "D) Real diminished"], ans: 1 } },
-        class11: { physics: { text: "Max range projectile angle?", opt: ["A) 30°", "B) 45°", "C) 60°", "D) 90°"], ans: 1 } },
-        class12: { physics: { text: "Dielectric K introduced, capacitance?", opt: ["A) Drops 1/K", "B) Scales by K", "C) Energy quadruples", "D) Drops completely"], ans: 1 } }
-    };
+export function generateMockDataset(stream) {
+    loadExamConfig(stream);
+    const config = ExamState.config;
+    const dataset = [];
+    let qIndex = 1;
 
-    for (let i = 1; i <= ExamState.totalQuestions; i++) {
-        let subjectLabel = "GENERAL";
-        let questionText = `Question ${i}`;
-        let optionsArray = ["Option A", "Option B", "Option C", "Option D"];
-        let correctOptionIndex = Math.floor(Math.random() * 4);
-
-        if (track.match(/class(6|7|8|9|10)/)) {
-            const classKey = `class${track.match(/\d+/)[0]}`;
-            if (i <= 25) {
-                subjectLabel = "MATHEMATICS";
-                questionText = `[Q.${i}] ${QuestionPool[classKey].math.text}`;
-                optionsArray = QuestionPool[classKey].math.opt;
-                correctOptionIndex = QuestionPool[classKey].math.ans;
-            } else {
-                subjectLabel = "SCIENCE";
-                questionText = `[Q.${i}] ${QuestionPool[classKey].science.text}`;
-                optionsArray = QuestionPool[classKey].science.opt;
-                correctOptionIndex = QuestionPool[classKey].science.ans;
-            }
-        } else if (track.match(/class(11|12)/)) {
-            const classKey = `class${track.match(/\d+/)[0]}`;
-            subjectLabel = "PHYSICS";
-            questionText = `[Q.${i}] ${QuestionPool[classKey].physics.text}`;
-            optionsArray = QuestionPool[classKey].physics.opt;
-            correctOptionIndex = QuestionPool[classKey].physics.ans;
-        } else if (track.includes('neet')) {
-            if (i <= 45) subjectLabel = "PHYSICS";
-            else if (i <= 90) subjectLabel = "CHEMISTRY";
-            else if (i <= 135) subjectLabel = "BOTANY";
-            else subjectLabel = "ZOOLOGY";
-            questionText = `[NEET ${subjectLabel} Q.${i}] Question text`;
-        } else if (track.includes('jee')) {
-            if (i <= 30) subjectLabel = "PHYSICS";
-            else if (i <= 60) subjectLabel = "CHEMISTRY";
-            else subjectLabel = "MATHEMATICS";
-            questionText = `[JEE ${subjectLabel} Q.${i}] Question text`;
-        } else if (track.includes('cuet')) {
-            if (i <= 50) subjectLabel = "PHYSICS";
-            else if (i <= 100) subjectLabel = "CHEMISTRY";
-            else subjectLabel = "BIOLOGY";
-            questionText = `[CUET ${subjectLabel} Q.${i}] Question text`;
-        } else if (track.includes('iat') || track.includes('nest')) {
-            if (i <= 15 || (track.includes('nest') && i <= 20)) subjectLabel = "PHYSICS";
-            else if (i <= 30 || (track.includes('nest') && i <= 40)) subjectLabel = "CHEMISTRY";
-            else if (i <= 45 || (track.includes('nest') && i <= 60)) subjectLabel = "MATHEMATICS";
-            else subjectLabel = "BIOLOGY";
-            questionText = `[${subjectLabel} Q.${i}] Question text`;
+    for (let subject in config.subjects) {
+        const count = config.subjects[subject];
+        for (let i = 0; i < count; i++) {
+            dataset.push({
+                id: qIndex, subject: subject,
+                text: `[${stream.toUpperCase()} // ${subject} Q.${qIndex}] Sample question text for testing the CBT engine.`,
+                options: ["Option A", "Option B", "Option C", "Option D"],
+                correct: Math.floor(Math.random() * 4)
+            });
+            ExamState.questionStatuses[qIndex] = 'unvisited';
+            qIndex++;
         }
-
-        dataset.push({ id: i, subject: subjectLabel, text: questionText, options: optionsArray, correct: correctOptionIndex });
-        ExamState.questionStatuses[i] = 'unvisited';
     }
     return dataset;
 }
