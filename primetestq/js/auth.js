@@ -5,7 +5,7 @@ export const PrimeAuth = {
     initMentorNode() {
         const users = this.getUsers();
         if (!users.find(u => u.role === 'admin')) {
-            users.push({ name: "Abhinav Kashyap", classLevel: "Mentor", email: "mentor@primespirit.co.in", password: "PrimeSpirit2026!", role: "admin" });
+            users.push({ name: "Abhinav Kashyap", classLevel: "Mentor", email: "primespiritmentors@gmail.com", password: "Abhin@v2204", role: "admin" });
             localStorage.setItem(this.DB_KEY_USERS, JSON.stringify(users));
         }
     },
