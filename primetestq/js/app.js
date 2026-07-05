@@ -7,8 +7,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     await PrimeDB.init();
     enforceAntiCheatingProtocols();
     initializeTestExecutionEngine();
-    
-    // DO NOT call initializeOrbitEngine() here - wait for user login
+    initializeOrbitEngine();
     
     initAuthUI();
     initAdminUI();
@@ -94,23 +93,9 @@ function checkSessionAndRoute() {
 function openAuthGate() { document.getElementById('auth-gateway').classList.remove('hidden'); }
 
 function openTestQInterface(user) {
-    const hub = document.getElementById('screen-home-hub');
-    hub.classList.remove('hidden');
-    
+    document.getElementById('screen-home-hub').classList.remove('hidden');
     const badge = document.getElementById('user-profile-badge');
     if(badge && user) badge.innerText = `MENTEE: ${user.name.toUpperCase()}`;
-    
-    // CRITICAL FIX: Wait for elements to be visible and rendered, then attach listeners
-    setTimeout(() => {
-        // Verify elements exist before initializing
-        const orbitNodes = document.querySelectorAll('.orbit-node');
-        if (orbitNodes.length > 0) {
-            initializeOrbitEngine();
-            console.log(`✅ Orbit engine initialized with ${orbitNodes.length} clickable nodes`);
-        } else {
-            console.error('❌ No orbit nodes found!');
-        }
-    }, 150);
 }
 
 function openAdminPanel() {
