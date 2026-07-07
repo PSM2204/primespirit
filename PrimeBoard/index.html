@@ -29,7 +29,6 @@
     <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
 
     <style>
-    /* ─── TOKENS ─────────────────────────────────────────── */
     :root {
         --bg: #111118;
         --surface: rgba(22, 22, 32, 0.95);
@@ -48,9 +47,7 @@
         --r: 8px;
         --r2: 12px;
         --r3: 20px;
-        --toolbar-h: 52px;
-        --topbar-h: 44px;
-        --pagetabs-h: 36px;
+        --sidebar-w: 56px;
         --safe-top: env(safe-area-inset-top, 0px);
         --safe-bottom: env(safe-area-inset-bottom, 0px);
         --shadow: 0 4px 24px rgba(0,0,0,0.5);
@@ -71,509 +68,567 @@
     /* ─── CANVAS ROOT ────────────────────────────────────── */
     #root {
         position:fixed;
-        top: calc(var(--topbar-h) + var(--pagetabs-h) + var(--safe-top));
-        left:0; right:0;
-        bottom: calc(var(--toolbar-h) + var(--safe-bottom));
+        top: var(--safe-top);
+        left: var(--sidebar-w);
+        right: 0;
+        bottom: var(--safe-bottom);
     }
 
-    /* ─── TOPBAR ─────────────────────────────────────────── */
+    /* ─── MINIMAL TOPBAR ─────────────────────────────────── */
     #topbar {
-        position:fixed; top:var(--safe-top); left:0; right:0;
-        height:var(--topbar-h); z-index:1000;
-        display:flex; align-items:center; gap:8px; padding:0 12px;
-        background:var(--surface); border-bottom:1px solid var(--border);
-        backdrop-filter:blur(20px);
+        position:fixed;
+        top: var(--safe-top);
+        left: var(--sidebar-w);
+        right: 0;
+        height: 48px;
+        z-index: 1000;
+        display:flex;
+        align-items:center;
+        gap: 12px;
+        padding: 0 20px;
+        background: transparent;
+        pointer-events: none;
     }
+    #topbar > * { pointer-events: auto; }
 
     #brand {
-        display:flex; align-items:center; gap:7px;
-        font-weight:700; font-size:0.85rem; letter-spacing:-0.02em;
-        color:var(--text); flex-shrink:0;
+        display:flex;
+        align-items:center;
+        gap: 8px;
+        font-weight: 700;
+        font-size: 0.9rem;
+        color: var(--text);
+        background: var(--surface);
+        padding: 6px 14px;
+        border-radius: var(--r2);
+        border: 1px solid var(--border);
+        backdrop-filter: blur(12px);
     }
-    #brand i { color:var(--accent); font-size:0.9rem; filter:drop-shadow(0 0 6px rgba(124,106,247,0.5)); }
+    #brand i { color: var(--accent); font-size: 1rem; }
+
+    .topbar-right {
+        margin-left: auto;
+        display: flex;
+        gap: 8px;
+        align-items: center;
+    }
+
+    .top-btn {
+        height: 32px;
+        padding: 0 12px;
+        border-radius: var(--r);
+        border: 1px solid var(--border);
+        background: var(--surface);
+        color: var(--text2);
+        font-size: 0.75rem;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        backdrop-filter: blur(12px);
+        transition: all 0.15s;
+    }
+    .top-btn:hover { background: var(--surface2); color: var(--text); border-color: var(--border2); }
+    .top-btn.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .top-btn.primary:hover { background: var(--accent2); }
 
     #room-pill {
-        display:flex; align-items:center; gap:5px;
-        background:rgba(255,255,255,0.05); border:1px solid var(--border);
-        padding:4px 10px; border-radius:100px;
-        font-size:0.65rem; font-family:'JetBrains Mono',monospace; color:var(--text2);
+        display:flex;
+        align-items:center;
+        gap: 6px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        padding: 6px 12px;
+        border-radius: var(--r);
+        font-size: 0.7rem;
+        font-family: 'JetBrains Mono', monospace;
+        color: var(--text2);
+        backdrop-filter: blur(12px);
     }
-    #room-pill b { color:var(--accent3); }
-    #status-dot { width:6px; height:6px; border-radius:50%; background:var(--text3); flex-shrink:0; }
-    #status-dot.connected { background:var(--green); box-shadow:0 0 8px var(--green); }
-    #status-dot.connecting { background:var(--yellow); animation:blink 1.2s infinite; }
-    #status-dot.error { background:var(--red); }
+    #room-pill b { color: var(--accent3); }
+    #status-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--text3); }
+    #status-dot.connected { background: var(--green); box-shadow: 0 0 8px var(--green); }
+    #status-dot.connecting { background: var(--yellow); animation: blink 1.2s infinite; }
     @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
 
-    #online-pill {
-        display:none; align-items:center; gap:5px;
-        background:rgba(74,222,128,0.08); border:1px solid rgba(74,222,128,0.2);
-        padding:4px 10px; border-radius:100px;
-        font-size:0.65rem; font-weight:600; color:var(--green);
+    /* ─── LEFT SIDEBAR (MIRO STYLE) ──────────────────────── */
+    #sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: var(--sidebar-w);
+        background: var(--surface);
+        border-right: 1px solid var(--border);
+        backdrop-filter: blur(20px);
+        z-index: 1100;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 12px 0;
+        gap: 4px;
+        overflow-y: auto;
+    }
+    #sidebar::-webkit-scrollbar { display: none; }
+
+    .sidebar-section {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2px;
+        padding: 8px 0;
+        border-bottom: 1px solid var(--border);
+    }
+    .sidebar-section:last-child { border-bottom: none; }
+
+    .sidebar-btn {
+        width: 40px;
+        height: 40px;
+        border-radius: var(--r);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: transparent;
+        border: none;
+        color: var(--text2);
+        cursor: pointer;
+        font-size: 1.05rem;
+        transition: all 0.15s;
+        position: relative;
+    }
+    .sidebar-btn:hover {
+        background: rgba(255,255,255,0.08);
+        color: var(--text);
+    }
+    .sidebar-btn.active {
+        background: var(--accent);
+        color: #fff;
+        box-shadow: 0 0 12px rgba(124,106,247,0.4);
+    }
+    .sidebar-btn.active::before {
+        content: '';
+        position: absolute;
+        left: -8px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 3px;
+        height: 20px;
+        background: var(--accent);
+        border-radius: 0 4px 4px 0;
     }
 
-    .tb-spacer { flex:1; }
+    /* Tooltip */
+    .sidebar-btn[title]::after {
+        content: attr(title);
+        position: absolute;
+        left: calc(100% + 10px);
+        top: 50%;
+        transform: translateY(-50%);
+        padding: 5px 10px;
+        border-radius: var(--r);
+        background: var(--surface2);
+        border: 1px solid var(--border2);
+        color: var(--text);
+        font-size: 0.7rem;
+        font-weight: 600;
+        white-space: nowrap;
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 0.15s;
+        z-index: 9999;
+        box-shadow: var(--shadow);
+    }
+    .sidebar-btn:hover::after { opacity: 1; }
 
-    .tb-btn {
-        display:flex; align-items:center; justify-content:center; gap:5px;
-        height:28px; padding:0 10px; border-radius:var(--r);
-        border:1px solid var(--border); background:transparent;
-        font-size:0.68rem; font-weight:600; color:var(--text2);
-        cursor:pointer; transition:all 0.15s; white-space:nowrap;
-        font-family:'Inter',sans-serif;
-    }
-    .tb-btn:hover { background:rgba(255,255,255,0.07); color:var(--text); border-color:var(--border2); }
-    .tb-btn i { font-size:0.75rem; }
-    .tb-btn span { display:none; }
-    @media(min-width:640px) { .tb-btn span { display:inline; } }
-
-    #lock-btn { color:var(--red); border-color:rgba(251,113,133,0.25); background:rgba(251,113,133,0.06); }
-    #lock-btn.unlocked { color:var(--green); border-color:rgba(74,222,128,0.25); background:rgba(74,222,128,0.06); }
-    #invite-btn { color:var(--accent); border-color:rgba(124,106,247,0.25); background:rgba(124,106,247,0.06); }
-    #add-student-btn { color:var(--green); border-color:rgba(74,222,128,0.25); background:rgba(74,222,128,0.06); }
-    #record-btn { color:var(--red); border-color:rgba(251,113,133,0.2); background:rgba(251,113,133,0.05); }
-    #record-btn.recording { background:var(--red); color:#fff; border-color:var(--red); animation:recpulse 1.2s infinite; }
-    @keyframes recpulse { 0%,100%{box-shadow:0 0 0 0 rgba(251,113,133,0.5)} 50%{box-shadow:0 0 0 5px rgba(251,113,133,0)} }
-
-    #rec-indicator {
-        display:none; align-items:center; gap:5px;
-        padding:4px 10px; border-radius:100px;
-        background:rgba(251,113,133,0.1); border:1px solid rgba(251,113,133,0.25);
-        color:var(--red); font-size:0.65rem; font-weight:700; font-family:'JetBrains Mono',monospace;
-    }
-    .rec-dot { width:7px; height:7px; border-radius:50%; background:var(--red); animation:blink 0.9s infinite; }
-
-    /* ─── PAGE TABS ──────────────────────────────────────── */
-    #page-tabs-bar {
-        position:fixed;
-        top:calc(var(--topbar-h) + var(--safe-top));
-        left:0; right:0; height:var(--pagetabs-h);
-        display:none; align-items:center; gap:4px;
-        padding:0 10px;
-        background:rgba(14,14,22,0.92); border-bottom:1px solid var(--border);
-        backdrop-filter:blur(16px); z-index:999;
-    }
-    #page-tabs-list { display:flex; gap:3px; overflow-x:auto; flex:1; align-items:center; height:100%; scrollbar-width:none; }
-    #page-tabs-list::-webkit-scrollbar { display:none; }
-    .page-tab {
-        display:flex; align-items:center; gap:6px;
-        padding:4px 10px; border-radius:var(--r);
-        background:transparent; border:1px solid transparent;
-        color:var(--text3); font-size:0.65rem; font-weight:600;
-        cursor:pointer; transition:all 0.15s; white-space:nowrap; flex-shrink:0;
-    }
-    .page-tab:hover { color:var(--text2); background:rgba(255,255,255,0.05); }
-    .page-tab.active {
-        color:var(--text); border-color:rgba(124,106,247,0.4);
-        background:rgba(124,106,247,0.12);
-    }
-    .page-tab-close { font-size:0.55rem; opacity:0.5; transition:opacity 0.15s; }
-    .page-tab-close:hover { opacity:1; color:var(--red); }
-    #add-page-btn {
-        flex-shrink:0; width:26px; height:26px; border-radius:var(--r);
-        border:1px dashed var(--border); background:transparent; color:var(--text3);
-        cursor:pointer; transition:all 0.15s; display:flex; align-items:center; justify-content:center; font-size:0.7rem;
-    }
-    #add-page-btn:hover { color:var(--green); border-color:var(--green); background:rgba(74,222,128,0.06); }
-
-    /* ─── MIRO-STYLE FLOATING TOOLBAR ───────────────────── */
-    #floatbar {
-        position:fixed;
-        bottom:calc(10px + var(--safe-bottom));
-        left:50%; transform:translateX(-50%);
-        z-index:1100;
-        display:none;
-        align-items:center; gap:2px;
-        padding:4px 8px;
-        background:var(--surface2);
-        border:1px solid var(--border2);
-        border-radius:var(--r3);
-        box-shadow: var(--shadow2), var(--glow);
-        backdrop-filter:blur(24px);
-        height:var(--toolbar-h);
+    .sidebar-divider {
+        width: 32px;
+        height: 1px;
+        background: var(--border);
+        margin: 4px 0;
     }
 
-    .fbar-btn {
-        position:relative;
-        width:36px; height:36px; border-radius:var(--r);
-        display:flex; align-items:center; justify-content:center;
-        background:transparent; border:none; color:var(--text2);
-        cursor:pointer; font-size:0.95rem;
-        transition:all 0.15s cubic-bezier(0.34,1.56,0.64,1);
-        flex-shrink:0;
+    /* ─── POPOVERS ─────────────────────────────────────── */
+    .popover {
+        position: fixed;
+        z-index: 2000;
+        left: calc(var(--sidebar-w) + 12px);
+        top: 60px;
+        background: var(--surface2);
+        border: 1px solid var(--border2);
+        border-radius: var(--r2);
+        box-shadow: var(--shadow2);
+        backdrop-filter: blur(24px);
+        display: none;
+        animation: popUp 0.2s cubic-bezier(0.34,1.56,0.64,1);
+        min-width: 280px;
     }
-    .fbar-btn:hover { color:var(--text); background:rgba(255,255,255,0.07); transform:scale(1.1); }
-    .fbar-btn.active {
-        color:#fff; background:var(--accent);
-        box-shadow:0 0 14px rgba(124,106,247,0.45);
-    }
-    .fbar-btn.active:hover { transform:scale(1.08); }
-
-    .fbar-btn[title]::after {
-        content:attr(title);
-        position:absolute; bottom:calc(100% + 8px); left:50%; transform:translateX(-50%);
-        padding:4px 8px; border-radius:var(--r);
-        background:rgba(10,10,18,0.95); border:1px solid var(--border2);
-        color:var(--text); font-size:0.6rem; font-weight:600; font-family:'Inter',sans-serif;
-        white-space:nowrap; pointer-events:none; opacity:0;
-        transition:opacity 0.15s; z-index:9999;
-    }
-    .fbar-btn:hover::after { opacity:1; }
-
-    .fbar-divider { width:1px; height:22px; background:var(--border2); margin:0 4px; flex-shrink:0; }
-
-    /* ─── PEN POPOVER ────────────────────────────────────── */
-    #pen-popover {
-        position:fixed; z-index:2000;
-        bottom:calc(var(--toolbar-h) + 14px + var(--safe-bottom));
-        left:50%; transform:translateX(-50%);
-        width:min(340px, 96vw);
-        background:var(--surface2); border:1px solid var(--border2);
-        border-radius:var(--r2); box-shadow:var(--shadow2);
-        backdrop-filter:blur(24px);
-        display:none;
-        animation:popUp 0.2s cubic-bezier(0.34,1.56,0.64,1);
-    }
-    @keyframes popUp { from{opacity:0;transform:translateX(-50%) translateY(10px)} to{opacity:1;transform:translateX(-50%) translateY(0)} }
+    @keyframes popUp { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
 
     .popover-head {
-        display:flex; align-items:center; justify-content:space-between;
-        padding:8px 12px; border-bottom:1px solid var(--border);
-        font-size:0.68rem; font-weight:700; color:var(--text2); letter-spacing:0.06em; text-transform:uppercase;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 14px;
+        border-bottom: 1px solid var(--border);
+        font-size: 0.7rem;
+        font-weight: 700;
+        color: var(--text2);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
     }
     .popover-close {
-        width:22px; height:22px; border-radius:5px; border:none; background:transparent;
-        color:var(--text3); cursor:pointer; font-size:0.75rem; display:flex; align-items:center; justify-content:center;
-        transition:all 0.15s;
+        width: 24px;
+        height: 24px;
+        border-radius: 5px;
+        border: none;
+        background: transparent;
+        color: var(--text3);
+        cursor: pointer;
+        font-size: 0.8rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
-    .popover-close:hover { background:rgba(251,113,133,0.1); color:var(--red); }
-    .popover-body { padding:10px 12px; display:flex; flex-direction:column; gap:10px; }
+    .popover-close:hover { background: rgba(251,113,133,0.1); color: var(--red); }
+    .popover-body { padding: 12px; }
 
-    .pen-types-row { display:flex; gap:5px; flex-wrap:wrap; }
-    .pen-type-btn {
-        display:flex; flex-direction:column; align-items:center; gap:3px;
-        padding:7px 8px; border-radius:var(--r); border:1px solid var(--border);
-        background:rgba(255,255,255,0.04); color:var(--text2);
-        cursor:pointer; transition:all 0.15s; min-width:52px; flex:1;
+    /* Pen types */
+    .pen-types { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 12px; }
+    .pen-type {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+        padding: 8px;
+        border-radius: var(--r);
+        border: 1px solid var(--border);
+        background: rgba(255,255,255,0.04);
+        color: var(--text2);
+        cursor: pointer;
+        font-size: 0.6rem;
+        font-weight: 600;
+        transition: all 0.15s;
     }
-    .pen-type-btn svg { width:28px; height:14px; }
-    .pen-type-btn span { font-size:0.55rem; font-weight:600; white-space:nowrap; }
-    .pen-type-btn:hover { border-color:var(--border2); color:var(--text); background:rgba(255,255,255,0.07); }
-    .pen-type-btn.active { border-color:var(--accent); color:var(--text); background:rgba(124,106,247,0.15); }
+    .pen-type svg { width: 24px; height: 12px; }
+    .pen-type:hover { border-color: var(--border2); color: var(--text); background: rgba(255,255,255,0.07); }
+    .pen-type.active { border-color: var(--accent); color: var(--text); background: rgba(124,106,247,0.15); }
 
-    .color-row { display:flex; align-items:center; gap:5px; flex-wrap:wrap; }
+    /* Colors */
+    .colors { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
     .color-dot {
-        width:22px; height:22px; border-radius:50%; cursor:pointer;
-        border:2px solid transparent; transition:all 0.15s; flex-shrink:0;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        cursor: pointer;
+        border: 2px solid transparent;
+        transition: all 0.15s;
     }
-    .color-dot:hover { transform:scale(1.2); }
-    .color-dot.active { border-color:rgba(255,255,255,0.8); box-shadow:0 0 0 2px rgba(255,255,255,0.2); transform:scale(1.1); }
-    #stroke-custom-color {
-        width:22px; height:22px; border-radius:50%; border:2px solid var(--border2);
-        cursor:pointer; padding:0; background:transparent; overflow:hidden;
-    }
+    .color-dot:hover { transform: scale(1.15); }
+    .color-dot.active { border-color: rgba(255,255,255,0.8); box-shadow: 0 0 0 2px rgba(255,255,255,0.2); }
+    #stroke-custom { width: 24px; height: 24px; border-radius: 50%; border: 2px solid var(--border2); cursor: pointer; padding: 0; background: transparent; }
 
-    .thickness-row { display:flex; align-items:center; gap:7px; }
-    .thickness-row label { font-size:0.6rem; font-weight:700; color:var(--text3); text-transform:uppercase; letter-spacing:0.05em; white-space:nowrap; }
-    #thickness-slider {
-        flex:1; height:4px; border-radius:2px; cursor:pointer;
-        -webkit-appearance:none; appearance:none;
-        background: linear-gradient(to right, var(--accent) 0%, var(--accent) var(--pct,40%), rgba(255,255,255,0.12) var(--pct,40%), rgba(255,255,255,0.12) 100%);
-        outline:none; border:none;
+    /* Sliders */
+    .slider-row { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+    .slider-row label { font-size: 0.6rem; font-weight: 700; color: var(--text3); text-transform: uppercase; letter-spacing: 0.05em; min-width: 50px; }
+    .slider-row input[type="range"] {
+        flex: 1;
+        height: 4px;
+        border-radius: 2px;
+        cursor: pointer;
+        -webkit-appearance: none;
+        appearance: none;
+        background: linear-gradient(to right, var(--accent) 0%, var(--accent) var(--pct,50%), rgba(255,255,255,0.1) var(--pct,50%), rgba(255,255,255,0.1) 100%);
+        outline: none;
+        border: none;
     }
-    #thickness-slider::-webkit-slider-thumb {
-        -webkit-appearance:none; width:14px; height:14px; border-radius:50%;
-        background:#fff; border:2px solid var(--accent); cursor:pointer;
-        box-shadow:0 0 6px rgba(124,106,247,0.4);
+    .slider-row input[type="range"]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        background: #fff;
+        border: 2px solid var(--accent);
+        cursor: pointer;
+        box-shadow: 0 0 6px rgba(124,106,247,0.4);
     }
-    #thickness-slider::-moz-range-thumb {
-        width:14px; height:14px; border-radius:50%;
-        background:#fff; border:2px solid var(--accent); cursor:pointer;
-    }
-    .thickness-preview { display:flex; align-items:center; justify-content:center; width:28px; flex-shrink:0; }
+    .slider-val { font-size: 0.6rem; font-weight: 700; color: var(--text2); font-family: 'JetBrains Mono', monospace; min-width: 32px; text-align: right; }
 
-    .opacity-row { display:flex; align-items:center; gap:7px; }
-    .opacity-row label { font-size:0.6rem; font-weight:700; color:var(--text3); text-transform:uppercase; letter-spacing:0.05em; white-space:nowrap; min-width:44px; }
-    #opacity-slider {
-        flex:1; height:4px; border-radius:2px; cursor:pointer;
-        -webkit-appearance:none; appearance:none;
-        background: linear-gradient(to right, var(--accent) 0%, var(--accent) var(--pct2,100%), rgba(255,255,255,0.12) var(--pct2,100%), rgba(255,255,255,0.12) 100%);
-        outline:none; border:none;
-    }
-    #opacity-slider::-webkit-slider-thumb {
-        -webkit-appearance:none; width:14px; height:14px; border-radius:50%;
-        background:#fff; border:2px solid var(--accent); cursor:pointer;
-    }
-    #opacity-slider::-moz-range-thumb {
-        width:14px; height:14px; border-radius:50%;
-        background:#fff; border:2px solid var(--accent); cursor:pointer;
-    }
-    #opacity-val { font-size:0.6rem; font-weight:700; color:var(--text2); font-family:'JetBrains Mono',monospace; min-width:28px; text-align:right; }
-
-    /* ─── BACKGROUND COLOR POPOVER ───────────────────────── */
-    #bg-popover {
-        position:fixed; z-index:2000;
-        bottom:calc(var(--toolbar-h) + 14px + var(--safe-bottom));
-        background:var(--surface2); border:1px solid var(--border2);
-        border-radius:var(--r2); box-shadow:var(--shadow2);
-        backdrop-filter:blur(24px);
-        display:none; width:220px;
-        animation:popUp 0.2s cubic-bezier(0.34,1.56,0.64,1);
-    }
-    .bg-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:6px; padding:10px 12px; }
+    /* BG Colors Grid */
+    .bg-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
     .bg-swatch {
-        aspect-ratio:1; border-radius:var(--r); cursor:pointer;
-        border:2px solid rgba(255,255,255,0.1); transition:all 0.15s;
-        position:relative;
+        aspect-ratio: 1;
+        border-radius: var(--r);
+        cursor: pointer;
+        border: 2px solid rgba(255,255,255,0.1);
+        transition: all 0.15s;
+        position: relative;
     }
-    .bg-swatch:hover { transform:scale(1.1); border-color:rgba(255,255,255,0.3); }
-    .bg-swatch.active { border-color:var(--accent); box-shadow:0 0 0 2px rgba(124,106,247,0.3); }
-    .bg-swatch.active::after { content:'✓'; position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:#fff; font-size:0.85rem; font-weight:800; text-shadow:0 1px 3px rgba(0,0,0,0.6); }
-    .bg-custom-row { display:flex; align-items:center; gap:8px; padding:0 12px 10px; border-top:1px solid var(--border); padding-top:8px; }
-    .bg-custom-row span { font-size:0.62rem; color:var(--text3); font-weight:600; }
-    #bg-custom-picker { width:26px; height:26px; border-radius:var(--r); border:2px solid var(--border2); cursor:pointer; padding:1px; background:transparent; overflow:hidden; }
+    .bg-swatch:hover { transform: scale(1.1); border-color: rgba(255,255,255,0.3); }
+    .bg-swatch.active { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(124,106,247,0.3); }
+    .bg-swatch.active::after {
+        content: '✓';
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-size: 0.8rem;
+        font-weight: 800;
+        text-shadow: 0 1px 3px rgba(0,0,0,0.6);
+    }
 
-    /* ─── TIMER POPOVER ─────────────────────────────────── */
-    #timer-popover {
-        position:fixed; z-index:2000;
-        bottom:calc(var(--toolbar-h) + 14px + var(--safe-bottom));
-        background:var(--surface2); border:1px solid var(--border2);
-        border-radius:var(--r2); box-shadow:var(--shadow2);
-        backdrop-filter:blur(24px);
-        display:none; padding:14px 16px;
-        animation:popUp 0.2s cubic-bezier(0.34,1.56,0.64,1);
-        width:200px;
-    }
-    #timer-display {
-        font-size:2rem; font-weight:800; color:var(--accent);
-        font-family:'JetBrains Mono',monospace; letter-spacing:2px;
-        text-align:center; margin-bottom:10px;
-        text-shadow:0 0 20px rgba(124,106,247,0.4);
-    }
-    #timer-display.warn { color:var(--yellow); text-shadow:0 0 20px rgba(251,191,36,0.4); }
-    #timer-display.danger { color:var(--red); animation:danger-pulse 0.8s infinite; }
-    @keyframes danger-pulse { 0%,100%{opacity:1} 50%{opacity:0.6} }
-    .timer-btns { display:flex; gap:5px; margin-bottom:10px; }
-    .t-btn {
-        flex:1; padding:6px 4px; border-radius:var(--r); border:none;
-        font-size:0.62rem; font-weight:700; cursor:pointer; transition:all 0.15s;
-        font-family:'Inter',sans-serif;
-    }
-    .t-btn.start { background:var(--green); color:#0a1012; }
-    .t-btn.pause { background:var(--yellow); color:#0a0a00; }
-    .t-btn.reset { background:var(--red); color:#fff; }
-    .t-btn:hover { filter:brightness(1.1); transform:scale(1.04); }
-    .timer-inputs-row { display:flex; gap:5px; align-items:center; }
-    .timer-inputs-row input {
-        flex:1; background:rgba(255,255,255,0.06); border:1px solid var(--border);
-        color:var(--text); padding:5px 4px; border-radius:var(--r);
-        text-align:center; font-size:0.75rem; font-family:'JetBrains Mono',monospace; outline:none;
-    }
-    .timer-inputs-row input:focus { border-color:var(--accent); }
-    .timer-inputs-row span { color:var(--text3); font-weight:800; font-family:'JetBrains Mono',monospace; }
-
-    /* ─── GENERIC MODAL OVERLAY ──────────────────────────── */
+    /* ── MODALS ────────────────────────────────────────── */
     .modal-overlay {
-        position:fixed; inset:0; z-index:4000;
-        display:none; align-items:center; justify-content:center;
-        background:rgba(8,8,16,0.8); backdrop-filter:blur(8px); padding:20px;
-        animation:fadeIn 0.15s ease;
+        position: fixed;
+        inset: 0;
+        z-index: 4000;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        background: rgba(8,8,16,0.85);
+        backdrop-filter: blur(8px);
+        padding: 20px;
+        animation: fadeIn 0.15s ease;
     }
     @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+
     .modal-card {
-        width:min(460px,95vw); background:var(--surface2);
-        border:1px solid var(--border2); border-radius:var(--r2);
-        box-shadow:var(--shadow2);
-        animation:popUp 0.25s cubic-bezier(0.34,1.56,0.64,1);
-        overflow:hidden; max-height:90vh; overflow-y:auto;
+        width: min(520px, 95vw);
+        background: var(--surface2);
+        border: 1px solid var(--border2);
+        border-radius: var(--r2);
+        box-shadow: var(--shadow2);
+        animation: popUp 0.25s cubic-bezier(0.34,1.56,0.64,1);
+        overflow: hidden;
+        max-height: 90vh;
+        overflow-y: auto;
     }
     .modal-header {
-        display:flex; align-items:center; justify-content:space-between;
-        padding:14px 16px; border-bottom:1px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 14px 18px;
+        border-bottom: 1px solid var(--border);
     }
-    .modal-title { font-size:0.88rem; font-weight:700; color:var(--text); display:flex; align-items:center; gap:8px; }
-    .modal-title i { color:var(--accent); }
+    .modal-title { font-size: 0.9rem; font-weight: 700; color: var(--text); display: flex; align-items: center; gap: 8px; }
+    .modal-title i { color: var(--accent); }
     .modal-close {
-        width:28px; height:28px; border-radius:var(--r); border:none; background:transparent;
-        color:var(--text2); cursor:pointer; font-size:0.85rem;
-        display:flex; align-items:center; justify-content:center; transition:all 0.15s;
+        width: 30px;
+        height: 30px;
+        border-radius: var(--r);
+        border: none;
+        background: transparent;
+        color: var(--text2);
+        cursor: pointer;
+        font-size: 0.9rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
-    .modal-close:hover { background:rgba(251,113,133,0.1); color:var(--red); }
-    .modal-body { padding:16px; }
-    .modal-body p { color:var(--text2); font-size:0.72rem; margin-bottom:14px; font-weight:500; line-height:1.5; }
-    .modal-label { display:block; color:var(--text2); font-size:0.62rem; font-weight:700; letter-spacing:0.07em; text-transform:uppercase; margin:12px 0 5px; }
+    .modal-close:hover { background: rgba(251,113,133,0.1); color: var(--red); }
+    .modal-body { padding: 18px; }
+    .modal-body p { color: var(--text2); font-size: 0.75rem; margin-bottom: 14px; line-height: 1.5; }
+
+    .modal-label {
+        display: block;
+        color: var(--text2);
+        font-size: 0.62rem;
+        font-weight: 700;
+        letter-spacing: 0.07em;
+        text-transform: uppercase;
+        margin: 12px 0 6px;
+    }
     .modal-input {
-        width:100%; background:rgba(255,255,255,0.06); border:1px solid var(--border);
-        color:var(--text); padding:10px 12px; border-radius:var(--r);
-        font-size:0.85rem; outline:none; transition:border-color 0.15s;
-        font-family:'Inter',sans-serif;
+        width: 100%;
+        background: rgba(255,255,255,0.06);
+        border: 1px solid var(--border);
+        color: var(--text);
+        padding: 10px 12px;
+        border-radius: var(--r);
+        font-size: 0.85rem;
+        outline: none;
+        font-family: 'Inter', sans-serif;
     }
-    .modal-input:focus { border-color:var(--accent); }
-    .modal-input::placeholder { color:var(--text3); }
-    .modal-row { display:flex; gap:8px; margin-top:14px; }
+    .modal-input:focus { border-color: var(--accent); }
+
+    .modal-row { display: flex; gap: 8px; margin-top: 16px; }
     .modal-row button {
-        flex:1; padding:10px; border-radius:var(--r); border:none;
-        font-weight:700; font-size:0.78rem; cursor:pointer; transition:all 0.15s;
-        font-family:'Inter',sans-serif;
+        flex: 1;
+        padding: 10px;
+        border-radius: var(--r);
+        border: none;
+        font-weight: 700;
+        font-size: 0.8rem;
+        cursor: pointer;
+        transition: all 0.15s;
+        font-family: 'Inter', sans-serif;
     }
-    .modal-row button:hover { filter:brightness(1.08); transform:translateY(-1px); }
-    .btn-primary { background:linear-gradient(135deg,var(--accent),var(--accent2)); color:#fff; }
-    .btn-secondary { background:rgba(255,255,255,0.07); color:var(--text); border:1px solid var(--border) !important; }
-    .btn-green { background:var(--green); color:#0a1a0a; }
+    .modal-row button:hover { filter: brightness(1.08); transform: translateY(-1px); }
+    .btn-primary { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #fff; }
+    .btn-secondary { background: rgba(255,255,255,0.07); color: var(--text); border: 1px solid var(--border) !important; }
+    .btn-green { background: var(--green); color: #0a1a0a; }
 
-    #toolkit-card { width:min(580px,95vw); }
-    .toolkit-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(120px,1fr)); gap:8px; margin-top:14px; }
+    /* Math Preview */
+    #math-preview {
+        margin-top: 12px;
+        padding: 14px;
+        background: rgba(255,255,255,0.04);
+        border-radius: var(--r);
+        min-height: 50px;
+        border: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* Toolkit Grid */
+    .toolkit-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 14px; }
     .toolkit-item {
-        display:flex; flex-direction:column; align-items:center; gap:7px;
-        padding:14px 10px; background:rgba(255,255,255,0.04); border:1px solid var(--border);
-        border-radius:var(--r); cursor:pointer; transition:all 0.15s; text-align:center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+        padding: 12px;
+        background: rgba(255,255,255,0.04);
+        border: 1px solid var(--border);
+        border-radius: var(--r);
+        cursor: pointer;
+        transition: all 0.15s;
+        text-align: center;
     }
-    .toolkit-item:hover { background:rgba(124,106,247,0.1); border-color:rgba(124,106,247,0.3); transform:translateY(-2px); }
-    .toolkit-item i { font-size:1.3rem; color:var(--accent); }
-    .toolkit-item .t-name { color:var(--text); font-size:0.75rem; font-weight:700; }
-    .toolkit-item .t-sub { color:var(--text3); font-size:0.58rem; font-weight:600; }
+    .toolkit-item:hover { background: rgba(124,106,247,0.1); border-color: rgba(124,106,247,0.3); transform: translateY(-2px); }
+    .toolkit-item i { font-size: 1.2rem; color: var(--accent); }
+    .toolkit-item .t-name { color: var(--text); font-size: 0.7rem; font-weight: 700; }
+    .toolkit-item .t-sub { color: var(--text3); font-size: 0.58rem; font-weight: 600; }
 
-    #math-preview { margin-top:10px; padding:12px; background:rgba(255,255,255,0.04); border-radius:var(--r); min-height:44px; border:1px solid var(--border); }
-    #math-input { min-height:70px; resize:vertical; }
-
-    #graph-card { width:min(660px,95vw); }
-    .graph-tabs { display:flex; gap:5px; margin-bottom:12px; }
-    .graph-tab {
-        padding:6px 12px; border-radius:100px; border:1px solid var(--border);
-        background:rgba(255,255,255,0.04); color:var(--text2);
-        font-size:0.67rem; font-weight:600; cursor:pointer; transition:all 0.15s;
-    }
-    .graph-tab.active { border-color:rgba(56,189,248,0.4); color:#fff; background:rgba(56,189,248,0.15); }
-    .graph-fields { display:none; flex-direction:column; gap:8px; }
-    .graph-fields.active { display:flex; }
-    .g-row { display:flex; gap:8px; align-items:center; }
-    .g-row label { min-width:70px; font-size:0.62rem; font-weight:700; color:var(--text2); text-transform:uppercase; letter-spacing:0.05em; }
-    .g-row input {
-        flex:1; background:rgba(255,255,255,0.06); border:1px solid var(--border);
-        color:var(--text); padding:8px 10px; border-radius:var(--r);
-        font-size:0.82rem; outline:none; font-family:'JetBrains Mono',monospace;
-    }
-    .g-row input:focus { border-color:var(--accent3); }
-    .graph-hint { font-size:0.6rem; color:var(--text3); font-weight:500; }
-    #graph-canvas-wrap { margin-top:12px; background:#07090f; border:1px solid var(--border); border-radius:var(--r); overflow:hidden; }
-    #graph-canvas { width:100%; height:240px; display:block; touch-action:none; }
-    #graph-readout { color:var(--accent3); font-size:0.65rem; font-family:'JetBrains Mono',monospace; margin-top:6px; min-height:1em; }
-    #graph-error { color:var(--red); font-size:0.65rem; margin-top:4px; min-height:1em; }
-
-    #email-list { min-height:36px; max-height:120px; overflow-y:auto; padding:6px; background:rgba(255,255,255,0.04); border-radius:var(--r); margin:8px 0; }
-    .email-tag {
-        display:inline-flex; align-items:center; gap:5px;
-        background:rgba(74,222,128,0.1); border:1px solid rgba(74,222,128,0.3);
-        color:var(--green); padding:3px 8px; border-radius:100px;
-        font-size:0.65rem; font-weight:600; margin:2px;
-    }
-    .email-tag i { cursor:pointer; opacity:0.6; font-size:0.55rem; }
-    .email-tag i:hover { opacity:1; color:var(--red); }
-    #email-suggestions {
-        position:absolute; top:100%; left:0; right:0; z-index:100;
-        background:var(--surface2); border:1px solid var(--border2);
-        border-radius:var(--r); margin-top:4px; max-height:130px; overflow-y:auto;
-        display:none; box-shadow:var(--shadow);
-    }
-    .sug-item { padding:8px 12px; font-size:0.78rem; color:var(--text); cursor:pointer; border-bottom:1px solid var(--border); transition:background 0.1s; }
-    .sug-item:hover { background:rgba(124,106,247,0.1); color:var(--accent); }
-    .sug-item:last-child { border-bottom:none; }
-
+    /* Setup Screen */
     #setup-screen {
-        position:fixed; inset:0; z-index:9000;
-        display:flex; align-items:center; justify-content:center;
-        background:radial-gradient(ellipse at center, #13112a 0%, #07060f 100%);
-        padding:20px;
+        position: fixed;
+        inset: 0;
+        z-index: 9000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: radial-gradient(ellipse at center, #13112a 0%, #07060f 100%);
+        padding: 20px;
     }
     #setup-card {
-        width:min(420px,95vw); background:var(--surface2);
-        border:1px solid var(--border2); border-radius:var(--r2);
-        padding:32px 26px; text-align:center;
-        box-shadow:var(--shadow2), var(--glow);
-        animation:popUp 0.5s cubic-bezier(0.34,1.56,0.64,1);
+        width: min(420px, 95vw);
+        background: var(--surface2);
+        border: 1px solid var(--border2);
+        border-radius: var(--r2);
+        padding: 32px 26px;
+        text-align: center;
+        box-shadow: var(--shadow2), var(--glow);
+        animation: popUp 0.5s cubic-bezier(0.34,1.56,0.64,1);
     }
-    #setup-card h1 { font-size:1.6rem; font-weight:800; color:var(--text); margin-bottom:4px; letter-spacing:-0.03em; }
-    #setup-card h1 span { color:var(--accent); }
-    #setup-card .tagline { font-size:0.65rem; color:var(--text3); font-weight:600; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:24px; }
-    .role-row { display:flex; gap:8px; }
+    #setup-card h1 { font-size: 1.6rem; font-weight: 800; color: var(--text); margin-bottom: 4px; }
+    #setup-card h1 span { color: var(--accent); }
+    #setup-card .tagline { font-size: 0.65rem; color: var(--text3); font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 24px; }
+    .role-row { display: flex; gap: 8px; }
     .role-btn {
-        flex:1; padding:10px; border-radius:var(--r); border:1px solid var(--border);
-        background:rgba(255,255,255,0.04); color:var(--text2);
-        font-weight:700; font-size:0.78rem; cursor:pointer; transition:all 0.15s;
-        font-family:'Inter',sans-serif;
+        flex: 1;
+        padding: 10px;
+        border-radius: var(--r);
+        border: 1px solid var(--border);
+        background: rgba(255,255,255,0.04);
+        color: var(--text2);
+        font-weight: 700;
+        font-size: 0.78rem;
+        cursor: pointer;
+        transition: all 0.15s;
     }
-    .role-btn:hover { transform:scale(1.02); }
-    .role-btn.active { border-color:var(--accent); color:var(--text); background:rgba(124,106,247,0.12); }
+    .role-btn:hover { transform: scale(1.02); }
+    .role-btn.active { border-color: var(--accent); color: var(--text); background: rgba(124,106,247,0.12); }
     #enter-btn {
-        width:100%; margin-top:22px; padding:13px; border-radius:var(--r); border:none;
-        background:linear-gradient(135deg,var(--accent),var(--accent2));
-        color:#fff; font-weight:800; font-size:0.9rem; cursor:pointer;
-        transition:all 0.15s; box-shadow:0 4px 18px rgba(124,106,247,0.3);
-        font-family:'Inter',sans-serif;
+        width: 100%;
+        margin-top: 22px;
+        padding: 13px;
+        border-radius: var(--r);
+        border: none;
+        background: linear-gradient(135deg, var(--accent), var(--accent2));
+        color: #fff;
+        font-weight: 800;
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: all 0.15s;
+        box-shadow: 0 4px 18px rgba(124,106,247,0.3);
     }
-    #enter-btn:hover { transform:translateY(-2px); box-shadow:0 8px 28px rgba(124,106,247,0.4); }
-    #setup-err { color:var(--red); font-size:0.72rem; margin-top:10px; min-height:1.1em; font-weight:600; }
+    #enter-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(124,106,247,0.4); }
+    #setup-err { color: var(--red); font-size: 0.72rem; margin-top: 10px; min-height: 1.1em; font-weight: 600; }
 
+    /* Spotlight */
     #spotlight-overlay {
-        position:fixed; inset:0; z-index:1500; pointer-events:none; display:none;
-        background:radial-gradient(circle 260px at var(--sx,50%) var(--sy,50%), transparent 0%, rgba(11,11,20,0.97) 100%);
-        transition:background 0.06s;
+        position: fixed;
+        inset: 0;
+        z-index: 1500;
+        pointer-events: none;
+        display: none;
+        background: radial-gradient(circle 260px at var(--sx,50%) var(--sy,50%), transparent 0%, rgba(11,11,20,0.97) 100%);
+        transition: background 0.06s;
     }
     #spotlight-handle {
-        position:fixed; width:38px; height:38px; border-radius:50%;
-        background:rgba(124,106,247,0.25); border:2px solid var(--accent);
-        box-shadow:0 0 18px rgba(124,106,247,0.4); cursor:grab; z-index:1501;
-        display:none; align-items:center; justify-content:center;
-        color:#fff; font-size:1rem;
-        left:var(--hx,50%); top:var(--hy,50%); transform:translate(-50%,-50%);
-        transition:transform 0.15s;
+        position: fixed;
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        background: rgba(124,106,247,0.25);
+        border: 2px solid var(--accent);
+        box-shadow: 0 0 18px rgba(124,106,247,0.4);
+        cursor: grab;
+        z-index: 1501;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-size: 1rem;
+        left: var(--hx,50%);
+        top: var(--hy,50%);
+        transform: translate(-50%,-50%);
+        transition: transform 0.15s;
     }
-    #spotlight-handle:hover { transform:translate(-50%,-50%) scale(1.15); }
-    #spotlight-handle:active { cursor:grabbing; }
+    #spotlight-handle:hover { transform: translate(-50%,-50%) scale(1.15); }
+    #spotlight-handle:active { cursor: grabbing; }
 
+    /* Banners */
     #locked-banner {
-        position:fixed; bottom:calc(var(--toolbar-h) + 14px + var(--safe-bottom));
-        left:50%; transform:translateX(-50%); z-index:1000;
-        display:none; align-items:center; gap:8px;
-        background:rgba(251,113,133,0.1); border:1px solid rgba(251,113,133,0.25);
-        color:var(--text); padding:8px 16px; border-radius:100px;
-        font-size:0.7rem; font-weight:600; backdrop-filter:blur(10px);
-        box-shadow:var(--shadow); max-width:90vw;
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 1000;
+        display: none;
+        align-items: center;
+        gap: 8px;
+        background: rgba(251,113,133,0.1);
+        border: 1px solid rgba(251,113,133,0.25);
+        color: var(--text);
+        padding: 8px 16px;
+        border-radius: 100px;
+        font-size: 0.7rem;
+        font-weight: 600;
+        backdrop-filter: blur(10px);
+        box-shadow: var(--shadow);
     }
-    #locked-banner i { color:var(--red); }
-    #recording-notice {
-        position:fixed; top:calc(var(--topbar-h) + var(--pagetabs-h) + 10px + var(--safe-top));
-        left:50%; transform:translateX(-50%); z-index:999;
-        display:none; align-items:center; gap:6px;
-        background:rgba(251,113,133,0.1); border:1px solid rgba(251,113,133,0.25);
-        color:var(--text); padding:6px 14px; border-radius:100px;
-        font-size:0.67rem; font-weight:700; backdrop-filter:blur(10px);
-    }
-    #recording-notice i { color:var(--red); }
+    #locked-banner i { color: var(--red); }
 
-    .excalidraw .App-toolbar {
-        position:fixed !important;
-        top:calc(var(--topbar-h) + var(--pagetabs-h) + var(--safe-top)) !important;
-        left:10px !important; right:10px !important;
-        z-index:997 !important;
-        background:var(--surface) !important;
-        backdrop-filter:blur(20px) !important;
-        border-radius:0 0 var(--r2) var(--r2) !important;
-        border:1px solid var(--border) !important; border-top:none !important;
-        padding:6px 12px !important;
-        box-shadow:var(--shadow) !important;
-        overflow-x:auto; scrollbar-width:none;
-    }
-    .excalidraw .App-toolbar::-webkit-scrollbar { display:none; }
-    .excalidraw { touch-action:none; }
+    /* Excalidraw overrides */
+    .excalidraw .App-toolbar,
     .excalidraw .Island.App-toolbar-content > div:last-child,
     .excalidraw .panelColumn,
-    .excalidraw [class*="properties"] { display:none !important; }
+    .excalidraw [class*="properties"] { display: none !important; }
+    .excalidraw { touch-action: none; }
 
-    @media(max-width:480px) {
-        .tb-btn i { font-size:0.8rem; }
-        #floatbar { padding:4px 6px; gap:1px; }
-        .fbar-btn { width:32px; height:32px; font-size:0.85rem; }
+    /* Responsive */
+    @media(max-width: 768px) {
+        #sidebar { width: 48px; }
+        #root { left: 48px; }
+        #topbar { left: 48px; }
+        .sidebar-btn { width: 36px; height: 36px; font-size: 0.95rem; }
+        .sidebar-btn[title]::after { display: none; }
     }
     </style>
 </head>
@@ -598,101 +653,98 @@
     </div>
 </div>
 
-<!-- TOPBAR -->
+<!-- MINIMAL TOPBAR -->
 <div id="topbar" style="display:none">
     <div id="brand"><i class="fas fa-atom"></i> PrimeBoard</div>
     <div id="room-pill"><span id="status-dot"></span> <span id="room-pill-code">—</span></div>
-    <div id="online-pill"><i class="fas fa-users"></i> <span id="student-count">1</span></div>
-    <div class="tb-spacer"></div>
-    <div id="rec-indicator"><span class="rec-dot"></span> <span id="rec-timer">00:00</span></div>
-    <button id="record-btn" class="tb-btn" style="display:none"><i class="fas fa-video"></i> <span id="rec-btn-text">Rec</span></button>
-    <button id="lock-btn" class="tb-btn" style="display:none"><i class="fas fa-lock"></i> <span id="lock-btn-text">Locked</span></button>
-    <button id="add-student-btn" class="tb-btn" style="display:none"><i class="fas fa-user-plus"></i> <span>Add</span></button>
-    <button id="invite-btn" class="tb-btn" style="display:none"><i class="fas fa-link"></i> <span>Invite</span></button>
-    <a id="exit-btn" class="tb-btn" href="../index.html"><i class="fas fa-home"></i></a>
+    <div class="topbar-right">
+        <button id="lock-btn" class="top-btn" style="display:none"><i class="fas fa-lock"></i> <span id="lock-text">Locked</span></button>
+        <button id="invite-btn" class="top-btn primary" style="display:none"><i class="fas fa-share-alt"></i> Share</button>
+        <a id="exit-btn" class="top-btn" href="../index.html"><i class="fas fa-home"></i></a>
+    </div>
 </div>
 
-<!-- PAGE TABS -->
-<div id="page-tabs-bar">
-    <div id="page-tabs-list"></div>
-    <button id="add-page-btn" title="Add Page"><i class="fas fa-plus"></i></button>
-</div>
+<!-- LEFT SIDEBAR (MIRO STYLE) -->
+<div id="sidebar" style="display:none">
+    <!-- Tools Section -->
+    <div class="sidebar-section">
+        <button class="sidebar-btn" id="tool-select" title="Select (V)"><i class="fas fa-mouse-pointer"></i></button>
+        <button class="sidebar-btn" id="tool-hand" title="Hand Tool (H)"><i class="fas fa-hand"></i></button>
+        <button class="sidebar-btn" id="tool-pen" title="Pen/Draw (P)"><i class="fas fa-pen"></i></button>
+        <button class="sidebar-btn" id="tool-eraser" title="Eraser (E)"><i class="fas fa-eraser"></i></button>
+    </div>
 
-<!-- CANVAS -->
-<div id="root"></div>
+    <!-- Shapes Section -->
+    <div class="sidebar-section">
+        <button class="sidebar-btn" id="tool-rect" title="Rectangle (R)"><i class="far fa-square"></i></button>
+        <button class="sidebar-btn" id="tool-circle" title="Circle (O)"><i class="far fa-circle"></i></button>
+        <button class="sidebar-btn" id="tool-line" title="Line (L)"><i class="fas fa-minus"></i></button>
+        <button class="sidebar-btn" id="tool-arrow" title="Arrow"><i class="fas fa-arrow-right"></i></button>
+    </div>
 
-<!-- MIRO-STYLE FLOATING TOOLBAR -->
-<div id="floatbar">
-    <button class="fbar-btn" id="fbar-select" title="Select"><i class="fas fa-mouse-pointer"></i></button>
-    <div class="fbar-divider"></div>
-    <button class="fbar-btn" id="fbar-pen" title="Pen / Brush"><i class="fas fa-pen-nib"></i></button>
-    <button class="fbar-btn" id="fbar-eraser" title="Eraser"><i class="fas fa-eraser"></i></button>
-    <div class="fbar-divider"></div>
-    <button class="fbar-btn" id="fbar-rect" title="Rectangle"><i class="far fa-square"></i></button>
-    <button class="fbar-btn" id="fbar-ellipse" title="Ellipse / Circle"><i class="far fa-circle"></i></button>
-    <button class="fbar-btn" id="fbar-arrow" title="Arrow"><i class="fas fa-long-arrow-alt-right"></i></button>
-    <button class="fbar-btn" id="fbar-text" title="Text"><i class="fas fa-font"></i></button>
-    <div class="fbar-divider"></div>
-    <button class="fbar-btn" id="fbar-math" title="Math Equation"><i class="fas fa-square-root-alt"></i></button>
-    <button class="fbar-btn" id="fbar-graph" title="Graph Plotter"><i class="fas fa-chart-line"></i></button>
-    <button class="fbar-btn" id="fbar-toolkit" title="Educational Toolkit"><i class="fas fa-graduation-cap"></i></button>
-    <div class="fbar-divider"></div>
-    <button class="fbar-btn" id="fbar-bg" title="Background Color"><i class="fas fa-fill-drip"></i></button>
-    <button class="fbar-btn" id="fbar-spotlight" title="Spotlight / Fog of War"><i class="fas fa-lightbulb"></i></button>
-    <button class="fbar-btn" id="fbar-timer" title="Timer"><i class="fas fa-stopwatch"></i></button>
+    <!-- Text & Media -->
+    <div class="sidebar-section">
+        <button class="sidebar-btn" id="tool-text" title="Text (T)"><i class="fas fa-font"></i></button>
+        <button class="sidebar-btn" id="tool-image" title="Image"><i class="fas fa-image"></i></button>
+    </div>
+
+    <div class="sidebar-divider"></div>
+
+    <!-- Smart Tools -->
+    <div class="sidebar-section">
+        <button class="sidebar-btn" id="btn-math" title="Math Equation"><i class="fas fa-square-root-alt"></i></button>
+        <button class="sidebar-btn" id="btn-convert" title="Convert to LaTeX"><i class="fas fa-magic"></i></button>
+        <button class="sidebar-btn" id="btn-toolkit" title="Toolkit"><i class="fas fa-graduation-cap"></i></button>
+    </div>
+
+    <!-- Board Settings -->
+    <div class="sidebar-section">
+        <button class="sidebar-btn" id="btn-bg" title="Background"><i class="fas fa-fill-drip"></i></button>
+        <button class="sidebar-btn" id="btn-spotlight" title="Spotlight"><i class="fas fa-lightbulb"></i></button>
+        <button class="sidebar-btn" id="btn-theme" title="Theme"><i class="fas fa-palette"></i></button>
+    </div>
+
+    <div class="sidebar-divider"></div>
+
+    <!-- Bottom Actions -->
+    <div class="sidebar-section" style="margin-top:auto; padding-bottom:12px">
+        <button class="sidebar-btn" id="btn-undo" title="Undo"><i class="fas fa-undo"></i></button>
+        <button class="sidebar-btn" id="btn-redo" title="Redo"><i class="fas fa-redo"></i></button>
+    </div>
 </div>
 
 <!-- PEN POPOVER -->
-<div id="pen-popover">
+<div id="pen-popover" class="popover">
     <div class="popover-head">
-        <span>Drawing Pen</span>
+        <span>Drawing Tools</span>
         <button class="popover-close" data-close="pen-popover"><i class="fas fa-times"></i></button>
     </div>
     <div class="popover-body">
-        <div class="pen-types-row" id="pen-types-row"></div>
-        <div class="color-row" id="stroke-color-row"></div>
-        <div class="thickness-row">
+        <div class="pen-types" id="pen-types"></div>
+        <div class="colors" id="stroke-colors"></div>
+        <div class="slider-row">
             <label>Size</label>
-            <input type="range" id="thickness-slider" min="1" max="30" value="2">
-            <div class="thickness-preview" id="thickness-preview">
-                <svg width="28" height="14" viewBox="0 0 28 14">
-                    <line id="thickness-line" x1="0" y1="7" x2="28" y2="7" stroke="#a78bfa" stroke-linecap="round"/>
-                </svg>
-            </div>
+            <input type="range" id="thickness" min="1" max="30" value="2">
+            <span class="slider-val" id="thickness-val">2</span>
         </div>
-        <div class="opacity-row">
+        <div class="slider-row">
             <label>Opacity</label>
-            <input type="range" id="opacity-slider" min="10" max="100" value="100">
-            <span id="opacity-val">100%</span>
+            <input type="range" id="opacity" min="10" max="100" value="100">
+            <span class="slider-val" id="opacity-val">100%</span>
         </div>
+        <input type="color" id="stroke-custom" value="#a78bfa" style="margin-top:8px;width:100%;height:36px;border-radius:var(--r);border:none;cursor:pointer">
     </div>
 </div>
 
-<!-- BACKGROUND COLOR POPOVER -->
-<div id="bg-popover">
-    <div class="popover-head" style="padding:8px 12px">
+<!-- BG POPOVER -->
+<div id="bg-popover" class="popover" style="min-width:220px">
+    <div class="popover-head">
         <span>Background</span>
         <button class="popover-close" data-close="bg-popover"><i class="fas fa-times"></i></button>
     </div>
-    <div class="bg-grid" id="bg-grid"></div>
-    <div class="bg-custom-row">
-        <span>Custom</span>
-        <input type="color" id="bg-custom-picker" value="#111118">
-    </div>
-</div>
-
-<!-- TIMER POPOVER -->
-<div id="timer-popover">
-    <div id="timer-display">05:00</div>
-    <div class="timer-btns" id="timer-ctrl-row">
-        <button class="t-btn start" id="timer-start"><i class="fas fa-play"></i></button>
-        <button class="t-btn pause" id="timer-pause"><i class="fas fa-pause"></i></button>
-        <button class="t-btn reset" id="timer-reset"><i class="fas fa-redo"></i></button>
-    </div>
-    <div class="timer-inputs-row" id="timer-inputs-row">
-        <input type="number" id="t-min" min="0" max="99" value="5" placeholder="m">
-        <span>:</span>
-        <input type="number" id="t-sec" min="0" max="59" value="0" placeholder="s">
+    <div class="popover-body">
+        <div class="bg-grid" id="bg-colors"></div>
+        <input type="color" id="bg-custom" value="#111118" style="margin-top:10px;width:100%;height:36px;border-radius:var(--r);border:none;cursor:pointer">
     </div>
 </div>
 
@@ -700,40 +752,20 @@
 <div id="spotlight-overlay"></div>
 <div id="spotlight-handle"><i class="fas fa-crosshairs"></i></div>
 
-<!-- BANNERS -->
-<div id="locked-banner"><i class="fas fa-lock"></i> Drawing locked</div>
-<div id="recording-notice"><i class="fas fa-video"></i> Recording in progress</div>
+<!-- LOCKED BANNER -->
+<div id="locked-banner"><i class="fas fa-lock"></i> Drawing locked by teacher</div>
 
-<!-- ──── MODALS ──────────────────────────────────────────── -->
-<div class="modal-overlay" id="toolkit-modal">
-    <div class="modal-card" id="toolkit-card">
-        <div class="modal-header">
-            <div class="modal-title"><i class="fas fa-graduation-cap"></i> Educational Toolkit</div>
-            <button class="modal-close" id="close-toolkit"><i class="fas fa-times"></i></button>
-        </div>
-        <div class="modal-body">
-            <p>Click a tool to instantly add it to the board.</p>
-            <div class="toolkit-grid">
-                <div class="toolkit-item" data-tool="grid"><i class="fas fa-border-all"></i><span class="t-name">Math Grid</span><span class="t-sub">Snap to graph</span></div>
-                <div class="toolkit-item" data-tool="chem-benzene"><i class="fas fa-atom"></i><span class="t-name">Chemistry</span><span class="t-sub">Benzene Ring</span></div>
-                <div class="toolkit-item" data-tool="bio-cell"><i class="fas fa-dna"></i><span class="t-name">Biology</span><span class="t-sub">Animal Cell</span></div>
-                <div class="toolkit-item" data-tool="physics-circuit"><i class="fas fa-bolt"></i><span class="t-name">Physics</span><span class="t-sub">Circuit</span></div>
-                <div class="toolkit-item" data-tool="history-timeline"><i class="fas fa-history"></i><span class="t-name">History</span><span class="t-sub">Timeline</span></div>
-                <div class="toolkit-item" data-tool="code-block"><i class="fas fa-code"></i><span class="t-name">CS</span><span class="t-sub">Code Block</span></div>
-            </div>
-        </div>
-    </div>
-</div>
-
+<!-- MATH MODAL -->
 <div class="modal-overlay" id="math-modal">
     <div class="modal-card">
         <div class="modal-header">
-            <div class="modal-title"><i class="fas fa-square-root-alt"></i> LaTeX Equation</div>
+            <div class="modal-title"><i class="fas fa-square-root-alt"></i> Math Equation</div>
             <button class="modal-close" id="close-math"><i class="fas fa-times"></i></button>
         </div>
         <div class="modal-body">
-            <p>Enter LaTeX code — e.g. <code style="color:var(--accent3)">\frac{-b \pm \sqrt{b^2-4ac}}{2a}</code></p>
-            <textarea id="math-input" class="modal-input" placeholder="\frac{a}{b}"></textarea>
+            <p>Type LaTeX code or use the converter to transform handwriting into LaTeX.</p>
+            <span class="modal-label">LaTeX Code</span>
+            <textarea id="math-input" class="modal-input" placeholder="\frac{-b \pm \sqrt{b^2-4ac}}{2a}" style="min-height:80px;resize:vertical"></textarea>
             <div id="math-preview"></div>
             <div class="modal-row">
                 <button class="btn-secondary" id="cancel-math">Cancel</button>
@@ -743,68 +775,27 @@
     </div>
 </div>
 
-<div class="modal-overlay" id="graph-modal">
-    <div class="modal-card" id="graph-card">
-        <div class="modal-header">
-            <div class="modal-title"><i class="fas fa-chart-line"></i> Graph Plotter</div>
-            <button class="modal-close" id="close-graph"><i class="fas fa-times"></i></button>
-        </div>
-        <div class="modal-body">
-            <p>Plot a function or physics motion, then drop it onto the board.</p>
-            <div class="graph-tabs">
-                <button class="graph-tab active" data-mode="function">f(x) Function</button>
-                <button class="graph-tab" data-mode="projectile">Projectile</button>
-                <button class="graph-tab" data-mode="shm">SHM Wave</button>
-            </div>
-            <div class="graph-fields active" id="fields-function">
-                <div class="g-row"><label>y =</label><input id="fn-expr" type="text" value="sin(x)"></div>
-                <p class="graph-hint">Variables: x. Ops: + - * / ^ sin cos tan sqrt log exp pi</p>
-                <div class="g-row"><label>X range</label><input id="fn-xmin" type="number" value="-10" style="max-width:60px"><span style="color:var(--text3);margin:0 4px">to</span><input id="fn-xmax" type="number" value="10" style="max-width:60px"></div>
-            </div>
-            <div class="graph-fields" id="fields-projectile">
-                <div class="g-row"><label>u (m/s)</label><input id="pr-u" type="number" value="20"></div>
-                <div class="g-row"><label>Angle θ°</label><input id="pr-angle" type="number" value="45"></div>
-                <div class="g-row"><label>g (m/s²)</label><input id="pr-g" type="number" value="9.8"></div>
-            </div>
-            <div class="graph-fields" id="fields-shm">
-                <div class="g-row"><label>Amplitude A</label><input id="shm-a" type="number" value="1"></div>
-                <div class="g-row"><label>ω (rad/s)</label><input id="shm-w" type="number" value="2"></div>
-                <div class="g-row"><label>Phase φ</label><input id="shm-phi" type="number" value="0"></div>
-            </div>
-            <div id="graph-canvas-wrap"><canvas id="graph-canvas"></canvas></div>
-            <div id="graph-readout"></div>
-            <div id="graph-error"></div>
-            <div class="modal-row">
-                <button class="btn-secondary" id="cancel-graph">Close</button>
-                <button class="btn-green" id="insert-graph"><i class="fas fa-plus"></i> Insert onto Board</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="modal-overlay" id="add-student-modal">
+<!-- TOOLKIT MODAL -->
+<div class="modal-overlay" id="toolkit-modal">
     <div class="modal-card">
         <div class="modal-header">
-            <div class="modal-title"><i class="fas fa-user-plus"></i> Add Students</div>
-            <button class="modal-close" id="close-add-student"><i class="fas fa-times"></i></button>
+            <div class="modal-title"><i class="fas fa-graduation-cap"></i> Educational Toolkit</div>
+            <button class="modal-close" id="close-toolkit"><i class="fas fa-times"></i></button>
         </div>
         <div class="modal-body">
-            <p>Enter student email addresses. They'll receive an invite link via Brevo.</p>
-            <span class="modal-label">Email addresses (comma separated)</span>
-            <div style="position:relative">
-                <input id="email-input" class="modal-input" type="email" placeholder="student@email.com" autocomplete="off">
-                <div id="email-suggestions"></div>
-            </div>
-            <div id="email-list"></div>
-            <div class="modal-row">
-                <button class="btn-secondary" id="cancel-add">Cancel</button>
-                <button class="btn-green" id="send-invites">Send Invites</button>
+            <p>Quick insert educational elements</p>
+            <div class="toolkit-grid">
+                <div class="toolkit-item" data-tool="grid"><i class="fas fa-border-all"></i><span class="t-name">Grid</span><span class="t-sub">Math paper</span></div>
+                <div class="toolkit-item" data-tool="chem"><i class="fas fa-atom"></i><span class="t-name">Chemistry</span><span class="t-sub">Benzene</span></div>
+                <div class="toolkit-item" data-tool="bio"><i class="fas fa-dna"></i><span class="t-name">Biology</span><span class="t-sub">Cell</span></div>
+                <div class="toolkit-item" data-tool="physics"><i class="fas fa-bolt"></i><span class="t-name">Physics</span><span class="t-sub">Circuit</span></div>
+                <div class="toolkit-item" data-tool="timeline"><i class="fas fa-history"></i><span class="t-name">History</span><span class="t-sub">Timeline</span></div>
+                <div class="toolkit-item" data-tool="code"><i class="fas fa-code"></i><span class="t-name">Code</span><span class="t-sub">Block</span></div>
             </div>
         </div>
     </div>
 </div>
 
-<!-- ─── SCRIPTS ────────────────────────────────────────── -->
 <script type="module">
 import React from "react";
 import ReactDOM from "react-dom/client";
@@ -824,880 +815,490 @@ function mkEl(type,x,y,w,h,extra={}) {
         isDeleted:false,boundElements:null,updated:Date.now(),link:null,locked:false,...extra};
 }
 
+// Pen definitions
 const PEN_TYPES = [
-    { id:'ballpoint',  name:'Ballpoint',  strokeWidth:2,   roughness:0,   opacity:100, svgPath:'M2,12 L26,4',        sw:2   },
-    { id:'pencil',     name:'Pencil',     strokeWidth:1.5, roughness:2,   opacity:85,  svgPath:'M2,12 L26,4',        sw:1.5 },
-    { id:'marker',     name:'Marker',     strokeWidth:6,   roughness:0,   opacity:70,  svgPath:'M2,12 L26,4',        sw:6   },
-    { id:'highlighter',name:'Highlight',  strokeWidth:16,  roughness:0,   opacity:30,  svgPath:'M2,12 L26,4',        sw:14  },
-    { id:'brush',      name:'Brush',      strokeWidth:4,   roughness:1,   opacity:85,  svgPath:'M2,12 Q14,4 26,4',   sw:4   },
-    { id:'chalk',      name:'Chalk',      strokeWidth:3,   roughness:3,   opacity:75,  svgPath:'M2,12 L26,4',        sw:3   },
+    { id:'ballpoint', name:'Pen', strokeWidth:2, roughness:0, opacity:100, svg:'M2,10 L22,2' },
+    { id:'pencil', name:'Pencil', strokeWidth:1.5, roughness:2, opacity:85, svg:'M2,10 L22,2' },
+    { id:'marker', name:'Marker', strokeWidth:6, roughness:0, opacity:70, svg:'M2,10 L22,2' },
+    { id:'highlight', name:'Highlite', strokeWidth:14, roughness:0, opacity:30, svg:'M2,10 L22,2' },
+    { id:'brush', name:'Brush', strokeWidth:4, roughness:1, opacity:85, svg:'M2,10 Q12,2 22,2' },
+    { id:'chalk', name:'Chalk', strokeWidth:3, roughness:3, opacity:75, svg:'M2,10 L22,2' },
 ];
 
-const STROKE_COLORS = [
-    { hex:'#f1f5f9', name:'White'   },
-    { hex:'#000000', name:'Black'   },
-    { hex:'#fb7185', name:'Red'     },
-    { hex:'#fbbf24', name:'Yellow'  },
-    { hex:'#4ade80', name:'Green'   },
-    { hex:'#38bdf8', name:'Blue'    },
-    { hex:'#a78bfa', name:'Violet'  },
-    { hex:'#f472b6', name:'Pink'    },
-    { hex:'#fb923c', name:'Orange'  },
-];
+const COLORS = ['#f1f5f9','#000000','#fb7185','#fbbf24','#4ade80','#38bdf8','#a78bfa','#f472b6','#fb923c'];
+const BG_COLORS = ['#111118','#1e1b4b','#ffffff','#f1f5f9','#fef9c3','#e0f2fe','#e8f5e9','#000000'];
 
-const BG_COLORS = [
-    { hex:'#111118' }, { hex:'#1e1b4b' }, { hex:'#ffffff' },
-    { hex:'#f1f5f9' }, { hex:'#fef9c3' }, { hex:'#e0f2fe' },
-    { hex:'#e8f5e9' }, { hex:'#000000' },
-];
-
+// Setup
 const setupScreen = document.getElementById('setup-screen');
-const roleTeacherBtn = document.getElementById('role-teacher');
-const roleStudentBtn = document.getElementById('role-student');
-const nameInput = document.getElementById('name-input');
-const roomInput = document.getElementById('room-input');
-const roomLabel = document.getElementById('room-label');
 const enterBtn = document.getElementById('enter-btn');
 const setupErr = document.getElementById('setup-err');
 let selectedRole = 'teacher';
 
 const inviteRoom = getQ('room');
 if (inviteRoom) {
-    roomInput.value = inviteRoom;
+    document.getElementById('room-input').value = inviteRoom;
     selectedRole = 'student';
-    roleStudentBtn.classList.add('active');
-    roleTeacherBtn.classList.remove('active');
-    roomLabel.textContent = 'Room code (from invite)';
+    document.getElementById('role-student').classList.add('active');
+    document.getElementById('role-teacher').classList.remove('active');
 }
-roleTeacherBtn.addEventListener('click', () => { selectedRole='teacher'; roleTeacherBtn.classList.add('active'); roleStudentBtn.classList.remove('active'); });
-roleStudentBtn.addEventListener('click', () => { selectedRole='student'; roleStudentBtn.classList.add('active'); roleTeacherBtn.classList.remove('active'); });
 
-enterBtn.addEventListener('click', () => {
-    const name = nameInput.value.trim();
-    let room = roomInput.value.trim().toUpperCase().replace(/\s+/g,'-');
-    if (!name) { setupErr.textContent = 'Please enter your name.'; return; }
+document.getElementById('role-teacher').onclick = () => {
+    selectedRole = 'teacher';
+    document.getElementById('role-teacher').classList.add('active');
+    document.getElementById('role-student').classList.remove('active');
+};
+document.getElementById('role-student').onclick = () => {
+    selectedRole = 'student';
+    document.getElementById('role-student').classList.add('active');
+    document.getElementById('role-teacher').classList.remove('active');
+};
+
+enterBtn.onclick = () => {
+    const name = document.getElementById('name-input').value.trim();
+    let room = document.getElementById('room-input').value.trim().toUpperCase().replace(/\s+/g,'-');
+    if (!name) { setupErr.textContent = 'Enter your name'; return; }
     if (selectedRole === 'teacher' && !room) room = randomCode();
-    if (!room) { setupErr.textContent = 'Please enter the room code.'; return; }
+    if (!room) { setupErr.textContent = 'Enter room code'; return; }
     setupErr.textContent = '';
     setupScreen.style.display = 'none';
     document.getElementById('topbar').style.display = 'flex';
-    document.getElementById('floatbar').style.display = 'flex';
-    startBoard({ name, role: selectedRole, room });
-});
-
-const POPOVERS = ['pen-popover','bg-popover','timer-popover'];
-
-function closeAllPopovers() {
-    POPOVERS.forEach(id => { document.getElementById(id).style.display = 'none'; });
-    document.querySelectorAll('.fbar-btn').forEach(b => b.classList.remove('active'));
-}
-
-function positionPopoverNear(popoverId, btnId) {
-    const popover = document.getElementById(popoverId);
-    const btn = document.getElementById(btnId);
-    if (!btn) return;
-    const btnRect = btn.getBoundingClientRect();
-    const popW = popover.offsetWidth || 340;
-    let left = btnRect.left + btnRect.width/2 - popW/2;
-    left = Math.max(8, Math.min(window.innerWidth - popW - 8, left));
-    popover.style.left = left + 'px';
-    popover.style.right = 'auto';
-}
-
-function togglePopover(popoverId, btnId) {
-    const popover = document.getElementById(popoverId);
-    const isOpen = popover.style.display === 'block';
-    closeAllPopovers();
-    if (!isOpen) {
-        popover.style.display = 'block';
-        if (btnId) document.getElementById(btnId)?.classList.add('active');
-        requestAnimationFrame(() => positionPopoverNear(popoverId, btnId));
+    document.getElementById('sidebar').style.display = 'flex';
+    document.getElementById('room-pill-code').textContent = room;
+    if (selectedRole === 'teacher') {
+        document.getElementById('lock-btn').style.display = 'flex';
+        document.getElementById('invite-btn').style.display = 'flex';
     }
-}
+    initBoard({ name, role: selectedRole, room });
+};
 
+// Popover management
+const POPOVERS = ['pen-popover', 'bg-popover'];
+function closePopovers() {
+    POPOVERS.forEach(id => document.getElementById(id).style.display = 'none');
+    document.querySelectorAll('.sidebar-btn').forEach(b => b.classList.remove('active'));
+}
 document.querySelectorAll('[data-close]').forEach(btn => {
-    btn.addEventListener('click', e => {
+    btn.onclick = (e) => {
         e.stopPropagation();
         document.getElementById(btn.dataset.close).style.display = 'none';
-        document.querySelectorAll('.fbar-btn').forEach(b => b.classList.remove('active'));
-    });
+        document.querySelectorAll('.sidebar-btn').forEach(b => b.classList.remove('active'));
+    };
 });
-
-document.addEventListener('click', e => {
+document.addEventListener('click', (e) => {
     POPOVERS.forEach(id => {
         const p = document.getElementById(id);
         if (p.style.display !== 'block') return;
-        const fbarBtn = document.querySelector(`.fbar-btn[data-popover="${id}"]`);
-        if (!p.contains(e.target) && (!fbarBtn || !fbarBtn.contains(e.target))) {
+        const btn = document.querySelector(`[data-popover="${id}"]`);
+        if (!p.contains(e.target) && (!btn || !btn.contains(e.target))) {
             p.style.display = 'none';
-            document.querySelectorAll('.fbar-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.sidebar-btn').forEach(b => b.classList.remove('active'));
         }
     });
 });
 
-function startBoard({ name, role, room }) {
-    const roomPillCode = document.getElementById('room-pill-code');
-    const statusDot = document.getElementById('status-dot');
-    const onlinePill = document.getElementById('online-pill');
-    const studentCountEl = document.getElementById('student-count');
-    const lockBtn = document.getElementById('lock-btn');
-    const lockBtnText = document.getElementById('lock-btn-text');
-    const inviteBtn = document.getElementById('invite-btn');
-    const addStudentBtn = document.getElementById('add-student-btn');
-    const lockedBanner = document.getElementById('locked-banner');
-    const recordBtn = document.getElementById('record-btn');
-
-    roomPillCode.textContent = room;
-    if (role === 'teacher') {
-        lockBtn.style.display = 'flex';
-        inviteBtn.style.display = 'flex';
-        addStudentBtn.style.display = 'flex';
-        recordBtn.style.display = 'flex';
-    }
-    onlinePill.style.display = 'flex';
-
-    const inviteUrl = `${location.origin}${location.pathname}?room=${encodeURIComponent(room)}`;
-    inviteBtn.addEventListener('click', () => {
-        navigator.clipboard.writeText(inviteUrl).then(() => {
-            const o = inviteBtn.innerHTML;
-            inviteBtn.innerHTML = '<i class="fas fa-check"></i> Copied!';
-            setTimeout(() => { inviteBtn.innerHTML = o; }, 1800);
-        });
-    });
-
+function initBoard({ name, role, room }) {
     let excalidrawAPI = null;
     let isRemoteUpdate = false;
-    let currentPenId = 'ballpoint';
-    let currentStrokeColor = '#f1f5f9';
-    let currentThickness = 2;
-    let currentOpacity = 100;
+    let currentPen = PEN_TYPES[0];
+    let strokeColor = '#f1f5f9';
+    let isLocked = false;
 
-    const penTypesRow = document.getElementById('pen-types-row');
-    const strokeColorRow = document.getElementById('stroke-color-row');
-
+    // Build pen popover
+    const penTypes = document.getElementById('pen-types');
     PEN_TYPES.forEach(pen => {
-        const btn = document.createElement('button');
-        btn.className = 'pen-type-btn' + (pen.id === currentPenId ? ' active' : '');
-        btn.dataset.penId = pen.id;
-        btn.innerHTML = `
-            <svg viewBox="0 0 28 14" xmlns="http://www.w3.org/2000/svg">
-                <path d="${pen.svgPath}" stroke="currentColor" stroke-width="${Math.min(pen.sw, 8)}" fill="none" stroke-linecap="round" opacity="${pen.opacity/100}"/>
-            </svg>
-            <span>${pen.name}</span>`;
-        btn.addEventListener('click', () => selectPen(pen));
-        penTypesRow.appendChild(btn);
+        const btn = document.createElement('div');
+        btn.className = 'pen-type' + (pen.id === currentPen.id ? ' active' : '');
+        btn.innerHTML = `<svg viewBox="0 0 24 12"><path d="${pen.svg}" stroke="currentColor" stroke-width="${Math.min(pen.strokeWidth,6)}" fill="none" stroke-linecap="round"/></svg><span>${pen.name}</span>`;
+        btn.onclick = () => {
+            currentPen = pen;
+            document.querySelectorAll('.pen-type').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            applyPen();
+        };
+        penTypes.appendChild(btn);
     });
 
-    STROKE_COLORS.forEach(c => {
+    const strokeColors = document.getElementById('stroke-colors');
+    COLORS.forEach(c => {
         const dot = document.createElement('div');
-        dot.className = 'color-dot' + (c.hex === currentStrokeColor ? ' active' : '');
-        dot.style.backgroundColor = c.hex;
-        dot.title = c.name;
-        if (c.hex === '#ffffff' || c.hex === '#f1f5f9') dot.style.border = '2px solid rgba(255,255,255,0.4)';
-        dot.addEventListener('click', () => selectStrokeColor(c.hex, dot));
-        strokeColorRow.appendChild(dot);
+        dot.className = 'color-dot' + (c === strokeColor ? ' active' : '');
+        dot.style.backgroundColor = c;
+        if (c === '#f1f5f9' || c === '#ffffff') dot.style.border = '2px solid rgba(0,0,0,0.2)';
+        dot.onclick = () => {
+            strokeColor = c;
+            document.querySelectorAll('.color-dot').forEach(d => d.classList.remove('active'));
+            dot.classList.add('active');
+            applyPen();
+        };
+        strokeColors.appendChild(dot);
     });
-    const customColorInput = document.createElement('input');
-    customColorInput.type = 'color';
-    customColorInput.id = 'stroke-custom-color';
-    customColorInput.value = '#a78bfa';
-    customColorInput.title = 'Custom color';
-    customColorInput.addEventListener('input', e => selectStrokeColor(e.target.value, null, true));
-    strokeColorRow.appendChild(customColorInput);
 
-    const thicknessSlider = document.getElementById('thickness-slider');
-    const thicknessLine = document.getElementById('thickness-line');
-    const opacitySlider = document.getElementById('opacity-slider');
+    const thicknessSlider = document.getElementById('thickness');
+    const thicknessVal = document.getElementById('thickness-val');
+    const opacitySlider = document.getElementById('opacity');
     const opacityVal = document.getElementById('opacity-val');
 
-    function updateThicknessUI(val) {
-        const pct = ((val - 1) / 29 * 100).toFixed(1);
+    thicknessSlider.oninput = (e) => {
+        currentPen.strokeWidth = parseFloat(e.target.value);
+        thicknessVal.textContent = currentPen.strokeWidth;
+        const pct = ((currentPen.strokeWidth - 1) / 29 * 100);
         thicknessSlider.style.setProperty('--pct', pct + '%');
-        thicknessLine.setAttribute('stroke-width', Math.min(val, 12));
-    }
-    function updateOpacityUI(val) {
-        const pct = ((val - 10) / 90 * 100).toFixed(1);
-        opacitySlider.style.setProperty('--pct2', pct + '%');
-        opacityVal.textContent = val + '%';
-    }
+        applyPen();
+    };
+    opacitySlider.oninput = (e) => {
+        currentPen.opacity = parseInt(e.target.value);
+        opacityVal.textContent = currentPen.opacity + '%';
+        const pct = ((currentPen.opacity - 10) / 90 * 100);
+        opacitySlider.style.setProperty('--pct', pct + '%');
+        applyPen();
+    };
 
-    thicknessSlider.addEventListener('input', e => {
-        currentThickness = parseFloat(e.target.value);
-        updateThicknessUI(currentThickness);
-        applyPenToBoard();
-    });
-    opacitySlider.addEventListener('input', e => {
-        currentOpacity = parseInt(e.target.value);
-        updateOpacityUI(currentOpacity);
-        applyPenToBoard();
-    });
-
-    updateThicknessUI(currentThickness);
-    updateOpacityUI(currentOpacity);
-
-    function selectPen(pen) {
-        currentPenId = pen.id;
-        currentThickness = pen.strokeWidth;
-        currentOpacity = pen.opacity;
-        thicknessSlider.value = currentThickness;
-        opacitySlider.value = currentOpacity;
-        updateThicknessUI(currentThickness);
-        updateOpacityUI(currentOpacity);
-        document.querySelectorAll('.pen-type-btn').forEach(b => {
-            b.classList.toggle('active', b.dataset.penId === pen.id);
-        });
-        applyPenToBoard();
-    }
-
-    function selectStrokeColor(hex, dotEl, custom = false) {
-        currentStrokeColor = hex;
+    document.getElementById('stroke-custom').oninput = (e) => {
+        strokeColor = e.target.value;
         document.querySelectorAll('.color-dot').forEach(d => d.classList.remove('active'));
-        if (dotEl) dotEl.classList.add('active');
-        applyPenToBoard();
-    }
+        applyPen();
+    };
 
-    function applyPenToBoard() {
+    function applyPen() {
         if (!excalidrawAPI) return;
-        const pen = PEN_TYPES.find(p => p.id === currentPenId) || PEN_TYPES[0];
-        try {
-            excalidrawAPI.updateScene({
-                appState: {
-                    currentItemStrokeColor: currentStrokeColor,
-                    currentItemStrokeWidth: currentThickness,
-                    currentItemRoughness: pen.roughness,
-                    currentItemOpacity: currentOpacity,
-                    currentItemFillStyle: 'solid',
-                }
-            });
-        } catch(e) {}
+        excalidrawAPI.updateScene({
+            appState: {
+                currentItemStrokeColor: strokeColor,
+                currentItemStrokeWidth: currentPen.strokeWidth,
+                currentItemRoughness: currentPen.roughness,
+                currentItemOpacity: currentPen.opacity,
+                currentItemFillStyle: 'solid',
+            }
+        });
     }
 
-    const bgGrid = document.getElementById('bg-grid');
-    const bgCustomPicker = document.getElementById('bg-custom-picker');
+    // BG colors
+    const bgColors = document.getElementById('bg-colors');
     BG_COLORS.forEach(c => {
         const swatch = document.createElement('div');
         swatch.className = 'bg-swatch';
-        swatch.style.backgroundColor = c.hex;
-        swatch.dataset.color = c.hex;
-        if (c.hex === '#ffffff' || c.hex === '#f1f5f9') swatch.style.border = '2px solid #cbd5e1';
-        swatch.addEventListener('click', e => { e.stopPropagation(); applyBgColor(c.hex); });
-        bgGrid.appendChild(swatch);
+        swatch.style.backgroundColor = c;
+        swatch.dataset.color = c;
+        if (c === '#ffffff' || c === '#f1f5f9') swatch.style.border = '2px solid #cbd5e1';
+        swatch.onclick = (e) => { e.stopPropagation(); applyBg(c); };
+        bgColors.appendChild(swatch);
     });
-    bgCustomPicker.addEventListener('input', e => applyBgColor(e.target.value));
-    bgCustomPicker.addEventListener('click', e => e.stopPropagation());
+    document.getElementById('bg-custom').oninput = (e) => applyBg(e.target.value);
 
-    function applyBgColor(color) {
+    function applyBg(color) {
         if (!excalidrawAPI) return;
         excalidrawAPI.updateScene({ appState: { viewBackgroundColor: color } });
-        bgCustomPicker.value = color;
         document.querySelectorAll('.bg-swatch').forEach(s => {
             s.classList.toggle('active', s.dataset.color === color);
         });
     }
 
+    // Sidebar buttons
     const toolMap = {
-        'fbar-select':  () => excalidrawAPI?.setActiveTool({ type: 'selection' }),
-        'fbar-eraser':  () => excalidrawAPI?.setActiveTool({ type: 'eraser' }),
-        'fbar-rect':    () => excalidrawAPI?.setActiveTool({ type: 'rectangle' }),
-        'fbar-ellipse': () => excalidrawAPI?.setActiveTool({ type: 'ellipse' }),
-        'fbar-arrow':   () => excalidrawAPI?.setActiveTool({ type: 'arrow' }),
-        'fbar-text':    () => excalidrawAPI?.setActiveTool({ type: 'text' }),
+        'tool-select': 'selection',
+        'tool-hand': 'hand',
+        'tool-pen': 'freedraw',
+        'tool-eraser': 'eraser',
+        'tool-rect': 'rectangle',
+        'tool-circle': 'ellipse',
+        'tool-line': 'line',
+        'tool-arrow': 'arrow',
+        'tool-text': 'text',
     };
 
-    Object.entries(toolMap).forEach(([id, fn]) => {
-        document.getElementById(id)?.addEventListener('click', () => {
-            closeAllPopovers();
-            fn();
-            document.querySelectorAll('.fbar-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById(id)?.classList.add('active');
-        });
+    Object.entries(toolMap).forEach(([id, type]) => {
+        const btn = document.getElementById(id);
+        if (!btn) return;
+        btn.onclick = () => {
+            closePopovers();
+            if (excalidrawAPI) excalidrawAPI.setActiveTool({ type });
+            document.querySelectorAll('.sidebar-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        };
     });
 
-    document.getElementById('fbar-pen')?.addEventListener('click', e => {
+    // Pen button
+    document.getElementById('tool-pen').dataset.popover = 'pen-popover';
+    document.getElementById('tool-pen').onclick = (e) => {
         e.stopPropagation();
-        togglePopover('pen-popover', 'fbar-pen');
-        if (excalidrawAPI) {
-            try { excalidrawAPI.setActiveTool({ type: 'freedraw' }); } catch(err) {}
+        const p = document.getElementById('pen-popover');
+        const isOpen = p.style.display === 'block';
+        closePopovers();
+        if (!isOpen) {
+            p.style.display = 'block';
+            document.getElementById('tool-pen').classList.add('active');
+            if (excalidrawAPI) excalidrawAPI.setActiveTool({ type: 'freedraw' });
+            applyPen();
         }
-        applyPenToBoard();
-    });
-    document.getElementById('fbar-pen').dataset.popover = 'pen-popover';
+    };
 
-    document.getElementById('fbar-bg')?.addEventListener('click', e => {
+    // BG button
+    document.getElementById('btn-bg').dataset.popover = 'bg-popover';
+    document.getElementById('btn-bg').onclick = (e) => {
         e.stopPropagation();
-        togglePopover('bg-popover', 'fbar-bg');
-    });
-    document.getElementById('fbar-bg').dataset.popover = 'bg-popover';
+        const p = document.getElementById('bg-popover');
+        const isOpen = p.style.display === 'block';
+        closePopovers();
+        if (!isOpen) {
+            p.style.display = 'block';
+            document.getElementById('btn-bg').classList.add('active');
+        }
+    };
 
-    document.getElementById('fbar-timer')?.addEventListener('click', e => {
-        e.stopPropagation();
-        togglePopover('timer-popover', 'fbar-timer');
-    });
-    document.getElementById('fbar-timer').dataset.popover = 'timer-popover';
-
-    document.getElementById('fbar-toolkit')?.addEventListener('click', () => {
-        closeAllPopovers();
-        document.getElementById('toolkit-modal').style.display = 'flex';
-    });
-
-    document.getElementById('fbar-math')?.addEventListener('click', () => {
-        closeAllPopovers();
+    // Math modal
+    document.getElementById('btn-math').onclick = () => {
+        closePopovers();
         document.getElementById('math-input').value = '';
         document.getElementById('math-preview').innerHTML = '';
         document.getElementById('math-modal').style.display = 'flex';
-    });
-
-    document.getElementById('fbar-graph')?.addEventListener('click', () => {
-        closeAllPopovers();
-        document.getElementById('graph-modal').style.display = 'flex';
-        requestAnimationFrame(drawGraph);
-    });
-
-    document.getElementById('fbar-spotlight')?.addEventListener('click', () => {
-        closeAllPopovers();
-        toggleSpotlight();
-    });
-
-    document.getElementById('close-toolkit')?.addEventListener('click', () => { document.getElementById('toolkit-modal').style.display='none'; });
-    document.getElementById('close-math')?.addEventListener('click', () => { document.getElementById('math-modal').style.display='none'; });
-    document.getElementById('cancel-math')?.addEventListener('click', () => { document.getElementById('math-modal').style.display='none'; });
-    document.getElementById('close-graph')?.addEventListener('click', () => { document.getElementById('graph-modal').style.display='none'; });
-    document.getElementById('cancel-graph')?.addEventListener('click', () => { document.getElementById('graph-modal').style.display='none'; });
-    document.getElementById('close-add-student')?.addEventListener('click', () => { document.getElementById('add-student-modal').style.display='none'; });
-    document.getElementById('cancel-add')?.addEventListener('click', () => { document.getElementById('add-student-modal').style.display='none'; });
-
-    document.querySelectorAll('.modal-overlay').forEach(overlay => {
-        overlay.addEventListener('click', e => {
-            if (e.target === overlay) overlay.style.display = 'none';
-        });
-    });
+    };
+    document.getElementById('close-math').onclick = () => document.getElementById('math-modal').style.display = 'none';
+    document.getElementById('cancel-math').onclick = () => document.getElementById('math-modal').style.display = 'none';
 
     const mathInput = document.getElementById('math-input');
     const mathPreview = document.getElementById('math-preview');
-    mathInput.addEventListener('input', () => {
-        try { katex.render(mathInput.value, mathPreview, { throwOnError:false, displayMode:true }); }
+    mathInput.oninput = () => {
+        try { katex.render(mathInput.value, mathPreview, { throwOnError: false, displayMode: true }); }
         catch(e) { mathPreview.textContent = 'Invalid LaTeX'; }
-    });
-    document.getElementById('insert-math')?.addEventListener('click', () => {
+    };
+    document.getElementById('insert-math').onclick = () => {
         if (mathInput.value && excalidrawAPI) {
             const els = excalidrawAPI.getSceneElements();
-            excalidrawAPI.updateScene({ elements:[...els, mkEl('text',150,150,200,50,{text:mathInput.value,fontSize:24,strokeColor:'#f1f5f9'})] });
+            excalidrawAPI.updateScene({ elements: [...els, mkEl('text', 150, 150, 200, 50, { text: mathInput.value, fontSize: 24, strokeColor: '#f1f5f9' })] });
         }
         document.getElementById('math-modal').style.display = 'none';
-    });
+    };
+
+    // Convert to LaTeX (Handwriting recognition simulation)
+    document.getElementById('btn-convert').onclick = () => {
+        closePopovers();
+        if (!excalidrawAPI) return;
+        
+        // Get recent drawings
+        const elements = excalidrawAPI.getSceneElements();
+        const drawings = elements.filter(el => el.type === 'freedraw' && !el.isDeleted);
+        
+        if (drawings.length === 0) {
+            alert('Draw something first, then click convert!');
+            return;
+        }
+
+        // Simple pattern matching for common math symbols
+        // In production, you'd use MathPix API or similar
+        const lastDrawing = drawings[drawings.length - 1];
+        let detected = detectMathPattern(lastDrawing);
+        
+        if (detected) {
+            mathInput.value = detected;
+            try { katex.render(detected, mathPreview, { throwOnError: false, displayMode: true }); }
+            catch(e) {}
+            document.getElementById('math-modal').style.display = 'flex';
+        } else {
+            alert('Could not detect math pattern. Try drawing clearer symbols like: √, ∫, Σ, fractions, or exponents.');
+        }
+    };
+
+    function detectMathPattern(drawing) {
+        // Analyze drawing points to detect patterns
+        // This is a simplified version - in production use ML model
+        const points = drawing.points;
+        if (!points || points.length === 0) return null;
+
+        // Calculate bounding box and characteristics
+        let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+        points.forEach(p => {
+            if (p[0] < minX) minX = p[0];
+            if (p[0] > maxX) maxX = p[0];
+            if (p[1] < minY) minY = p[1];
+            if (p[1] > maxY) maxY = p[1];
+        });
+
+        const width = maxX - minX;
+        const height = maxY - minY;
+        const aspectRatio = width / height;
+
+        // Detect common patterns
+        // Square root symbol (starts high, goes down and right)
+        if (points.length > 10 && aspectRatio > 1.5 && height > 30) {
+            const firstPoint = points[0];
+            const lastPoint = points[points.length - 1];
+            if (firstPoint[1] < lastPoint[1] && firstPoint[0] < lastPoint[0]) {
+                return '\\sqrt{}';
+            }
+        }
+
+        // Integral symbol (tall and narrow)
+        if (height > 60 && aspectRatio < 0.5) {
+            return '\\int';
+        }
+
+        // Sum symbol (wide and medium height)
+        if (width > 40 && height > 30 && aspectRatio > 1) {
+            return '\\sum';
+        }
+
+        // Fraction (horizontal line with elements above/below)
+        if (width > 50 && height > 40) {
+            return '\\frac{}{}';
+        }
+
+        // Exponent/superscript detection
+        if (width < 30 && height < 20) {
+            return '^{}';
+        }
+
+        return null;
+    }
+
+    // Toolkit
+    document.getElementById('btn-toolkit').onclick = () => {
+        closePopovers();
+        document.getElementById('toolkit-modal').style.display = 'flex';
+    };
+    document.getElementById('close-toolkit').onclick = () => document.getElementById('toolkit-modal').style.display = 'none';
 
     document.querySelectorAll('.toolkit-item').forEach(item => {
-        item.addEventListener('click', () => { applyToolkit(item.dataset.tool); });
+        item.onclick = () => {
+            applyToolkit(item.dataset.tool);
+            document.getElementById('toolkit-modal').style.display = 'none';
+        };
     });
+
     function applyToolkit(type) {
         if (!excalidrawAPI) return;
         const els = excalidrawAPI.getSceneElements();
-        let n = []; const sx=100, sy=100;
-        if (type==='grid') {
-            const a = excalidrawAPI.getAppState();
-            excalidrawAPI.updateScene({ appState:{ gridSize: a.gridSize?0:20 } });
-        } else if (type==='chem-benzene') {
-            n.push(mkEl('diamond',sx,sy,100,100,{strokeColor:'#a78bfa',strokeWidth:2}));
-            n.push(mkEl('text',sx+20,sy+40,60,20,{text:'C₆H₆',fontSize:20,strokeColor:'#f1f5f9'}));
-        } else if (type==='bio-cell') {
-            n.push(mkEl('ellipse',sx,sy,200,150,{strokeColor:'#4ade80',backgroundColor:'rgba(74,222,128,0.1)',fillStyle:'solid'}));
-            n.push(mkEl('ellipse',sx+70,sy+50,60,50,{strokeColor:'#fb7185',backgroundColor:'rgba(251,113,133,0.2)',fillStyle:'solid'}));
-            n.push(mkEl('text',sx+80,sy+70,40,20,{text:'Nucleus',fontSize:14,strokeColor:'#f1f5f9'}));
-        } else if (type==='physics-circuit') {
-            n.push(mkEl('rectangle',sx,sy+40,20,40,{strokeColor:'#fbbf24'}));
-            n.push(mkEl('line',sx+20,sy+60,100,0,{strokeColor:'#f1f5f9',points:[[0,0],[100,0]]}));
-            n.push(mkEl('rectangle',sx+120,sy+40,40,40,{strokeColor:'#38bdf8'}));
-            n.push(mkEl('line',sx+160,sy+60,100,0,{strokeColor:'#f1f5f9',points:[[0,0],[100,0]]}));
-            n.push(mkEl('line',sx+260,sy+60,0,-100,{strokeColor:'#f1f5f9',points:[[0,0],[0,-100]]}));
-            n.push(mkEl('line',sx+260,sy-40,-260,0,{strokeColor:'#f1f5f9',points:[[0,0],[-260,0]]}));
-        } else if (type==='history-timeline') {
-            n.push(mkEl('line',sx,sy+50,400,0,{strokeColor:'#a78bfa',strokeWidth:3,points:[[0,0],[400,0]]}));
-            for (let i=0;i<3;i++) {
-                n.push(mkEl('ellipse',sx+(i*150),sy+40,20,20,{strokeColor:'#f472b6',backgroundColor:'#f472b6',fillStyle:'solid'}));
-                n.push(mkEl('text',sx+(i*150)-20,sy+80,60,20,{text:`Event ${i+1}`,fontSize:16,strokeColor:'#f1f5f9'}));
+        let n = [];
+        const sx = 100, sy = 100;
+
+        if (type === 'grid') {
+            const state = excalidrawAPI.getAppState();
+            excalidrawAPI.updateScene({ appState: { gridSize: state.gridSize ? 0 : 20 } });
+        } else if (type === 'chem') {
+            n.push(mkEl('diamond', sx, sy, 80, 80, { strokeColor: '#a78bfa', strokeWidth: 2 }));
+            n.push(mkEl('text', sx + 20, sy + 35, 40, 20, { text: 'CH₆', fontSize: 16, strokeColor: '#f1f5f9' }));
+        } else if (type === 'bio') {
+            n.push(mkEl('ellipse', sx, sy, 150, 120, { strokeColor: '#4ade80', backgroundColor: 'rgba(74,222,128,0.1)', fillStyle: 'solid' }));
+            n.push(mkEl('ellipse', sx + 50, sy + 40, 50, 40, { strokeColor: '#fb7185', backgroundColor: 'rgba(251,113,133,0.2)', fillStyle: 'solid' }));
+        } else if (type === 'physics') {
+            n.push(mkEl('rectangle', sx, sy + 30, 15, 30, { strokeColor: '#fbbf24' }));
+            n.push(mkEl('line', sx + 15, sy + 45, 80, 0, { strokeColor: '#f1f5f9', points: [[0,0],[80,0]] }));
+            n.push(mkEl('rectangle', sx + 95, sy + 30, 30, 30, { strokeColor: '#38bdf8' }));
+        } else if (type === 'timeline') {
+            n.push(mkEl('line', sx, sy + 40, 300, 0, { strokeColor: '#a78bfa', strokeWidth: 3, points: [[0,0],[300,0]] }));
+            for (let i = 0; i < 3; i++) {
+                n.push(mkEl('ellipse', sx + (i * 100), sy + 30, 15, 15, { strokeColor: '#f472b6', backgroundColor: '#f472b6', fillStyle: 'solid' }));
             }
-        } else if (type==='code-block') {
-            n.push(mkEl('rectangle',sx,sy,300,150,{strokeColor:'#1e1b4b',backgroundColor:'#1e1b4b',fillStyle:'solid',roundness:{type:3}}));
-            n.push(mkEl('text',sx+10,sy+10,280,130,{text:"def hello():\n  print('Hello World')",fontSize:14,fontFamily:3,strokeColor:'#4ade80'}));
+        } else if (type === 'code') {
+            n.push(mkEl('rectangle', sx, sy, 250, 120, { strokeColor: '#1e1b4b', backgroundColor: '#1e1b4b', fillStyle: 'solid', roundness: { type: 3 } }));
+            n.push(mkEl('text', sx + 10, sy + 10, 230, 100, { text: 'def hello():\n  print("World")', fontSize: 12, fontFamily: 3, strokeColor: '#4ade80' }));
         }
-        if (n.length) excalidrawAPI.updateScene({ elements:[...els,...n] });
-        document.getElementById('toolkit-modal').style.display = 'none';
+
+        if (n.length) excalidrawAPI.updateScene({ elements: [...els, ...n] });
     }
 
-    const timerDisplay = document.getElementById('timer-display');
-    const timerCtrlRow = document.getElementById('timer-ctrl-row');
-    const timerInputsRow = document.getElementById('timer-inputs-row');
-    let timerInterval = null, timeLeft = 300, isTimerRunning = false;
-
-    if (role !== 'teacher') { timerCtrlRow.style.display='none'; timerInputsRow.style.display='none'; }
-
-    function fmtTime(s) { return `${Math.floor(s/60).toString().padStart(2,'0')}:${(s%60).toString().padStart(2,'0')}`; }
-    function updateTimerDisplay() {
-        timerDisplay.textContent = fmtTime(timeLeft);
-        timerDisplay.className = '';
-        if (timeLeft <= 10 && timeLeft > 0) timerDisplay.classList.add('danger');
-        else if (timeLeft <= 60) timerDisplay.classList.add('warn');
-    }
-    function startTimerLocal() {
-        if (isTimerRunning) return; isTimerRunning = true;
-        timerInterval = setInterval(() => { if (timeLeft>0){timeLeft--;updateTimerDisplay();}else{clearInterval(timerInterval);isTimerRunning=false;} }, 1000);
-    }
-    function pauseTimerLocal() { clearInterval(timerInterval); isTimerRunning=false; }
-    function resetTimerLocal() {
-        pauseTimerLocal();
-        timeLeft = (parseInt(document.getElementById('t-min').value)||0)*60 + (parseInt(document.getElementById('t-sec').value)||0);
-        updateTimerDisplay();
-    }
-
-    if (role === 'teacher') {
-        document.getElementById('timer-start')?.addEventListener('click', () => { if(timeLeft===0) resetTimerLocal(); startTimerLocal(); sendMsg({type:'timer-update',action:'start',timeLeft}); });
-        document.getElementById('timer-pause')?.addEventListener('click', () => { pauseTimerLocal(); sendMsg({type:'timer-update',action:'pause',timeLeft}); });
-        document.getElementById('timer-reset')?.addEventListener('click', () => { resetTimerLocal(); sendMsg({type:'timer-update',action:'reset',timeLeft}); });
-        document.getElementById('t-min')?.addEventListener('change', resetTimerLocal);
-        document.getElementById('t-sec')?.addEventListener('change', resetTimerLocal);
-    }
-    updateTimerDisplay();
-
+    // Spotlight
     const spotlightOverlay = document.getElementById('spotlight-overlay');
     const spotlightHandle = document.getElementById('spotlight-handle');
-    let isSpotlightActive = false, lastSpotlightSend = 0;
+    let isSpotlight = false;
 
-    function toggleSpotlight() {
-        isSpotlightActive = !isSpotlightActive;
-        document.getElementById('fbar-spotlight')?.classList.toggle('active', isSpotlightActive);
+    document.getElementById('btn-spotlight').onclick = () => {
+        isSpotlight = !isSpotlight;
+        document.getElementById('btn-spotlight').classList.toggle('active', isSpotlight);
         if (role === 'teacher') {
-            sendMsg({ type:'spotlight-update', active:isSpotlightActive });
-            if (isSpotlightActive) {
-                document.addEventListener('mousemove', handleTeacherMouse);
-                document.addEventListener('touchmove', handleTeacherTouch, { passive:true });
+            if (isSpotlight) {
                 spotlightOverlay.style.display = 'block';
                 spotlightHandle.style.display = 'flex';
+                document.addEventListener('mousemove', handleSpotlight);
             } else {
-                document.removeEventListener('mousemove', handleTeacherMouse);
-                document.removeEventListener('touchmove', handleTeacherTouch);
                 spotlightOverlay.style.display = 'none';
                 spotlightHandle.style.display = 'none';
+                document.removeEventListener('mousemove', handleSpotlight);
             }
         }
+    };
+
+    function handleSpotlight(e) {
+        const x = (e.clientX / window.innerWidth * 100).toFixed(2) + '%';
+        const y = (e.clientY / window.innerHeight * 100).toFixed(2) + '%';
+        spotlightOverlay.style.setProperty('--sx', x);
+        spotlightOverlay.style.setProperty('--sy', y);
+        spotlightHandle.style.setProperty('--hx', e.clientX + 'px');
+        spotlightHandle.style.setProperty('--hy', e.clientY + 'px');
     }
 
-    function handleTeacherMouse(e) {
-        const now = Date.now();
-        if (now - lastSpotlightSend > 33) {
-            lastSpotlightSend = now;
-            const x = (e.clientX / window.innerWidth * 100).toFixed(2) + '%';
-            const y = (e.clientY / window.innerHeight * 100).toFixed(2) + '%';
-            spotlightOverlay.style.setProperty('--sx', x);
-            spotlightOverlay.style.setProperty('--sy', y);
-            spotlightHandle.style.setProperty('--hx', e.clientX + 'px');
-            spotlightHandle.style.setProperty('--hy', e.clientY + 'px');
-            sendMsg({ type:'spotlight-update', active:true, x:e.clientX, y:e.clientY });
-        }
-    }
-    function handleTeacherTouch(e) {
-        if (!e.touches[0]) return;
-        handleTeacherMouse({ clientX:e.touches[0].clientX, clientY:e.touches[0].clientY });
-    }
-
-    let pages = [{ id:'page-1', name:'Page 1', elements:[], bg:'#111118' }];
-    let currentPageId = 'page-1';
-    const pageTabsList = document.getElementById('page-tabs-list');
-    const addPageBtn = document.getElementById('add-page-btn');
-    if (role !== 'teacher') addPageBtn.style.display = 'none';
-
-    function renderPageTabs() {
-        pageTabsList.innerHTML = '';
-        pages.forEach(p => {
-            const tab = document.createElement('div');
-            tab.className = 'page-tab' + (p.id===currentPageId?' active':'');
-            tab.dataset.pageId = p.id;
-            tab.innerHTML = `<span>${p.name}</span>` +
-                (role==='teacher' && pages.length>1 ? `<i class="fas fa-times page-tab-close"></i>` : '');
-            tab.addEventListener('click', e => { if (e.target.closest('.page-tab-close')) return; switchToPage(p.id, false); });
-            if (role === 'teacher') {
-                tab.addEventListener('dblclick', () => {
-                    const nn = prompt('Rename page:', p.name);
-                    if (nn?.trim()) { p.name=nn.trim().slice(0,24); renderPageTabs(); sendMsg({type:'pages-structure',pages:pages.map(x=>({id:x.id,name:x.name})),currentPageId}); }
-                });
-                const close = tab.querySelector('.page-tab-close');
-                if (close) close.addEventListener('click', e => { e.stopPropagation(); deletePage(p.id); });
-            }
-            pageTabsList.appendChild(tab);
-        });
-    }
-
-    function saveCurrentSnapshot() {
-        if (!excalidrawAPI) return;
-        const page = pages.find(p => p.id===currentPageId);
-        if (page) { page.elements = excalidrawAPI.getSceneElements(); page.bg = excalidrawAPI.getAppState().viewBackgroundColor; }
-    }
-
-    function switchToPage(pageId, remote) {
-        if (pageId===currentPageId && !remote) return;
-        if (!remote) saveCurrentSnapshot();
-        currentPageId = pageId;
-        const page = pages.find(p => p.id===pageId);
-        if (page && excalidrawAPI) {
-            isRemoteUpdate = true;
-            excalidrawAPI.updateScene({ elements:page.elements||[], appState:{ viewBackgroundColor:page.bg||'#111118' } });
-        }
-        renderPageTabs();
-        if (!remote && role==='teacher') sendMsg({ type:'page-switch', pageId, elements:page?.elements||[], bg:page?.bg||'#111118' });
-    }
-
-    function addNewPage() {
-        saveCurrentSnapshot();
-        const id = 'page-'+Date.now();
-        const pg = { id, name:`Page ${pages.length+1}`, elements:[], bg:'#111118' };
-        pages.push(pg); currentPageId = id;
-        if (excalidrawAPI) { isRemoteUpdate=true; excalidrawAPI.updateScene({ elements:[], appState:{ viewBackgroundColor:'#111118' } }); }
-        renderPageTabs();
-        sendMsg({ type:'pages-structure', pages:pages.map(x=>({id:x.id,name:x.name})), currentPageId });
-        sendMsg({ type:'page-switch', pageId:id, elements:[], bg:'#111118' });
-    }
-
-    function deletePage(pageId) {
-        if (pages.length <= 1) return;
-        const idx = pages.findIndex(p => p.id===pageId);
-        if (idx === -1) return;
-        const wasActive = pageId===currentPageId;
-        pages.splice(idx,1);
-        if (wasActive) {
-            const next = pages[Math.max(0,idx-1)];
-            currentPageId = next.id;
-            if (excalidrawAPI) { isRemoteUpdate=true; excalidrawAPI.updateScene({ elements:next.elements||[], appState:{ viewBackgroundColor:next.bg||'#111118' } }); }
-        }
-        renderPageTabs();
-        sendMsg({ type:'pages-structure', pages:pages.map(x=>({id:x.id,name:x.name})), currentPageId });
-        if (wasActive) {
-            const p = pages.find(x => x.id===currentPageId);
-            sendMsg({ type:'page-switch', pageId:currentPageId, elements:p?.elements||[], bg:p?.bg||'#111118' });
-        }
-    }
-
-    addPageBtn.addEventListener('click', addNewPage);
-    document.getElementById('page-tabs-bar').style.display = 'flex';
-    renderPageTabs();
-
-    const recBtnText = document.getElementById('rec-btn-text');
-    const recIndicator = document.getElementById('rec-indicator');
-    const recTimerEl = document.getElementById('rec-timer');
-    let mediaRecorder=null, recordedChunks=[], recordStream=null, recStart=0, recInterval=null;
-
-    document.getElementById('record-btn')?.addEventListener('click', toggleRecording);
-    async function toggleRecording() {
-        if (mediaRecorder?.state==='recording') { stopRecording(); return; }
-        if (!navigator.mediaDevices?.getDisplayMedia) { alert('Screen recording not supported. Try Chrome on desktop.'); return; }
-        try { recordStream = await navigator.mediaDevices.getDisplayMedia({ video:{cursor:'always'}, audio:true }); }
-        catch { alert('Recording cancelled or permission denied.'); return; }
-        recordedChunks = [];
-        let mimeType = 'video/webm;codecs=vp9,opus';
-        if (!MediaRecorder.isTypeSupported(mimeType)) mimeType = 'video/webm';
-        try { mediaRecorder = new MediaRecorder(recordStream, {mimeType}); }
-        catch { mediaRecorder = new MediaRecorder(recordStream); }
-        mediaRecorder.ondataavailable = e => { if (e.data?.size>0) recordedChunks.push(e.data); };
-        mediaRecorder.onstop = () => {
-            const blob = new Blob(recordedChunks, {type:'video/webm'});
-            const url = URL.createObjectURL(blob);
-            const stamp = new Date().toISOString().replace(/[:.]/g,'-');
-            const a = document.createElement('a');
-            a.href=url; a.download=`PrimeBoard-${room}-${stamp}.webm`;
-            document.body.appendChild(a); a.click(); a.remove();
-            setTimeout(()=>URL.revokeObjectURL(url),4000);
-            recordStream?.getTracks().forEach(t=>t.stop()); recordStream=null;
-        };
-        recordStream.getVideoTracks()[0].addEventListener('ended', () => { if (mediaRecorder?.state==='recording') stopRecording(); });
-        mediaRecorder.start(1000);
-        recStart = Date.now();
-        document.getElementById('record-btn').classList.add('recording');
-        recBtnText.textContent = 'Stop';
-        recIndicator.style.display = 'flex';
-        recInterval = setInterval(updateRecTimer, 1000);
-        updateRecTimer();
-        sendMsg({ type:'recording-status', active:true });
-    }
-    function stopRecording() {
-        if (mediaRecorder?.state!=='inactive') mediaRecorder.stop();
-        clearInterval(recInterval);
-        document.getElementById('record-btn').classList.remove('recording');
-        recBtnText.textContent = 'Rec';
-        recIndicator.style.display = 'none';
-        sendMsg({ type:'recording-status', active:false });
-    }
-    function updateRecTimer() {
-        const s = Math.floor((Date.now()-recStart)/1000);
-        recTimerEl.textContent = `${Math.floor(s/60).toString().padStart(2,'0')}:${(s%60).toString().padStart(2,'0')}`;
-    }
-
-    let isLocked = false;
-    lockBtn.addEventListener('click', () => {
-        if (role !== 'teacher') return;
+    // Lock
+    document.getElementById('lock-btn').onclick = () => {
         isLocked = !isLocked;
-        lockBtn.classList.toggle('unlocked', !isLocked);
-        lockBtnText.textContent = isLocked ? 'Locked' : 'Unlocked';
-        lockBtn.querySelector('i').className = isLocked ? 'fas fa-lock' : 'fas fa-lock-open';
+        document.getElementById('lock-btn').classList.toggle('active', isLocked);
+        document.getElementById('lock-text').textContent = isLocked ? 'Unlocked' : 'Locked';
         document.getElementById('locked-banner').style.display = isLocked ? 'flex' : 'none';
-        sendMsg({ type:'board-lock', locked:isLocked });
-    });
+        if (excalidrawAPI) excalidrawAPI.updateScene({ appState: { viewModeEnabled: isLocked } });
+    };
 
-    addStudentBtn.addEventListener('click', () => { document.getElementById('add-student-modal').style.display='flex'; });
-    const emailInput = document.getElementById('email-input');
-    const emailList = document.getElementById('email-list');
-    const emailSugs = document.getElementById('email-suggestions');
-    let emails = [];
+    // Theme
+    let darkTheme = true;
+    document.getElementById('btn-theme').onclick = () => {
+        darkTheme = !darkTheme;
+        if (excalidrawAPI) excalidrawAPI.updateScene({ appState: { theme: darkTheme ? 'dark' : 'light' } });
+    };
 
-    function renderEmailTags() {
-        emailList.innerHTML = emails.map((e,i) =>
-            `<span class="email-tag">${e}<i class="fas fa-times" onclick="removeEmail(${i})"></i></span>`
-        ).join('');
-    }
-    window.removeEmail = (i) => { emails.splice(i,1); renderEmailTags(); };
+    // Undo/Redo
+    document.getElementById('btn-undo').onclick = () => { if (excalidrawAPI) excalidrawAPI.undo(); };
+    document.getElementById('btn-redo').onclick = () => { if (excalidrawAPI) excalidrawAPI.redo(); };
 
-    emailInput.addEventListener('keydown', e => {
-        if (e.key==='Enter'||e.key===',') {
-            e.preventDefault();
-            const val = emailInput.value.trim().replace(',','');
-            if (val && !emails.includes(val)) { emails.push(val); renderEmailTags(); emailInput.value=''; emailSugs.style.display='none'; }
-        }
-    });
-    document.getElementById('send-invites')?.addEventListener('click', () => {
-        alert(`Invites to be sent to: ${emails.join(', ')||'(none added)'}`);
-        emails=[]; renderEmailTags(); document.getElementById('add-student-modal').style.display='none';
-    });
-
-    const graphCanvas = document.getElementById('graph-canvas');
-    const graphCtx = graphCanvas.getContext('2d');
-    const graphReadout = document.getElementById('graph-readout');
-    const graphError = document.getElementById('graph-error');
-    let graphMode = 'function';
-
-    document.querySelectorAll('.graph-tab').forEach(tab => {
-        tab.addEventListener('click', () => {
-            document.querySelectorAll('.graph-tab').forEach(t=>t.classList.remove('active'));
-            document.querySelectorAll('.graph-fields').forEach(f=>f.classList.remove('active'));
-            tab.classList.add('active'); graphMode = tab.dataset.mode;
-            document.getElementById(`fields-${graphMode}`)?.classList.add('active');
-            drawGraph();
-        });
-    });
-    document.querySelectorAll('#graph-modal input').forEach(inp => inp.addEventListener('input', drawGraph));
-
-    function safeEval(expr, xVal) {
-        let e = expr.toLowerCase()
-            .replace(/\^/g,'**').replace(/pi/g,'Math.PI')
-            .replace(/\bsin\(/g,'Math.sin(').replace(/\bcos\(/g,'Math.cos(')
-            .replace(/\btan\(/g,'Math.tan(').replace(/\bsqrt\(/g,'Math.sqrt(')
-            .replace(/\blog\(/g,'Math.log10(').replace(/\bln\(/g,'Math.log(')
-            .replace(/\bexp\(/g,'Math.exp(').replace(/\babs\(/g,'Math.abs(')
-            .replace(/\bx\b/g,'('+xVal+')');
-        if (!/^[0-9+\-*/().,\sA-Za-z]*$/.test(e)) throw new Error('Invalid characters');
-        return Function('"use strict"; return (' + e + ')')();
-    }
-
-    function drawGraph() {
-        const wrap = graphCanvas.parentElement;
-        const w = wrap.clientWidth || 580, h = 240;
-        const dpr = window.devicePixelRatio || 1;
-        graphCanvas.width = w*dpr; graphCanvas.height = h*dpr;
-        graphCanvas.style.width = w+'px'; graphCanvas.style.height = h+'px';
-        graphCtx.setTransform(dpr,0,0,dpr,0,0);
-        graphCtx.clearRect(0,0,w,h);
-        graphError.textContent = ''; graphReadout.textContent = '';
-
-        let points=[]; let xMin=-10,xMax=10,yMin=-2,yMax=2;
-        try {
-            if (graphMode==='function') {
-                // FIXED: Replaced Unicode minus with standard hyphen
-                xMin=parseFloat(document.getElementById('fn-xmin').value)||-10;
-                xMax=parseFloat(document.getElementById('fn-xmax').value)||10;
-                const expr = document.getElementById('fn-expr').value;
-                const steps=200;
-                for (let i=0;i<=steps;i++) {
-                    const x=xMin+(xMax-xMin)*i/steps;
-                    const y=safeEval(expr,x);
-                    if (!isFinite(y)||isNaN(y)) continue;
-                    points.push({x,y});
-                    if (y<yMin) yMin=y; if (y>yMax) yMax=y;
-                }
-                graphReadout.textContent = `y = ${expr}, x ∈ [${xMin}, ${xMax}]`;
-            } else if (graphMode==='projectile') {
-                const u=parseFloat(document.getElementById('pr-u').value)||20;
-                const ang=parseFloat(document.getElementById('pr-angle').value)||45;
-                const g=parseFloat(document.getElementById('pr-g').value)||9.8;
-                const rad=ang*Math.PI/180;
-                const T=2*u*Math.sin(rad)/g;
-                const steps=150;
-                for (let i=0;i<=steps;i++) {
-                    const t=T*i/steps;
-                    const x=u*Math.cos(rad)*t;
-                    const y=u*Math.sin(rad)*t-0.5*g*t*t;
-                    points.push({x,y});
-                    if (x>xMax) xMax=x; if (y>yMax) yMax=y; if (y<yMin) yMin=y;
-                }
-                xMin=0; yMin=0;
-                graphReadout.textContent = `Range: ${(u*u*Math.sin(2*rad)/g).toFixed(1)}m, H: ${(u*u*Math.sin(rad)*Math.sin(rad)/(2*g)).toFixed(1)}m`;
-            } else if (graphMode==='shm') {
-                const A=parseFloat(document.getElementById('shm-a').value)||1;
-                const w2=parseFloat(document.getElementById('shm-w').value)||2;
-                const phi=parseFloat(document.getElementById('shm-phi').value)||0;
-                xMin=0; xMax=2*Math.PI/w2*2;
-                const steps=200;
-                for (let i=0;i<=steps;i++) {
-                    const x=xMin+(xMax-xMin)*i/steps;
-                    const y=A*Math.cos(w2*x+phi);
-                    points.push({x,y});
-                }
-                yMin=-Math.abs(A)-0.2; yMax=Math.abs(A)+0.2;
-                graphReadout.textContent = `A=${A}, ω=${w2} rad/s, T=${(2*Math.PI/w2).toFixed(2)}s`;
-            }
-        } catch(err) { graphError.textContent='Error: '+err.message; return; }
-
-        if (!points.length) { graphError.textContent='No points to plot.'; return; }
-        const pad=36;
-        const sx=(x)=>pad+(x-xMin)/(xMax-xMin)*(w-2*pad);
-        const sy=(y)=>h-pad-(y-yMin)/(yMax-yMin)*(h-2*pad);
-
-        graphCtx.strokeStyle='rgba(255,255,255,0.07)'; graphCtx.lineWidth=1;
-        for (let i=0;i<=5;i++) {
-            const gx=pad+(w-2*pad)*i/5; const gy=pad+(h-2*pad)*i/5;
-            graphCtx.beginPath(); graphCtx.moveTo(gx,pad); graphCtx.lineTo(gx,h-pad); graphCtx.stroke();
-            graphCtx.beginPath(); graphCtx.moveTo(pad,gy); graphCtx.lineTo(w-pad,gy); graphCtx.stroke();
-        }
-        graphCtx.strokeStyle='rgba(255,255,255,0.2)'; graphCtx.lineWidth=1;
-        const x0=sx(0), y0=sy(0);
-        if (x0>=pad&&x0<=w-pad) { graphCtx.beginPath(); graphCtx.moveTo(x0,pad); graphCtx.lineTo(x0,h-pad); graphCtx.stroke(); }
-        if (y0>=pad&&y0<=h-pad) { graphCtx.beginPath(); graphCtx.moveTo(pad,y0); graphCtx.lineTo(w-pad,y0); graphCtx.stroke(); }
-
-        graphCtx.fillStyle='rgba(148,163,184,0.8)'; graphCtx.font='10px JetBrains Mono, monospace'; graphCtx.textAlign='center';
-        for (let i=0;i<=5;i++) {
-            const xv=xMin+(xMax-xMin)*i/5;
-            const yv=yMin+(yMax-yMin)*i/5;
-            graphCtx.fillText(xv.toFixed(1), pad+(w-2*pad)*i/5, h-pad+14);
-            graphCtx.textAlign='right';
-            graphCtx.fillText(yv.toFixed(1), pad-4, h-pad-(h-2*pad)*i/5+4);
-            graphCtx.textAlign='center';
-        }
-
-        graphCtx.beginPath();
-        graphCtx.strokeStyle='#7c6af7'; graphCtx.lineWidth=2.5;
-        graphCtx.shadowColor='rgba(124,106,247,0.5)'; graphCtx.shadowBlur=6;
-        let first=true;
-        points.forEach(pt => {
-            const px=sx(pt.x), py=sy(pt.y);
-            if (py<-50||py>h+50) { first=true; return; }
-            if (first) { graphCtx.moveTo(px,py); first=false; } else { graphCtx.lineTo(px,py); }
-        });
-        graphCtx.stroke();
-        graphCtx.shadowBlur=0;
-    }
-
-    document.getElementById('insert-graph')?.addEventListener('click', () => {
-        if (!excalidrawAPI || !graphCanvas) return;
-        drawGraph();
-        const url = graphCanvas.toDataURL('image/png');
-        const els = excalidrawAPI.getSceneElements();
-        excalidrawAPI.updateScene({ elements:[...els, mkEl('image',100,100,480,240,{type:'image',fileId:null,status:'saved',scale:[1,1]})] });
-        document.getElementById('graph-modal').style.display = 'none';
-    });
-
-    let ws = null, lastSendTime = 0;
+    // WebSocket
+    let ws = null;
     function connectWS() {
-        statusDot.className = 'connecting';
+        const dot = document.getElementById('status-dot');
+        dot.className = 'connecting';
         try {
             ws = new WebSocket(`${window.PRIMEBOARD_RELAY_URL}?room=${encodeURIComponent(room)}&name=${encodeURIComponent(name)}&role=${role}`);
-            ws.onopen = () => { 
-                statusDot.className = 'connected'; 
-                sendMsg({type:'join', room, role, name});
+            ws.onopen = () => { dot.className = 'connected'; };
+            ws.onclose = () => { dot.className = ''; setTimeout(connectWS, 3000); };
+            ws.onerror = () => { dot.className = 'error'; };
+            ws.onmessage = (e) => {
+                try { handleMsg(JSON.parse(e.data)); } catch(err) {}
             };
-            ws.onclose = () => { statusDot.className = ''; setTimeout(connectWS, 3000); };
-            ws.onerror = () => { statusDot.className = 'error'; };
-            ws.onmessage = (event) => {
-                try { handleMsg(JSON.parse(event.data)); } catch(e) {}
-            };
-        } catch(e) { statusDot.className = 'error'; setTimeout(connectWS, 5000); }
+        } catch(err) { setTimeout(connectWS, 5000); }
     }
+
     function sendMsg(data) {
         if (ws?.readyState === WebSocket.OPEN) ws.send(JSON.stringify(data));
     }
+
     function handleMsg(msg) {
-        if (msg.type==='scene-update') {
-            if (!excalidrawAPI) return;
+        if (msg.type === 'scene-update' && excalidrawAPI) {
             isRemoteUpdate = true;
             excalidrawAPI.updateScene({ elements: msg.elements });
-            setTimeout(() => { isRemoteUpdate=false; }, 100);
-        } else if (msg.type==='timer-update') {
-            timeLeft = msg.timeLeft;
-            updateTimerDisplay();
-            if (msg.action==='start') startTimerLocal();
-            else if (msg.action==='pause') pauseTimerLocal();
-            else if (msg.action==='reset') { pauseTimerLocal(); updateTimerDisplay(); }
-        } else if (msg.type==='spotlight-update' && role==='student') {
-            if (msg.active) {
-                spotlightOverlay.style.display = 'block';
-                if (msg.x != null) {
-                    const px = (msg.x/window.innerWidth*100).toFixed(2)+'%';
-                    const py = (msg.y/window.innerHeight*100).toFixed(2)+'%';
-                    spotlightOverlay.style.setProperty('--sx',px);
-                    spotlightOverlay.style.setProperty('--sy',py);
-                }
-            } else {
-                spotlightOverlay.style.display = 'none';
-            }
-        } else if (msg.type==='board-lock') {
-            if (role==='student') {
-                document.getElementById('locked-banner').style.display = msg.locked ? 'flex' : 'none';
-                if (excalidrawAPI) {
-                    excalidrawAPI.updateScene({ appState:{ viewModeEnabled: msg.locked } });
-                }
-            }
-        } else if (msg.type==='pages-structure') {
-            if (role==='student') {
-                msg.pages.forEach(p => {
-                    if (!pages.find(x=>x.id===p.id)) pages.push({id:p.id,name:p.name,elements:[],bg:'#111118'});
-                    else { const pg=pages.find(x=>x.id===p.id); if(pg) pg.name=p.name; }
-                });
-                pages = pages.filter(p=>msg.pages.find(x=>x.id===p.id));
-                renderPageTabs();
-            }
-        } else if (msg.type==='page-switch') {
-            if (role==='student') {
-                const page = pages.find(p=>p.id===msg.pageId);
-                if (page) { page.elements=msg.elements||[]; page.bg=msg.bg||'#111118'; }
-                else pages.push({id:msg.pageId,name:msg.pageId,elements:msg.elements||[],bg:msg.bg||'#111118'});
-                switchToPage(msg.pageId, true);
-            }
-        } else if (msg.type==='recording-status') {
-            document.getElementById('recording-notice').style.display = msg.active ? 'flex' : 'none';
-        } else if (msg.type==='user-count') {
-            studentCountEl.textContent = msg.count;
+            setTimeout(() => isRemoteUpdate = false, 100);
+        } else if (msg.type === 'board-lock' && role === 'student') {
+            document.getElementById('locked-banner').style.display = msg.locked ? 'flex' : 'none';
+            if (excalidrawAPI) excalidrawAPI.updateScene({ appState: { viewModeEnabled: msg.locked } });
         }
     }
+
     connectWS();
 
-    // FIXED: Removed useCallback Hook violation and passed normal arrow functions
+    // Render Excalidraw
     const root = ReactDOM.createRoot(document.getElementById('root'));
     root.render(React.createElement(Excalidraw, {
         theme: 'dark',
         initialData: {
-            appState: { viewBackgroundColor:'#111118', gridSize:0, theme:'dark' },
+            appState: { viewBackgroundColor: '#111118', gridSize: 0, theme: 'dark' },
             elements: [],
         },
         onChange: (elements, appState) => {
-            if (isRemoteUpdate) { isRemoteUpdate=false; return; }
-            const now = Date.now();
-            if (now - lastSendTime > 40) {
-                lastSendTime = now;
-                sendMsg({ type:'scene-update', elements });
-            }
+            if (isRemoteUpdate) { isRemoteUpdate = false; return; }
+            sendMsg({ type: 'scene-update', elements });
         },
         excalidrawAPI: (api) => {
             excalidrawAPI = api;
-            applyPenToBoard();
-            try { api.setActiveTool({ type:'freedraw' }); } catch(e) {}
+            applyPen();
         },
     }));
 
-    document.getElementById('fbar-select')?.classList.add('active');
+    // Set initial tool
+    document.getElementById('tool-select').classList.add('active');
 }
 </script>
 </body>
