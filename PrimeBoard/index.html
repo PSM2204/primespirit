@@ -34,7 +34,7 @@
             --bg-deep: #0f0c29;
             --bg-mid: #302b63;
             --bg-light: #24243e;
-            --glass-bg: rgba(30, 27, 75, 0.65);
+            --glass-bg: rgba(30, 27, 75, 0.7);
             --glass-border: rgba(255, 255, 255, 0.08);
             --glass-highlight: rgba(255, 255, 255, 0.12);
             
@@ -50,18 +50,18 @@
             --text-muted: #64748b;
             
             --radius-sm: 8px;
-            --radius-md: 14px;
-            --radius-lg: 20px;
-            --radius-xl: 28px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 20px;
             
             --shadow-glow: 0 0 20px rgba(167, 139, 250, 0.15);
             --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.3);
+            --shadow-toolbar: 0 4px 24px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255,255,255,0.05);
             --transition-bounce: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-            --transition-smooth: all 0.25s ease;
+            --transition-smooth: all 0.2s ease;
             
-            --sidebar-width: 58px;
-            --topbar-height: 56px;
-            --mobile-toolbar-height: 64px;
+            --sidebar-width: 64px;
+            --topbar-height: 52px;
             --safe-top: env(safe-area-inset-top, 0px);
             --safe-bottom: env(safe-area-inset-bottom, 0px);
         }
@@ -71,23 +71,26 @@
             background: linear-gradient(135deg, var(--bg-deep) 0%, var(--bg-mid) 50%, var(--bg-light) 100%);
             height: 100%; overflow: hidden; 
             touch-action: manipulation;
-            -webkit-user-select: none;
-            user-select: none;
         }
         #root { position: absolute; top: calc(var(--topbar-height) + var(--safe-top)); left: 0; right: 0; bottom: 0; }
 
-        /* ── HIDE EXCALIDRAW DEFAULT PROPERTIES PANEL ── */
+        /* ── HIDE ALL EXCALIDRAW DEFAULT UI ─ */
+        .excalidraw .App-toolbar,
         .excalidraw .Island.App-toolbar-content > div:last-child,
         .excalidraw .panelColumn,
-        .excalidraw [class*="properties"] {
+        .excalidraw [class*="properties"],
+        .excalidraw .HelpDialog,
+        .excalidraw .WelcomeScreen,
+        .excalidraw .Footer,
+        .excalidraw .App-bottom-bar {
             display: none !important;
         }
         .excalidraw { touch-action: none; }
 
-        /* ── TOPBAR ─────────────────────────────────────── */
+        /* ── TOPBAR (Minimal - just room info) ─────────── */
         #topbar {
             position: fixed; top: var(--safe-top); left: 0; right: 0; height: var(--topbar-height); z-index: 1000;
-            display: flex; align-items: center; gap: 10px; padding: 0 14px;
+            display: flex; align-items: center; gap: 10px; padding: 0 14px 0 calc(var(--sidebar-width) + 14px);
             background: var(--glass-bg); backdrop-filter: blur(20px) saturate(1.8);
             border-bottom: 1px solid var(--glass-border);
         }
@@ -161,7 +164,7 @@
         @keyframes pulse-dot { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
         
         #locked-banner {
-            position: fixed; bottom: calc(var(--mobile-toolbar-height) + 20px + var(--safe-bottom)); left: 50%; transform: translateX(-50%); z-index: 1000;
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 1000;
             display: none; align-items: center; gap: 10px;
             background: rgba(251, 113, 133, 0.12); border: 1px solid rgba(251, 113, 133, 0.25);
             color: var(--text-primary); padding: 10px 20px; border-radius: 100px;
@@ -171,54 +174,60 @@
         }
         #locked-banner i { color: var(--accent-danger); }
 
-        /* ─ LEFT SIDEBAR ───────────────────────────────── */
+        /* ── MIRO-INSPIRED LEFT TOOLBAR ────────────────── */
         #left-sidebar {
-            position: fixed; left: 0; top: calc(var(--topbar-height) + var(--safe-top)); bottom: 0; width: var(--sidebar-width);
-            background: var(--glass-bg); border-right: 1px solid var(--glass-border);
-            backdrop-filter: blur(20px) saturate(1.8); z-index: 1100;
+            position: fixed; left: 12px; top: calc(var(--topbar-height) + 12px + var(--safe-top)); bottom: 12px; 
+            width: var(--sidebar-width);
+            background: var(--glass-bg); border: 1px solid var(--glass-border);
+            backdrop-filter: blur(24px) saturate(1.8); z-index: 1100;
             display: flex; flex-direction: column; align-items: center;
-            padding: 14px 0; gap: 5px;
+            padding: 10px 0; gap: 4px;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-toolbar);
             overflow-y: auto;
+            overflow-x: hidden;
             scrollbar-width: none;
         }
         #left-sidebar::-webkit-scrollbar { display: none; }
         
         .sidebar-btn {
-            width: 42px; height: 42px; border-radius: var(--radius-md);
+            width: 44px; height: 44px; border-radius: var(--radius-md);
             display: flex; align-items: center; justify-content: center;
-            font-size: 1rem; border: 1px solid transparent;
+            font-size: 1.05rem; border: 1px solid transparent;
             background: transparent; color: var(--text-muted);
-            cursor: pointer; transition: var(--transition-bounce);
+            cursor: pointer; transition: var(--transition-smooth);
             position: relative; overflow: hidden;
             flex-shrink: 0;
         }
         .sidebar-btn::before {
             content: ''; position: absolute; inset: 0; border-radius: inherit;
             background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
-            opacity: 0; transition: opacity 0.3s ease; z-index: -1;
+            opacity: 0; transition: opacity 0.2s ease; z-index: -1;
         }
         .sidebar-btn:hover { 
-            color: var(--text-primary); transform: scale(1.08); 
-            background: var(--glass-highlight); border-color: var(--glass-border);
+            color: var(--text-primary); 
+            background: var(--glass-highlight);
         }
         .sidebar-btn.active { 
-            color: #fff; border-color: transparent; 
-            box-shadow: 0 0 16px rgba(167, 139, 250, 0.4);
+            color: #fff; 
+            box-shadow: 0 0 0 2px var(--accent-primary), 0 4px 12px rgba(167, 139, 250, 0.4);
+            background: linear-gradient(135deg, rgba(167,139,250,0.3), rgba(244,114,182,0.2));
         }
         .sidebar-btn.active::before { opacity: 1; }
-        .sidebar-divider { width: 26px; height: 1px; background: var(--glass-border); margin: 4px 0; flex-shrink: 0; }
+        .sidebar-divider { width: 32px; height: 1px; background: var(--glass-border); margin: 4px 0; flex-shrink: 0; }
 
+        /* Tooltips */
         .sidebar-btn[title]:hover::after {
-            content: attr(title); position: absolute; left: 50px; top: 50%;
-            transform: translateY(-50%); padding: 5px 10px; border-radius: var(--radius-sm);
+            content: attr(title); position: absolute; left: calc(100% + 10px); top: 50%;
+            transform: translateY(-50%); padding: 6px 12px; border-radius: var(--radius-sm);
             background: var(--bg-light); border: 1px solid var(--glass-border);
-            color: var(--text-primary); font-size: 0.65rem; font-weight: 700;
+            color: var(--text-primary); font-size: 0.7rem; font-weight: 700;
             white-space: nowrap; z-index: 9999; pointer-events: none;
             box-shadow: var(--shadow-card);
         }
 
         /* ── RIGHT PANELS ───────────────────────────────── */
-        #right-panels { position: fixed; right: 16px; top: calc(var(--topbar-height) + 20px + var(--safe-top)); z-index: 1100; display: flex; flex-direction: column; gap: 12px; max-width: calc(100vw - 100px); }
+        #right-panels { position: fixed; right: 16px; top: calc(var(--topbar-height) + 20px + var(--safe-top)); z-index: 1100; display: flex; flex-direction: column; gap: 12px; max-width: calc(100vw - 120px); }
         
         #timer-widget {
             background: var(--glass-bg); border: 1px solid var(--glass-border);
@@ -260,7 +269,7 @@
         .timer-inputs input:focus { outline: none; border-color: var(--accent-primary); box-shadow: 0 0 8px rgba(167, 139, 250, 0.3); }
         .timer-inputs span { color: var(--text-muted); font-weight: 800; font-family: 'JetBrains Mono', monospace; }
 
-        /* ── MINIMALIST POPUPS (shared style) ──────────── */
+        /* ── MINIMALIST POPUPS ─────────────────────────── */
         .minimal-popup {
             display: none;
             position: fixed;
@@ -308,9 +317,7 @@
             top: calc(var(--topbar-height) + 20px + var(--safe-top));
         }
         
-        .pen-category {
-            margin-bottom: 14px;
-        }
+        .pen-category { margin-bottom: 14px; }
         .pen-category-label {
             color: var(--text-muted);
             font-size: 0.62rem;
@@ -437,7 +444,7 @@
         }
         #custom-bg-picker:hover { border-color: var(--accent-primary); }
 
-        /* ── FOG OF WAR OVERLAY ─────────────────────────── */
+        /* ── FOG OF WAR OVERLAY ────────────────────────── */
         #spotlight-overlay {
             position: fixed; inset: 0; z-index: 1500;
             background: radial-gradient(circle 280px at var(--sx, 50%) var(--sy, 50%), transparent 0%, rgba(15, 12, 41, 0.97) 100%);
@@ -610,85 +617,20 @@
         .toolkit-item span { color: var(--text-primary); font-size: 0.8rem; font-weight: 700; }
         .toolkit-item .sub-text { color: var(--text-muted); font-size: 0.6rem; font-weight: 600; }
 
-        /* ── EXCALIDRAW TOOLBAR OVERRIDE ────────────────── */
-        .excalidraw .App-toolbar {
-            position: fixed !important; 
-            top: calc(var(--topbar-height) + var(--safe-top)) !important; 
-            left: calc(var(--sidebar-width) + 14px) !important; 
-            right: 280px !important;
-            z-index: 997 !important; 
-            background: var(--glass-bg) !important;
-            backdrop-filter: blur(20px) saturate(1.8) !important;
-            border-radius: 0 0 var(--radius-lg) var(--radius-lg) !important;
-            border: 1px solid var(--glass-border) !important; 
-            border-top: none !important;
-            padding: 8px 14px !important; 
-            box-shadow: var(--shadow-card) !important;
-            overflow-x: auto;
-            scrollbar-width: none;
-        }
-        .excalidraw .App-toolbar::-webkit-scrollbar { display: none; }
-
-        /* ── MOBILE BOTTOM TOOLBAR ─────────────────────── */
-        #mobile-toolbar {
-            display: none;
-            position: fixed;
-            bottom: var(--safe-bottom);
-            left: 0; right: 0;
-            height: var(--mobile-toolbar-height);
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px) saturate(1.8);
-            border-top: 1px solid var(--glass-border);
-            z-index: 1100;
-            align-items: center;
-            justify-content: space-around;
-            padding: 0 8px;
-            padding-bottom: var(--safe-bottom);
-        }
-        .mobile-tool-btn {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 3px;
-            padding: 6px 4px;
-            background: transparent;
-            border: none;
-            color: var(--text-muted);
-            cursor: pointer;
-            font-size: 0.6rem;
-            font-weight: 700;
-            transition: var(--transition-bounce);
-            border-radius: var(--radius-sm);
-            min-height: 48px;
-        }
-        .mobile-tool-btn i { font-size: 1.1rem; }
-        .mobile-tool-btn:hover, .mobile-tool-btn.active {
-            color: var(--accent-primary);
-            background: var(--glass-highlight);
-        }
-        .mobile-tool-btn.active {
-            color: #fff;
-            background: linear-gradient(135deg, rgba(167,139,250,0.2), rgba(244,114,182,0.15));
-        }
-
         /* ── RESPONSIVE BREAKPOINTS ────────────────────── */
         
         /* Large tablets & small laptops */
         @media(max-width: 1024px) {
-            .excalidraw .App-toolbar { right: 220px !important; }
             #right-panels { right: 12px; }
         }
         
         /* Tablets */
         @media(max-width: 900px) {
-            .excalidraw .App-toolbar { right: 20px !important; }
             #right-panels { 
                 position: fixed; 
                 right: 10px; 
                 top: auto; 
-                bottom: calc(var(--mobile-toolbar-height) + 10px + var(--safe-bottom));
+                bottom: 10px;
                 flex-direction: row-reverse;
             }
             #timer-widget { min-width: 160px; }
@@ -698,20 +640,13 @@
         /* Mobile devices */
         @media(max-width: 768px) {
             :root {
-                --topbar-height: 50px;
-                --mobile-toolbar-height: 60px;
+                --topbar-height: 48px;
+                --sidebar-width: 56px;
             }
             
-            #root { 
-                top: calc(var(--topbar-height) + var(--safe-top)); 
-                bottom: var(--mobile-toolbar-height);
-            }
+            #root { top: calc(var(--topbar-height) + var(--safe-top)); }
             
-            #topbar { 
-                padding: 0 10px; 
-                gap: 6px;
-                height: var(--topbar-height);
-            }
+            #topbar { padding: 0 10px 0 calc(var(--sidebar-width) + 10px); gap: 6px; }
             #brand { font-size: 0.85rem; gap: 6px; }
             #brand i { font-size: 0.95rem; }
             #room-pill { padding: 4px 10px; font-size: 0.65rem; }
@@ -720,21 +655,25 @@
             .topbar-btn span { display: none; }
             .topbar-btn i { font-size: 0.85rem; }
             
-            #left-sidebar { display: none; }
-            #mobile-toolbar { display: flex; }
-            
-            .excalidraw .App-toolbar {
-                left: 10px !important;
-                right: 10px !important;
-                padding: 6px 10px !important;
+            #left-sidebar { 
+                left: 8px;
+                top: calc(var(--topbar-height) + 8px + var(--safe-top));
+                bottom: 8px;
+                padding: 8px 0;
+                gap: 2px;
             }
+            .sidebar-btn { 
+                width: 40px; height: 40px; 
+                font-size: 0.95rem;
+            }
+            .sidebar-divider { width: 28px; margin: 2px 0; }
             
             #pen-popup, #bg-color-popup {
                 position: fixed !important;
                 left: 10px !important;
                 right: 10px !important;
                 top: auto !important;
-                bottom: calc(var(--mobile-toolbar-height) + 10px + var(--safe-bottom)) !important;
+                bottom: 10px !important;
                 width: auto !important;
                 max-height: 70vh;
             }
@@ -742,23 +681,14 @@
             .pen-grid { grid-template-columns: repeat(2, 1fr); }
             .color-grid { grid-template-columns: repeat(4, 1fr); }
             
-            #timer-widget { 
-                min-width: 140px; 
-                padding: 10px;
-            }
+            #timer-widget { min-width: 140px; padding: 10px; }
             #timer-display { font-size: 1.6rem; }
             
-            #locked-banner {
-                bottom: calc(var(--mobile-toolbar-height) + 10px + var(--safe-bottom));
-                font-size: 0.7rem;
-                padding: 8px 16px;
-            }
+            #locked-banner { bottom: 10px; font-size: 0.7rem; padding: 8px 16px; }
             
             .sidebar-btn[title]:hover::after { display: none; }
             
-            #add-student-card, #toolkit-card, #math-card {
-                padding: 22px 18px;
-            }
+            #add-student-card, #toolkit-card, #math-card { padding: 22px 18px; }
             .toolkit-grid { grid-template-columns: repeat(2, 1fr); }
         }
         
@@ -775,16 +705,15 @@
         
         /* Landscape mobile */
         @media(max-height: 500px) and (orientation: landscape) {
-            :root { --topbar-height: 44px; --mobile-toolbar-height: 50px; }
-            #pen-popup, #bg-color-popup {
-                max-height: 80vh;
-                bottom: calc(var(--mobile-toolbar-height) + 5px + var(--safe-bottom)) !important;
-            }
+            :root { --topbar-height: 42px; --sidebar-width: 52px; }
+            #left-sidebar { padding: 6px 0; gap: 2px; }
+            .sidebar-btn { width: 38px; height: 38px; font-size: 0.9rem; }
+            #pen-popup, #bg-color-popup { max-height: 80vh; bottom: 10px !important; }
         }
         
         /* Touch device optimizations */
         @media (hover: none) and (pointer: coarse) {
-            .sidebar-btn, .mobile-tool-btn, .topbar-btn, .timer-btn, .pen-item, .color-swatch {
+            .sidebar-btn, .topbar-btn, .timer-btn, .pen-item, .color-swatch {
                 min-height: 40px;
                 min-width: 40px;
             }
@@ -814,7 +743,7 @@
         </div>
     </div>
 
-    <!-- TOPBAR -->
+    <!-- TOPBAR (Minimal) -->
     <div id="topbar" style="display:none;">
         <div id="brand"><i class="fas fa-atom"></i> PrimeBoard <span class="sub">by Prime Spirit Mentors</span></div>
         <div id="room-pill"><span id="status-dot"></span> Room: <b id="room-pill-code">-</b></div>
@@ -828,27 +757,35 @@
 
     <div id="locked-banner"><i class="fas fa-lock"></i> Drawing locked — pan & zoom only</div>
 
-    <!-- LEFT SIDEBAR (Desktop/Tablet) -->
+    <!-- MIRO-INSPIRED LEFT TOOLBAR -->
     <div id="left-sidebar" style="display:none;">
-        <button class="sidebar-btn" id="btn-toolkit" title="Smart Toolkit"><i class="fas fa-graduation-cap"></i></button>
-        <button class="sidebar-btn" id="btn-pen" title="Pen Types"><i class="fas fa-pen-nib"></i></button>
+        <!-- Drawing Tools Section -->
+        <button class="sidebar-btn" id="tool-select" title="Select (V)"><i class="fas fa-mouse-pointer"></i></button>
+        <button class="sidebar-btn" id="tool-hand" title="Hand (H)"><i class="fas fa-hand"></i></button>
+        <div class="sidebar-divider"></div>
+        <button class="sidebar-btn" id="tool-rectangle" title="Rectangle (R)"><i class="fas fa-square"></i></button>
+        <button class="sidebar-btn" id="tool-diamond" title="Diamond"><i class="fas fa-diamond"></i></button>
+        <button class="sidebar-btn" id="tool-ellipse" title="Circle (O)"><i class="fas fa-circle"></i></button>
+        <button class="sidebar-btn" id="tool-triangle" title="Triangle"><i class="fas fa-play" style="transform: rotate(-90deg);"></i></button>
+        <div class="sidebar-divider"></div>
+        <button class="sidebar-btn" id="tool-line" title="Line (L)"><i class="fas fa-minus"></i></button>
+        <button class="sidebar-btn" id="tool-arrow" title="Arrow"><i class="fas fa-arrow-right"></i></button>
+        <div class="sidebar-divider"></div>
+        <button class="sidebar-btn" id="tool-pen" title="Draw (P)"><i class="fas fa-pen"></i></button>
+        <button class="sidebar-btn" id="tool-text" title="Text (T)"><i class="fas fa-font"></i></button>
+        <button class="sidebar-btn" id="tool-image" title="Image"><i class="fas fa-image"></i></button>
+        <button class="sidebar-btn" id="tool-eraser" title="Eraser (E)"><i class="fas fa-eraser"></i></button>
+        <div class="sidebar-divider"></div>
+        <!-- PrimeBoard Custom Tools -->
+        <button class="sidebar-btn" id="btn-pen-types" title="Pen Styles"><i class="fas fa-pen-nib"></i></button>
         <button class="sidebar-btn" id="btn-spotlight" title="Fog of War"><i class="fas fa-lightbulb"></i></button>
         <div class="sidebar-divider"></div>
-        <button class="sidebar-btn" id="btn-timer" title="Timer"><i class="fas fa-stopwatch"></i></button>
+        <button class="sidebar-btn" id="btn-toolkit" title="Smart Toolkit"><i class="fas fa-graduation-cap"></i></button>
         <button class="sidebar-btn" id="btn-math" title="Math Equation"><i class="fas fa-square-root-alt"></i></button>
+        <button class="sidebar-btn" id="btn-timer" title="Timer"><i class="fas fa-stopwatch"></i></button>
         <div class="sidebar-divider"></div>
         <button class="sidebar-btn" id="btn-bg-color" title="Background"><i class="fas fa-fill-drip"></i></button>
         <button class="sidebar-btn" id="btn-theme" title="Theme"><i class="fas fa-palette"></i></button>
-    </div>
-
-    <!-- MOBILE BOTTOM TOOLBAR -->
-    <div id="mobile-toolbar" style="display:none;">
-        <button class="mobile-tool-btn" data-action="toolkit"><i class="fas fa-graduation-cap"></i><span>Tools</span></button>
-        <button class="mobile-tool-btn" data-action="pen"><i class="fas fa-pen-nib"></i><span>Pens</span></button>
-        <button class="mobile-tool-btn" data-action="spotlight"><i class="fas fa-lightbulb"></i><span>Spot</span></button>
-        <button class="mobile-tool-btn" data-action="timer"><i class="fas fa-stopwatch"></i><span>Timer</span></button>
-        <button class="mobile-tool-btn" data-action="math"><i class="fas fa-square-root-alt"></i><span>Math</span></button>
-        <button class="mobile-tool-btn" data-action="bg"><i class="fas fa-fill-drip"></i><span>BG</span></button>
     </div>
 
     <!-- RIGHT PANELS -->
@@ -872,7 +809,7 @@
     <div id="spotlight-overlay"></div>
     <div id="spotlight-handle"><i class="fas fa-crosshairs"></i></div>
 
-    <!-- PEN SELECTOR POPUP (Minimalist) -->
+    <!-- PEN SELECTOR POPUP -->
     <div id="pen-popup" class="minimal-popup">
         <div class="popup-header">
             <div class="popup-header-left">
@@ -1003,7 +940,7 @@
             ]
         };
 
-        function createPenPreviewSVG(icon, strokeW = 2) {
+        function createPenPreviewSVG(icon) {
             const svgs = {
                 'line-thin': `<line x1="4" y1="28" x2="28" y2="4" stroke="currentColor" stroke-width="1" stroke-linecap="round"/>`,
                 'line-medium': `<line x1="4" y1="28" x2="28" y2="4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>`,
@@ -1024,37 +961,36 @@
         // ── POPUP MANAGEMENT ────────────────────────────
         function closeAllPopups() {
             document.querySelectorAll('.minimal-popup').forEach(p => p.style.display = 'none');
-            document.querySelectorAll('.sidebar-btn, .mobile-tool-btn').forEach(b => b.classList.remove('active'));
         }
         
         function togglePopup(popupId, btnEl) {
             const popup = document.getElementById(popupId);
             const isOpen = popup.style.display === 'block';
             closeAllPopups();
+            // Remove active from all sidebar buttons
+            document.querySelectorAll('.sidebar-btn').forEach(b => b.classList.remove('active'));
             if (!isOpen) {
                 popup.style.display = 'block';
                 if (btnEl) btnEl.classList.add('active');
             }
         }
 
-        // Close popup buttons
         document.querySelectorAll('[data-close]').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 e.stopPropagation();
                 const popupId = btn.dataset.close;
                 document.getElementById(popupId).style.display = 'none';
-                document.querySelectorAll('.sidebar-btn, .mobile-tool-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.sidebar-btn').forEach(b => b.classList.remove('active'));
             });
         });
 
-        // Close popups when clicking outside
         document.addEventListener('click', (e) => {
             document.querySelectorAll('.minimal-popup').forEach(popup => {
                 if (popup.style.display === 'block' && !popup.contains(e.target)) {
                     const triggerBtn = document.querySelector(`[data-popup="${popup.id}"]`);
                     if (triggerBtn && !triggerBtn.contains(e.target)) {
                         popup.style.display = 'none';
-                        document.querySelectorAll('.sidebar-btn, .mobile-tool-btn').forEach(b => b.classList.remove('active'));
+                        document.querySelectorAll('.sidebar-btn').forEach(b => b.classList.remove('active'));
                     }
                 }
             });
@@ -1134,7 +1070,6 @@
             setupScreen.style.display='none';
             document.getElementById('topbar').style.display='flex';
             document.getElementById('left-sidebar').style.display='flex';
-            document.getElementById('mobile-toolbar').style.display='flex';
             startBoard({name,role:selectedRole,room});
         });
 
@@ -1169,19 +1104,45 @@
             let isRemoteUpdate=false;
             let lastSendTime=0;
             let currentPenId = 'ballpoint';
+            let activeToolId = 'tool-select';
 
-            function deselectTools() {
+            function setActiveTool(toolType, btnId) {
                 if (!excalidrawAPI) return;
-                try {
-                    excalidrawAPI.setActiveTool({ type: "selection" });
-                } catch(e) {
-                    try {
-                        excalidrawAPI.updateScene({
-                            appState: { activeTool: { type: "selection", locked: false } }
-                        });
-                    } catch(e2) { console.warn('Could not deselect tool', e2); }
+                activeToolId = btnId;
+                // Remove active from all drawing tool buttons
+                document.querySelectorAll('#left-sidebar .sidebar-btn').forEach(b => b.classList.remove('active'));
+                if (btnId) {
+                    const btn = document.getElementById(btnId);
+                    if (btn) btn.classList.add('active');
                 }
+                excalidrawAPI.setActiveTool({ type: toolType });
             }
+
+            // ── DRAWING TOOL BUTTONS ────────────────────
+            const toolMap = {
+                'tool-select': 'selection',
+                'tool-hand': 'hand',
+                'tool-rectangle': 'rectangle',
+                'tool-diamond': 'diamond',
+                'tool-ellipse': 'ellipse',
+                'tool-triangle': 'diamond', // Excalidraw doesn't have triangle, use diamond
+                'tool-line': 'line',
+                'tool-arrow': 'arrow',
+                'tool-pen': 'freedraw',
+                'tool-text': 'text',
+                'tool-image': 'image',
+                'tool-eraser': 'eraser',
+            };
+
+            Object.keys(toolMap).forEach(btnId => {
+                const btn = document.getElementById(btnId);
+                if (btn) {
+                    btn.addEventListener('click', () => {
+                        setActiveTool(toolMap[btnId], btnId);
+                        closeAllPopups();
+                    });
+                }
+            });
 
             // ── PEN SELECTOR LOGIC ──────────────────────
             function renderPenGrids() {
@@ -1218,8 +1179,8 @@
                             currentItemFillStyle: pen.fillStyle,
                         }
                     });
-                    // Force freetype tool for drawing
                     excalidrawAPI.setActiveTool({ type: 'freedraw' });
+                    setActiveTool('freedraw', 'tool-pen');
                 }
                 document.querySelectorAll('.pen-item').forEach(el => {
                     el.classList.toggle('selected', el.dataset.penId === pen.id);
@@ -1228,33 +1189,13 @@
 
             renderPenGrids();
 
-            // Make popups draggable
             makeDraggable(document.getElementById('pen-popup'));
             makeDraggable(document.getElementById('bg-color-popup'));
 
-            // Pen button handlers
-            document.getElementById('btn-pen').addEventListener('click', (e) => {
+            // Pen types button
+            document.getElementById('btn-pen-types').addEventListener('click', (e) => {
                 e.stopPropagation();
-                deselectTools();
-                togglePopup('pen-popup', document.getElementById('btn-pen'));
-            });
-
-            // Mobile toolbar
-            document.querySelectorAll('.mobile-tool-btn').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    deselectTools();
-                    const action = btn.dataset.action;
-                    const actionMap = {
-                        'toolkit': () => { document.getElementById('toolkit-modal').style.display = 'flex'; },
-                        'pen': () => togglePopup('pen-popup', btn),
-                        'spotlight': () => document.getElementById('btn-spotlight').click(),
-                        'timer': () => document.getElementById('btn-timer').click(),
-                        'math': () => { document.getElementById('math-modal').style.display = 'flex'; },
-                        'bg': () => togglePopup('bg-color-popup', btn),
-                    };
-                    if (actionMap[action]) actionMap[action]();
-                });
+                togglePopup('pen-popup', document.getElementById('btn-pen-types'));
             });
 
             // ===== FOG OF WAR (SPOTLIGHT) =====
@@ -1263,9 +1204,9 @@
             let isSpotlightActive=false, lastSpotlightSend=0;
 
             btnSpotlight.addEventListener('click',()=>{
-                deselectTools();
                 isSpotlightActive=!isSpotlightActive;
                 btnSpotlight.classList.toggle('active',isSpotlightActive);
+                if(!isSpotlightActive) closeAllPopups();
                 
                 if(role==='teacher'){
                     sendMessage({type:'spotlight-update',active:isSpotlightActive});
@@ -1340,7 +1281,6 @@
 
             btnBgColor.addEventListener('click', (e) => {
                 e.stopPropagation();
-                deselectTools();
                 togglePopup('bg-color-popup', btnBgColor);
             });
 
@@ -1362,7 +1302,6 @@
             let timerInterval=null,timeLeft=300,isTimerRunning=false;
 
             document.getElementById('btn-timer').addEventListener('click',()=>{
-                deselectTools();
                 timerWidget.style.display=timerWidget.style.display==='flex'?'none':'flex';
             });
             if(role!=='teacher'){timerControls.style.display='none';timerInputs.style.display='none';}
@@ -1390,7 +1329,6 @@
             // ===== SMART TOOLKIT =====
             const toolkitModal=document.getElementById('toolkit-modal');
             document.getElementById('btn-toolkit').addEventListener('click',()=>{
-                deselectTools();
                 toolkitModal.style.display='flex';
             });
             document.getElementById('close-toolkit-btn').addEventListener('click',()=>{toolkitModal.style.display='none';});
@@ -1441,7 +1379,6 @@
             const mathPreview=document.getElementById('math-preview');
 
             document.getElementById('btn-math').addEventListener('click',()=>{
-                deselectTools();
                 mathModal.style.display='flex';mathInput.value='';mathPreview.innerHTML='';
             });
             document.getElementById('cancel-math-btn').addEventListener('click',()=>{mathModal.style.display='none';});
@@ -1461,7 +1398,6 @@
             // ===== THEME TOGGLE =====
             let currentTheme='dark';
             document.getElementById('btn-theme').addEventListener('click',()=>{
-                deselectTools();
                 currentTheme=currentTheme==='dark'?'light':'dark';
                 if(excalidrawAPI) excalidrawAPI.updateScene({appState:{theme:currentTheme}});
             });
@@ -1528,20 +1464,13 @@
             lockBtn.addEventListener('click',()=>{
                 locked=!locked;applyLockUI();
                 sendMessage({type:'set-lock',locked});
-                if(role==='teacher') setExcalidrawViewMode(false);
             });
-            function setExcalidrawViewMode(viewOnly){
-                if(excalidrawAPI) excalidrawAPI.updateScene({appState:{viewModeEnabled:viewOnly}});
-            }
 
             // ===== RESPONSIVE RESIZE HANDLER =====
             let resizeTimer;
             window.addEventListener('resize', () => {
                 clearTimeout(resizeTimer);
-                resizeTimer = setTimeout(() => {
-                    // Close popups on orientation change to avoid layout issues
-                    closeAllPopups();
-                }, 200);
+                resizeTimer = setTimeout(() => { closeAllPopups(); }, 200);
             });
 
             // ===== EXCALIDRAW RENDER =====
@@ -1559,12 +1488,21 @@
                 return React.createElement(Excalidraw,{
                     excalidrawAPI:(api)=>{
                         excalidrawAPI=api;
-                        // Apply default pen
-                        setTimeout(() => selectPen(PEN_TYPES.writing[1]), 100);
+                        // Set default tool
+                        setTimeout(() => {
+                            setActiveTool('selection', 'tool-select');
+                            selectPen(PEN_TYPES.writing[1]);
+                        }, 100);
                     },
                     onChange,theme:'dark',name:`PrimeBoard - ${room}`,
                     UIOptions:{
-                        canvasActions:{loadScene:false,saveToActiveFile:false,export:{saveFileToDisk:false}},
+                        canvasActions:{
+                            loadScene:false,
+                            saveToActiveFile:false,
+                            export:{saveFileToDisk:false},
+                            toggleTheme:false,
+                            saveAsImage:false,
+                        },
                         allowPinchZoom: true,
                         allowClipboard: true,
                     },
@@ -1583,7 +1521,7 @@
                     const data=JSON.parse(event.data);
                     if(data.type==='state'||data.type==='lock-changed'){
                         locked=data.locked;applyLockUI();
-                        if(role==='student')setExcalidrawViewMode(locked);
+                        if(role==='student' && excalidrawAPI) excalidrawAPI.updateScene({appState:{viewModeEnabled:locked}});
                     }
                     if(data.type==='scene-update'&&excalidrawAPI){
                         isRemoteUpdate=true;
