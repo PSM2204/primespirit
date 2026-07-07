@@ -48,6 +48,8 @@
         --r2: 12px;
         --r3: 20px;
         --sidebar-w: 56px;
+        --topbar-h: 48px;
+        --pagetabs-h: 36px;
         --safe-top: env(safe-area-inset-top, 0px);
         --safe-bottom: env(safe-area-inset-bottom, 0px);
         --shadow: 0 4px 24px rgba(0,0,0,0.5);
@@ -68,28 +70,28 @@
     /* ─── CANVAS ROOT ────────────────────────────────────── */
     #root {
         position:fixed;
-        top: var(--safe-top);
+        top: calc(var(--topbar-h) + var(--pagetabs-h) + var(--safe-top));
         left: var(--sidebar-w);
         right: 0;
         bottom: var(--safe-bottom);
     }
 
-    /* ─── MINIMAL TOPBAR ─────────────────────────────────── */
+    /* ─── MINIMAL TOPBAR ────────────────────────────────── */
     #topbar {
         position:fixed;
         top: var(--safe-top);
         left: var(--sidebar-w);
         right: 0;
-        height: 48px;
+        height: var(--topbar-h);
         z-index: 1000;
         display:flex;
         align-items:center;
         gap: 12px;
         padding: 0 20px;
-        background: transparent;
-        pointer-events: none;
+        background: var(--surface);
+        border-bottom: 1px solid var(--border);
+        backdrop-filter: blur(20px);
     }
-    #topbar > * { pointer-events: auto; }
 
     #brand {
         display:flex;
@@ -98,13 +100,35 @@
         font-weight: 700;
         font-size: 0.9rem;
         color: var(--text);
-        background: var(--surface);
-        padding: 6px 14px;
-        border-radius: var(--r2);
-        border: 1px solid var(--border);
-        backdrop-filter: blur(12px);
+        flex-shrink: 0;
     }
-    #brand i { color: var(--accent); font-size: 1rem; }
+    #brand i { color: var(--accent); font-size: 1rem; filter: drop-shadow(0 0 6px rgba(124,106,247,0.5)); }
+
+    #room-pill {
+        display:flex;
+        align-items:center;
+        gap: 6px;
+        background: rgba(255,255,255,0.05);
+        border: 1px solid var(--border);
+        padding: 5px 12px;
+        border-radius: 100px;
+        font-size: 0.7rem;
+        font-family: 'JetBrains Mono', monospace;
+        color: var(--text2);
+    }
+    #room-pill b { color: var(--accent3); }
+    #status-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--text3); flex-shrink: 0; }
+    #status-dot.connected { background: var(--green); box-shadow: 0 0 8px var(--green); }
+    #status-dot.connecting { background: var(--yellow); animation: blink 1.2s infinite; }
+    #status-dot.error { background: var(--red); }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+    #online-pill {
+        display:none; align-items:center; gap:5px;
+        background:rgba(74,222,128,0.08); border:1px solid rgba(74,222,128,0.2);
+        padding:4px 10px; border-radius:100px;
+        font-size:0.65rem; font-weight:600; color:var(--green);
+    }
 
     .topbar-right {
         margin-left: auto;
@@ -118,7 +142,7 @@
         padding: 0 12px;
         border-radius: var(--r);
         border: 1px solid var(--border);
-        background: var(--surface);
+        background: transparent;
         color: var(--text2);
         font-size: 0.75rem;
         font-weight: 600;
@@ -126,31 +150,65 @@
         display: flex;
         align-items: center;
         gap: 6px;
-        backdrop-filter: blur(12px);
         transition: all 0.15s;
+        font-family: 'Inter', sans-serif;
     }
-    .top-btn:hover { background: var(--surface2); color: var(--text); border-color: var(--border2); }
+    .top-btn:hover { background: rgba(255,255,255,0.07); color: var(--text); border-color: var(--border2); }
     .top-btn.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
-    .top-btn.primary:hover { background: var(--accent2); }
+    .top-btn.primary:hover { background: var(--accent2); border-color: var(--accent2); }
+    
+    #lock-btn { color:var(--red); border-color:rgba(251,113,133,0.25); background:rgba(251,113,133,0.06); }
+    #lock-btn.unlocked { color:var(--green); border-color:rgba(74,222,128,0.25); background:rgba(74,222,128,0.06); }
+    #record-btn { color:var(--red); border-color:rgba(251,113,133,0.2); background:rgba(251,113,133,0.05); }
+    #record-btn.recording { background:var(--red); color:#fff; border-color:var(--red); animation:recpulse 1.2s infinite; }
+    @keyframes recpulse { 0%,100%{box-shadow:0 0 0 0 rgba(251,113,133,0.5)} 50%{box-shadow:0 0 0 5px rgba(251,113,133,0)} }
 
-    #room-pill {
-        display:flex;
-        align-items:center;
-        gap: 6px;
-        background: var(--surface);
-        border: 1px solid var(--border);
-        padding: 6px 12px;
-        border-radius: var(--r);
-        font-size: 0.7rem;
-        font-family: 'JetBrains Mono', monospace;
-        color: var(--text2);
-        backdrop-filter: blur(12px);
+    #rec-indicator {
+        display:none; align-items:center; gap:5px;
+        padding:4px 10px; border-radius:100px;
+        background:rgba(251,113,133,0.1); border:1px solid rgba(251,113,133,0.25);
+        color:var(--red); font-size:0.65rem; font-weight:700; font-family:'JetBrains Mono',monospace;
     }
-    #room-pill b { color: var(--accent3); }
-    #status-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--text3); }
-    #status-dot.connected { background: var(--green); box-shadow: 0 0 8px var(--green); }
-    #status-dot.connecting { background: var(--yellow); animation: blink 1.2s infinite; }
-    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+    .rec-dot { width:7px; height:7px; border-radius:50%; background:var(--red); animation:blink 0.9s infinite; }
+
+    /* ── PAGE TABS ──────────────────────────────────────── */
+    #page-tabs-bar {
+        position:fixed;
+        top:calc(var(--topbar-h) + var(--safe-top));
+        left: var(--sidebar-w);
+        right: 0;
+        height: var(--pagetabs-h);
+        display:none;
+        align-items:center;
+        gap: 4px;
+        padding: 0 12px;
+        background: rgba(14,14,22,0.92);
+        border-bottom: 1px solid var(--border);
+        backdrop-filter: blur(16px);
+        z-index: 999;
+    }
+    #page-tabs-list { display:flex; gap:3px; overflow-x:auto; flex:1; align-items:center; height:100%; scrollbar-width:none; }
+    #page-tabs-list::-webkit-scrollbar { display:none; }
+    .page-tab {
+        display:flex; align-items:center; gap:6px;
+        padding:4px 10px; border-radius:var(--r);
+        background:transparent; border:1px solid transparent;
+        color:var(--text3); font-size:0.65rem; font-weight:600;
+        cursor:pointer; transition:all 0.15s; white-space:nowrap; flex-shrink:0;
+    }
+    .page-tab:hover { color:var(--text2); background:rgba(255,255,255,0.05); }
+    .page-tab.active {
+        color:var(--text); border-color:rgba(124,106,247,0.4);
+        background:rgba(124,106,247,0.12);
+    }
+    .page-tab-close { font-size:0.55rem; opacity:0.5; transition:opacity 0.15s; }
+    .page-tab-close:hover { opacity:1; color:var(--red); }
+    #add-page-btn {
+        flex-shrink:0; width:26px; height:26px; border-radius:var(--r);
+        border:1px dashed var(--border); background:transparent; color:var(--text3);
+        cursor:pointer; transition:all 0.15s; display:flex; align-items:center; justify-content:center; font-size:0.7rem;
+    }
+    #add-page-btn:hover { color:var(--green); border-color:var(--green); background:rgba(74,222,128,0.06); }
 
     /* ─── LEFT SIDEBAR (MIRO STYLE) ──────────────────────── */
     #sidebar {
@@ -219,7 +277,6 @@
         border-radius: 0 4px 4px 0;
     }
 
-    /* Tooltip */
     .sidebar-btn[title]::after {
         content: attr(title);
         position: absolute;
@@ -294,7 +351,6 @@
     .popover-close:hover { background: rgba(251,113,133,0.1); color: var(--red); }
     .popover-body { padding: 12px; }
 
-    /* Pen types */
     .pen-types { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 12px; }
     .pen-type {
         display: flex;
@@ -315,7 +371,6 @@
     .pen-type:hover { border-color: var(--border2); color: var(--text); background: rgba(255,255,255,0.07); }
     .pen-type.active { border-color: var(--accent); color: var(--text); background: rgba(124,106,247,0.15); }
 
-    /* Colors */
     .colors { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
     .color-dot {
         width: 24px;
@@ -329,7 +384,6 @@
     .color-dot.active { border-color: rgba(255,255,255,0.8); box-shadow: 0 0 0 2px rgba(255,255,255,0.2); }
     #stroke-custom { width: 24px; height: 24px; border-radius: 50%; border: 2px solid var(--border2); cursor: pointer; padding: 0; background: transparent; }
 
-    /* Sliders */
     .slider-row { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
     .slider-row label { font-size: 0.6rem; font-weight: 700; color: var(--text3); text-transform: uppercase; letter-spacing: 0.05em; min-width: 50px; }
     .slider-row input[type="range"] {
@@ -355,7 +409,6 @@
     }
     .slider-val { font-size: 0.6rem; font-weight: 700; color: var(--text2); font-family: 'JetBrains Mono', monospace; min-width: 32px; text-align: right; }
 
-    /* BG Colors Grid */
     .bg-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
     .bg-swatch {
         aspect-ratio: 1;
@@ -471,7 +524,6 @@
     .btn-secondary { background: rgba(255,255,255,0.07); color: var(--text); border: 1px solid var(--border) !important; }
     .btn-green { background: var(--green); color: #0a1a0a; }
 
-    /* Math Preview */
     #math-preview {
         margin-top: 12px;
         padding: 14px;
@@ -484,7 +536,6 @@
         justify-content: center;
     }
 
-    /* Toolkit Grid */
     .toolkit-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 14px; }
     .toolkit-item {
         display: flex;
@@ -503,6 +554,16 @@
     .toolkit-item i { font-size: 1.2rem; color: var(--accent); }
     .toolkit-item .t-name { color: var(--text); font-size: 0.7rem; font-weight: 700; }
     .toolkit-item .t-sub { color: var(--text3); font-size: 0.58rem; font-weight: 600; }
+
+    #email-list { min-height:36px; max-height:120px; overflow-y:auto; padding:6px; background:rgba(255,255,255,0.04); border-radius:var(--r); margin:8px 0; }
+    .email-tag {
+        display:inline-flex; align-items:center; gap:5px;
+        background:rgba(74,222,128,0.1); border:1px solid rgba(74,222,128,0.3);
+        color:var(--green); padding:3px 8px; border-radius:100px;
+        font-size:0.65rem; font-weight:600; margin:2px;
+    }
+    .email-tag i { cursor:pointer; opacity:0.6; font-size:0.55rem; }
+    .email-tag i:hover { opacity:1; color:var(--red); }
 
     /* Setup Screen */
     #setup-screen {
@@ -614,6 +675,16 @@
         box-shadow: var(--shadow);
     }
     #locked-banner i { color: var(--red); }
+    
+    #recording-notice {
+        position:fixed; top:calc(var(--topbar-h) + var(--pagetabs-h) + 10px + var(--safe-top));
+        left:50%; transform:translateX(-50%); z-index:999;
+        display:none; align-items:center; gap:6px;
+        background:rgba(251,113,133,0.1); border:1px solid rgba(251,113,133,0.25);
+        color:var(--text); padding:6px 14px; border-radius:100px;
+        font-size:0.67rem; font-weight:700; backdrop-filter:blur(10px);
+    }
+    #recording-notice i { color:var(--red); }
 
     /* Excalidraw overrides */
     .excalidraw .App-toolbar,
@@ -627,8 +698,10 @@
         #sidebar { width: 48px; }
         #root { left: 48px; }
         #topbar { left: 48px; }
+        #page-tabs-bar { left: 48px; }
         .sidebar-btn { width: 36px; height: 36px; font-size: 0.95rem; }
         .sidebar-btn[title]::after { display: none; }
+        .top-btn span { display: none; }
     }
     </style>
 </head>
@@ -657,11 +730,21 @@
 <div id="topbar" style="display:none">
     <div id="brand"><i class="fas fa-atom"></i> PrimeBoard</div>
     <div id="room-pill"><span id="status-dot"></span> <span id="room-pill-code">—</span></div>
+    <div id="online-pill"><i class="fas fa-users"></i> <span id="student-count">1</span></div>
     <div class="topbar-right">
+        <div id="rec-indicator"><span class="rec-dot"></span> <span id="rec-timer">00:00</span></div>
+        <button id="record-btn" class="top-btn" style="display:none"><i class="fas fa-video"></i> <span id="rec-btn-text">Rec</span></button>
         <button id="lock-btn" class="top-btn" style="display:none"><i class="fas fa-lock"></i> <span id="lock-text">Locked</span></button>
-        <button id="invite-btn" class="top-btn primary" style="display:none"><i class="fas fa-share-alt"></i> Share</button>
+        <button id="add-student-btn" class="top-btn" style="display:none"><i class="fas fa-user-plus"></i> <span>Add Student</span></button>
+        <button id="invite-btn" class="top-btn primary" style="display:none"><i class="fas fa-share-alt"></i> <span>Share</span></button>
         <a id="exit-btn" class="top-btn" href="../index.html"><i class="fas fa-home"></i></a>
     </div>
+</div>
+
+<!-- PAGE TABS -->
+<div id="page-tabs-bar">
+    <div id="page-tabs-list"></div>
+    <button id="add-page-btn" title="Add Page"><i class="fas fa-plus"></i></button>
 </div>
 
 <!-- LEFT SIDEBAR (MIRO STYLE) -->
@@ -752,8 +835,9 @@
 <div id="spotlight-overlay"></div>
 <div id="spotlight-handle"><i class="fas fa-crosshairs"></i></div>
 
-<!-- LOCKED BANNER -->
+<!-- BANNERS -->
 <div id="locked-banner"><i class="fas fa-lock"></i> Drawing locked by teacher</div>
+<div id="recording-notice"><i class="fas fa-video"></i> Recording in progress</div>
 
 <!-- MATH MODAL -->
 <div class="modal-overlay" id="math-modal">
@@ -796,6 +880,26 @@
     </div>
 </div>
 
+<!-- ADD STUDENT MODAL -->
+<div class="modal-overlay" id="add-student-modal">
+    <div class="modal-card">
+        <div class="modal-header">
+            <div class="modal-title"><i class="fas fa-user-plus"></i> Add Students</div>
+            <button class="modal-close" id="close-add-student"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="modal-body">
+            <p>Enter student email addresses. They'll receive an invite link via Brevo.</p>
+            <span class="modal-label">Email addresses (comma separated)</span>
+            <input id="email-input" class="modal-input" type="email" placeholder="student@email.com" autocomplete="off">
+            <div id="email-list"></div>
+            <div class="modal-row">
+                <button class="btn-secondary" id="cancel-add">Cancel</button>
+                <button class="btn-green" id="send-invites">Send Invites</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script type="module">
 import React from "react";
 import ReactDOM from "react-dom/client";
@@ -815,7 +919,6 @@ function mkEl(type,x,y,w,h,extra={}) {
         isDeleted:false,boundElements:null,updated:Date.now(),link:null,locked:false,...extra};
 }
 
-// Pen definitions
 const PEN_TYPES = [
     { id:'ballpoint', name:'Pen', strokeWidth:2, roughness:0, opacity:100, svg:'M2,10 L22,2' },
     { id:'pencil', name:'Pencil', strokeWidth:1.5, roughness:2, opacity:85, svg:'M2,10 L22,2' },
@@ -828,7 +931,6 @@ const PEN_TYPES = [
 const COLORS = ['#f1f5f9','#000000','#fb7185','#fbbf24','#4ade80','#38bdf8','#a78bfa','#f472b6','#fb923c'];
 const BG_COLORS = ['#111118','#1e1b4b','#ffffff','#f1f5f9','#fef9c3','#e0f2fe','#e8f5e9','#000000'];
 
-// Setup
 const setupScreen = document.getElementById('setup-screen');
 const enterBtn = document.getElementById('enter-btn');
 const setupErr = document.getElementById('setup-err');
@@ -863,15 +965,18 @@ enterBtn.onclick = () => {
     setupScreen.style.display = 'none';
     document.getElementById('topbar').style.display = 'flex';
     document.getElementById('sidebar').style.display = 'flex';
+    document.getElementById('page-tabs-bar').style.display = 'flex';
     document.getElementById('room-pill-code').textContent = room;
     if (selectedRole === 'teacher') {
         document.getElementById('lock-btn').style.display = 'flex';
         document.getElementById('invite-btn').style.display = 'flex';
+        document.getElementById('add-student-btn').style.display = 'flex';
+        document.getElementById('record-btn').style.display = 'flex';
     }
+    document.getElementById('online-pill').style.display = 'flex';
     initBoard({ name, role: selectedRole, room });
 };
 
-// Popover management
 const POPOVERS = ['pen-popover', 'bg-popover'];
 function closePopovers() {
     POPOVERS.forEach(id => document.getElementById(id).style.display = 'none');
@@ -1017,7 +1122,6 @@ function initBoard({ name, role, room }) {
         };
     });
 
-    // Pen button
     document.getElementById('tool-pen').dataset.popover = 'pen-popover';
     document.getElementById('tool-pen').onclick = (e) => {
         e.stopPropagation();
@@ -1032,7 +1136,6 @@ function initBoard({ name, role, room }) {
         }
     };
 
-    // BG button
     document.getElementById('btn-bg').dataset.popover = 'bg-popover';
     document.getElementById('btn-bg').onclick = (e) => {
         e.stopPropagation();
@@ -1069,42 +1172,31 @@ function initBoard({ name, role, room }) {
         document.getElementById('math-modal').style.display = 'none';
     };
 
-    // Convert to LaTeX (Handwriting recognition simulation)
+    // Convert to LaTeX
     document.getElementById('btn-convert').onclick = () => {
         closePopovers();
         if (!excalidrawAPI) return;
-        
-        // Get recent drawings
         const elements = excalidrawAPI.getSceneElements();
         const drawings = elements.filter(el => el.type === 'freedraw' && !el.isDeleted);
-        
         if (drawings.length === 0) {
             alert('Draw something first, then click convert!');
             return;
         }
-
-        // Simple pattern matching for common math symbols
-        // In production, you'd use MathPix API or similar
         const lastDrawing = drawings[drawings.length - 1];
         let detected = detectMathPattern(lastDrawing);
-        
         if (detected) {
             mathInput.value = detected;
             try { katex.render(detected, mathPreview, { throwOnError: false, displayMode: true }); }
             catch(e) {}
             document.getElementById('math-modal').style.display = 'flex';
         } else {
-            alert('Could not detect math pattern. Try drawing clearer symbols like: √, ∫, Σ, fractions, or exponents.');
+            alert('Could not detect math pattern. Try drawing clearer symbols like: √, , Σ, fractions, or exponents.');
         }
     };
 
     function detectMathPattern(drawing) {
-        // Analyze drawing points to detect patterns
-        // This is a simplified version - in production use ML model
         const points = drawing.points;
         if (!points || points.length === 0) return null;
-
-        // Calculate bounding box and characteristics
         let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
         points.forEach(p => {
             if (p[0] < minX) minX = p[0];
@@ -1112,41 +1204,18 @@ function initBoard({ name, role, room }) {
             if (p[1] < minY) minY = p[1];
             if (p[1] > maxY) maxY = p[1];
         });
-
         const width = maxX - minX;
         const height = maxY - minY;
         const aspectRatio = width / height;
-
-        // Detect common patterns
-        // Square root symbol (starts high, goes down and right)
         if (points.length > 10 && aspectRatio > 1.5 && height > 30) {
             const firstPoint = points[0];
             const lastPoint = points[points.length - 1];
-            if (firstPoint[1] < lastPoint[1] && firstPoint[0] < lastPoint[0]) {
-                return '\\sqrt{}';
-            }
+            if (firstPoint[1] < lastPoint[1] && firstPoint[0] < lastPoint[0]) return '\\sqrt{}';
         }
-
-        // Integral symbol (tall and narrow)
-        if (height > 60 && aspectRatio < 0.5) {
-            return '\\int';
-        }
-
-        // Sum symbol (wide and medium height)
-        if (width > 40 && height > 30 && aspectRatio > 1) {
-            return '\\sum';
-        }
-
-        // Fraction (horizontal line with elements above/below)
-        if (width > 50 && height > 40) {
-            return '\\frac{}{}';
-        }
-
-        // Exponent/superscript detection
-        if (width < 30 && height < 20) {
-            return '^{}';
-        }
-
+        if (height > 60 && aspectRatio < 0.5) return '\\int';
+        if (width > 40 && height > 30 && aspectRatio > 1) return '\\sum';
+        if (width > 50 && height > 40) return '\\frac{}{}';
+        if (width < 30 && height < 20) return '^{}';
         return null;
     }
 
@@ -1169,7 +1238,6 @@ function initBoard({ name, role, room }) {
         const els = excalidrawAPI.getSceneElements();
         let n = [];
         const sx = 100, sy = 100;
-
         if (type === 'grid') {
             const state = excalidrawAPI.getAppState();
             excalidrawAPI.updateScene({ appState: { gridSize: state.gridSize ? 0 : 20 } });
@@ -1192,7 +1260,6 @@ function initBoard({ name, role, room }) {
             n.push(mkEl('rectangle', sx, sy, 250, 120, { strokeColor: '#1e1b4b', backgroundColor: '#1e1b4b', fillStyle: 'solid', roundness: { type: 3 } }));
             n.push(mkEl('text', sx + 10, sy + 10, 230, 100, { text: 'def hello():\n  print("World")', fontSize: 12, fontFamily: 3, strokeColor: '#4ade80' }));
         }
-
         if (n.length) excalidrawAPI.updateScene({ elements: [...els, ...n] });
     }
 
@@ -1229,10 +1296,11 @@ function initBoard({ name, role, room }) {
     // Lock
     document.getElementById('lock-btn').onclick = () => {
         isLocked = !isLocked;
-        document.getElementById('lock-btn').classList.toggle('active', isLocked);
-        document.getElementById('lock-text').textContent = isLocked ? 'Unlocked' : 'Locked';
+        document.getElementById('lock-btn').classList.toggle('unlocked', !isLocked);
+        document.getElementById('lock-text').textContent = isLocked ? 'Locked' : 'Unlocked';
         document.getElementById('locked-banner').style.display = isLocked ? 'flex' : 'none';
         if (excalidrawAPI) excalidrawAPI.updateScene({ appState: { viewModeEnabled: isLocked } });
+        sendMsg({ type: 'board-lock', locked: isLocked });
     };
 
     // Theme
@@ -1246,14 +1314,174 @@ function initBoard({ name, role, room }) {
     document.getElementById('btn-undo').onclick = () => { if (excalidrawAPI) excalidrawAPI.undo(); };
     document.getElementById('btn-redo').onclick = () => { if (excalidrawAPI) excalidrawAPI.redo(); };
 
-    // WebSocket
-    let ws = null;
+    // ─ PAGES ──────────────────────────────────────────
+    let pages = [{ id:'page-1', name:'Page 1', elements:[], bg:'#111118' }];
+    let currentPageId = 'page-1';
+    const pageTabsList = document.getElementById('page-tabs-list');
+    const addPageBtn = document.getElementById('add-page-btn');
+    if (role !== 'teacher') addPageBtn.style.display = 'none';
+
+    function renderPageTabs() {
+        pageTabsList.innerHTML = '';
+        pages.forEach(p => {
+            const tab = document.createElement('div');
+            tab.className = 'page-tab' + (p.id===currentPageId?' active':'');
+            tab.dataset.pageId = p.id;
+            tab.innerHTML = `<span>${p.name}</span>` +
+                (role==='teacher' && pages.length>1 ? `<i class="fas fa-times page-tab-close"></i>` : '');
+            tab.addEventListener('click', e => { if (e.target.closest('.page-tab-close')) return; switchToPage(p.id, false); });
+            if (role === 'teacher') {
+                tab.addEventListener('dblclick', () => {
+                    const nn = prompt('Rename page:', p.name);
+                    if (nn?.trim()) { p.name=nn.trim().slice(0,24); renderPageTabs(); sendMsg({type:'pages-structure',pages:pages.map(x=>({id:x.id,name:x.name})),currentPageId}); }
+                });
+                const close = tab.querySelector('.page-tab-close');
+                if (close) close.addEventListener('click', e => { e.stopPropagation(); deletePage(p.id); });
+            }
+            pageTabsList.appendChild(tab);
+        });
+    }
+
+    function saveCurrentSnapshot() {
+        if (!excalidrawAPI) return;
+        const page = pages.find(p => p.id===currentPageId);
+        if (page) { page.elements = excalidrawAPI.getSceneElements(); page.bg = excalidrawAPI.getAppState().viewBackgroundColor; }
+    }
+
+    function switchToPage(pageId, remote) {
+        if (pageId===currentPageId && !remote) return;
+        if (!remote) saveCurrentSnapshot();
+        currentPageId = pageId;
+        const page = pages.find(p => p.id===pageId);
+        if (page && excalidrawAPI) {
+            isRemoteUpdate = true;
+            excalidrawAPI.updateScene({ elements:page.elements||[], appState:{ viewBackgroundColor:page.bg||'#111118' } });
+        }
+        renderPageTabs();
+        if (!remote && role==='teacher') sendMsg({ type:'page-switch', pageId, elements:page?.elements||[], bg:page?.bg||'#111118' });
+    }
+
+    function addNewPage() {
+        saveCurrentSnapshot();
+        const id = 'page-'+Date.now();
+        const pg = { id, name:`Page ${pages.length+1}`, elements:[], bg:'#111118' };
+        pages.push(pg); currentPageId = id;
+        if (excalidrawAPI) { isRemoteUpdate=true; excalidrawAPI.updateScene({ elements:[], appState:{ viewBackgroundColor:'#111118' } }); }
+        renderPageTabs();
+        sendMsg({ type:'pages-structure', pages:pages.map(x=>({id:x.id,name:x.name})), currentPageId });
+        sendMsg({ type:'page-switch', pageId:id, elements:[], bg:'#111118' });
+    }
+
+    function deletePage(pageId) {
+        if (pages.length <= 1) return;
+        const idx = pages.findIndex(p => p.id===pageId);
+        if (idx === -1) return;
+        const wasActive = pageId===currentPageId;
+        pages.splice(idx,1);
+        if (wasActive) {
+            const next = pages[Math.max(0,idx-1)];
+            currentPageId = next.id;
+            if (excalidrawAPI) { isRemoteUpdate=true; excalidrawAPI.updateScene({ elements:next.elements||[], appState:{ viewBackgroundColor:next.bg||'#111118' } }); }
+        }
+        renderPageTabs();
+        sendMsg({ type:'pages-structure', pages:pages.map(x=>({id:x.id,name:x.name})), currentPageId });
+        if (wasActive) {
+            const p = pages.find(x => x.id===currentPageId);
+            sendMsg({ type:'page-switch', pageId:currentPageId, elements:p?.elements||[], bg:p?.bg||'#111118' });
+        }
+    }
+
+    addPageBtn.addEventListener('click', addNewPage);
+    renderPageTabs();
+
+    // ── RECORDING ─────────────────────────────────────
+    const recBtnText = document.getElementById('rec-btn-text');
+    const recIndicator = document.getElementById('rec-indicator');
+    const recTimerEl = document.getElementById('rec-timer');
+    let mediaRecorder=null, recordedChunks=[], recordStream=null, recStart=0, recInterval=null;
+
+    document.getElementById('record-btn')?.addEventListener('click', toggleRecording);
+    async function toggleRecording() {
+        if (mediaRecorder?.state==='recording') { stopRecording(); return; }
+        if (!navigator.mediaDevices?.getDisplayMedia) { alert('Screen recording not supported. Try Chrome on desktop.'); return; }
+        try { recordStream = await navigator.mediaDevices.getDisplayMedia({ video:{cursor:'always'}, audio:true }); }
+        catch { alert('Recording cancelled or permission denied.'); return; }
+        recordedChunks = [];
+        let mimeType = 'video/webm;codecs=vp9,opus';
+        if (!MediaRecorder.isTypeSupported(mimeType)) mimeType = 'video/webm';
+        try { mediaRecorder = new MediaRecorder(recordStream, {mimeType}); }
+        catch { mediaRecorder = new MediaRecorder(recordStream); }
+        mediaRecorder.ondataavailable = e => { if (e.data?.size>0) recordedChunks.push(e.data); };
+        mediaRecorder.onstop = () => {
+            const blob = new Blob(recordedChunks, {type:'video/webm'});
+            const url = URL.createObjectURL(blob);
+            const stamp = new Date().toISOString().replace(/[:.]/g,'-');
+            const a = document.createElement('a');
+            a.href=url; a.download=`PrimeBoard-${room}-${stamp}.webm`;
+            document.body.appendChild(a); a.click(); a.remove();
+            setTimeout(()=>URL.revokeObjectURL(url),4000);
+            recordStream?.getTracks().forEach(t=>t.stop()); recordStream=null;
+        };
+        recordStream.getVideoTracks()[0].addEventListener('ended', () => { if (mediaRecorder?.state==='recording') stopRecording(); });
+        mediaRecorder.start(1000);
+        recStart = Date.now();
+        document.getElementById('record-btn').classList.add('recording');
+        recBtnText.textContent = 'Stop';
+        recIndicator.style.display = 'flex';
+        recInterval = setInterval(updateRecTimer, 1000);
+        updateRecTimer();
+        sendMsg({ type:'recording-status', active:true });
+    }
+    function stopRecording() {
+        if (mediaRecorder?.state!=='inactive') mediaRecorder.stop();
+        clearInterval(recInterval);
+        document.getElementById('record-btn').classList.remove('recording');
+        recBtnText.textContent = 'Rec';
+        recIndicator.style.display = 'none';
+        sendMsg({ type:'recording-status', active:false });
+    }
+    function updateRecTimer() {
+        const s = Math.floor((Date.now()-recStart)/1000);
+        recTimerEl.textContent = `${Math.floor(s/60).toString().padStart(2,'0')}:${(s%60).toString().padStart(2,'0')}`;
+    }
+
+    // ── ADD STUDENT ────────────────────────────────────
+    const addStudentBtn = document.getElementById('add-student-btn');
+    const emailInput = document.getElementById('email-input');
+    const emailList = document.getElementById('email-list');
+    let emails = [];
+
+    addStudentBtn.onclick = () => { document.getElementById('add-student-modal').style.display='flex'; };
+    document.getElementById('close-add-student').onclick = () => { document.getElementById('add-student-modal').style.display='none'; };
+    document.getElementById('cancel-add').onclick = () => { document.getElementById('add-student-modal').style.display='none'; };
+
+    function renderEmailTags() {
+        emailList.innerHTML = emails.map((e,i) =>
+            `<span class="email-tag">${e}<i class="fas fa-times" onclick="removeEmail(${i})"></i></span>`
+        ).join('');
+    }
+    window.removeEmail = (i) => { emails.splice(i,1); renderEmailTags(); };
+
+    emailInput.addEventListener('keydown', e => {
+        if (e.key==='Enter'||e.key===',') {
+            e.preventDefault();
+            const val = emailInput.value.trim().replace(',','');
+            if (val && !emails.includes(val)) { emails.push(val); renderEmailTags(); emailInput.value=''; }
+        }
+    });
+    document.getElementById('send-invites').onclick = () => {
+        alert(`Invites to be sent to: ${emails.join(', ')||'(none added)'}`);
+        emails=[]; renderEmailTags(); document.getElementById('add-student-modal').style.display='none';
+    };
+
+    // ── WEBSOCKET ──────────────────────────────────────
+    let ws = null, lastSendTime = 0;
     function connectWS() {
         const dot = document.getElementById('status-dot');
         dot.className = 'connecting';
         try {
             ws = new WebSocket(`${window.PRIMEBOARD_RELAY_URL}?room=${encodeURIComponent(room)}&name=${encodeURIComponent(name)}&role=${role}`);
-            ws.onopen = () => { dot.className = 'connected'; };
+            ws.onopen = () => { dot.className = 'connected'; sendMsg({type:'join', room, role, name}); };
             ws.onclose = () => { dot.className = ''; setTimeout(connectWS, 3000); };
             ws.onerror = () => { dot.className = 'error'; };
             ws.onmessage = (e) => {
@@ -1261,35 +1489,53 @@ function initBoard({ name, role, room }) {
             };
         } catch(err) { setTimeout(connectWS, 5000); }
     }
-
     function sendMsg(data) {
         if (ws?.readyState === WebSocket.OPEN) ws.send(JSON.stringify(data));
     }
-
     function handleMsg(msg) {
-        if (msg.type === 'scene-update' && excalidrawAPI) {
+        if (msg.type==='scene-update') {
+            if (!excalidrawAPI) return;
             isRemoteUpdate = true;
             excalidrawAPI.updateScene({ elements: msg.elements });
-            setTimeout(() => isRemoteUpdate = false, 100);
-        } else if (msg.type === 'board-lock' && role === 'student') {
+            setTimeout(() => { isRemoteUpdate=false; }, 100);
+        } else if (msg.type==='board-lock' && role==='student') {
             document.getElementById('locked-banner').style.display = msg.locked ? 'flex' : 'none';
-            if (excalidrawAPI) excalidrawAPI.updateScene({ appState: { viewModeEnabled: msg.locked } });
+            if (excalidrawAPI) excalidrawAPI.updateScene({ appState:{ viewModeEnabled: msg.locked } });
+        } else if (msg.type==='pages-structure' && role==='student') {
+            msg.pages.forEach(p => {
+                if (!pages.find(x=>x.id===p.id)) pages.push({id:p.id,name:p.name,elements:[],bg:'#111118'});
+                else { const pg=pages.find(x=>x.id===p.id); if(pg) pg.name=p.name; }
+            });
+            pages = pages.filter(p=>msg.pages.find(x=>x.id===p.id));
+            renderPageTabs();
+        } else if (msg.type==='page-switch' && role==='student') {
+            const page = pages.find(p=>p.id===msg.pageId);
+            if (page) { page.elements=msg.elements||[]; page.bg=msg.bg||'#111118'; }
+            else pages.push({id:msg.pageId,name:msg.pageId,elements:msg.elements||[],bg:msg.bg||'#111118'});
+            switchToPage(msg.pageId, true);
+        } else if (msg.type==='recording-status') {
+            document.getElementById('recording-notice').style.display = msg.active ? 'flex' : 'none';
+        } else if (msg.type==='user-count') {
+            document.getElementById('student-count').textContent = msg.count;
         }
     }
-
     connectWS();
 
-    // Render Excalidraw
+    // ── EXCALIDRAW RENDER ──────────────────────────────
     const root = ReactDOM.createRoot(document.getElementById('root'));
     root.render(React.createElement(Excalidraw, {
         theme: 'dark',
         initialData: {
-            appState: { viewBackgroundColor: '#111118', gridSize: 0, theme: 'dark' },
+            appState: { viewBackgroundColor:'#111118', gridSize:0, theme:'dark' },
             elements: [],
         },
         onChange: (elements, appState) => {
-            if (isRemoteUpdate) { isRemoteUpdate = false; return; }
-            sendMsg({ type: 'scene-update', elements });
+            if (isRemoteUpdate) { isRemoteUpdate=false; return; }
+            const now = Date.now();
+            if (now - lastSendTime > 40) {
+                lastSendTime = now;
+                sendMsg({ type:'scene-update', elements });
+            }
         },
         excalidrawAPI: (api) => {
             excalidrawAPI = api;
@@ -1297,7 +1543,6 @@ function initBoard({ name, role, room }) {
         },
     }));
 
-    // Set initial tool
     document.getElementById('tool-select').classList.add('active');
 }
 </script>
