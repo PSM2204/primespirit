@@ -114,7 +114,6 @@
 
     .tb-spacer { flex:1; }
 
-    /* Topbar icon buttons — very small */
     .tb-btn {
         display:flex; align-items:center; justify-content:center; gap:5px;
         height:28px; padding:0 10px; border-radius:var(--r);
@@ -210,7 +209,6 @@
     }
     .fbar-btn.active:hover { transform:scale(1.08); }
 
-    /* tooltips */
     .fbar-btn[title]::after {
         content:attr(title);
         position:absolute; bottom:calc(100% + 8px); left:50%; transform:translateX(-50%);
@@ -251,7 +249,6 @@
     .popover-close:hover { background:rgba(251,113,133,0.1); color:var(--red); }
     .popover-body { padding:10px 12px; display:flex; flex-direction:column; gap:10px; }
 
-    /* pen type row */
     .pen-types-row { display:flex; gap:5px; flex-wrap:wrap; }
     .pen-type-btn {
         display:flex; flex-direction:column; align-items:center; gap:3px;
@@ -264,7 +261,6 @@
     .pen-type-btn:hover { border-color:var(--border2); color:var(--text); background:rgba(255,255,255,0.07); }
     .pen-type-btn.active { border-color:var(--accent); color:var(--text); background:rgba(124,106,247,0.15); }
 
-    /* color row */
     .color-row { display:flex; align-items:center; gap:5px; flex-wrap:wrap; }
     .color-dot {
         width:22px; height:22px; border-radius:50%; cursor:pointer;
@@ -277,7 +273,6 @@
         cursor:pointer; padding:0; background:transparent; overflow:hidden;
     }
 
-    /* thickness row */
     .thickness-row { display:flex; align-items:center; gap:7px; }
     .thickness-row label { font-size:0.6rem; font-weight:700; color:var(--text3); text-transform:uppercase; letter-spacing:0.05em; white-space:nowrap; }
     #thickness-slider {
@@ -297,7 +292,6 @@
     }
     .thickness-preview { display:flex; align-items:center; justify-content:center; width:28px; flex-shrink:0; }
 
-    /* opacity row */
     .opacity-row { display:flex; align-items:center; gap:7px; }
     .opacity-row label { font-size:0.6rem; font-weight:700; color:var(--text3); text-transform:uppercase; letter-spacing:0.05em; white-space:nowrap; min-width:44px; }
     #opacity-slider {
@@ -427,7 +421,6 @@
     .btn-secondary { background:rgba(255,255,255,0.07); color:var(--text); border:1px solid var(--border) !important; }
     .btn-green { background:var(--green); color:#0a1a0a; }
 
-    /* toolkit grid */
     #toolkit-card { width:min(580px,95vw); }
     .toolkit-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(120px,1fr)); gap:8px; margin-top:14px; }
     .toolkit-item {
@@ -440,11 +433,9 @@
     .toolkit-item .t-name { color:var(--text); font-size:0.75rem; font-weight:700; }
     .toolkit-item .t-sub { color:var(--text3); font-size:0.58rem; font-weight:600; }
 
-    /* math */
     #math-preview { margin-top:10px; padding:12px; background:rgba(255,255,255,0.04); border-radius:var(--r); min-height:44px; border:1px solid var(--border); }
     #math-input { min-height:70px; resize:vertical; }
 
-    /* graph */
     #graph-card { width:min(660px,95vw); }
     .graph-tabs { display:flex; gap:5px; margin-bottom:12px; }
     .graph-tab {
@@ -469,7 +460,6 @@
     #graph-readout { color:var(--accent3); font-size:0.65rem; font-family:'JetBrains Mono',monospace; margin-top:6px; min-height:1em; }
     #graph-error { color:var(--red); font-size:0.65rem; margin-top:4px; min-height:1em; }
 
-    /* add student */
     #email-list { min-height:36px; max-height:120px; overflow-y:auto; padding:6px; background:rgba(255,255,255,0.04); border-radius:var(--r); margin:8px 0; }
     .email-tag {
         display:inline-flex; align-items:center; gap:5px;
@@ -489,7 +479,6 @@
     .sug-item:hover { background:rgba(124,106,247,0.1); color:var(--accent); }
     .sug-item:last-child { border-bottom:none; }
 
-    /* ─── SETUP SCREEN ───────────────────────────────────── */
     #setup-screen {
         position:fixed; inset:0; z-index:9000;
         display:flex; align-items:center; justify-content:center;
@@ -525,7 +514,6 @@
     #enter-btn:hover { transform:translateY(-2px); box-shadow:0 8px 28px rgba(124,106,247,0.4); }
     #setup-err { color:var(--red); font-size:0.72rem; margin-top:10px; min-height:1.1em; font-weight:600; }
 
-    /* ─── FOG OF WAR ─────────────────────────────────────── */
     #spotlight-overlay {
         position:fixed; inset:0; z-index:1500; pointer-events:none; display:none;
         background:radial-gradient(circle 260px at var(--sx,50%) var(--sy,50%), transparent 0%, rgba(11,11,20,0.97) 100%);
@@ -543,7 +531,6 @@
     #spotlight-handle:hover { transform:translate(-50%,-50%) scale(1.15); }
     #spotlight-handle:active { cursor:grabbing; }
 
-    /* ─── MISC BANNERS ───────────────────────────────────── */
     #locked-banner {
         position:fixed; bottom:calc(var(--toolbar-h) + 14px + var(--safe-bottom));
         left:50%; transform:translateX(-50%); z-index:1000;
@@ -564,7 +551,6 @@
     }
     #recording-notice i { color:var(--red); }
 
-    /* Excalidraw toolbar override */
     .excalidraw .App-toolbar {
         position:fixed !important;
         top:calc(var(--topbar-h) + var(--pagetabs-h) + var(--safe-top)) !important;
@@ -584,7 +570,6 @@
     .excalidraw .panelColumn,
     .excalidraw [class*="properties"] { display:none !important; }
 
-    /* responsive */
     @media(max-width:480px) {
         .tb-btn i { font-size:0.8rem; }
         #floatbar { padding:4px 6px; gap:1px; }
@@ -638,25 +623,20 @@
 
 <!-- MIRO-STYLE FLOATING TOOLBAR -->
 <div id="floatbar">
-    <!-- Selection -->
     <button class="fbar-btn" id="fbar-select" title="Select"><i class="fas fa-mouse-pointer"></i></button>
     <div class="fbar-divider"></div>
-    <!-- Drawing -->
     <button class="fbar-btn" id="fbar-pen" title="Pen / Brush"><i class="fas fa-pen-nib"></i></button>
     <button class="fbar-btn" id="fbar-eraser" title="Eraser"><i class="fas fa-eraser"></i></button>
     <div class="fbar-divider"></div>
-    <!-- Shapes / Text -->
     <button class="fbar-btn" id="fbar-rect" title="Rectangle"><i class="far fa-square"></i></button>
     <button class="fbar-btn" id="fbar-ellipse" title="Ellipse / Circle"><i class="far fa-circle"></i></button>
     <button class="fbar-btn" id="fbar-arrow" title="Arrow"><i class="fas fa-long-arrow-alt-right"></i></button>
     <button class="fbar-btn" id="fbar-text" title="Text"><i class="fas fa-font"></i></button>
     <div class="fbar-divider"></div>
-    <!-- Smart tools -->
     <button class="fbar-btn" id="fbar-math" title="Math Equation"><i class="fas fa-square-root-alt"></i></button>
     <button class="fbar-btn" id="fbar-graph" title="Graph Plotter"><i class="fas fa-chart-line"></i></button>
     <button class="fbar-btn" id="fbar-toolkit" title="Educational Toolkit"><i class="fas fa-graduation-cap"></i></button>
     <div class="fbar-divider"></div>
-    <!-- Board tools -->
     <button class="fbar-btn" id="fbar-bg" title="Background Color"><i class="fas fa-fill-drip"></i></button>
     <button class="fbar-btn" id="fbar-spotlight" title="Spotlight / Fog of War"><i class="fas fa-lightbulb"></i></button>
     <button class="fbar-btn" id="fbar-timer" title="Timer"><i class="fas fa-stopwatch"></i></button>
@@ -669,13 +649,8 @@
         <button class="popover-close" data-close="pen-popover"><i class="fas fa-times"></i></button>
     </div>
     <div class="popover-body">
-        <!-- Pen types -->
         <div class="pen-types-row" id="pen-types-row"></div>
-        <!-- Stroke color -->
-        <div class="color-row" id="stroke-color-row">
-            <!-- injected by JS -->
-        </div>
-        <!-- Thickness -->
+        <div class="color-row" id="stroke-color-row"></div>
         <div class="thickness-row">
             <label>Size</label>
             <input type="range" id="thickness-slider" min="1" max="30" value="2">
@@ -685,7 +660,6 @@
                 </svg>
             </div>
         </div>
-        <!-- Opacity -->
         <div class="opacity-row">
             <label>Opacity</label>
             <input type="range" id="opacity-slider" min="10" max="100" value="100">
@@ -731,8 +705,6 @@
 <div id="recording-notice"><i class="fas fa-video"></i> Recording in progress</div>
 
 <!-- ──── MODALS ──────────────────────────────────────────── -->
-
-<!-- TOOLKIT MODAL -->
 <div class="modal-overlay" id="toolkit-modal">
     <div class="modal-card" id="toolkit-card">
         <div class="modal-header">
@@ -753,7 +725,6 @@
     </div>
 </div>
 
-<!-- MATH MODAL -->
 <div class="modal-overlay" id="math-modal">
     <div class="modal-card">
         <div class="modal-header">
@@ -772,7 +743,6 @@
     </div>
 </div>
 
-<!-- GRAPH MODAL -->
 <div class="modal-overlay" id="graph-modal">
     <div class="modal-card" id="graph-card">
         <div class="modal-header">
@@ -812,7 +782,6 @@
     </div>
 </div>
 
-<!-- ADD STUDENT MODAL -->
 <div class="modal-overlay" id="add-student-modal">
     <div class="modal-card">
         <div class="modal-header">
@@ -837,12 +806,11 @@
 
 <!-- ─── SCRIPTS ────────────────────────────────────────── -->
 <script type="module">
-import React, { useCallback } from "react";
+import React from "react";
 import ReactDOM from "react-dom/client";
 import * as ExcalidrawLib from "https://esm.sh/@excalidraw/excalidraw@0.18.0/dist/dev/index.js?external=react,react-dom";
 const { Excalidraw } = ExcalidrawLib;
 
-// ── HELPERS ────────────────────────────────────────────
 function randomCode() {
     const w=['MAPLE','RIVER','COMET','TIGER','ORBIT','PRISM','EAGLE','DELTA'];
     return `${w[Math.floor(Math.random()*8)]}-${Math.floor(100+Math.random()*900)}`;
@@ -856,7 +824,6 @@ function mkEl(type,x,y,w,h,extra={}) {
         isDeleted:false,boundElements:null,updated:Date.now(),link:null,locked:false,...extra};
 }
 
-// ── PEN TYPES ──────────────────────────────────────────
 const PEN_TYPES = [
     { id:'ballpoint',  name:'Ballpoint',  strokeWidth:2,   roughness:0,   opacity:100, svgPath:'M2,12 L26,4',        sw:2   },
     { id:'pencil',     name:'Pencil',     strokeWidth:1.5, roughness:2,   opacity:85,  svgPath:'M2,12 L26,4',        sw:1.5 },
@@ -884,7 +851,6 @@ const BG_COLORS = [
     { hex:'#e8f5e9' }, { hex:'#000000' },
 ];
 
-// ── SETUP LOGIC ────────────────────────────────────────
 const setupScreen = document.getElementById('setup-screen');
 const roleTeacherBtn = document.getElementById('role-teacher');
 const roleStudentBtn = document.getElementById('role-student');
@@ -919,7 +885,6 @@ enterBtn.addEventListener('click', () => {
     startBoard({ name, role: selectedRole, room });
 });
 
-// ── POPOVER MANAGEMENT ─────────────────────────────────
 const POPOVERS = ['pen-popover','bg-popover','timer-popover'];
 
 function closeAllPopovers() {
@@ -970,7 +935,6 @@ document.addEventListener('click', e => {
     });
 });
 
-// ── MAIN BOARD ─────────────────────────────────────────
 function startBoard({ name, role, room }) {
     const roomPillCode = document.getElementById('room-pill-code');
     const statusDot = document.getElementById('status-dot');
@@ -1008,7 +972,6 @@ function startBoard({ name, role, room }) {
     let currentThickness = 2;
     let currentOpacity = 100;
 
-    // ── BUILD PEN POPOVER UI ───────────────────────────
     const penTypesRow = document.getElementById('pen-types-row');
     const strokeColorRow = document.getElementById('stroke-color-row');
 
@@ -1034,7 +997,6 @@ function startBoard({ name, role, room }) {
         dot.addEventListener('click', () => selectStrokeColor(c.hex, dot));
         strokeColorRow.appendChild(dot);
     });
-    // custom color
     const customColorInput = document.createElement('input');
     customColorInput.type = 'color';
     customColorInput.id = 'stroke-custom-color';
@@ -1110,7 +1072,6 @@ function startBoard({ name, role, room }) {
         } catch(e) {}
     }
 
-    // ── BG COLOR ────────────────────────────────────────
     const bgGrid = document.getElementById('bg-grid');
     const bgCustomPicker = document.getElementById('bg-custom-picker');
     BG_COLORS.forEach(c => {
@@ -1134,7 +1095,6 @@ function startBoard({ name, role, room }) {
         });
     }
 
-    // ── TOOLBAR BUTTON MAPPING ─────────────────────────
     const toolMap = {
         'fbar-select':  () => excalidrawAPI?.setActiveTool({ type: 'selection' }),
         'fbar-eraser':  () => excalidrawAPI?.setActiveTool({ type: 'eraser' }),
@@ -1153,7 +1113,6 @@ function startBoard({ name, role, room }) {
         });
     });
 
-    // pen button
     document.getElementById('fbar-pen')?.addEventListener('click', e => {
         e.stopPropagation();
         togglePopover('pen-popover', 'fbar-pen');
@@ -1164,27 +1123,23 @@ function startBoard({ name, role, room }) {
     });
     document.getElementById('fbar-pen').dataset.popover = 'pen-popover';
 
-    // bg button
     document.getElementById('fbar-bg')?.addEventListener('click', e => {
         e.stopPropagation();
         togglePopover('bg-popover', 'fbar-bg');
     });
     document.getElementById('fbar-bg').dataset.popover = 'bg-popover';
 
-    // timer button
     document.getElementById('fbar-timer')?.addEventListener('click', e => {
         e.stopPropagation();
         togglePopover('timer-popover', 'fbar-timer');
     });
     document.getElementById('fbar-timer').dataset.popover = 'timer-popover';
 
-    // toolkit
     document.getElementById('fbar-toolkit')?.addEventListener('click', () => {
         closeAllPopovers();
         document.getElementById('toolkit-modal').style.display = 'flex';
     });
 
-    // math
     document.getElementById('fbar-math')?.addEventListener('click', () => {
         closeAllPopovers();
         document.getElementById('math-input').value = '';
@@ -1192,20 +1147,17 @@ function startBoard({ name, role, room }) {
         document.getElementById('math-modal').style.display = 'flex';
     });
 
-    // graph
     document.getElementById('fbar-graph')?.addEventListener('click', () => {
         closeAllPopovers();
         document.getElementById('graph-modal').style.display = 'flex';
         requestAnimationFrame(drawGraph);
     });
 
-    // spotlight
     document.getElementById('fbar-spotlight')?.addEventListener('click', () => {
         closeAllPopovers();
         toggleSpotlight();
     });
 
-    // ── MODAL CLOSE BUTTONS ────────────────────────────
     document.getElementById('close-toolkit')?.addEventListener('click', () => { document.getElementById('toolkit-modal').style.display='none'; });
     document.getElementById('close-math')?.addEventListener('click', () => { document.getElementById('math-modal').style.display='none'; });
     document.getElementById('cancel-math')?.addEventListener('click', () => { document.getElementById('math-modal').style.display='none'; });
@@ -1214,14 +1166,12 @@ function startBoard({ name, role, room }) {
     document.getElementById('close-add-student')?.addEventListener('click', () => { document.getElementById('add-student-modal').style.display='none'; });
     document.getElementById('cancel-add')?.addEventListener('click', () => { document.getElementById('add-student-modal').style.display='none'; });
 
-    // click outside modal to close
     document.querySelectorAll('.modal-overlay').forEach(overlay => {
         overlay.addEventListener('click', e => {
             if (e.target === overlay) overlay.style.display = 'none';
         });
     });
 
-    // ── MATH EQUATION ──────────────────────────────────
     const mathInput = document.getElementById('math-input');
     const mathPreview = document.getElementById('math-preview');
     mathInput.addEventListener('input', () => {
@@ -1236,7 +1186,6 @@ function startBoard({ name, role, room }) {
         document.getElementById('math-modal').style.display = 'none';
     });
 
-    // ── TOOLKIT ────────────────────────────────────────
     document.querySelectorAll('.toolkit-item').forEach(item => {
         item.addEventListener('click', () => { applyToolkit(item.dataset.tool); });
     });
@@ -1275,7 +1224,6 @@ function startBoard({ name, role, room }) {
         document.getElementById('toolkit-modal').style.display = 'none';
     }
 
-    // ── TIMER ──────────────────────────────────────────
     const timerDisplay = document.getElementById('timer-display');
     const timerCtrlRow = document.getElementById('timer-ctrl-row');
     const timerInputsRow = document.getElementById('timer-inputs-row');
@@ -1310,7 +1258,6 @@ function startBoard({ name, role, room }) {
     }
     updateTimerDisplay();
 
-    // ── SPOTLIGHT / FOG OF WAR ──────────────────────────
     const spotlightOverlay = document.getElementById('spotlight-overlay');
     const spotlightHandle = document.getElementById('spotlight-handle');
     let isSpotlightActive = false, lastSpotlightSend = 0;
@@ -1352,7 +1299,6 @@ function startBoard({ name, role, room }) {
         handleTeacherMouse({ clientX:e.touches[0].clientX, clientY:e.touches[0].clientY });
     }
 
-    // ── PAGES ──────────────────────────────────────────
     let pages = [{ id:'page-1', name:'Page 1', elements:[], bg:'#111118' }];
     let currentPageId = 'page-1';
     const pageTabsList = document.getElementById('page-tabs-list');
@@ -1433,7 +1379,6 @@ function startBoard({ name, role, room }) {
     document.getElementById('page-tabs-bar').style.display = 'flex';
     renderPageTabs();
 
-    // ── RECORDING ─────────────────────────────────────
     const recBtnText = document.getElementById('rec-btn-text');
     const recIndicator = document.getElementById('rec-indicator');
     const recTimerEl = document.getElementById('rec-timer');
@@ -1484,7 +1429,6 @@ function startBoard({ name, role, room }) {
         recTimerEl.textContent = `${Math.floor(s/60).toString().padStart(2,'0')}:${(s%60).toString().padStart(2,'0')}`;
     }
 
-    // ── LOCK BOARD ─────────────────────────────────────
     let isLocked = false;
     lockBtn.addEventListener('click', () => {
         if (role !== 'teacher') return;
@@ -1496,7 +1440,6 @@ function startBoard({ name, role, room }) {
         sendMsg({ type:'board-lock', locked:isLocked });
     });
 
-    // ── ADD STUDENT ────────────────────────────────────
     addStudentBtn.addEventListener('click', () => { document.getElementById('add-student-modal').style.display='flex'; });
     const emailInput = document.getElementById('email-input');
     const emailList = document.getElementById('email-list');
@@ -1522,7 +1465,6 @@ function startBoard({ name, role, room }) {
         emails=[]; renderEmailTags(); document.getElementById('add-student-modal').style.display='none';
     });
 
-    // ── GRAPHING TOOL ──────────────────────────────────
     const graphCanvas = document.getElementById('graph-canvas');
     const graphCtx = graphCanvas.getContext('2d');
     const graphReadout = document.getElementById('graph-readout');
@@ -1565,7 +1507,8 @@ function startBoard({ name, role, room }) {
         let points=[]; let xMin=-10,xMax=10,yMin=-2,yMax=2;
         try {
             if (graphMode==='function') {
-                xMin=parseFloat(document.getElementById('fn-xmin').value)||−10;
+                // FIXED: Replaced Unicode minus with standard hyphen
+                xMin=parseFloat(document.getElementById('fn-xmin').value)||-10;
                 xMax=parseFloat(document.getElementById('fn-xmax').value)||10;
                 const expr = document.getElementById('fn-expr').value;
                 const steps=200;
@@ -1614,20 +1557,17 @@ function startBoard({ name, role, room }) {
         const sx=(x)=>pad+(x-xMin)/(xMax-xMin)*(w-2*pad);
         const sy=(y)=>h-pad-(y-yMin)/(yMax-yMin)*(h-2*pad);
 
-        // Grid lines
         graphCtx.strokeStyle='rgba(255,255,255,0.07)'; graphCtx.lineWidth=1;
         for (let i=0;i<=5;i++) {
             const gx=pad+(w-2*pad)*i/5; const gy=pad+(h-2*pad)*i/5;
             graphCtx.beginPath(); graphCtx.moveTo(gx,pad); graphCtx.lineTo(gx,h-pad); graphCtx.stroke();
             graphCtx.beginPath(); graphCtx.moveTo(pad,gy); graphCtx.lineTo(w-pad,gy); graphCtx.stroke();
         }
-        // Axes
         graphCtx.strokeStyle='rgba(255,255,255,0.2)'; graphCtx.lineWidth=1;
         const x0=sx(0), y0=sy(0);
         if (x0>=pad&&x0<=w-pad) { graphCtx.beginPath(); graphCtx.moveTo(x0,pad); graphCtx.lineTo(x0,h-pad); graphCtx.stroke(); }
         if (y0>=pad&&y0<=h-pad) { graphCtx.beginPath(); graphCtx.moveTo(pad,y0); graphCtx.lineTo(w-pad,y0); graphCtx.stroke(); }
 
-        // Labels
         graphCtx.fillStyle='rgba(148,163,184,0.8)'; graphCtx.font='10px JetBrains Mono, monospace'; graphCtx.textAlign='center';
         for (let i=0;i<=5;i++) {
             const xv=xMin+(xMax-xMin)*i/5;
@@ -1638,7 +1578,6 @@ function startBoard({ name, role, room }) {
             graphCtx.textAlign='center';
         }
 
-        // Curve
         graphCtx.beginPath();
         graphCtx.strokeStyle='#7c6af7'; graphCtx.lineWidth=2.5;
         graphCtx.shadowColor='rgba(124,106,247,0.5)'; graphCtx.shadowBlur=6;
@@ -1661,13 +1600,15 @@ function startBoard({ name, role, room }) {
         document.getElementById('graph-modal').style.display = 'none';
     });
 
-    // ── WEBSOCKET RELAY ────────────────────────────────
     let ws = null, lastSendTime = 0;
     function connectWS() {
         statusDot.className = 'connecting';
         try {
             ws = new WebSocket(`${window.PRIMEBOARD_RELAY_URL}?room=${encodeURIComponent(room)}&name=${encodeURIComponent(name)}&role=${role}`);
-            ws.onopen = () => { statusDot.className = 'connected'; };
+            ws.onopen = () => { 
+                statusDot.className = 'connected'; 
+                sendMsg({type:'join', room, role, name});
+            };
             ws.onclose = () => { statusDot.className = ''; setTimeout(connectWS, 3000); };
             ws.onerror = () => { statusDot.className = 'error'; };
             ws.onmessage = (event) => {
@@ -1733,7 +1674,7 @@ function startBoard({ name, role, room }) {
     }
     connectWS();
 
-    // ── EXCALIDRAW MOUNT ───────────────────────────────
+    // FIXED: Removed useCallback Hook violation and passed normal arrow functions
     const root = ReactDOM.createRoot(document.getElementById('root'));
     root.render(React.createElement(Excalidraw, {
         theme: 'dark',
@@ -1741,23 +1682,21 @@ function startBoard({ name, role, room }) {
             appState: { viewBackgroundColor:'#111118', gridSize:0, theme:'dark' },
             elements: [],
         },
-        onChange: useCallback((elements, appState) => {
+        onChange: (elements, appState) => {
             if (isRemoteUpdate) { isRemoteUpdate=false; return; }
             const now = Date.now();
             if (now - lastSendTime > 40) {
                 lastSendTime = now;
                 sendMsg({ type:'scene-update', elements });
             }
-        }, []),
-        excalidrawAPI: useCallback(api => {
+        },
+        excalidrawAPI: (api) => {
             excalidrawAPI = api;
             applyPenToBoard();
-            // set initial pen
             try { api.setActiveTool({ type:'freedraw' }); } catch(e) {}
-        }, []),
+        },
     }));
 
-    // ── INITIAL ACTIVE BUTTON ──────────────────────────
     document.getElementById('fbar-select')?.classList.add('active');
 }
 </script>
