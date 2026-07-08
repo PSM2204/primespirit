@@ -1121,7 +1121,7 @@
         import * as ExcalidrawLib from "https://esm.sh/@excalidraw/excalidraw@0.18.0/dist/dev/index.js?external=react,react-dom";
         const { Excalidraw } = ExcalidrawLib;
 
-        // Global variables
+        // Global state
         let excalidrawAPI = null;
         let isRemoteUpdate = false;
         let lastSendTime = 0;
@@ -1136,13 +1136,181 @@
         let graphMode = 'function';
         let isSpotlightActive = false, lastSpotlightSend = 0;
 
+        // DOM Elements
+        const setupScreen = document.getElementById('setup-screen');
+        const roleTeacherBtn = document.getElementById('role-teacher');
+        const roleStudentBtn = document.getElementById('role-student');
+        const nameInput = document.getElementById('name-input');
+        const roomInput = document.getElementById('room-input');
+        const roomLabel = document.getElementById('room-label');
+        const enterBtn = document.getElementById('enter-btn');
+        const setupError = document.getElementById('setup-error');
+        let selectedRole = 'teacher';
+
+        // Check for invite room in URL
+        const inviteRoom = new URLSearchParams(window.location.search).get('room');
+        if (inviteRoom) {
+            roomInput.value = inviteRoom;
+            selectedRole = 'student';
+            roleStudentBtn.classList.add('active');
+            roleTeacherBtn.classList.remove('active');
+            roomLabel.textContent = 'Class room code (from your invite link)';
+        }
+
+        // Role toggle
+        roleTeacherBtn.addEventListener('click', () => {
+            selectedRole = 'teacher';
+            roleTeacherBtn.classList.add('active');
+            roleStudentBtn.classList.remove('active');
+        });
+
+        roleStudentBtn.addEventListener('click', () => {
+            selectedRole = 'student';
+            roleStudentBtn.classList.add('active');
+            roleTeacherBtn.classList.remove('active');
+        });
+
+        // Enter board button
+        enterBtn.addEventListener('click', () => {
+            const name = nameInput.value.trim();
+            let room = roomInput.value.trim().toUpperCase().replace(/\s+/g, '-');
+            
+            if (!name) { 
+                setupError.textContent = 'Please enter your name.'; 
+                return; 
+            }
+            if (selectedRole === 'teacher' && !room) {
+                room = randomRoomCode();
+            }
+            if (!room) { 
+                setupError.textContent = 'Please enter the room code.'; 
+                return; 
+            }
+            
+            setupError.textContent = '';
+            setupScreen.style.display = 'none';
+            document.getElementById('sidebar').style.display = 'flex';
+            startBoard(name, selectedRole, room);
+        });
+
         function randomRoomCode() {
             const w = ['MAPLE','RIVER','COMET','TIGER','ORBIT','PRISM','EAGLE','DELTA'][Math.floor(Math.random()*8)];
             return `${w}-${Math.floor(100+Math.random()*900)}`;
         }
-        function getQueryParam(n) { return new URLSearchParams(window.location.search).get(n); }
+
         function createEl(type,x,y,width,height,extra={}) {
             return {type,x,y,width,height,angle:0,strokeColor:"#a78bfa",backgroundColor:"transparent",fillStyle:"hachure",strokeWidth:1,roughness:1,opacity:100,groupIds:[],roundness:type==="rectangle"||type==="ellipse"?{type:3}:null,seed:Math.floor(Math.random()*2e9),version:1,versionNonce:Math.floor(Math.random()*2e9),isDeleted:false,boundElements:null,updated:Date.now(),link:null,locked:false,...extra};
+        }
+
+        function startBoard(name, role, room) {
+            console.log('Starting board with:', { name, role, room });
+            
+            document.getElementById('sb-room-code').textContent = room;
+            const lockBtn = document.getElementById('lock-btn');
+            const recordBtn = document.getElementById('record-btn');
+            const addStudentBtn = document.getElementById('btn-add-student');
+            const inviteBtn = document.getElementById('btn-invite');
+            const onlineDot = document.getElementById('sb-online-dot');
+            const onlineCount = document.getElementById('sb-online-count');
+            const lockedBanner = document.getElementById('locked-banner');
+
+            if (role === 'teacher') {
+                lockBtn.style.display = 'flex';
+                recordBtn.style.display = 'flex';
+                addStudentBtn.style.display = 'flex';
+                inviteBtn.style.display = 'flex';
+            }
+
+            const inviteUrl = `${window.location.origin}${window.location.pathname}?room=${encodeURIComponent(room)}`;
+            inviteBtn.addEventListener('click', () => {
+                navigator.clipboard.writeText(inviteUrl).then(() => {
+                    const orig = inviteBtn.innerHTML;
+                    inviteBtn.innerHTML = '<i class="fas fa-check"></i>';
+                    inviteBtn.style.color = 'var(--accent-success)';
+                    setTimeout(() => {
+                        inviteBtn.innerHTML = orig;
+                        inviteBtn.style.color = '';
+                    }, 1800);
+                });
+            });
+
+            // Initialize UI components
+            renderPenGrids();
+            makeDraggable(document.getElementById('pen-popup'));
+            makeDraggable(document.getElementById('bg-color-popup'));
+            setupPopupHandlers();
+            setupTimer(role);
+            setupToolkit();
+            setupMath();
+            setupGraph();
+            setupPages(role);
+            setupRecording(role);
+            setupAddStudent();
+            setupSpotlight(role);
+            setupLock(role, lockedBanner);
+            setupUndoRedo();
+            setupWebSocket(role, onlineDot, onlineCount, lockedBanner, name, room);
+            setupExcalidraw();
+            
+            console.log('Board initialized successfully');
+        }
+
+        function setupPopupHandlers() {
+            document.querySelectorAll('[data-close]').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    document.getElementById(btn.dataset.close).style.display = 'none';
+                    document.querySelectorAll('.sidebar-btn').forEach(b => b.classList.remove('active'));
+                });
+            });
+
+            document.addEventListener('click', (e) => {
+                document.querySelectorAll('.minimal-popup').forEach(popup => {
+                    if (popup.style.display === 'block' && !popup.contains(e.target)) {
+                        const triggerBtn = document.querySelector(`[data-popup="${popup.id}"]`);
+                        if (triggerBtn && !triggerBtn.contains(e.target)) {
+                            popup.style.display = 'none';
+                            document.querySelectorAll('.sidebar-btn').forEach(b => b.classList.remove('active'));
+                        }
+                    }
+                });
+            });
+
+            document.getElementById('btn-pen').addEventListener('click', (e) => {
+                e.stopPropagation();
+                deselectTools();
+                togglePopup('pen-popup', document.getElementById('btn-pen'));
+            });
+            document.getElementById('btn-pen').dataset.popup = 'pen-popup';
+
+            document.getElementById('btn-bg-color').addEventListener('click', (e) => {
+                e.stopPropagation();
+                deselectTools();
+                togglePopup('bg-color-popup', document.getElementById('btn-bg-color'));
+            });
+            document.getElementById('btn-bg-color').dataset.popup = 'bg-color-popup';
+        }
+
+        function closeAllPopups() {
+            document.querySelectorAll('.minimal-popup').forEach(p => p.style.display = 'none');
+            document.querySelectorAll('.sidebar-btn').forEach(b => b.classList.remove('active'));
+        }
+        
+        function togglePopup(popupId, btnEl) {
+            const popup = document.getElementById(popupId);
+            const isOpen = popup.style.display === 'block';
+            closeAllPopups();
+            if (!isOpen) {
+                popup.style.display = 'block';
+                if (btnEl) btnEl.classList.add('active');
+            }
+        }
+
+        function deselectTools() {
+            if (!excalidrawAPI) return;
+            try {
+                excalidrawAPI.setActiveTool({ type: "selection" });
+            } catch(e) {}
         }
 
         const PEN_TYPES = {
@@ -1184,40 +1352,46 @@
             return `<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">${svgs[icon] || svgs['line-medium']}</svg>`;
         }
 
-        function closeAllPopups() {
-            document.querySelectorAll('.minimal-popup').forEach(p => p.style.display = 'none');
-            document.querySelectorAll('.sidebar-btn').forEach(b => b.classList.remove('active'));
-        }
-        
-        function togglePopup(popupId, btnEl) {
-            const popup = document.getElementById(popupId);
-            const isOpen = popup.style.display === 'block';
-            closeAllPopups();
-            if (!isOpen) {
-                popup.style.display = 'block';
-                if (btnEl) btnEl.classList.add('active');
-            }
-        }
-
-        document.querySelectorAll('[data-close]').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                document.getElementById(btn.dataset.close).style.display = 'none';
-                document.querySelectorAll('.sidebar-btn').forEach(b => b.classList.remove('active'));
+        function renderPenGrids() {
+            Object.keys(PEN_TYPES).forEach(category => {
+                const grid = document.getElementById(`pen-grid-${category === 'writing' ? 'writing' : category === 'art' ? 'art' : 'highlight'}`);
+                if (!grid) return;
+                grid.innerHTML = '';
+                PEN_TYPES[category].forEach(pen => {
+                    const item = document.createElement('div');
+                    item.className = 'pen-item' + (pen.id === currentPenId ? ' selected' : '');
+                    item.dataset.penId = pen.id;
+                    item.innerHTML = `
+                        <div class="pen-preview">${createPenPreviewSVG(pen.icon)}</div>
+                        <div class="pen-info">
+                            <div class="pen-name">${pen.name}</div>
+                            <div class="pen-desc">${pen.desc}</div>
+                        </div>
+                        <i class="fas fa-check pen-check"></i>
+                    `;
+                    item.addEventListener('click', () => selectPen(pen));
+                    grid.appendChild(item);
+                });
             });
-        });
+        }
 
-        document.addEventListener('click', (e) => {
-            document.querySelectorAll('.minimal-popup').forEach(popup => {
-                if (popup.style.display === 'block' && !popup.contains(e.target)) {
-                    const triggerBtn = document.querySelector(`[data-popup="${popup.id}"]`);
-                    if (triggerBtn && !triggerBtn.contains(e.target)) {
-                        popup.style.display = 'none';
-                        document.querySelectorAll('.sidebar-btn').forEach(b => b.classList.remove('active'));
+        function selectPen(pen) {
+            currentPenId = pen.id;
+            if (excalidrawAPI) {
+                excalidrawAPI.updateScene({
+                    appState: {
+                        currentItemStrokeWidth: pen.strokeWidth,
+                        currentItemRoughness: pen.roughness,
+                        currentItemOpacity: pen.opacity,
+                        currentItemFillStyle: pen.fillStyle,
                     }
-                }
+                });
+                excalidrawAPI.setActiveTool({ type: 'freedraw' });
+            }
+            document.querySelectorAll('.pen-item').forEach(el => {
+                el.classList.toggle('selected', el.dataset.penId === pen.id);
             });
-        });
+        }
 
         function makeDraggable(popup) {
             const header = popup.querySelector('.popup-header');
@@ -1249,89 +1423,140 @@
             document.addEventListener('mouseup', endDrag);
         }
 
-        // Setup event listeners
-        const setupScreen = document.getElementById('setup-screen');
-        const roleTeacherBtn = document.getElementById('role-teacher');
-        const roleStudentBtn = document.getElementById('role-student');
-        const nameInput = document.getElementById('name-input');
-        const roomInput = document.getElementById('room-input');
-        const roomLabel = document.getElementById('room-label');
-        const enterBtn = document.getElementById('enter-btn');
-        const setupError = document.getElementById('setup-error');
-        let selectedRole = 'teacher';
-
-        const inviteRoom = getQueryParam('room');
-        if (inviteRoom) {
-            roomInput.value = inviteRoom;
-            selectedRole = 'student';
-            roleStudentBtn.classList.add('active');
-            roleTeacherBtn.classList.remove('active');
-            roomLabel.textContent = 'Class room code (from your invite link)';
+        function setupExcalidraw() {
+            const root = ReactDOM.createRoot(document.getElementById('root'));
+            root.render(React.createElement(Excalidraw, {
+                theme: 'light',
+                initialData: {
+                    appState: { viewBackgroundColor: '#FFFFFF', gridSize: 0, theme: 'light' },
+                    elements: [],
+                },
+                onChange: (elements, appState) => {
+                    if (isRemoteUpdate) {
+                        isRemoteUpdate = false;
+                        return;
+                    }
+                    const now = Date.now();
+                    if (now - lastSendTime >= 50) {
+                        lastSendTime = now;
+                        sendMessage({
+                            type: 'scene-update',
+                            elements,
+                            appState: { viewBackgroundColor: appState.viewBackgroundColor }
+                        });
+                    }
+                },
+                excalidrawAPI: (api) => {
+                    excalidrawAPI = api;
+                },
+            }));
         }
 
-        roleTeacherBtn.addEventListener('click', () => {
-            selectedRole = 'teacher';
-            roleTeacherBtn.classList.add('active');
-            roleStudentBtn.classList.remove('active');
-        });
-
-        roleStudentBtn.addEventListener('click', () => {
-            selectedRole = 'student';
-            roleStudentBtn.classList.add('active');
-            roleTeacherBtn.classList.remove('active');
-        });
-
-        enterBtn.addEventListener('click', () => {
-            const name = nameInput.value.trim();
-            let room = roomInput.value.trim().toUpperCase().replace(/\s+/g, '-');
-            if (!name) { 
-                setupError.textContent = 'Please enter your name.'; 
-                return; 
-            }
-            if (selectedRole === 'teacher' && !room) {
-                room = randomRoomCode();
-            }
-            if (!room) { 
-                setupError.textContent = 'Please enter the room code.'; 
-                return; 
-            }
-            setupError.textContent = '';
-            setupScreen.style.display = 'none';
-            document.getElementById('sidebar').style.display = 'flex';
-            startBoard(name, selectedRole, room);
-        });
-
-        function startBoard(name, role, room) {
-            document.getElementById('sb-room-code').textContent = room;
-            const lockBtn = document.getElementById('lock-btn');
-            const recordBtn = document.getElementById('record-btn');
-            const addStudentBtn = document.getElementById('btn-add-student');
-            const inviteBtn = document.getElementById('btn-invite');
-            const onlineDot = document.getElementById('sb-online-dot');
-            const onlineCount = document.getElementById('sb-online-count');
-            const lockedBanner = document.getElementById('locked-banner');
-
-            if (role === 'teacher') {
-                lockBtn.style.display = 'flex';
-                recordBtn.style.display = 'flex';
-                addStudentBtn.style.display = 'flex';
-                inviteBtn.style.display = 'flex';
-            }
-
-            const inviteUrl = `${window.location.origin}${window.location.pathname}?room=${encodeURIComponent(room)}`;
-            inviteBtn.addEventListener('click', () => {
-                navigator.clipboard.writeText(inviteUrl).then(() => {
-                    const orig = inviteBtn.innerHTML;
-                    inviteBtn.innerHTML = '<i class="fas fa-check"></i>';
-                    inviteBtn.style.color = 'var(--accent-success)';
-                    setTimeout(() => {
-                        inviteBtn.innerHTML = orig;
-                        inviteBtn.style.color = '';
-                    }, 1800);
+        function setupWebSocket(role, onlineDot, onlineCount, lockedBanner, name, room) {
+            function connect() {
+                onlineDot.className = 'sb-online-dot connecting';
+                socket = new WebSocket(window.PRIMEBOARD_RELAY_URL);
+                socket.addEventListener('open', () => {
+                    onlineDot.className = 'sb-online-dot';
+                    sendMessage({ type: 'join', room, role, name });
                 });
-            });
-
-            function forceSyncScene() {
+                socket.addEventListener('message', (event) => {
+                    const data = JSON.parse(event.data);
+                    if (data.type === 'state' || data.type === 'lock-changed') {
+                        isLocked = data.locked;
+                        if (role === 'student') {
+                            lockedBanner.style.display = isLocked ? 'flex' : 'none';
+                            if (excalidrawAPI) {
+                                excalidrawAPI.updateScene({ appState: { viewModeEnabled: isLocked } });
+                            }
+                        }
+                    }
+                    if (data.type === 'scene-update' && excalidrawAPI) {
+                        isRemoteUpdate = true;
+                        excalidrawAPI.updateScene({ elements: data.elements });
+                        if (data.appState && data.appState.viewBackgroundColor) {
+                            excalidrawAPI.updateScene({
+                                appState: { viewBackgroundColor: data.appState.viewBackgroundColor }
+                            });
+                        }
+                    }
+                    if (data.type === 'roster' && data.users) {
+                        onlineCount.textContent = data.users.length;
+                    }
+                    if (data.type === 'timer-update') {
+                        timeLeft = data.timeLeft;
+                        updateTimerDisplay();
+                        if (data.action === 'start' && !isTimerRunning) startTimerLocal();
+                        if (data.action === 'pause') pauseTimerLocal();
+                        if (data.action === 'reset') {
+                            pauseTimerLocal();
+                            timeLeft = data.timeLeft;
+                            updateTimerDisplay();
+                        }
+                    }
+                    if (data.type === 'spotlight-update') {
+                        if (data.active) {
+                            const spotlightOverlay = document.getElementById('spotlight-overlay');
+                            const spotlightHandle = document.getElementById('spotlight-handle');
+                            spotlightOverlay.style.display = 'block';
+                            if (role !== 'teacher') spotlightHandle.style.display = 'flex';
+                            spotlightOverlay.style.setProperty('--sx', `${data.x}px`);
+                            spotlightOverlay.style.setProperty('--sy', `${data.y}px`);
+                        } else {
+                            const spotlightOverlay = document.getElementById('spotlight-overlay');
+                            const spotlightHandle = document.getElementById('spotlight-handle');
+                            spotlightOverlay.style.display = 'none';
+                            spotlightHandle.style.display = 'none';
+                        }
+                    }
+                    if (data.type === 'pages-structure' && role === 'student') {
+                        data.pages.forEach(p => {
+                            if (!pages.find(x => x.id === p.id)) {
+                                pages.push({ id: p.id, name: p.name, elements: [], bg: '#FFFFFF' });
+                            } else {
+                                const pg = pages.find(x => x.id === p.id);
+                                if (pg) pg.name = p.name;
+                            }
+                        });
+                        pages = pages.filter(p => data.pages.find(x => x.id === p.id));
+                        renderPageTabs();
+                    }
+                    if (data.type === 'page-switch' && role === 'student') {
+                        const page = pages.find(p => p.id === data.pageId);
+                        if (page) {
+                            page.elements = data.elements || [];
+                            page.bg = data.bg || '#FFFFFF';
+                        } else {
+                            pages.push({
+                                id: data.pageId,
+                                name: data.pageId,
+                                elements: data.elements || [],
+                                bg: data.bg || '#FFFFFF'
+                            });
+                        }
+                        switchToPage(data.pageId, true);
+                    }
+                });
+                socket.addEventListener('close', () => {
+                    onlineDot.className = 'sb-online-dot connecting';
+                    setTimeout(connect, 2000);
+                });
+                socket.addEventListener('error', () => {
+                    onlineDot.className = 'sb-online-dot error';
+                });
+            }
+            
+            function sendMessage(payload) {
+                if (socket && socket.readyState === WebSocket.OPEN) {
+                    socket.send(JSON.stringify(payload));
+                }
+            }
+            
+            connect();
+            
+            // Expose sendMessage globally for other functions
+            window.sendMessage = sendMessage;
+            window.forceSyncScene = function() {
                 if (!excalidrawAPI) return;
                 const elements = excalidrawAPI.getSceneElements();
                 const appState = excalidrawAPI.getAppState();
@@ -1340,116 +1565,10 @@
                     elements,
                     appState: { viewBackgroundColor: appState.viewBackgroundColor }
                 });
-            }
+            };
+        }
 
-            function deselectTools() {
-                if (!excalidrawAPI) return;
-                try {
-                    excalidrawAPI.setActiveTool({ type: "selection" });
-                } catch(e) {}
-            }
-
-            function renderPenGrids() {
-                Object.keys(PEN_TYPES).forEach(category => {
-                    const grid = document.getElementById(`pen-grid-${category === 'writing' ? 'writing' : category === 'art' ? 'art' : 'highlight'}`);
-                    if (!grid) return;
-                    grid.innerHTML = '';
-                    PEN_TYPES[category].forEach(pen => {
-                        const item = document.createElement('div');
-                        item.className = 'pen-item' + (pen.id === currentPenId ? ' selected' : '');
-                        item.dataset.penId = pen.id;
-                        item.innerHTML = `
-                            <div class="pen-preview">${createPenPreviewSVG(pen.icon)}</div>
-                            <div class="pen-info">
-                                <div class="pen-name">${pen.name}</div>
-                                <div class="pen-desc">${pen.desc}</div>
-                            </div>
-                            <i class="fas fa-check pen-check"></i>
-                        `;
-                        item.addEventListener('click', () => selectPen(pen));
-                        grid.appendChild(item);
-                    });
-                });
-            }
-
-            function selectPen(pen) {
-                currentPenId = pen.id;
-                if (excalidrawAPI) {
-                    excalidrawAPI.updateScene({
-                        appState: {
-                            currentItemStrokeWidth: pen.strokeWidth,
-                            currentItemRoughness: pen.roughness,
-                            currentItemOpacity: pen.opacity,
-                            currentItemFillStyle: pen.fillStyle,
-                        }
-                    });
-                    excalidrawAPI.setActiveTool({ type: 'freedraw' });
-                }
-                document.querySelectorAll('.pen-item').forEach(el => {
-                    el.classList.toggle('selected', el.dataset.penId === pen.id);
-                });
-            }
-
-            renderPenGrids();
-            makeDraggable(document.getElementById('pen-popup'));
-            makeDraggable(document.getElementById('bg-color-popup'));
-
-            document.getElementById('btn-pen').addEventListener('click', (e) => {
-                e.stopPropagation();
-                deselectTools();
-                togglePopup('pen-popup', document.getElementById('btn-pen'));
-            });
-            document.getElementById('btn-pen').dataset.popup = 'pen-popup';
-
-            document.getElementById('btn-bg-color').addEventListener('click', (e) => {
-                e.stopPropagation();
-                deselectTools();
-                togglePopup('bg-color-popup', document.getElementById('btn-bg-color'));
-            });
-            document.getElementById('btn-bg-color').dataset.popup = 'bg-color-popup';
-
-            const COLORS = [
-                { hex: '#FFFFFF', name: 'White' },
-                { hex: '#F7F7F9', name: 'Soft Gray' },
-                { hex: '#F1F5F9', name: 'Cloud' },
-                { hex: '#E0F2FE', name: 'Sky' },
-                { hex: '#E8F5E9', name: 'Mint' },
-                { hex: '#FEF9C3', name: 'Butter' },
-                { hex: '#1E1B4B', name: 'Indigo' },
-                { hex: '#000000', name: 'Midnight' }
-            ];
-            const colorGrid = document.getElementById('color-grid');
-            const customBgPicker = document.getElementById('custom-bg-picker');
-
-            COLORS.forEach(c => {
-                const swatch = document.createElement('div');
-                swatch.className = 'color-swatch';
-                swatch.style.backgroundColor = c.hex;
-                swatch.title = c.name;
-                swatch.dataset.color = c.hex;
-                if (c.hex === '#FFFFFF') swatch.style.border = '2px solid #e2e8f0';
-                swatch.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    e.preventDefault();
-                    applyBackgroundColor(c.hex);
-                });
-                colorGrid.appendChild(swatch);
-            });
-
-            function applyBackgroundColor(color) {
-                if (!excalidrawAPI) return;
-                excalidrawAPI.updateScene({ appState: { viewBackgroundColor: color } });
-                customBgPicker.value = color;
-                colorGrid.querySelectorAll('.color-swatch').forEach(s => {
-                    s.classList.remove('selected');
-                    if (s.dataset.color === color) s.classList.add('selected');
-                });
-                setTimeout(forceSyncScene, 50);
-            }
-
-            customBgPicker.addEventListener('input', (e) => applyBackgroundColor(e.target.value));
-            customBgPicker.addEventListener('click', (e) => e.stopPropagation());
-
+        function setupTimer(role) {
             const timerWidget = document.getElementById('timer-widget');
             const timerDisplay = document.getElementById('timer-display');
             const timerStartBtn = document.getElementById('timer-start');
@@ -1472,7 +1591,7 @@
             function formatTime(s) {
                 return `${Math.floor(s/60).toString().padStart(2,'0')}:${(s%60).toString().padStart(2,'0')}`;
             }
-            function updateTimerDisplay() {
+            window.updateTimerDisplay = function() {
                 timerDisplay.textContent = formatTime(timeLeft);
                 timerDisplay.className = '';
                 if (timeLeft <= 10 && timeLeft > 0) timerDisplay.classList.add('danger');
@@ -1511,7 +1630,9 @@
                 timerSecInput.addEventListener('change', resetTimerLocal);
             }
             updateTimerDisplay();
+        }
 
+        function setupToolkit() {
             const toolkitModal = document.getElementById('toolkit-modal');
             document.getElementById('btn-toolkit').addEventListener('click', () => {
                 deselectTools();
@@ -1562,11 +1683,13 @@
                 }
                 if (n.length > 0) {
                     excalidrawAPI.updateScene({ elements: [...elements, ...n] });
-                    setTimeout(forceSyncScene, 50);
+                    setTimeout(window.forceSyncScene, 50);
                 }
                 toolkitModal.style.display = 'none';
             }
+        }
 
+        function setupMath() {
             const mathModal = document.getElementById('math-modal');
             const mathInput = document.getElementById('math-input');
             const mathPreview = document.getElementById('math-preview');
@@ -1596,11 +1719,13 @@
                         strokeColor: "#18181B"
                     }));
                     excalidrawAPI.updateScene({ elements: e });
-                    setTimeout(forceSyncScene, 50);
+                    setTimeout(window.forceSyncScene, 50);
                 }
                 mathModal.style.display = 'none';
             });
+        }
 
+        function setupGraph() {
             const graphModal = document.getElementById('graph-modal');
             const graphCanvas = document.getElementById('graph-canvas');
             const graphCtx = graphCanvas.getContext('2d');
@@ -1814,62 +1939,12 @@
                 }));
                 
                 excalidrawAPI.updateScene({ elements });
-                setTimeout(forceSyncScene, 100);
+                setTimeout(window.forceSyncScene, 100);
                 graphModal.style.display = 'none';
             });
+        }
 
-            const spotlightOverlay = document.getElementById('spotlight-overlay');
-            const spotlightHandle = document.getElementById('spotlight-handle');
-
-            document.getElementById('btn-spotlight').addEventListener('click', () => {
-                deselectTools();
-                isSpotlightActive = !isSpotlightActive;
-                document.getElementById('btn-spotlight').classList.toggle('active', isSpotlightActive);
-                
-                if (role === 'teacher') {
-                    sendMessage({ type: 'spotlight-update', active: isSpotlightActive });
-                    if (isSpotlightActive) {
-                        document.addEventListener('mousemove', handleTeacherMouse);
-                        document.addEventListener('touchmove', handleTeacherTouch, { passive: true });
-                        spotlightOverlay.style.display = 'block';
-                    } else {
-                        document.removeEventListener('mousemove', handleTeacherMouse);
-                        document.removeEventListener('touchmove', handleTeacherTouch);
-                        spotlightOverlay.style.display = 'none';
-                    }
-                }
-            });
-
-            function handleTeacherMouse(e) {
-                const now = Date.now();
-                if (now - lastSpotlightSend > 33) {
-                    lastSpotlightSend = now;
-                    sendMessage({ type: 'spotlight-update', active: true, x: e.clientX, y: e.clientY });
-                }
-            }
-            function handleTeacherTouch(e) {
-                const now = Date.now();
-                if (now - lastSpotlightSend > 33 && e.touches[0]) {
-                    lastSpotlightSend = now;
-                    sendMessage({ type: 'spotlight-update', active: true, x: e.touches[0].clientX, y: e.touches[0].clientY });
-                }
-            }
-
-            lockBtn.addEventListener('click', () => {
-                isLocked = !isLocked;
-                lockBtn.classList.toggle('active', isLocked);
-                lockBtn.querySelector('i').className = isLocked ? 'fas fa-lock' : 'fas fa-lock-open';
-                lockedBanner.style.display = 'none';
-                sendMessage({ type: 'set-lock', locked: isLocked });
-            });
-
-            document.getElementById('btn-undo').addEventListener('click', () => {
-                if (excalidrawAPI) excalidrawAPI.undo();
-            });
-            document.getElementById('btn-redo').addEventListener('click', () => {
-                if (excalidrawAPI) excalidrawAPI.redo();
-            });
-
+        function setupPages(role) {
             const pageTabsList = document.getElementById('page-tabs-list');
             const addPageBtn = document.getElementById('add-page-btn');
             if (role !== 'teacher') addPageBtn.style.display = 'none';
@@ -1925,7 +2000,7 @@
                         elements: page.elements || [],
                         appState: { viewBackgroundColor: page.bg || '#FFFFFF' }
                     });
-                    setTimeout(forceSyncScene, 50);
+                    setTimeout(window.forceSyncScene, 50);
                 }
                 renderPageTabs();
                 if (!remote && role === 'teacher') {
@@ -1989,6 +2064,12 @@
             addPageBtn.addEventListener('click', addNewPage);
             document.getElementById('page-tabs-bar').style.display = 'flex';
             renderPageTabs();
+        }
+
+        function setupRecording(role) {
+            const recordBtn = document.getElementById('record-btn');
+            const recIndicator = document.getElementById('rec-indicator');
+            const recTimerEl = document.getElementById('rec-timer');
 
             recordBtn.addEventListener('click', toggleRecording);
 
@@ -2063,12 +2144,14 @@
                 const s = Math.floor((Date.now() - recStart) / 1000);
                 recTimerEl.textContent = `${Math.floor(s / 60).toString().padStart(2, '0')}:${(s % 60).toString().padStart(2, '0')}`;
             }
+        }
 
+        function setupAddStudent() {
             const addStudentModal = document.getElementById('add-student-modal');
             const emailInput = document.getElementById('email-input');
             const emailList = document.getElementById('email-list');
 
-            addStudentBtn.addEventListener('click', () => {
+            document.getElementById('btn-add-student').addEventListener('click', () => {
                 addStudentModal.style.display = 'flex';
             });
             document.getElementById('cancel-add-btn').addEventListener('click', () => {
@@ -2115,10 +2198,10 @@
                 }
                 sendMessage({
                     type: 'email-invites',
-                    room,
+                    room: roomInput.value,
                     emails: emailTags,
-                    inviteUrl,
-                    teacherName: name
+                    inviteUrl: `${window.location.origin}${window.location.pathname}?room=${encodeURIComponent(roomInput.value)}`,
+                    teacherName: nameInput.value
                 });
                 alert('Invite request sent to server!');
                 addStudentModal.style.display = 'none';
@@ -2126,145 +2209,135 @@
                 updateEmailList();
                 emailInput.value = '';
             });
+        }
 
-            let resizeTimer;
-            window.addEventListener('resize', () => {
-                clearTimeout(resizeTimer);
-                resizeTimer = setTimeout(() => {
-                    closeAllPopups();
-                    if (graphModal.style.display === 'flex') drawGraph();
-                }, 200);
+        function setupSpotlight(role) {
+            const spotlightOverlay = document.getElementById('spotlight-overlay');
+            const spotlightHandle = document.getElementById('spotlight-handle');
+
+            document.getElementById('btn-spotlight').addEventListener('click', () => {
+                deselectTools();
+                isSpotlightActive = !isSpotlightActive;
+                document.getElementById('btn-spotlight').classList.toggle('active', isSpotlightActive);
+                
+                if (role === 'teacher') {
+                    sendMessage({ type: 'spotlight-update', active: isSpotlightActive });
+                    if (isSpotlightActive) {
+                        document.addEventListener('mousemove', handleTeacherMouse);
+                        document.addEventListener('touchmove', handleTeacherTouch, { passive: true });
+                        spotlightOverlay.style.display = 'block';
+                    } else {
+                        document.removeEventListener('mousemove', handleTeacherMouse);
+                        document.removeEventListener('touchmove', handleTeacherTouch);
+                        spotlightOverlay.style.display = 'none';
+                    }
+                }
             });
 
-            const root = ReactDOM.createRoot(document.getElementById('root'));
-            root.render(React.createElement(Excalidraw, {
-                theme: 'light',
-                initialData: {
-                    appState: { viewBackgroundColor: '#FFFFFF', gridSize: 0, theme: 'light' },
-                    elements: [],
-                },
-                onChange: (elements, appState) => {
-                    if (isRemoteUpdate) {
-                        isRemoteUpdate = false;
-                        return;
-                    }
-                    const now = Date.now();
-                    if (now - lastSendTime >= 50) {
-                        lastSendTime = now;
-                        sendMessage({
-                            type: 'scene-update',
-                            elements,
-                            appState: { viewBackgroundColor: appState.viewBackgroundColor }
-                        });
-                    }
-                },
-                excalidrawAPI: (api) => {
-                    excalidrawAPI = api;
-                },
-            }));
-
-            function connect() {
-                const onlineDot = document.getElementById('sb-online-dot');
-                onlineDot.className = 'sb-online-dot connecting';
-                socket = new WebSocket(window.PRIMEBOARD_RELAY_URL);
-                socket.addEventListener('open', () => {
-                    onlineDot.className = 'sb-online-dot';
-                    sendMessage({ type: 'join', room, role, name });
-                });
-                socket.addEventListener('message', (event) => {
-                    const data = JSON.parse(event.data);
-                    if (data.type === 'state' || data.type === 'lock-changed') {
-                        isLocked = data.locked;
-                        if (role === 'student') {
-                            lockedBanner.style.display = isLocked ? 'flex' : 'none';
-                            if (excalidrawAPI) {
-                                excalidrawAPI.updateScene({ appState: { viewModeEnabled: isLocked } });
-                            }
-                        }
-                    }
-                    if (data.type === 'scene-update' && excalidrawAPI) {
-                        isRemoteUpdate = true;
-                        excalidrawAPI.updateScene({ elements: data.elements });
-                        if (data.appState && data.appState.viewBackgroundColor) {
-                            excalidrawAPI.updateScene({
-                                appState: { viewBackgroundColor: data.appState.viewBackgroundColor }
-                            });
-                        }
-                    }
-                    if (data.type === 'roster' && data.users) {
-                        onlineCount.textContent = data.users.length;
-                    }
-                    if (data.type === 'timer-update') {
-                        timeLeft = data.timeLeft;
-                        updateTimerDisplay();
-                        if (data.action === 'start' && !isTimerRunning) startTimerLocal();
-                        if (data.action === 'pause') pauseTimerLocal();
-                        if (data.action === 'reset') {
-                            pauseTimerLocal();
-                            timeLeft = data.timeLeft;
-                            updateTimerDisplay();
-                        }
-                    }
-                    if (data.type === 'spotlight-update') {
-                        if (data.active) {
-                            const spotlightOverlay = document.getElementById('spotlight-overlay');
-                            const spotlightHandle = document.getElementById('spotlight-handle');
-                            spotlightOverlay.style.display = 'block';
-                            if (role !== 'teacher') spotlightHandle.style.display = 'flex';
-                            spotlightOverlay.style.setProperty('--sx', `${data.x}px`);
-                            spotlightOverlay.style.setProperty('--sy', `${data.y}px`);
-                        } else {
-                            const spotlightOverlay = document.getElementById('spotlight-overlay');
-                            const spotlightHandle = document.getElementById('spotlight-handle');
-                            spotlightOverlay.style.display = 'none';
-                            spotlightHandle.style.display = 'none';
-                        }
-                    }
-                    if (data.type === 'pages-structure' && role === 'student') {
-                        data.pages.forEach(p => {
-                            if (!pages.find(x => x.id === p.id)) {
-                                pages.push({ id: p.id, name: p.name, elements: [], bg: '#FFFFFF' });
-                            } else {
-                                const pg = pages.find(x => x.id === p.id);
-                                if (pg) pg.name = p.name;
-                            }
-                        });
-                        pages = pages.filter(p => data.pages.find(x => x.id === p.id));
-                        renderPageTabs();
-                    }
-                    if (data.type === 'page-switch' && role === 'student') {
-                        const page = pages.find(p => p.id === data.pageId);
-                        if (page) {
-                            page.elements = data.elements || [];
-                            page.bg = data.bg || '#FFFFFF';
-                        } else {
-                            pages.push({
-                                id: data.pageId,
-                                name: data.pageId,
-                                elements: data.elements || [],
-                                bg: data.bg || '#FFFFFF'
-                            });
-                        }
-                        switchToPage(data.pageId, true);
-                    }
-                });
-                socket.addEventListener('close', () => {
-                    const onlineDot = document.getElementById('sb-online-dot');
-                    onlineDot.className = 'sb-online-dot connecting';
-                    setTimeout(connect, 2000);
-                });
-                socket.addEventListener('error', () => {
-                    const onlineDot = document.getElementById('sb-online-dot');
-                    onlineDot.className = 'sb-online-dot error';
-                });
-            }
-            function sendMessage(payload) {
-                if (socket && socket.readyState === WebSocket.OPEN) {
-                    socket.send(JSON.stringify(payload));
+            function handleTeacherMouse(e) {
+                const now = Date.now();
+                if (now - lastSpotlightSend > 33) {
+                    lastSpotlightSend = now;
+                    sendMessage({ type: 'spotlight-update', active: true, x: e.clientX, y: e.clientY });
                 }
             }
-            connect();
+            function handleTeacherTouch(e) {
+                const now = Date.now();
+                if (now - lastSpotlightSend > 33 && e.touches[0]) {
+                    lastSpotlightSend = now;
+                    sendMessage({ type: 'spotlight-update', active: true, x: e.touches[0].clientX, y: e.touches[0].clientY });
+                }
+            }
         }
+
+        function setupLock(role, lockedBanner) {
+            const lockBtn = document.getElementById('lock-btn');
+            
+            lockBtn.addEventListener('click', () => {
+                isLocked = !isLocked;
+                lockBtn.classList.toggle('active', isLocked);
+                lockBtn.querySelector('i').className = isLocked ? 'fas fa-lock' : 'fas fa-lock-open';
+                lockedBanner.style.display = 'none';
+                sendMessage({ type: 'set-lock', locked: isLocked });
+            });
+        }
+
+        function setupUndoRedo() {
+            document.getElementById('btn-undo').addEventListener('click', () => {
+                if (excalidrawAPI) excalidrawAPI.undo();
+            });
+            document.getElementById('btn-redo').addEventListener('click', () => {
+                if (excalidrawAPI) excalidrawAPI.redo();
+            });
+        }
+
+        // Background color setup
+        const colorGrid = document.getElementById('color-grid');
+        const customBgPicker = document.getElementById('custom-bg-picker');
+
+        const COLORS = [
+            { hex: '#FFFFFF', name: 'White' },
+            { hex: '#F7F7F9', name: 'Soft Gray' },
+            { hex: '#F1F5F9', name: 'Cloud' },
+            { hex: '#E0F2FE', name: 'Sky' },
+            { hex: '#E8F5E9', name: 'Mint' },
+            { hex: '#FEF9C3', name: 'Butter' },
+            { hex: '#1E1B4B', name: 'Indigo' },
+            { hex: '#000000', name: 'Midnight' }
+        ];
+
+        COLORS.forEach(c => {
+            const swatch = document.createElement('div');
+            swatch.className = 'color-swatch';
+            swatch.style.backgroundColor = c.hex;
+            swatch.title = c.name;
+            swatch.dataset.color = c.hex;
+            if (c.hex === '#FFFFFF') swatch.style.border = '2px solid #e2e8f0';
+            swatch.addEventListener('click', (e) => {
+                e.stopPropagation();
+                e.preventDefault();
+                applyBackgroundColor(c.hex);
+            });
+            colorGrid.appendChild(swatch);
+        });
+
+        function applyBackgroundColor(color) {
+            if (!excalidrawAPI) return;
+            excalidrawAPI.updateScene({ appState: { viewBackgroundColor: color } });
+            customBgPicker.value = color;
+            colorGrid.querySelectorAll('.color-swatch').forEach(s => {
+                s.classList.remove('selected');
+                if (s.dataset.color === color) s.classList.add('selected');
+            });
+            setTimeout(window.forceSyncScene, 50);
+        }
+
+        customBgPicker.addEventListener('input', (e) => applyBackgroundColor(e.target.value));
+        customBgPicker.addEventListener('click', (e) => e.stopPropagation());
+
+        // Resize handler
+        let resizeTimer;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(() => {
+                closeAllPopups();
+                const graphModal = document.getElementById('graph-modal');
+                if (graphModal && graphModal.style.display === 'flex') {
+                    const graphCanvas = document.getElementById('graph-canvas');
+                    if (graphCanvas) {
+                        const graphCtx = graphCanvas.getContext('2d');
+                        const wrap = graphCanvas.parentElement;
+                        const w = wrap.clientWidth || 580, h = 260;
+                        const dpr = window.devicePixelRatio || 1;
+                        graphCanvas.width = w * dpr;
+                        graphCanvas.height = h * dpr;
+                        graphCanvas.style.width = w + 'px';
+                        graphCanvas.style.height = h + 'px';
+                        graphCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+                    }
+                }
+            }, 200);
+        });
     </script>
 </body>
 </html>
