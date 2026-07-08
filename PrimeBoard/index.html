@@ -868,6 +868,7 @@
         </div>
         <div class="header-spacer"></div>
         <button class="header-btn" id="btn-invite"><i class="fas fa-user-plus"></i> <span>Invite</span></button>
+        <button class="header-btn library-btn" id="btn-library"><i class="fas fa-book"></i> <span>Library</span></button>
         <button class="header-btn primary" id="btn-share"><i class="fas fa-share-alt"></i> <span>Share</span></button>
         <div class="header-icon" id="btn-settings"><i class="fas fa-cog"></i></div>
     </div>
@@ -1104,6 +1105,29 @@
         </div>
     </div>
 
+    <!-- Invite Modal -->
+    <div class="modal-overlay" id="invite-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <span>Invite Students</span>
+                <div class="modal-close" id="close-invite"><i class="fas fa-times"></i></div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Add Student Email Addresses</label>
+                <div style="display:flex;gap:8px;margin-bottom:12px;">
+                    <input type="email" id="student-email" class="form-input" placeholder="student@example.com" style="flex:1;">
+                    <button class="submit-btn" id="add-email-btn" style="width:auto;padding:14px 24px;">
+                        <i class="fas fa-plus"></i> Add
+                    </button>
+                </div>
+                <div id="email-list" style="display:flex;flex-wrap:wrap;gap:8px;min-height:40px;"></div>
+            </div>
+            <button class="submit-btn" id="send-invites-btn" style="margin-top:16px;">
+                <i class="fas fa-paper-plane"></i> Send Invites
+            </button>
+        </div>
+    </div>
+
     <div id="root"></div>
 
     <script type="module">
@@ -1130,7 +1154,7 @@
         let recordStream = null;
         let recStart = 0;
         let recInterval = null;
-        let emailTags = [];
+        let studentEmails = [];
         let graphMode = 'function';
         let isSpotlightActive = false;
         let lastSpotlightSend = 0;
@@ -1319,8 +1343,7 @@
 
             // Tool selection
             document.querySelectorAll('.tool-btn').forEach(btn => {
-                if (btn.id !== 'btn-undo' && btn.id !== 'btn-redo' && btn.id !== 'btn-spotlight' && 
-                    btn.id !== 'btn-timer-tool' && btn.id !== 'btn-record' && btn.id !== 'btn-bg') {
+                if (btn.id !== 'btn-spotlight' && btn.id !== 'btn-timer-tool' && btn.id !== 'btn-record' && btn.id !== 'btn-bg') {
                     btn.addEventListener('click', () => {
                         const tool = btn.id.replace('btn-', '');
                         selectTool(tool);
@@ -1850,17 +1873,66 @@
                 }
             });
 
-            // Invite button
+            // Invite Modal
             document.getElementById('btn-invite').addEventListener('click', () => {
-                const url = `${window.location.origin}${window.location.pathname}?room=${encodeURIComponent(room)}`;
-                navigator.clipboard.writeText(url).then(() => {
-                    alert('Invite link copied! Share this with your students.');
-                });
+                document.getElementById('invite-modal').classList.add('active');
             });
+            
+            document.getElementById('close-invite').addEventListener('click', () => {
+                document.getElementById('invite-modal').classList.remove('active');
+            });
+            
+            document.getElementById('add-email-btn').addEventListener('click', () => {
+                const emailInput = document.getElementById('student-email');
+                const email = emailInput.value.trim();
+                if (email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) && !studentEmails.includes(email)) {
+                    studentEmails.push(email);
+                    updateEmailList();
+                    emailInput.value = '';
+                }
+            });
+            
+            document.getElementById('student-email').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    document.getElementById('add-email-btn').click();
+                }
+            });
+            
+            document.getElementById('send-invites-btn').addEventListener('click', () => {
+                if (studentEmails.length > 0) {
+                    const inviteUrl = `${window.location.origin}${window.location.pathname}?room=${encodeURIComponent(roomInput.value)}`;
+                    // Here you would typically send emails via your backend
+                    alert(`Sending invites to:\n${studentEmails.join('\n')}\n\nInvite URL: ${inviteUrl}`);
+                    studentEmails = [];
+                    updateEmailList();
+                    document.getElementById('invite-modal').classList.remove('active');
+                } else {
+                    alert('Please add at least one email address');
+                }
+            });
+            
+            function updateEmailList() {
+                const emailList = document.getElementById('email-list');
+                if (studentEmails.length === 0) {
+                    emailList.innerHTML = '';
+                } else {
+                    emailList.innerHTML = studentEmails.map((email, index) => `
+                        <span style="display:inline-flex;align-items:center;gap:6px;padding:6px 12px;background:var(--bg-hover);border-radius:var(--radius-md);font-size:13px;">
+                            ${email}
+                            <i class="fas fa-times" style="cursor:pointer;color:var(--text-secondary);" onclick="removeEmail(${index})"></i>
+                        </span>
+                    `).join('');
+                }
+            }
+            
+            window.removeEmail = function(index) {
+                studentEmails.splice(index, 1);
+                updateEmailList();
+            };
 
             // Share button
             document.getElementById('btn-share').addEventListener('click', () => {
-                const url = `${window.location.origin}${window.location.pathname}?room=${encodeURIComponent(room)}`;
+                const url = `${window.location.origin}${window.location.pathname}?room=${encodeURIComponent(roomInput.value)}`;
                 navigator.clipboard.writeText(url).then(() => {
                     alert('Link copied to clipboard!');
                 });
