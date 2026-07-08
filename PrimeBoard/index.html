@@ -2,15 +2,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="mobile-web-app-capable" content="yes">
-    <title>PrimeBoard | Prime Spirit Mentors</title>
-    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PrimeBoard</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
-    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://esm.sh/@excalidraw/excalidraw@0.18.0/dist/dev/index.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
@@ -31,944 +27,635 @@
     
     <style>
         :root {
-            --bg-deep: #F5F5F7;
-            --bg-mid: #FFFFFF;
-            --bg-light: #EDEDF2;
-            --glass-bg: rgba(255, 255, 255, 0.88);
-            --glass-border: rgba(15, 15, 20, 0.09);
-            --glass-highlight: rgba(15, 15, 20, 0.045);
-            
-            --accent-primary: #4F46E5;
-            --accent-secondary: #818CF8;
-            --accent-tertiary: #0EA5E9;
-            --accent-success: #10B981;
-            --accent-warning: #F59E0B;
-            --accent-danger: #EF4444;
-            
-            --text-primary: #18181B;
-            --text-secondary: #52525B;
-            --text-muted: #A1A1AA;
-            
-            --radius-sm: 7px;
-            --radius-md: 10px;
-            --radius-lg: 14px;
-            --radius-xl: 18px;
-            
-            --shadow-glow: 0 0 0 3px rgba(79, 70, 229, 0.08);
-            --shadow-card: 0 4px 20px rgba(15, 15, 20, 0.09);
-            --transition-bounce: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
-            --transition-smooth: all 0.18s ease;
-            
-            --sidebar-width: 60px;
-            --topbar-height: 52px;
-            --pagetabs-height: 38px;
-            --mobile-toolbar-height: 60px;
-            --safe-top: env(safe-area-inset-top, 0px);
-            --safe-bottom: env(safe-area-inset-bottom, 0px);
+            --bg-canvas: #F3E8FF;
+            --bg-surface: #FFFFFF;
+            --bg-hover: #F3F4F6;
+            --border-light: #E5E7EB;
+            --text-primary: #111827;
+            --text-secondary: #6B7280;
+            --accent: #8B5CF6;
+            --accent-hover: #7C3AED;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
         }
         
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Nunito', system-ui, sans-serif; -webkit-tap-highlight-color: transparent; }
-        html, body { 
-            background: var(--bg-deep);
-            height: 100%; overflow: hidden; 
-            touch-action: manipulation;
-            -webkit-user-select: none;
-            user-select: none;
-        }
-        #root { position: absolute; top: calc(var(--topbar-height) + var(--pagetabs-height) + var(--safe-top)); left: 0; right: 0; bottom: 0; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', system-ui, sans-serif; }
+        html, body { height: 100%; overflow: hidden; background: var(--bg-canvas); }
+        #root { position: absolute; top: 60px; left: 0; right: 0; bottom: 80px; }
 
+        .excalidraw { touch-action: none; }
         .excalidraw .Island.App-toolbar-content > div:last-child,
         .excalidraw .panelColumn,
-        .excalidraw [class*="properties"] {
-            display: none !important;
-        }
-        .excalidraw { touch-action: none; }
+        .excalidraw [class*="properties"] { display: none !important; }
 
-        #topbar {
-            position: fixed; top: var(--safe-top); left: 0; right: 0; height: var(--topbar-height); z-index: 1000;
-            display: flex; align-items: center; gap: 10px; padding: 0 14px;
-            background: var(--glass-bg); backdrop-filter: blur(20px) saturate(1.1);
-            border-bottom: 1px solid var(--glass-border);
-        }
-        #brand { display: flex; align-items: center; gap: 8px; color: var(--text-primary); font-weight: 800; font-size: 0.95rem; letter-spacing: -0.02em; }
-        #brand i { color: var(--accent-primary); font-size: 1.05rem; }
-        #brand .sub { color: var(--text-muted); font-weight: 600; font-size: 0.65rem; margin-left: 2px; display: none; }
-        @media(min-width:768px){#brand .sub{display:inline}}
-        
-        #room-pill {
-            display: flex; align-items: center; gap: 6px;
-            background: var(--glass-highlight); border: 1px solid var(--glass-border);
-            padding: 5px 12px; border-radius: 100px; color: var(--text-secondary);
-            font-size: 0.7rem; font-family: 'JetBrains Mono', monospace;
-        }
-        #room-pill b { color: var(--accent-tertiary); letter-spacing: 0.03em; }
-        
-        #online-students {
-            display: flex; align-items: center; gap: 5px;
-            background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.25);
-            padding: 5px 12px; border-radius: 100px; color: var(--accent-success);
-            font-size: 0.7rem; font-weight: 700;
-        }
-        
-        .topbar-btn {
-            display: flex; align-items: center; gap: 5px;
-            background: transparent; border: 1px solid transparent;
-            font-weight: 700; font-size: 0.7rem;
-            padding: 6px 12px; border-radius: var(--radius-sm); cursor: pointer;
-            transition: var(--transition-bounce);
-            color: var(--text-secondary);
-            min-height: 32px;
-        }
-        .topbar-btn:hover { background: var(--glass-highlight); }
-        .topbar-btn.icon-only {
-            padding: 0; width: 34px; height: 34px; justify-content: center;
-            border: 1px solid var(--glass-border);
-        }
-        .topbar-btn.icon-only span { display: none; }
-        
-        #lock-btn {
-            border-color: rgba(239, 68, 68, 0.3); color: var(--accent-danger);
-            background: rgba(239, 68, 68, 0.08);
-        }
-        #lock-btn:hover { background: rgba(239, 68, 68, 0.15); }
-        #lock-btn.unlocked { 
-            border-color: rgba(16, 185, 129, 0.3); color: var(--accent-success); 
-            background: rgba(16, 185, 129, 0.08); 
-        }
-        #lock-btn.unlocked:hover { background: rgba(16, 185, 129, 0.15); }
-        
-        #invite-btn, #add-student-btn {
-            background: rgba(79, 70, 229, 0.1); border-color: rgba(79, 70, 229, 0.25);
-            color: var(--accent-primary);
-        }
-        #invite-btn:hover, #add-student-btn:hover { background: rgba(79, 70, 229, 0.2); }
-        #add-student-btn { 
-            background: rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.25); 
-            color: var(--accent-success); 
-        }
-        #add-student-btn:hover { background: rgba(16, 185, 129, 0.2); }
-        #exit-btn { color: var(--accent-danger); }
-        
-        .topbar-spacer { flex: 1; }
-
-        .menu-row-item {
-            display: flex; align-items: center; gap: 10px; width: 100%;
-            background: transparent; border: none; text-decoration: none;
-            color: var(--text-primary); font-weight: 700; font-size: 0.78rem;
-            padding: 9px 10px; border-radius: var(--radius-sm); cursor: pointer;
-            transition: var(--transition-smooth);
-        }
-        .menu-row-item i { width: 16px; text-align: center; color: var(--text-muted); font-size: 0.8rem; }
-        .menu-row-item:hover { background: var(--glass-highlight); }
-        #exit-btn.menu-row-item i { color: var(--accent-danger); }
-        
-        #status-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--text-muted); transition: var(--transition-smooth); }
-        #status-dot.connected { background: var(--accent-success); box-shadow: 0 0 10px var(--accent-success); }
-        #status-dot.connecting { background: var(--accent-warning); animation: pulse-dot 1.5s infinite; }
-        #status-dot.error { background: var(--accent-danger); }
-        @keyframes pulse-dot { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
-        
-        #locked-banner {
-            position: fixed; bottom: calc(var(--mobile-toolbar-height) + 20px + var(--safe-bottom)); left: 50%; transform: translateX(-50%); z-index: 1000;
-            display: none; align-items: center; gap: 10px;
-            background: rgba(239, 68, 68, 0.12); border: 1px solid rgba(239, 68, 68, 0.25);
-            color: var(--text-primary); padding: 10px 20px; border-radius: 100px;
-            font-size: 0.75rem; font-weight: 700; backdrop-filter: blur(10px);
-            box-shadow: 0 4px 20px rgba(239, 68, 68, 0.15);
-            max-width: 90vw;
-        }
-        #locked-banner i { color: var(--accent-danger); }
-
-        #record-btn { border-color: rgba(239, 68, 68, 0.3); color: var(--accent-danger); background: rgba(239, 68, 68, 0.08); }
-        #record-btn:hover { background: rgba(239, 68, 68, 0.15); }
-        #record-btn.recording {
-            background: var(--accent-danger); color: #fff; border-color: var(--accent-danger);
-            animation: recPulseBtn 1.4s infinite;
-        }
-        @keyframes recPulseBtn { 0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,0.5);} 50%{box-shadow:0 0 0 6px rgba(239,68,68,0);} }
-        #record-indicator {
-            display: none; align-items: center; gap: 6px;
-            background: rgba(239, 68, 68, 0.12); border: 1px solid rgba(239, 68, 68, 0.3);
-            padding: 5px 12px; border-radius: 100px; color: var(--accent-danger);
-            font-size: 0.7rem; font-weight: 800; font-family: 'JetBrains Mono', monospace;
-        }
-        .rec-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent-danger); animation: pulse-dot 1s infinite; }
-        #recording-notice-banner {
-            position: fixed; top: calc(var(--topbar-height) + var(--pagetabs-height) + 10px + var(--safe-top)); left: 50%; transform: translateX(-50%); z-index: 999;
-            display: none; align-items: center; gap: 8px;
-            background: rgba(239, 68, 68, 0.14); border: 1px solid rgba(239, 68, 68, 0.3);
-            color: var(--text-primary); padding: 7px 16px; border-radius: 100px;
-            font-size: 0.7rem; font-weight: 700; backdrop-filter: blur(10px);
-        }
-        #recording-notice-banner i { color: var(--accent-danger); }
-
-        #page-tabs-bar {
-            display: none; position: fixed; left: 0; right: 0;
-            top: calc(var(--topbar-height) + var(--safe-top)); height: var(--pagetabs-height);
-            z-index: 999; align-items: center; gap: 6px;
-            padding: 0 14px 0 calc(var(--sidebar-width) + 14px);
-            background: rgba(15, 12, 41, 0.5); border-bottom: 1px solid var(--glass-border);
-            backdrop-filter: blur(16px) saturate(1.05);
-        }
-        #page-tabs-list { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; flex: 1; height: 100%; align-items: center; }
-        #page-tabs-list::-webkit-scrollbar { display: none; }
-        .page-tab {
-            display: flex; align-items: center; gap: 8px;
-            padding: 6px 12px; border-radius: var(--radius-sm);
-            background: var(--glass-highlight); border: 1px solid transparent;
-            color: var(--text-muted); font-size: 0.7rem; font-weight: 700;
-            cursor: pointer; transition: var(--transition-bounce); white-space: nowrap; flex-shrink: 0;
-        }
-        .page-tab:hover { color: var(--text-primary); background: rgba(15,15,20,0.05); }
-        .page-tab.active {
-            color: var(--accent-primary); border-color: rgba(79,70,229,0.3);
-            background: rgba(79,70,229,0.1);
-        }
-        .page-tab-close { font-size: 0.6rem; opacity: 0.6; transition: var(--transition-smooth); padding: 2px; cursor: pointer; }
-        .page-tab-close:hover { opacity: 1; color: var(--accent-danger); }
-        #add-page-btn {
-            flex-shrink: 0; width: 30px; height: 30px; border-radius: var(--radius-sm);
-            border: 1px dashed var(--glass-border); background: transparent; color: var(--text-muted);
-            cursor: pointer; transition: var(--transition-bounce); display: flex; align-items: center; justify-content: center;
-        }
-        #add-page-btn:hover { color: var(--accent-success); border-color: var(--accent-success); background: rgba(16,185,129,0.08); transform: scale(1.08); }
-
-        @media(max-width: 768px) {
-            #page-tabs-bar {
-                top: calc(var(--topbar-height) + var(--safe-top));
-                padding: 0 8px; height: 38px;
-            }
-        }
-
-        #left-sidebar {
-            position: fixed; left: 12px; top: 50%; bottom: auto; transform: translateY(-50%);
-            width: 48px; max-height: calc(100vh - var(--topbar-height) - var(--pagetabs-height) - 40px);
-            background: var(--glass-bg); border: 1px solid var(--glass-border);
-            border-radius: var(--radius-xl);
-            backdrop-filter: blur(20px) saturate(1.1); z-index: 1100;
-            display: flex; flex-direction: column; align-items: center;
-            padding: 8px; gap: 3px;
-            overflow-y: auto;
-            scrollbar-width: none;
-            box-shadow: var(--shadow-card);
-        }
-        #left-sidebar::-webkit-scrollbar { display: none; }
-        
-        .sidebar-btn {
-            width: 36px; height: 36px; border-radius: var(--radius-sm);
-            display: flex; align-items: center; justify-content: center;
-            font-size: 0.9rem; border: 1px solid transparent;
-            background: transparent; color: var(--text-secondary);
-            cursor: pointer; transition: var(--transition-bounce);
-            position: relative; overflow: hidden;
-            flex-shrink: 0;
-        }
-        .sidebar-btn::before {
-            content: ''; position: absolute; inset: 0; border-radius: inherit;
-            background: var(--accent-primary);
-            opacity: 0; transition: opacity 0.2s ease; z-index: -1;
-        }
-        .sidebar-btn:hover { 
-            color: var(--text-primary); 
-            background: var(--glass-highlight); border-color: var(--glass-border);
-        }
-        .sidebar-btn.active { 
-            color: #fff; border-color: transparent; 
-        }
-        .sidebar-btn.active::before { opacity: 1; }
-        .sidebar-divider { width: 22px; height: 1px; background: var(--glass-border); margin: 3px 0; flex-shrink: 0; }
-
-        .sidebar-btn[title]:hover::after {
-            content: attr(title); position: absolute; left: 44px; top: 50%;
-            transform: translateY(-50%); padding: 5px 10px; border-radius: var(--radius-sm);
-            background: var(--text-primary); border: 1px solid var(--glass-border);
-            color: #fff; font-size: 0.65rem; font-weight: 700;
-            white-space: nowrap; z-index: 9999; pointer-events: none;
-            box-shadow: var(--shadow-card);
-        }
-
-        #right-panels { position: fixed; right: 16px; top: calc(var(--topbar-height) + var(--pagetabs-height) + 20px + var(--safe-top)); z-index: 1100; display: flex; flex-direction: column; gap: 12px; max-width: calc(100vw - 100px); }
-        
-        #timer-widget {
-            background: var(--glass-bg); border: 1px solid var(--glass-border);
-            border-radius: var(--radius-lg); padding: 14px; min-width: 180px;
-            backdrop-filter: blur(20px) saturate(1.1);
-            box-shadow: var(--shadow-card); display: none; flex-direction: column; align-items: center;
-        }
-        
-        #timer-display {
-            font-size: 2.2rem; font-weight: 800; color: var(--accent-primary);
-            font-family: 'JetBrains Mono', monospace; letter-spacing: 2px;
-            margin-bottom: 10px;
-        }
-        #timer-display.warning { color: var(--accent-warning); }
-        #timer-display.danger { color: var(--accent-danger); animation: pulse-timer 1s infinite; }
-        @keyframes pulse-timer { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.7; transform: scale(0.97); } }
-        
-        .timer-controls { display: flex; gap: 6px; width: 100%; margin-bottom: 10px; }
-        .timer-btn {
-            flex: 1; padding: 7px; border-radius: var(--radius-sm); border: none;
-            background: var(--glass-highlight); color: var(--text-primary);
-            font-weight: 700; font-size: 0.65rem; cursor: pointer;
-            transition: var(--transition-bounce); font-family: 'Nunito', sans-serif;
-        }
-        .timer-btn:hover { transform: scale(1.05); }
-        .timer-btn.start { background: var(--accent-success); color: #ffffff; }
-        .timer-btn.pause { background: var(--accent-warning); color: #ffffff; }
-        .timer-btn.reset { background: var(--accent-danger); color: #fff; }
-        
-        .timer-inputs { display: flex; gap: 5px; width: 100%; align-items: center; }
-        .timer-inputs input {
-            width: 100%; background: var(--glass-highlight); border: 1px solid var(--glass-border);
-            color: var(--text-primary); padding: 6px; border-radius: var(--radius-sm);
-            text-align: center; font-size: 0.8rem; font-family: 'JetBrains Mono', monospace;
-        }
-        .timer-inputs input:focus { outline: none; border-color: var(--accent-primary); }
-        .timer-inputs span { color: var(--text-muted); font-weight: 800; font-family: 'JetBrains Mono', monospace; }
-
-        .minimal-popup {
-            display: none;
+        /* Header */
+        #header {
             position: fixed;
-            z-index: 10000 !important;
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            border-radius: var(--radius-lg);
-            backdrop-filter: blur(24px) saturate(1.1);
-            box-shadow: 0 10px 32px rgba(15, 15, 20, 0.14);
-            max-width: calc(100vw - 32px);
-            max-height: calc(100vh - 100px);
-            overflow: hidden;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: var(--bg-surface);
+            border-bottom: 1px solid var(--border-light);
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            gap: 20px;
+            z-index: 1000;
         }
-        
-        .popup-header {
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 10px 14px;
-            border-bottom: 1px solid var(--glass-border);
-            cursor: move;
+        #brand {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            font-size: 16px;
             color: var(--text-primary);
-            font-size: 0.78rem;
-            font-weight: 800;
-            background: var(--glass-highlight);
-            user-select: none;
         }
-        .popup-header-left { display: flex; align-items: center; gap: 8px; }
-        .popup-header i { color: var(--accent-primary); font-size: 0.75rem; }
-        .popup-close-btn {
-            background: transparent; border: none; color: var(--text-muted);
-            cursor: pointer; font-size: 0.9rem; padding: 4px 8px; border-radius: var(--radius-sm);
-            min-width: 28px; min-height: 28px;
-            display: flex; align-items: center; justify-content: center;
+        #board-title {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-size: 14px;
+            color: var(--text-secondary);
         }
-        .popup-close-btn:hover { color: var(--accent-danger); background: rgba(239, 68, 68, 0.1); }
-        .popup-content { padding: 14px; overflow-y: auto; max-height: calc(100vh - 200px); }
+        #board-title:hover { background: var(--bg-hover); }
+        .header-spacer { flex: 1; }
+        .header-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            background: var(--bg-surface);
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+        .header-btn:hover { background: var(--bg-hover); }
+        .header-btn.primary {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+        .header-btn.primary:hover { background: var(--accent-hover); }
+        .header-icon {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            color: var(--text-secondary);
+        }
+        .header-icon:hover { background: var(--bg-hover); }
 
-        #pen-popup {
-            width: 320px;
+        /* Bottom Toolbar */
+        #toolbar {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--bg-surface);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-lg);
+            padding: 8px 16px;
+            display: flex;
+            gap: 4px;
+            box-shadow: var(--shadow-md);
+            z-index: 1000;
+        }
+        .tool-btn {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: var(--radius-sm);
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            color: var(--text-secondary);
+            font-size: 18px;
+            transition: all 0.2s;
+        }
+        .tool-btn:hover { background: var(--bg-hover); color: var(--text-primary); }
+        .tool-btn.active { background: var(--accent); color: white; }
+        .tool-divider {
+            width: 1px;
+            background: var(--border-light);
+            margin: 0 4px;
+        }
+
+        /* Right Panel */
+        #right-panel {
+            position: fixed;
             right: 20px;
-            top: calc(var(--topbar-height) + var(--pagetabs-height) + 20px + var(--safe-top));
+            top: 80px;
+            width: 280px;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-md);
+            padding: 20px;
+            box-shadow: var(--shadow-md);
+            z-index: 999;
+            display: none;
         }
-        
-        .pen-category { margin-bottom: 14px; }
-        .pen-category-label {
-            color: var(--text-muted);
-            font-size: 0.62rem;
-            font-weight: 800;
-            letter-spacing: 0.1em;
+        #right-panel.active { display: block; }
+        .panel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            font-weight: 600;
+            font-size: 16px;
+        }
+        .panel-close {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            color: var(--text-secondary);
+        }
+        .panel-close:hover { background: var(--bg-hover); }
+        .panel-section { margin-bottom: 24px; }
+        .panel-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
             text-transform: uppercase;
-            margin-bottom: 8px;
-            padding-left: 4px;
+            letter-spacing: 0.05em;
+            margin-bottom: 12px;
         }
-        .pen-grid {
+        .color-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: repeat(5, 1fr);
             gap: 8px;
         }
+        .color-swatch {
+            width: 100%;
+            aspect-ratio: 1;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: transform 0.2s;
+        }
+        .color-swatch:hover { transform: scale(1.1); }
+        .color-swatch.active { border-color: var(--text-primary); }
+        .grid-options {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+        .grid-option {
+            padding: 12px;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            text-align: center;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        .grid-option:hover { background: var(--bg-hover); }
+        .grid-option.active { border-color: var(--accent); background: rgba(139, 92, 246, 0.1); }
+
+        /* Setup Screen */
+        #setup-screen {
+            position: fixed;
+            inset: 0;
+            background: var(--bg-canvas);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+        #setup-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-lg);
+            padding: 40px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: var(--shadow-md);
+        }
+        #setup-card h1 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+        #setup-card .tagline {
+            color: var(--text-secondary);
+            font-size: 14px;
+            margin-bottom: 32px;
+        }
+        .form-group { margin-bottom: 20px; }
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            outline: none;
+        }
+        .form-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1); }
+        .role-toggle {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        .role-btn {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            background: var(--bg-surface);
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        .role-btn.active { border-color: var(--accent); background: rgba(139, 92, 246, 0.1); color: var(--accent); }
+        .submit-btn {
+            width: 100%;
+            padding: 14px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .submit-btn:hover { background: var(--accent-hover); }
+        #setup-error {
+            color: #EF4444;
+            font-size: 14px;
+            margin-top: 16px;
+            text-align: center;
+        }
+
+        /* Modals */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1500;
+        }
+        .modal-overlay.active { display: flex; }
+        .modal {
+            background: var(--bg-surface);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            font-weight: 600;
+            font-size: 18px;
+        }
+        .modal-close {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            color: var(--text-secondary);
+        }
+        .modal-close:hover { background: var(--bg-hover); }
+
+        /* Timer Widget */
+        #timer-widget {
+            position: fixed;
+            right: 20px;
+            top: 80px;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            box-shadow: var(--shadow-md);
+            z-index: 999;
+            display: none;
+            min-width: 200px;
+        }
+        #timer-widget.active { display: block; }
+        #timer-display {
+            font-size: 32px;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 12px;
+            font-variant-numeric: tabular-nums;
+        }
+        .timer-controls { display: flex; gap: 8px; }
+        .timer-btn {
+            flex: 1;
+            padding: 8px;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            background: var(--bg-surface);
+            cursor: pointer;
+            font-weight: 500;
+        }
+        .timer-btn:hover { background: var(--bg-hover); }
+        .timer-btn.start { background: #10B981; color: white; border-color: #10B981; }
+        .timer-btn.pause { background: #F59E0B; color: white; border-color: #F59E0B; }
+        .timer-btn.reset { background: #EF4444; color: white; border-color: #EF4444; }
+
+        /* Pen Popup */
+        #pen-popup {
+            position: fixed;
+            left: 20px;
+            bottom: 100px;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            box-shadow: var(--shadow-md);
+            z-index: 1000;
+            display: none;
+            min-width: 280px;
+        }
+        #pen-popup.active { display: block; }
+        .pen-category { margin-bottom: 16px; }
+        .pen-category-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+        .pen-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
         .pen-item {
             display: flex;
             align-items: center;
-            gap: 10px;
-            padding: 10px 12px;
-            background: var(--glass-highlight);
-            border: 1px solid var(--glass-border);
-            border-radius: var(--radius-md);
-            cursor: pointer;
-            transition: var(--transition-bounce);
-            position: relative;
-        }
-        .pen-item:hover {
-            background: rgba(79, 70, 229, 0.12);
-            border-color: rgba(79, 70, 229, 0.3);
-            transform: translateY(-2px);
-        }
-        .pen-item.selected {
-            background: linear-gradient(135deg, rgba(79,70,229,0.2), rgba(129,140,248,0.15));
-            border-color: var(--accent-primary);
-            box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2);
-        }
-        .pen-preview {
-            width: 32px; height: 32px;
-            display: flex; align-items: center; justify-content: center;
-            flex-shrink: 0;
-        }
-        .pen-preview svg { width: 100%; height: 100%; }
-        .pen-info { display: flex; flex-direction: column; min-width: 0; flex: 1; }
-        .pen-name {
-            color: var(--text-primary);
-            font-size: 0.78rem;
-            font-weight: 700;
-        }
-        .pen-desc {
-            color: var(--text-muted);
-            font-size: 0.6rem;
-            font-weight: 600;
-        }
-        .pen-check {
-            position: absolute;
-            top: 4px; right: 4px;
-            color: var(--accent-primary);
-            font-size: 0.7rem;
-            opacity: 0;
-        }
-        .pen-item.selected .pen-check { opacity: 1; }
-
-        #bg-color-popup {
-            width: 240px;
-            right: 20px;
-            top: calc(var(--topbar-height) + var(--pagetabs-height) + 20px + var(--safe-top));
-        }
-        
-        .color-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 8px;
-            margin-bottom: 12px;
-        }
-        .color-swatch {
-            width: 100%; aspect-ratio: 1; border-radius: var(--radius-sm);
-            cursor: pointer; border: 2px solid rgba(15,15,20,0.1);
-            transition: var(--transition-bounce);
-            position: relative;
-        }
-        .color-swatch:hover { 
-            transform: scale(1.1); 
-            border-color: rgba(15,15,20,0.25); 
-            z-index: 1;
-        }
-        .color-swatch.selected { 
-            border-color: var(--accent-primary) !important; 
-            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
-            transform: scale(1.06);
-        }
-        .color-swatch.selected::after {
-            content: '✓'; position: absolute; inset: 0;
-            display: flex; align-items: center; justify-content: center;
-            color: #fff; font-size: 1rem; font-weight: 800;
-            text-shadow: 0 1px 3px rgba(0,0,0,0.5);
-        }
-        
-        .custom-color-row {
-            display: flex; align-items: center; gap: 10px;
-            border-top: 1px solid var(--glass-border);
-            padding-top: 12px;
-        }
-        .custom-color-row span {
-            color: var(--text-secondary);
-            font-size: 0.7rem;
-            font-weight: 700;
-        }
-        #custom-bg-picker {
-            flex: 1; height: 34px; border: 2px solid var(--glass-border);
-            border-radius: var(--radius-sm); cursor: pointer; background: transparent;
-            padding: 2px;
-        }
-
-        #spotlight-overlay {
-            position: fixed; inset: 0; z-index: 1500;
-            background: radial-gradient(circle 280px at var(--sx, 50%) var(--sy, 50%), transparent 0%, rgba(15, 12, 41, 0.97) 100%);
-            pointer-events: none; display: none;
-        }
-        
-        #spotlight-handle {
-            position: fixed; width: 40px; height: 40px; border-radius: 50%;
-            background: rgba(79, 70, 229, 0.3); border: 2px solid var(--accent-primary);
-            box-shadow: 0 0 20px rgba(79, 70, 229, 0.5); cursor: grab; z-index: 1501;
-            display: none; align-items: center; justify-content: center;
-            color: #fff; font-size: 1.1rem;
-            left: var(--hx, 50%); top: var(--hy, 50%);
-            transform: translate(-50%, -50%);
-        }
-        #spotlight-handle:active { cursor: grabbing; }
-        #spotlight-handle i { pointer-events: none; }
-
-        #setup-screen {
-            position: fixed; inset: 0; z-index: 3000;
-            display: flex; align-items: center; justify-content: center;
-            background: radial-gradient(circle at center, #FFFFFF 0%, #EFEFF3 100%);
-            padding: 20px;
-        }
-        #setup-card {
-            width: min(440px, 95vw); background: var(--glass-bg);
-            border: 1px solid var(--glass-border); border-radius: var(--radius-xl);
-            padding: 36px 28px; text-align: center;
-            backdrop-filter: blur(24px) saturate(1.1);
-            box-shadow: var(--shadow-card);
-        }
-        
-        #setup-card h1 {
-            color: var(--text-primary); font-size: 1.7rem; font-weight: 800;
-            margin-bottom: 6px;
-        }
-        #setup-card h1 span {
-            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-        }
-        #setup-card p.tagline { color: var(--text-muted); font-size: 0.75rem; margin-bottom: 28px; font-weight: 600; letter-spacing: 0.05em; }
-        #setup-card label { display: block; text-align: left; color: var(--text-secondary); font-size: 0.68rem; font-weight: 800; letter-spacing: 0.08em; margin: 18px 0 6px; text-transform: uppercase; }
-        #setup-card input {
-            width: 100%; background: var(--glass-highlight); border: 1px solid var(--glass-border);
-            color: var(--text-primary); padding: 12px 14px; border-radius: var(--radius-md);
-            font-size: 0.95rem; outline: none; margin-bottom: 8px; font-weight: 600;
-        }
-        #setup-card input:focus { border-color: var(--accent-primary); }
-        
-        .role-toggle { display: flex; gap: 8px; margin-top: 6px; }
-        .role-toggle button {
-            flex: 1; padding: 12px; border-radius: var(--radius-md);
-            border: 1px solid var(--glass-border); background: var(--glass-highlight);
-            color: var(--text-muted); font-weight: 700; font-size: 0.8rem;
-            cursor: pointer; transition: var(--transition-bounce);
-        }
-        .role-toggle button:hover { transform: scale(1.03); }
-        .role-toggle button.active {
-            border-color: var(--accent-primary); color: var(--text-primary);
-            background: rgba(79, 70, 229, 0.1);
-        }
-        
-        #enter-btn {
-            width: 100%; margin-top: 28px; padding: 14px; border-radius: var(--radius-md);
-            border: none; font-weight: 800; font-size: 0.95rem; cursor: pointer;
-            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
-            color: #fff;
-        }
-        #setup-error { color: var(--accent-danger); font-size: 0.75rem; margin-top: 12px; min-height: 1.2em; font-weight: 700; }
-
-        #add-student-modal, #toolkit-modal, #math-modal, #graph-modal {
-            position: fixed; inset: 0; z-index: 4000;
-            display: none; align-items: center; justify-content: center;
-            background: rgba(15, 12, 41, 0.85); backdrop-filter: blur(8px); padding: 20px;
-        }
-        
-        #add-student-card, #toolkit-card, #math-card, #graph-card {
-            width: min(460px, 95vw); background: var(--glass-bg);
-            border: 1px solid var(--glass-border); border-radius: var(--radius-xl);
-            padding: 28px 24px; backdrop-filter: blur(24px) saturate(1.1);
-            box-shadow: var(--shadow-card);
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-        #toolkit-card { width: min(620px, 95vw); }
-        #graph-card { width: min(680px, 95vw); }
-        
-        #add-student-card h3, #toolkit-card h3, #math-card h3, #graph-card h3 {
-            color: var(--text-primary); font-size: 1.1rem; font-weight: 800;
-            margin-bottom: 6px; display: flex; align-items: center; gap: 10px;
-        }
-        #add-student-card h3 i, #toolkit-card h3 i, #math-card h3 i, #graph-card h3 i { color: var(--accent-success); }
-        #add-student-card p, #toolkit-card p, #graph-card p { color: var(--text-muted); font-size: 0.75rem; margin-bottom: 20px; font-weight: 600; }
-        #add-student-card label { display: block; text-align: left; color: var(--text-secondary); font-size: 0.68rem; font-weight: 800; letter-spacing: 0.08em; margin: 16px 0 6px; text-transform: uppercase; }
-        
-        #add-student-card input, #math-input {
-            width: 100%; background: var(--glass-highlight); border: 1px solid var(--glass-border);
-            color: var(--text-primary); padding: 12px 14px; border-radius: var(--radius-md);
-            font-size: 0.9rem; outline: none; margin-bottom: 8px; font-family: 'Nunito', sans-serif;
-        }
-        #math-input { min-height: 80px; resize: vertical; }
-        #add-student-card input:focus, #math-input:focus { border-color: var(--accent-success); }
-        
-        #email-list { max-height: 140px; overflow-y: auto; margin: 12px 0; background: var(--glass-highlight); border-radius: var(--radius-md); padding: 8px; min-height: 40px; }
-        .email-tag {
-            display: inline-flex; align-items: center; gap: 6px;
-            background: rgba(16, 185, 129, 0.1); border: 1px solid var(--accent-success);
-            color: var(--accent-success); padding: 4px 10px; border-radius: 100px;
-            font-size: 0.7rem; margin: 3px; font-weight: 700;
-        }
-        .email-tag i { cursor: pointer; font-size: 0.6rem; opacity: 0.7; }
-        .email-tag i:hover { opacity: 1; color: var(--accent-danger); }
-        
-        .btn-row { display: flex; gap: 8px; margin-top: 20px; }
-        .btn-row button {
-            flex: 1; padding: 12px; border-radius: var(--radius-md); border: none;
-            font-weight: 800; font-size: 0.85rem; cursor: pointer;
-            font-family: 'Nunito', sans-serif;
-        }
-        #send-invites-btn, #insert-math-btn, #insert-graph-btn { 
-            background: linear-gradient(135deg, var(--accent-success), #22d3ee); color: #ffffff;
-        }
-        #cancel-add-btn, #cancel-math-btn, #close-toolkit-btn, #cancel-graph-btn { background: rgba(15,15,20,0.055); color: var(--text-primary); border: 1px solid var(--glass-border); }
-        
-        .toolkit-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; margin-top: 16px; }
-        .toolkit-item {
-            background: rgba(15,15,20,0.035); border: 1px solid var(--glass-border);
-            border-radius: var(--radius-md); padding: 16px 12px; text-align: center;
-            cursor: pointer; transition: var(--transition-bounce);
-            display: flex; flex-direction: column; align-items: center; gap: 8px;
-        }
-        .toolkit-item:hover { 
-            background: rgba(79, 70, 229, 0.1); border-color: var(--accent-primary); 
-            transform: translateY(-3px);
-        }
-        .toolkit-item i { font-size: 1.4rem; color: var(--accent-primary); }
-        .toolkit-item span { color: var(--text-primary); font-size: 0.8rem; font-weight: 700; }
-        .toolkit-item .sub-text { color: var(--text-muted); font-size: 0.6rem; font-weight: 600; }
-
-        .graph-tabs { display: flex; gap: 6px; margin-bottom: 14px; flex-wrap: wrap; }
-        .graph-tab {
-            padding: 7px 13px; border-radius: 100px; border: 1px solid var(--glass-border);
-            background: var(--glass-highlight); color: var(--text-secondary);
-            font-size: 0.7rem; font-weight: 700; cursor: pointer;
-        }
-        .graph-tab.active {
-            border-color: var(--accent-tertiary); color: #fff;
-            background: linear-gradient(135deg, rgba(14,165,233,0.3), rgba(79,70,229,0.2));
-        }
-        .graph-fields { display: none; }
-        .graph-fields.active { display: flex; flex-direction: column; gap: 10px; }
-        .graph-field-row { display: flex; gap: 8px; align-items: center; }
-        .graph-field-row label {
-            min-width: 78px; color: var(--text-secondary); font-size: 0.68rem;
-            font-weight: 800; text-transform: uppercase;
-        }
-        .graph-field-row input {
-            flex: 1; background: var(--glass-highlight); border: 1px solid var(--glass-border);
-            color: var(--text-primary); padding: 9px 12px; border-radius: var(--radius-sm);
-            font-size: 0.85rem; outline: none; font-family: 'JetBrains Mono', monospace;
-        }
-        .graph-field-row input:focus { border-color: var(--accent-tertiary); }
-        .graph-hint { color: var(--text-muted); font-size: 0.65rem; margin-top: -4px; font-weight: 600; }
-        #graph-canvas-wrap {
-            margin-top: 14px; background: #05070f; border: 1px solid var(--glass-border);
-            border-radius: var(--radius-md); overflow: hidden;
-        }
-        #graph-canvas { width: 100%; height: 260px; display: block; }
-        #graph-readout {
-            margin-top: 8px; color: var(--accent-tertiary); font-size: 0.7rem;
-            font-family: 'JetBrains Mono', monospace; font-weight: 700; min-height: 1.2em;
-        }
-        #graph-error { color: var(--accent-danger); font-size: 0.7rem; font-weight: 700; margin-top: 6px; min-height: 1.2em; }
-
-        #mobile-toolbar {
-            display: none;
-            position: fixed;
-            bottom: var(--safe-bottom);
-            left: 0; right: 0;
-            height: var(--mobile-toolbar-height);
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px) saturate(1.1);
-            border-top: 1px solid var(--glass-border);
-            z-index: 1100;
-            align-items: center;
-            justify-content: space-around;
-            padding: 0 8px;
-            padding-bottom: var(--safe-bottom);
-            overflow-x: auto;
-        }
-        .mobile-tool-btn {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 3px;
-            padding: 6px 4px;
-            background: transparent;
-            border: none;
-            color: var(--text-muted);
-            cursor: pointer;
-            font-size: 0.6rem;
-            font-weight: 700;
+            gap: 12px;
+            padding: 10px;
+            border: 1px solid var(--border-light);
             border-radius: var(--radius-sm);
-            min-height: 48px;
-            min-width: 48px;
+            cursor: pointer;
+            transition: all 0.2s;
         }
-        .mobile-tool-btn i { font-size: 1.1rem; }
-        .mobile-tool-btn:hover, .mobile-tool-btn.active {
-            color: var(--accent-primary);
-            background: var(--glass-highlight);
+        .pen-item:hover { background: var(--bg-hover); }
+        .pen-item.active { border-color: var(--accent); background: rgba(139, 92, 246, 0.1); }
+        .pen-preview { width: 32px; height: 32px; }
+        .pen-info { flex: 1; }
+        .pen-name { font-weight: 600; font-size: 14px; }
+        .pen-desc { font-size: 12px; color: var(--text-secondary); }
+
+        /* Status indicators */
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #10B981;
+            display: inline-block;
+        }
+        .status-dot.connecting { background: #F59E0B; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+        /* Recording indicator */
+        #recording-indicator {
+            position: fixed;
+            top: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #EF4444;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 100px;
+            font-weight: 600;
+            font-size: 14px;
+            display: none;
+            align-items: center;
+            gap: 8px;
+            z-index: 999;
+        }
+        #recording-indicator.active { display: flex; }
+        .rec-dot {
+            width: 8px;
+            height: 8px;
+            background: white;
+            border-radius: 50%;
+            animation: pulse 1s infinite;
         }
 
-        @media(max-width: 768px) {
-            :root {
-                --topbar-height: 50px;
-                --pagetabs-height: 38px;
-                --mobile-toolbar-height: 60px;
-            }
-            
-            #root { 
-                top: calc(var(--topbar-height) + var(--pagetabs-height) + var(--safe-top)); 
-                bottom: var(--mobile-toolbar-height);
-            }
-            
-            #topbar { 
-                padding: 0 10px; 
-                gap: 6px;
-                height: var(--topbar-height);
-            }
-            #brand { font-size: 0.85rem; gap: 6px; }
-            #brand i { font-size: 0.95rem; }
-            #room-pill { padding: 4px 10px; font-size: 0.65rem; }
-            #online-students { padding: 4px 10px; font-size: 0.65rem; }
-            .topbar-btn { padding: 5px 10px; font-size: 0.65rem; min-height: 28px; }
-            .topbar-btn span { display: none; }
-            .topbar-btn i { font-size: 0.85rem; }
-            
-            #left-sidebar { display: none; }
-            #mobile-toolbar { display: flex; }
-            
-            #pen-popup, #bg-color-popup {
-                position: fixed !important;
-                left: 10px !important;
-                right: 10px !important;
-                top: auto !important;
-                bottom: calc(var(--mobile-toolbar-height) + 10px + var(--safe-bottom)) !important;
-                width: auto !important;
-                max-height: 70vh;
-            }
-            
-            .pen-grid { grid-template-columns: repeat(2, 1fr); }
-            .color-grid { grid-template-columns: repeat(4, 1fr); }
-            
-            #timer-widget { 
-                min-width: 140px; 
-                padding: 10px;
-            }
-            #timer-display { font-size: 1.6rem; }
-            
-            #locked-banner {
-                bottom: calc(var(--mobile-toolbar-height) + 10px + var(--safe-bottom));
-                font-size: 0.7rem;
-                padding: 8px 16px;
-            }
-            
-            .sidebar-btn[title]:hover::after { display: none; }
-            
-            #add-student-card, #toolkit-card, #math-card, #graph-card {
-                padding: 22px 18px;
-            }
-            .toolkit-grid { grid-template-columns: repeat(2, 1fr); }
-            #graph-canvas { height: 200px; }
+        /* Spotlight */
+        #spotlight-overlay {
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(circle 300px at var(--sx, 50%) var(--sy, 50%), transparent 0%, rgba(0, 0, 0, 0.8) 100%);
+            pointer-events: none;
+            display: none;
+            z-index: 998;
         }
-        
-        @media(max-width: 480px) {
-            #brand .sub { display: none; }
-            #online-students { display: none !important; }
-            .pen-grid { grid-template-columns: 1fr; }
-            .toolkit-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
-            .toolkit-item { padding: 12px 8px; }
-            .toolkit-item i { font-size: 1.2rem; }
-            .toolkit-item span { font-size: 0.72rem; }
-        }
+        #spotlight-overlay.active { display: block; }
     </style>
 </head>
 <body>
 
+    <!-- Setup Screen -->
     <div id="setup-screen">
         <div id="setup-card">
-            <h1>Prime<span>Board</span></h1>
+            <h1>PrimeBoard</h1>
             <p class="tagline">PRIME SPIRIT MENTORS // LIVE CLASS WHITEBOARD</p>
-            <label>I am the...</label>
+            
+            <label class="form-label">I am the...</label>
             <div class="role-toggle">
-                <button id="role-teacher" class="active" type="button"><i class="fas fa-chalkboard-teacher"></i> Teacher</button>
-                <button id="role-student" type="button"><i class="fas fa-user-graduate"></i> Student</button>
+                <button class="role-btn active" data-role="teacher">Teacher</button>
+                <button class="role-btn" data-role="student">Student</button>
             </div>
-            <label>Your name</label>
-            <input id="name-input" type="text" placeholder="e.g. Mr. Sharma" maxlength="40">
-            <label id="room-label">Class room code</label>
-            <input id="room-input" type="text" placeholder="e.g. CLASS10-PHYSICS" maxlength="30">
-            <button id="enter-btn">Enter Board ✨</button>
+            
+            <div class="form-group">
+                <label class="form-label">Your name</label>
+                <input type="text" id="name-input" class="form-input" placeholder="Enter your name" maxlength="40">
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Class room code</label>
+                <input type="text" id="room-input" class="form-input" placeholder="e.g. CLASS10-PHYSICS" maxlength="30">
+            </div>
+            
+            <button class="submit-btn" id="enter-btn">Enter Board</button>
             <div id="setup-error"></div>
         </div>
     </div>
 
-    <div id="topbar" style="display:none;">
-        <div id="brand"><i class="fas fa-atom"></i> PrimeBoard<span class="sub">by Prime Spirit Mentors</span></div>
-        <div id="room-pill"><span id="status-dot"></span> <b id="room-pill-code">-</b></div>
-        <div id="online-students" style="display:none;"><i class="fas fa-users"></i> <span id="student-count">1</span></div>
-        <div class="topbar-spacer"></div>
-        <button id="lock-btn" class="topbar-btn icon-only" style="display:none;" title="Lock drawing"><i class="fas fa-lock"></i><span id="lock-btn-text" style="display:none;">Locked</span></button>
-        <button id="record-btn" class="topbar-btn icon-only" style="display:none;" title="Record class"><i class="fas fa-video"></i><span id="record-btn-text" style="display:none;">Record</span></button>
-        <div id="record-indicator"><span class="rec-dot"></span> <span id="record-timer">00:00</span></div>
-        <button id="more-menu-btn" class="topbar-btn icon-only" title="More"><i class="fas fa-ellipsis-h"></i></button>
+    <!-- Header -->
+    <div id="header" style="display:none;">
+        <div id="brand"><i class="fas fa-atom"></i> PrimeBoard</div>
+        <div id="board-title">
+            <span id="room-code">-</span>
+            <i class="fas fa-chevron-down" style="font-size: 10px;"></i>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:14px;color:var(--text-secondary);">
+            <span class="status-dot" id="status-dot"></span>
+            <span id="user-count">1 online</span>
+        </div>
+        <div class="header-spacer"></div>
+        <button class="header-btn" id="btn-share"><i class="fas fa-share-alt"></i> Share</button>
+        <div class="header-icon" id="btn-settings"><i class="fas fa-cog"></i></div>
     </div>
 
-    <div id="more-menu" class="minimal-popup" style="width:200px; right:14px; top:calc(var(--topbar-height) + 6px + var(--safe-top));">
-        <div class="popup-content" style="padding:6px;">
-            <button class="menu-row-item" id="invite-btn" style="display:none;"><i class="fas fa-link"></i> Invite students</button>
-            <button class="menu-row-item" id="add-student-btn" style="display:none;"><i class="fas fa-user-plus"></i> Add by email</button>
-            <button class="menu-row-item" id="btn-theme"><i class="fas fa-circle-half-stroke"></i> Toggle theme</button>
-            <a class="menu-row-item" id="exit-btn" href="../index.html"><i class="fas fa-arrow-right-from-bracket"></i> Exit board</a>
+    <!-- Recording Indicator -->
+    <div id="recording-indicator">
+        <span class="rec-dot"></span>
+        <span id="rec-timer">00:00</span>
+    </div>
+
+    <!-- Timer Widget -->
+    <div id="timer-widget">
+        <div id="timer-display">05:00</div>
+        <div class="timer-controls" id="timer-controls">
+            <button class="timer-btn start" id="timer-start">Start</button>
+            <button class="timer-btn pause" id="timer-pause">Pause</button>
+            <button class="timer-btn reset" id="timer-reset">Reset</button>
         </div>
     </div>
 
-    <div id="locked-banner"><i class="fas fa-lock"></i> Drawing locked — pan & zoom only</div>
-    <div id="recording-notice-banner"><i class="fas fa-video"></i> This class is being recorded</div>
-
-    <div id="page-tabs-bar">
-        <div id="page-tabs-list"></div>
-        <button id="add-page-btn" title="Add Page"><i class="fas fa-plus"></i></button>
-    </div>
-
-    <div id="left-sidebar" style="display:none;">
-        <button class="sidebar-btn" id="btn-toolkit" title="Smart Toolkit"><i class="fas fa-graduation-cap"></i></button>
-        <button class="sidebar-btn" id="btn-pen" title="Pen Types"><i class="fas fa-pen-nib"></i></button>
-        <button class="sidebar-btn" id="btn-graph" title="Graphing Tool"><i class="fas fa-chart-line"></i></button>
-        <button class="sidebar-btn" id="btn-spotlight" title="Fog of War"><i class="fas fa-lightbulb"></i></button>
-        <div class="sidebar-divider"></div>
-        <button class="sidebar-btn" id="btn-timer" title="Timer"><i class="fas fa-stopwatch"></i></button>
-        <button class="sidebar-btn" id="btn-math" title="Math Equation"><i class="fas fa-square-root-alt"></i></button>
-        <div class="sidebar-divider"></div>
-        <button class="sidebar-btn" id="btn-bg-color" title="Background"><i class="fas fa-fill-drip"></i></button>
-    </div>
-
-    <div id="mobile-toolbar" style="display:none;">
-        <button class="mobile-tool-btn" data-action="toolkit"><i class="fas fa-graduation-cap"></i><span>Tools</span></button>
-        <button class="mobile-tool-btn" data-action="pen"><i class="fas fa-pen-nib"></i><span>Pens</span></button>
-        <button class="mobile-tool-btn" data-action="graph"><i class="fas fa-chart-line"></i><span>Graph</span></button>
-        <button class="mobile-tool-btn" data-action="spotlight"><i class="fas fa-lightbulb"></i><span>Spot</span></button>
-        <button class="mobile-tool-btn" data-action="timer"><i class="fas fa-stopwatch"></i><span>Timer</span></button>
-        <button class="mobile-tool-btn" data-action="math"><i class="fas fa-square-root-alt"></i><span>Math</span></button>
-        <button class="mobile-tool-btn" data-action="bg"><i class="fas fa-fill-drip"></i><span>BG</span></button>
-        <button class="mobile-tool-btn" data-action="pages"><i class="fas fa-copy"></i><span>Pages</span></button>
-        <button class="mobile-tool-btn" id="mobile-record-btn" data-action="record" style="display:none;"><i class="fas fa-video"></i><span>Rec</span></button>
-    </div>
-
-    <div id="right-panels">
-        <div id="timer-widget">
-            <div id="timer-display">05:00</div>
-            <div class="timer-controls" id="timer-controls-container">
-                <button class="timer-btn start" id="timer-start"><i class="fas fa-play"></i> Start</button>
-                <button class="timer-btn pause" id="timer-pause"><i class="fas fa-pause"></i> Pause</button>
-                <button class="timer-btn reset" id="timer-reset"><i class="fas fa-redo"></i> Reset</button>
-            </div>
-            <div class="timer-inputs" id="timer-inputs-container">
-                <input type="number" id="timer-min" placeholder="Min" min="0" max="99" value="5">
-                <span>:</span>
-                <input type="number" id="timer-sec" placeholder="Sec" min="0" max="59" value="0">
-            </div>
+    <!-- Right Panel -->
+    <div id="right-panel">
+        <div class="panel-header">
+            <span>Format background</span>
+            <div class="panel-close" id="panel-close"><i class="fas fa-times"></i></div>
         </div>
-    </div>
-
-    <div id="spotlight-overlay"></div>
-    <div id="spotlight-handle"><i class="fas fa-crosshairs"></i></div>
-
-    <div id="pen-popup" class="minimal-popup">
-        <div class="popup-header">
-            <div class="popup-header-left"><i class="fas fa-pen-nib"></i><span>Drawing Pens</span></div>
-            <button class="popup-close-btn" data-close="pen-popup"><i class="fas fa-times"></i></button>
-        </div>
-        <div class="popup-content">
-            <div class="pen-category">
-                <div class="pen-category-label">Everyday Writing</div>
-                <div class="pen-grid" id="pen-grid-writing"></div>
-            </div>
-            <div class="pen-category">
-                <div class="pen-category-label">Artistic & Calligraphy</div>
-                <div class="pen-grid" id="pen-grid-art"></div>
-            </div>
-            <div class="pen-category">
-                <div class="pen-category-label">Highlighters & Markers</div>
-                <div class="pen-grid" id="pen-grid-highlight"></div>
-            </div>
-        </div>
-    </div>
-
-    <div id="bg-color-popup" class="minimal-popup">
-        <div class="popup-header">
-            <div class="popup-header-left"><i class="fas fa-fill-drip"></i><span>Background</span></div>
-            <button class="popup-close-btn" data-close="bg-color-popup"><i class="fas fa-times"></i></button>
-        </div>
-        <div class="popup-content">
+        
+        <div class="panel-section">
+            <div class="panel-label">Color</div>
             <div class="color-grid" id="color-grid"></div>
-            <div class="custom-color-row">
-                <span>Custom:</span>
-                <input type="color" id="custom-bg-picker" value="#FFFFFF">
+        </div>
+        
+        <div class="panel-section">
+            <div class="panel-label">Grid</div>
+            <div class="grid-options">
+                <div class="grid-option active" data-grid="none">Solid</div>
+                <div class="grid-option" data-grid="dot">Dot</div>
+                <div class="grid-option" data-grid="square">Square</div>
+                <div class="grid-option" data-grid="graph">Graph</div>
+                <div class="grid-option" data-grid="hybrid">Hybrid</div>
+                <div class="grid-option" data-grid="diamond">Diamond</div>
             </div>
         </div>
     </div>
 
-    <div id="toolkit-modal">
-        <div id="toolkit-card">
-            <h3><i class="fas fa-graduation-cap"></i> Smart Educational Toolkit</h3>
-            <p>Click a tool to instantly add it to the board.</p>
-            <div class="toolkit-grid">
-                <div class="toolkit-item" data-tool="grid"><i class="fas fa-border-all"></i><span>Math Grid</span><span class="sub-text">Snap to graph</span></div>
-                <div class="toolkit-item" data-tool="chem-benzene"><i class="fas fa-atom"></i><span>Chemistry</span><span class="sub-text">Benzene Ring</span></div>
-                <div class="toolkit-item" data-tool="bio-cell"><i class="fas fa-dna"></i><span>Biology</span><span class="sub-text">Animal Cell</span></div>
-                <div class="toolkit-item" data-tool="physics-circuit"><i class="fas fa-bolt"></i><span>Physics</span><span class="sub-text">Circuit</span></div>
-                <div class="toolkit-item" data-tool="history-timeline"><i class="fas fa-history"></i><span>History</span><span class="sub-text">Timeline</span></div>
-                <div class="toolkit-item" data-tool="code-block"><i class="fas fa-code"></i><span>Computer Sci</span><span class="sub-text">Code Block</span></div>
-            </div>
-            <div class="btn-row"><button id="close-toolkit-btn">Close</button></div>
+    <!-- Pen Popup -->
+    <div id="pen-popup">
+        <div class="panel-header">
+            <span>Drawing Tools</span>
+            <div class="panel-close" id="pen-close"><i class="fas fa-times"></i></div>
+        </div>
+        <div class="pen-category">
+            <div class="pen-category-label">Everyday Writing</div>
+            <div class="pen-grid" id="pen-grid-writing"></div>
+        </div>
+        <div class="pen-category">
+            <div class="pen-category-label">Artistic</div>
+            <div class="pen-grid" id="pen-grid-art"></div>
+        </div>
+        <div class="pen-category">
+            <div class="pen-category-label">Highlighters</div>
+            <div class="pen-grid" id="pen-grid-highlight"></div>
         </div>
     </div>
 
-    <div id="math-modal">
-        <div id="math-card">
-            <h3><i class="fas fa-square-root-alt"></i> Insert LaTeX Math Equation</h3>
-            <p style="color:var(--text-muted);font-size:.75rem;margin-bottom:12px;font-weight:600;">Type LaTeX code (e.g., \frac{a}{b}, \sum_{i=1}^{n})</p>
-            <textarea id="math-input" placeholder="\frac{-b \pm \sqrt{b^2-4ac}}{2a}"></textarea>
-            <div id="math-preview" style="margin-top:12px;padding:14px;background:var(--glass-highlight);border-radius:var(--radius-md);min-height:50px;color:var(--text-primary);border:1px solid var(--glass-border);"></div>
-            <div class="btn-row">
-                <button id="cancel-math-btn">Cancel</button>
-                <button id="insert-math-btn">Insert Equation</button>
-            </div>
-        </div>
+    <!-- Bottom Toolbar -->
+    <div id="toolbar" style="display:none;">
+        <button class="tool-btn" id="btn-undo" title="Undo"><i class="fas fa-undo"></i></button>
+        <button class="tool-btn" id="btn-redo" title="Redo"><i class="fas fa-redo"></i></button>
+        <div class="tool-divider"></div>
+        <button class="tool-btn" id="btn-toolkit" title="Toolkit"><i class="fas fa-graduation-cap"></i></button>
+        <button class="tool-btn" id="btn-pen" title="Pens"><i class="fas fa-pen-nib"></i></button>
+        <button class="tool-btn" id="btn-graph" title="Graph"><i class="fas fa-chart-line"></i></button>
+        <button class="tool-btn" id="btn-math" title="Math"><i class="fas fa-square-root-alt"></i></button>
+        <div class="tool-divider"></div>
+        <button class="tool-btn" id="btn-timer" title="Timer"><i class="fas fa-stopwatch"></i></button>
+        <button class="tool-btn" id="btn-spotlight" title="Spotlight"><i class="fas fa-lightbulb"></i></button>
+        <button class="tool-btn" id="btn-record" title="Record"><i class="fas fa-video"></i></button>
+        <div class="tool-divider"></div>
+        <button class="tool-btn" id="btn-bg" title="Background"><i class="fas fa-fill-drip"></i></button>
+        <button class="tool-btn" id="btn-more" title="More"><i class="fas fa-ellipsis-h"></i></button>
     </div>
 
-    <div id="graph-modal">
-        <div id="graph-card">
-            <h3><i class="fas fa-chart-line"></i> Live Graphing Tool</h3>
-            <p>Plot a function or physics motion, then drop it onto the board as a framed image.</p>
-            <div class="graph-tabs">
-                <button class="graph-tab active" data-mode="function">f(x) Function</button>
-                <button class="graph-tab" data-mode="projectile">Projectile Motion</button>
-                <button class="graph-tab" data-mode="shm">SHM Wave</button>
+    <!-- Modals -->
+    <div class="modal-overlay" id="toolkit-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <span>Educational Toolkit</span>
+                <div class="modal-close" id="close-toolkit"><i class="fas fa-times"></i></div>
             </div>
-            <div class="graph-fields active" id="fields-function">
-                <div class="graph-field-row"><label>y =</label><input id="fn-expr" type="text" value="sin(x)"></div>
-                <div class="graph-hint">Use x as variable. Supports + - * / ^ sin cos tan sqrt log exp pi</div>
-                <div class="graph-field-row"><label>X range</label><input id="fn-xmin" type="number" value="-10" style="max-width:70px;"><span style="color:var(--text-muted);">to</span><input id="fn-xmax" type="number" value="10" style="max-width:70px;"></div>
-            </div>
-            <div class="graph-fields" id="fields-projectile">
-                <div class="graph-field-row"><label>u (m/s)</label><input id="pr-u" type="number" value="20"></div>
-                <div class="graph-field-row"><label>Angle θ°</label><input id="pr-angle" type="number" value="45"></div>
-                <div class="graph-field-row"><label>g (m/s²)</label><input id="pr-g" type="number" value="9.8"></div>
-            </div>
-            <div class="graph-fields" id="fields-shm">
-                <div class="graph-field-row"><label>Amplitude A</label><input id="shm-a" type="number" value="1"></div>
-                <div class="graph-field-row"><label>ω (rad/s)</label><input id="shm-w" type="number" value="2"></div>
-                <div class="graph-field-row"><label>Phase φ</label><input id="shm-phi" type="number" value="0"></div>
-            </div>
-            <div id="graph-canvas-wrap"><canvas id="graph-canvas"></canvas></div>
-            <div id="graph-readout"></div>
-            <div id="graph-error"></div>
-            <div class="btn-row">
-                <button id="cancel-graph-btn">Close</button>
-                <button id="insert-graph-btn"><i class="fas fa-plus"></i> Insert onto Board</button>
+            <div class="grid-options" style="grid-template-columns: repeat(3, 1fr);">
+                <div class="grid-option" data-tool="grid"><i class="fas fa-border-all" style="font-size:24px;margin-bottom:8px;"></i><br>Math Grid</div>
+                <div class="grid-option" data-tool="chem"><i class="fas fa-atom" style="font-size:24px;margin-bottom:8px;"></i><br>Chemistry</div>
+                <div class="grid-option" data-tool="bio"><i class="fas fa-dna" style="font-size:24px;margin-bottom:8px;"></i><br>Biology</div>
+                <div class="grid-option" data-tool="physics"><i class="fas fa-bolt" style="font-size:24px;margin-bottom:8px;"></i><br>Physics</div>
+                <div class="grid-option" data-tool="history"><i class="fas fa-history" style="font-size:24px;margin-bottom:8px;"></i><br>Timeline</div>
+                <div class="grid-option" data-tool="code"><i class="fas fa-code" style="font-size:24px;margin-bottom:8px;"></i><br>Code Block</div>
             </div>
         </div>
     </div>
 
-    <div id="add-student-modal">
-        <div id="add-student-card">
-            <h3><i class="fas fa-user-plus"></i> Add Students by Email</h3>
-            <p>Enter student email addresses. The server will send them an invite link via Brevo.</p>
-            <label>Email addresses (comma separated)</label>
-            <input id="email-input" type="email" placeholder="student1@email.com, student2@email.com" autocomplete="off">
-            <div id="email-list"></div>
-            <div class="btn-row">
-                <button id="cancel-add-btn">Cancel</button>
-                <button id="send-invites-btn">Send Invites</button>
+    <div class="modal-overlay" id="math-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <span>Insert Math Equation</span>
+                <div class="modal-close" id="close-math"><i class="fas fa-times"></i></div>
             </div>
+            <textarea id="math-input" class="form-input" style="min-height:100px;margin-bottom:16px;" placeholder="\frac{-b \pm \sqrt{b^2-4ac}}{2a}"></textarea>
+            <div id="math-preview" style="padding:16px;background:var(--bg-hover);border-radius:var(--radius-sm);margin-bottom:16px;min-height:60px;"></div>
+            <button class="submit-btn" id="insert-math">Insert</button>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="graph-modal">
+        <div class="modal" style="max-width:600px;">
+            <div class="modal-header">
+                <span>Graph Plotter</span>
+                <div class="modal-close" id="close-graph"><i class="fas fa-times"></i></div>
+            </div>
+            <div style="display:flex;gap:8px;margin-bottom:16px;">
+                <button class="role-btn active" data-graph="function">f(x)</button>
+                <button class="role-btn" data-graph="projectile">Projectile</button>
+                <button class="role-btn" data-graph="shm">SHM</button>
+            </div>
+            <div id="graph-function">
+                <input type="text" id="fn-expr" class="form-input" placeholder="y = sin(x)" value="sin(x)" style="margin-bottom:8px;">
+                <div style="display:flex;gap:8px;">
+                    <input type="number" id="fn-min" class="form-input" placeholder="Min" value="-10">
+                    <input type="number" id="fn-max" class="form-input" placeholder="Max" value="10">
+                </div>
+            </div>
+            <div id="graph-canvas-wrap" style="margin:16px 0;background:#000;border-radius:var(--radius-sm);overflow:hidden;">
+                <canvas id="graph-canvas" style="width:100%;height:240px;"></canvas>
+            </div>
+            <div id="graph-error" style="color:#EF4444;font-size:14px;margin-bottom:8px;"></div>
+            <button class="submit-btn" id="insert-graph">Insert Graph</button>
         </div>
     </div>
 
@@ -980,403 +667,186 @@
         import * as ExcalidrawLib from "https://esm.sh/@excalidraw/excalidraw@0.18.0/dist/dev/index.js?external=react,react-dom";
         const { Excalidraw } = ExcalidrawLib;
 
+        // Global state
         let excalidrawAPI = null;
         let isRemoteUpdate = false;
         let lastSendTime = 0;
-        let currentPenId = 'ballpoint';
         let socket = null;
+        let currentPenId = 'ballpoint';
         let isLocked = false;
-        let pages = [{ id: 'page-1', name: 'Page 1', elements: [], bg: '#F7F7F9' }];
-        let currentPageId = 'page-1';
-        let timerInterval = null, timeLeft = 300, isTimerRunning = false;
-        let mediaRecorder = null, recordedChunks = [], recordStream = null, recordStartTime = 0, recordTimerInterval = null;
+        let timerInterval = null;
+        let timeLeft = 300;
+        let isTimerRunning = false;
+        let mediaRecorder = null;
+        let recordedChunks = [];
+        let recordStream = null;
+        let recStart = 0;
+        let recInterval = null;
         let emailTags = [];
         let graphMode = 'function';
-        let isSpotlightActive = false, lastSpotlightSend = 0;
+        let isSpotlightActive = false;
+        let lastSpotlightSend = 0;
         let currentTheme = 'light';
+        let pages = [{ id: 'page-1', name: 'Page 1', elements: [], bg: '#F3E8FF' }];
+        let currentPageId = 'page-1';
 
-        function randomRoomCode() {
-            const w = ['MAPLE','RIVER','COMET','TIGER','ORBIT','PRISM','EAGLE','DELTA'][Math.floor(Math.random()*8)];
-            return `${w}-${Math.floor(100+Math.random()*900)}`;
-        }
-        function getQueryParam(n) { return new URLSearchParams(window.location.search).get(n); }
-        function createEl(type,x,y,width,height,extra={}) {
-            return {type,x,y,width,height,angle:0,strokeColor:"#a78bfa",backgroundColor:"transparent",fillStyle:"hachure",strokeWidth:1,roughness:1,opacity:100,groupIds:[],roundness:type==="rectangle"||type==="ellipse"?{type:3}:null,seed:Math.floor(Math.random()*2e9),version:1,versionNonce:Math.floor(Math.random()*2e9),isDeleted:false,boundElements:null,updated:Date.now(),link:null,locked:false,...extra};
-        }
-
-        const PEN_TYPES = {
-            writing: [
-                { id: 'fine-liner', name: 'Fine Liner', desc: '0.3mm precision', strokeWidth: 1, roughness: 0, opacity: 100, fillStyle: 'solid', icon: 'line-thin' },
-                { id: 'ballpoint', name: 'Ballpoint', desc: 'Classic 0.7mm', strokeWidth: 2, roughness: 0, opacity: 100, fillStyle: 'solid', icon: 'line-medium' },
-                { id: 'gel-pen', name: 'Gel Pen', desc: 'Smooth 0.5mm', strokeWidth: 1.5, roughness: 0, opacity: 100, fillStyle: 'solid', icon: 'line-smooth' },
-                { id: 'pencil', name: 'Pencil', desc: 'Graphite sketch', strokeWidth: 1.5, roughness: 2, opacity: 85, fillStyle: 'solid', icon: 'line-texture' },
-            ],
-            art: [
-                { id: 'fountain', name: 'Fountain Pen', desc: 'Elegant flow', strokeWidth: 2.5, roughness: 0.3, opacity: 100, fillStyle: 'solid', icon: 'line-elegant' },
-                { id: 'brush', name: 'Brush Pen', desc: 'Soft strokes', strokeWidth: 4, roughness: 1, opacity: 85, fillStyle: 'solid', icon: 'line-brush' },
-                { id: 'calligraphy', name: 'Calligraphy', desc: 'Angled nib', strokeWidth: 3, roughness: 0, opacity: 100, fillStyle: 'solid', icon: 'line-calligraphy' },
-                { id: 'ink', name: 'Dip Ink', desc: 'Traditional', strokeWidth: 2, roughness: 1.5, opacity: 95, fillStyle: 'solid', icon: 'line-ink' },
-            ],
-            highlight: [
-                { id: 'marker', name: 'Marker', desc: 'Bold 5mm', strokeWidth: 6, roughness: 0, opacity: 70, fillStyle: 'solid', icon: 'line-bold' },
-                { id: 'highlighter', name: 'Highlighter', desc: 'Translucent', strokeWidth: 16, roughness: 0, opacity: 30, fillStyle: 'solid', icon: 'line-highlight' },
-                { id: 'crayon', name: 'Crayon', desc: 'Waxy texture', strokeWidth: 5, roughness: 2.5, opacity: 80, fillStyle: 'solid', icon: 'line-crayon' },
-                { id: 'chalk', name: 'Chalk', desc: 'Dusty board', strokeWidth: 3, roughness: 3, opacity: 75, fillStyle: 'solid', icon: 'line-chalk' },
-            ]
-        };
-
-        function createPenPreviewSVG(icon) {
-            const svgs = {
-                'line-thin': `<line x1="4" y1="28" x2="28" y2="4" stroke="currentColor" stroke-width="1" stroke-linecap="round"/>`,
-                'line-medium': `<line x1="4" y1="28" x2="28" y2="4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>`,
-                'line-smooth': `<path d="M4,28 Q16,16 28,4" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/>`,
-                'line-texture': `<line x1="4" y1="28" x2="28" y2="4" stroke="currentColor" stroke-width="1.5" stroke-dasharray="2,1" stroke-linecap="round"/>`,
-                'line-elegant': `<path d="M4,28 C10,20 18,12 28,4" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round"/>`,
-                'line-brush': `<path d="M4,28 Q14,18 28,4" stroke="currentColor" stroke-width="4" fill="none" stroke-linecap="round" opacity="0.85"/>`,
-                'line-calligraphy': `<path d="M4,28 L28,4" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="square"/>`,
-                'line-ink': `<path d="M4,28 Q16,16 28,4" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-dasharray="1,2"/>`,
-                'line-bold': `<line x1="4" y1="28" x2="28" y2="4" stroke="currentColor" stroke-width="6" stroke-linecap="round" opacity="0.7"/>`,
-                'line-highlight': `<line x1="4" y1="28" x2="28" y2="4" stroke="currentColor" stroke-width="12" stroke-linecap="round" opacity="0.3"/>`,
-                'line-crayon': `<path d="M4,28 Q16,16 28,4" stroke="currentColor" stroke-width="5" fill="none" stroke-linecap="round" opacity="0.8"/>`,
-                'line-chalk': `<path d="M4,28 Q16,16 28,4" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round" opacity="0.75" stroke-dasharray="3,2"/>`,
-            };
-            return `<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">${svgs[icon] || svgs['line-medium']}</svg>`;
-        }
-
-        function closeAllPopups() {
-            document.querySelectorAll('.minimal-popup').forEach(p => p.style.display = 'none');
-            document.querySelectorAll('.sidebar-btn, .mobile-tool-btn').forEach(b => b.classList.remove('active'));
-        }
-        
-        function togglePopup(popupId, btnEl) {
-            const popup = document.getElementById(popupId);
-            const isOpen = popup.style.display === 'block';
-            closeAllPopups();
-            if (!isOpen) {
-                popup.style.display = 'block';
-                if (btnEl) btnEl.classList.add('active');
-            }
-        }
-
-        document.querySelectorAll('[data-close]').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                document.getElementById(btn.dataset.close).style.display = 'none';
-                document.querySelectorAll('.sidebar-btn, .mobile-tool-btn').forEach(b => b.classList.remove('active'));
-            });
-        });
-
-        document.addEventListener('click', (e) => {
-            document.querySelectorAll('.minimal-popup').forEach(popup => {
-                if (popup.style.display === 'block' && !popup.contains(e.target)) {
-                    const triggerBtn = document.querySelector(`[data-popup="${popup.id}"]`);
-                    if (triggerBtn && !triggerBtn.contains(e.target)) {
-                        popup.style.display = 'none';
-                        document.querySelectorAll('.sidebar-btn, .mobile-tool-btn').forEach(b => b.classList.remove('active'));
-                    }
-                }
-            });
-        });
-
-        function makeDraggable(popup) {
-            const header = popup.querySelector('.popup-header');
-            let isDragging = false, offsetX = 0, offsetY = 0;
-            const startDrag = (clientX, clientY) => {
-                isDragging = true;
-                const rect = popup.getBoundingClientRect();
-                offsetX = clientX - rect.left;
-                offsetY = clientY - rect.top;
-                popup.style.transition = 'none';
-            };
-            const doDrag = (clientX, clientY) => {
-                if (!isDragging) return;
-                const newLeft = Math.max(8, Math.min(window.innerWidth - popup.offsetWidth - 8, clientX - offsetX));
-                const newTop = Math.max(8, Math.min(window.innerHeight - popup.offsetHeight - 8, clientY - offsetY));
-                popup.style.left = newLeft + 'px';
-                popup.style.top = newTop + 'px';
-                popup.style.right = 'auto';
-                popup.style.bottom = 'auto';
-            };
-            const endDrag = () => { isDragging = false; popup.style.transition = ''; };
-            header.addEventListener('mousedown', (e) => {
-                if (e.target.closest('.popup-close-btn')) return;
-                startDrag(e.clientX, e.clientY);
-            });
-            document.addEventListener('mousemove', (e) => doDrag(e.clientX, e.clientY));
-            document.addEventListener('mouseup', endDrag);
-        }
-
+        // DOM Elements
         const setupScreen = document.getElementById('setup-screen');
-        const roleTeacherBtn = document.getElementById('role-teacher');
-        const roleStudentBtn = document.getElementById('role-student');
+        const enterBtn = document.getElementById('enter-btn');
         const nameInput = document.getElementById('name-input');
         const roomInput = document.getElementById('room-input');
-        const roomLabel = document.getElementById('room-label');
-        const enterBtn = document.getElementById('enter-btn');
         const setupError = document.getElementById('setup-error');
         let selectedRole = 'teacher';
 
-        const inviteRoom = getQueryParam('room');
-        if (inviteRoom) {
-            roomInput.value = inviteRoom;
-            selectedRole = 'student';
-            roleStudentBtn.classList.add('active');
-            roleTeacherBtn.classList.remove('active');
-            roomLabel.textContent = 'Class room code (from your invite link)';
-        }
-
-        roleTeacherBtn.addEventListener('click', () => {
-            selectedRole = 'teacher';
-            roleTeacherBtn.classList.add('active');
-            roleStudentBtn.classList.remove('active');
+        // Role toggle
+        document.querySelectorAll('.role-btn').forEach(btn => {
+            if (btn.parentElement.classList.contains('role-toggle')) {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.role-toggle .role-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    selectedRole = btn.dataset.role;
+                });
+            }
         });
 
-        roleStudentBtn.addEventListener('click', () => {
-            selectedRole = 'student';
-            roleStudentBtn.classList.add('active');
-            roleTeacherBtn.classList.remove('active');
-        });
-
+        // Enter board
         enterBtn.addEventListener('click', () => {
             const name = nameInput.value.trim();
             let room = roomInput.value.trim().toUpperCase().replace(/\s+/g, '-');
-            if (!name) { setupError.textContent = 'Please enter your name.'; return; }
-            if (selectedRole === 'teacher' && !room) room = randomRoomCode();
-            if (!room) { setupError.textContent = 'Please enter the room code.'; return; }
+            
+            if (!name) { 
+                setupError.textContent = 'Please enter your name'; 
+                return; 
+            }
+            if (selectedRole === 'teacher' && !room) {
+                const words = ['MAPLE','RIVER','COMET','TIGER','ORBIT','PRISM','EAGLE','DELTA'];
+                room = `${words[Math.floor(Math.random()*words.length)]}-${Math.floor(100+Math.random()*900)}`;
+            }
+            if (!room) { 
+                setupError.textContent = 'Please enter a room code'; 
+                return; 
+            }
+            
             setupError.textContent = '';
             setupScreen.style.display = 'none';
-            document.getElementById('topbar').style.display = 'flex';
-            document.getElementById('left-sidebar').style.display = 'flex';
-            document.getElementById('mobile-toolbar').style.display = 'flex';
+            document.getElementById('header').style.display = 'flex';
+            document.getElementById('toolbar').style.display = 'flex';
+            document.getElementById('room-code').textContent = room;
+            
             startBoard(name, selectedRole, room);
         });
 
+        function createEl(type, x, y, width, height, extra = {}) {
+            return {
+                type, x, y, width, height, angle: 0,
+                strokeColor: "#8B5CF6", backgroundColor: "transparent",
+                fillStyle: "hachure", strokeWidth: 1, roughness: 1, opacity: 100,
+                groupIds: [], roundness: (type === "rectangle" || type === "ellipse") ? { type: 3 } : null,
+                seed: Math.floor(Math.random() * 2e9), version: 1,
+                versionNonce: Math.floor(Math.random() * 2e9), isDeleted: false,
+                boundElements: null, updated: Date.now(), link: null, locked: false, ...extra
+            };
+        }
+
         function startBoard(name, role, room) {
-            document.getElementById('room-pill-code').textContent = room;
-            const lockBtn = document.getElementById('lock-btn');
-            const recordBtn = document.getElementById('record-btn');
-            const addStudentBtn = document.getElementById('add-student-btn');
-            const inviteBtn = document.getElementById('invite-btn');
-            const onlineStudents = document.getElementById('online-students');
-            const studentCount = document.getElementById('student-count');
             const statusDot = document.getElementById('status-dot');
-            const lockedBanner = document.getElementById('locked-banner');
-
-            if (role === 'teacher') {
-                lockBtn.style.display = 'flex';
-                recordBtn.style.display = 'flex';
-                addStudentBtn.style.display = 'flex';
-                inviteBtn.style.display = 'flex';
-                onlineStudents.style.display = 'flex';
-            } else {
-                onlineStudents.style.display = 'flex';
-            }
-
-            const inviteUrl = `${window.location.origin}${window.location.pathname}?room=${encodeURIComponent(room)}`;
-            inviteBtn.addEventListener('click', () => {
-                navigator.clipboard.writeText(inviteUrl).then(() => {
-                    const orig = inviteBtn.innerHTML;
-                    inviteBtn.innerHTML = '<i class="fas fa-check"></i> <span>Copied!</span>';
-                    setTimeout(() => { inviteBtn.innerHTML = orig; }, 1800);
-                });
-            });
-
-            function forceSyncScene() {
-                if (!excalidrawAPI) return;
-                const elements = excalidrawAPI.getSceneElements();
-                const appState = excalidrawAPI.getAppState();
-                sendMessage({ type: 'scene-update', elements, appState: { viewBackgroundColor: appState.viewBackgroundColor } });
-            }
-
-            function deselectTools() {
-                if (!excalidrawAPI) return;
-                try { excalidrawAPI.setActiveTool({ type: "selection" }); } catch(e) {}
-            }
-
-            function renderPenGrids() {
-                Object.keys(PEN_TYPES).forEach(category => {
-                    const grid = document.getElementById(`pen-grid-${category === 'writing' ? 'writing' : category === 'art' ? 'art' : 'highlight'}`);
-                    if (!grid) return;
-                    grid.innerHTML = '';
-                    PEN_TYPES[category].forEach(pen => {
-                        const item = document.createElement('div');
-                        item.className = 'pen-item' + (pen.id === currentPenId ? ' selected' : '');
-                        item.dataset.penId = pen.id;
-                        item.innerHTML = `<div class="pen-preview">${createPenPreviewSVG(pen.icon)}</div><div class="pen-info"><div class="pen-name">${pen.name}</div><div class="pen-desc">${pen.desc}</div></div><i class="fas fa-check pen-check"></i>`;
-                        item.addEventListener('click', () => selectPen(pen));
-                        grid.appendChild(item);
-                    });
-                });
-            }
-
-            function selectPen(pen) {
-                currentPenId = pen.id;
-                if (excalidrawAPI) {
-                    excalidrawAPI.updateScene({
-                        appState: {
-                            currentItemStrokeWidth: pen.strokeWidth,
-                            currentItemRoughness: pen.roughness,
-                            currentItemOpacity: pen.opacity,
-                            currentItemFillStyle: pen.fillStyle,
-                        }
-                    });
-                    excalidrawAPI.setActiveTool({ type: 'freedraw' });
-                }
-                document.querySelectorAll('.pen-item').forEach(el => {
-                    el.classList.toggle('selected', el.dataset.penId === pen.id);
-                });
-            }
-
-            renderPenGrids();
-            makeDraggable(document.getElementById('pen-popup'));
-            makeDraggable(document.getElementById('bg-color-popup'));
-
-            document.getElementById('more-menu-btn').addEventListener('click', (e) => {
-                e.stopPropagation();
-                togglePopup('more-menu', document.getElementById('more-menu-btn'));
-            });
-            document.querySelectorAll('#more-menu .menu-row-item').forEach(item => {
-                item.addEventListener('click', () => setTimeout(closeAllPopups, 150));
-            });
-
-            document.getElementById('btn-pen').addEventListener('click', (e) => {
-                e.stopPropagation();
-                deselectTools();
-                togglePopup('pen-popup', document.getElementById('btn-pen'));
-            });
-            document.getElementById('btn-pen').dataset.popup = 'pen-popup';
-
-            document.querySelectorAll('.mobile-tool-btn').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    deselectTools();
-                    const action = btn.dataset.action;
-                    const actionMap = {
-                        'toolkit': () => { document.getElementById('toolkit-modal').style.display = 'flex'; },
-                        'pen': () => togglePopup('pen-popup', btn),
-                        'graph': () => { document.getElementById('graph-modal').style.display = 'flex'; requestAnimationFrame(drawGraph); },
-                        'spotlight': () => document.getElementById('btn-spotlight').click(),
-                        'timer': () => document.getElementById('btn-timer').click(),
-                        'math': () => { document.getElementById('math-modal').style.display = 'flex'; },
-                        'bg': () => togglePopup('bg-color-popup', btn),
-                        'pages': () => { if (role === 'teacher') addNewPage(); document.getElementById('page-tabs-bar').scrollIntoView({ block: 'start' }); },
-                        'record': () => { if (role === 'teacher') toggleRecording(); },
-                    };
-                    if (actionMap[action]) actionMap[action]();
-                });
-            });
-
-            const btnSpotlight = document.getElementById('btn-spotlight');
-            const spotlightOverlay = document.getElementById('spotlight-overlay');
-            const spotlightHandle = document.getElementById('spotlight-handle');
-
-            btnSpotlight.addEventListener('click', () => {
-                deselectTools();
-                isSpotlightActive = !isSpotlightActive;
-                btnSpotlight.classList.toggle('active', isSpotlightActive);
-                if (role === 'teacher') {
-                    sendMessage({ type: 'spotlight-update', active: isSpotlightActive });
-                    if (isSpotlightActive) {
-                        document.addEventListener('mousemove', handleTeacherMouse);
-                        document.addEventListener('touchmove', handleTeacherTouch, { passive: true });
-                        spotlightOverlay.style.display = 'block';
-                    } else {
-                        document.removeEventListener('mousemove', handleTeacherMouse);
-                        document.removeEventListener('touchmove', handleTeacherTouch);
-                        spotlightOverlay.style.display = 'none';
-                    }
-                }
-            });
-
-            function handleTeacherMouse(e) {
-                const now = Date.now();
-                if (now - lastSpotlightSend > 33) {
-                    lastSpotlightSend = now;
-                    sendMessage({ type: 'spotlight-update', active: true, x: e.clientX, y: e.clientY });
-                }
-            }
-            function handleTeacherTouch(e) {
-                const now = Date.now();
-                if (now - lastSpotlightSend > 33 && e.touches[0]) {
-                    lastSpotlightSend = now;
-                    sendMessage({ type: 'spotlight-update', active: true, x: e.touches[0].clientX, y: e.touches[0].clientY });
-                }
-            }
-
-            const btnBgColor = document.getElementById('btn-bg-color');
-            const bgColorPopup = document.getElementById('bg-color-popup');
-            const customBgPicker = document.getElementById('custom-bg-picker');
-            const colorGrid = document.getElementById('color-grid');
-
-            const COLORS = [
-                { hex: '#FFFFFF', name: 'White' },
-                { hex: '#F7F7F9', name: 'Soft Gray' },
-                { hex: '#F1F5F9', name: 'Cloud' },
-                { hex: '#E0F2FE', name: 'Sky' },
-                { hex: '#E8F5E9', name: 'Mint' },
-                { hex: '#FEF9C3', name: 'Butter' },
-                { hex: '#1E1B4B', name: 'Indigo' },
-                { hex: '#000000', name: 'Midnight' }
-            ];
-
-            COLORS.forEach(c => {
-                const swatch = document.createElement('div');
-                swatch.className = 'color-swatch';
-                swatch.style.backgroundColor = c.hex;
-                swatch.title = c.name;
-                swatch.dataset.color = c.hex;
-                if (c.hex === '#FFFFFF') swatch.style.border = '2px solid #e2e8f0';
-                swatch.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    e.preventDefault();
-                    applyBackgroundColor(c.hex);
-                });
-                colorGrid.appendChild(swatch);
-            });
-
-            function applyBackgroundColor(color) {
-                if (!excalidrawAPI) return;
-                excalidrawAPI.updateScene({ appState: { viewBackgroundColor: color } });
-                customBgPicker.value = color;
-                colorGrid.querySelectorAll('.color-swatch').forEach(s => {
-                    s.classList.remove('selected');
-                    if (s.dataset.color === color) s.classList.add('selected');
-                });
-                setTimeout(forceSyncScene, 50);
-            }
-
-            btnBgColor.addEventListener('click', (e) => {
-                e.stopPropagation();
-                deselectTools();
-                togglePopup('bg-color-popup', btnBgColor);
-            });
-
-            customBgPicker.addEventListener('input', (e) => applyBackgroundColor(e.target.value));
-            customBgPicker.addEventListener('click', (e) => e.stopPropagation());
-
+            const userCount = document.getElementById('user-count');
             const timerWidget = document.getElementById('timer-widget');
-            const timerDisplay = document.getElementById('timer-display');
-            const timerStartBtn = document.getElementById('timer-start');
-            const timerPauseBtn = document.getElementById('timer-pause');
-            const timerResetBtn = document.getElementById('timer-reset');
-            const timerMinInput = document.getElementById('timer-min');
-            const timerSecInput = document.getElementById('timer-sec');
-            const timerControls = document.getElementById('timer-controls-container');
-            const timerInputs = document.getElementById('timer-inputs-container');
-
-            document.getElementById('btn-timer').addEventListener('click', () => {
-                deselectTools();
-                timerWidget.style.display = timerWidget.style.display === 'flex' ? 'none' : 'flex';
-            });
-            if (role !== 'teacher') { timerControls.style.display = 'none'; timerInputs.style.display = 'none'; }
-
-            function formatTime(s) { return `${Math.floor(s/60).toString().padStart(2,'0')}:${(s%60).toString().padStart(2,'0')}`; }
-            function updateTimerDisplay() {
-                timerDisplay.textContent = formatTime(timeLeft);
-                timerDisplay.className = '';
-                if (timeLeft <= 10 && timeLeft > 0) timerDisplay.classList.add('danger');
-                else if (timeLeft <= 60 && timeLeft > 10) timerDisplay.classList.add('warning');
+            const timerControls = document.getElementById('timer-controls');
+            
+            if (role !== 'teacher') {
+                timerControls.style.display = 'none';
+                document.getElementById('btn-record').style.display = 'none';
             }
+
+            // Initialize pen grids
+            renderPenGrids();
+            
+            // Initialize color grid
+            initColorGrid();
+            
+            // Setup Excalidraw
+            const root = ReactDOM.createRoot(document.getElementById('root'));
+            root.render(React.createElement(Excalidraw, {
+                theme: 'light',
+                initialData: {
+                    appState: { viewBackgroundColor: '#F3E8FF', gridSize: 0, theme: 'light' },
+                    elements: []
+                },
+                onChange: (elements, appState) => {
+                    if (isRemoteUpdate) { isRemoteUpdate = false; return; }
+                    const now = Date.now();
+                    if (now - lastSendTime >= 50) {
+                        lastSendTime = now;
+                        sendMessage({ type: 'scene-update', elements, appState: { viewBackgroundColor: appState.viewBackgroundColor } });
+                    }
+                },
+                excalidrawAPI: (api) => { excalidrawAPI = api; }
+            }));
+
+            // WebSocket connection
+            function connect() {
+                statusDot.className = 'status-dot connecting';
+                socket = new WebSocket(window.PRIMEBOARD_RELAY_URL);
+                
+                socket.addEventListener('open', () => {
+                    statusDot.className = 'status-dot';
+                    sendMessage({ type: 'join', room, role, name });
+                });
+                
+                socket.addEventListener('message', (event) => {
+                    const data = JSON.parse(event.data);
+                    
+                    if (data.type === 'scene-update' && excalidrawAPI) {
+                        isRemoteUpdate = true;
+                        excalidrawAPI.updateScene({ elements: data.elements });
+                        if (data.appState?.viewBackgroundColor) {
+                            excalidrawAPI.updateScene({ appState: { viewBackgroundColor: data.appState.viewBackgroundColor } });
+                        }
+                    }
+                    
+                    if (data.type === 'roster' && data.users) {
+                        userCount.textContent = `${data.users.length} online`;
+                    }
+                    
+                    if (data.type === 'timer-update') {
+                        timeLeft = data.timeLeft;
+                        updateTimerDisplay();
+                        if (data.action === 'start' && !isTimerRunning) startTimerLocal();
+                        if (data.action === 'pause') pauseTimerLocal();
+                        if (data.action === 'reset') { pauseTimerLocal(); timeLeft = data.timeLeft; updateTimerDisplay(); }
+                    }
+                });
+                
+                socket.addEventListener('close', () => {
+                    statusDot.className = 'status-dot connecting';
+                    setTimeout(connect, 2000);
+                });
+                
+                socket.addEventListener('error', () => {
+                    statusDot.className = 'status-dot';
+                    statusDot.style.background = '#EF4444';
+                });
+            }
+            
+            function sendMessage(payload) {
+                if (socket && socket.readyState === WebSocket.OPEN) {
+                    socket.send(JSON.stringify(payload));
+                }
+            }
+            
+            window.sendMessage = sendMessage;
+            connect();
+
+            // Timer functionality
+            function formatTime(s) {
+                return `${Math.floor(s/60).toString().padStart(2,'0')}:${(s%60).toString().padStart(2,'0')}`;
+            }
+            
+            function updateTimerDisplay() {
+                document.getElementById('timer-display').textContent = formatTime(timeLeft);
+            }
+            
             function startTimerLocal() {
                 if (isTimerRunning) return;
                 isTimerRunning = true;
@@ -1385,41 +855,67 @@
                     else { clearInterval(timerInterval); isTimerRunning = false; }
                 }, 1000);
             }
+            
             function pauseTimerLocal() { clearInterval(timerInterval); isTimerRunning = false; }
+            
             function resetTimerLocal() {
                 pauseTimerLocal();
-                timeLeft = (parseInt(timerMinInput.value) || 0) * 60 + (parseInt(timerSecInput.value) || 0);
+                timeLeft = 300;
                 updateTimerDisplay();
             }
 
-            if (role === 'teacher') {
-                timerStartBtn.addEventListener('click', () => {
-                    if (timeLeft === 0) resetTimerLocal();
-                    startTimerLocal();
-                    sendMessage({ type: 'timer-update', action: 'start', timeLeft });
-                });
-                timerPauseBtn.addEventListener('click', () => {
-                    pauseTimerLocal();
-                    sendMessage({ type: 'timer-update', action: 'pause', timeLeft });
-                });
-                timerResetBtn.addEventListener('click', () => {
-                    resetTimerLocal();
-                    sendMessage({ type: 'timer-update', action: 'reset', timeLeft });
-                });
-                timerMinInput.addEventListener('change', resetTimerLocal);
-                timerSecInput.addEventListener('change', resetTimerLocal);
-            }
-            updateTimerDisplay();
-
-            const toolkitModal = document.getElementById('toolkit-modal');
-            document.getElementById('btn-toolkit').addEventListener('click', () => {
-                deselectTools();
-                toolkitModal.style.display = 'flex';
+            document.getElementById('btn-timer').addEventListener('click', () => {
+                timerWidget.classList.toggle('active');
             });
-            document.getElementById('close-toolkit-btn').addEventListener('click', () => { toolkitModal.style.display = 'none'; });
+            
+            document.getElementById('timer-start').addEventListener('click', () => {
+                startTimerLocal();
+                sendMessage({ type: 'timer-update', action: 'start', timeLeft });
+            });
+            
+            document.getElementById('timer-pause').addEventListener('click', () => {
+                pauseTimerLocal();
+                sendMessage({ type: 'timer-update', action: 'pause', timeLeft });
+            });
+            
+            document.getElementById('timer-reset').addEventListener('click', () => {
+                resetTimerLocal();
+                sendMessage({ type: 'timer-update', action: 'reset', timeLeft });
+            });
 
-            document.querySelectorAll('.toolkit-item').forEach(item => {
-                item.addEventListener('click', () => { applyToolkit(item.dataset.tool); });
+            // Pen selection
+            document.getElementById('btn-pen').addEventListener('click', (e) => {
+                e.stopPropagation();
+                document.getElementById('pen-popup').classList.toggle('active');
+            });
+            
+            document.getElementById('pen-close').addEventListener('click', () => {
+                document.getElementById('pen-popup').classList.remove('active');
+            });
+
+            // Background panel
+            document.getElementById('btn-bg').addEventListener('click', () => {
+                document.getElementById('right-panel').classList.toggle('active');
+            });
+            
+            document.getElementById('panel-close').addEventListener('click', () => {
+                document.getElementById('right-panel').classList.remove('active');
+            });
+
+            // Toolkit modal
+            document.getElementById('btn-toolkit').addEventListener('click', () => {
+                document.getElementById('toolkit-modal').classList.add('active');
+            });
+            
+            document.getElementById('close-toolkit').addEventListener('click', () => {
+                document.getElementById('toolkit-modal').classList.remove('active');
+            });
+            
+            document.querySelectorAll('#toolkit-modal .grid-option').forEach(item => {
+                item.addEventListener('click', () => {
+                    applyToolkit(item.dataset.tool);
+                    document.getElementById('toolkit-modal').classList.remove('active');
+                });
             });
 
             function applyToolkit(type) {
@@ -1427,262 +923,79 @@
                 const elements = excalidrawAPI.getSceneElements();
                 let n = [];
                 const sx = 100, sy = 100;
+                
                 if (type === 'grid') {
                     const a = excalidrawAPI.getAppState();
                     excalidrawAPI.updateScene({ appState: { gridSize: a.gridSize ? 0 : 20 } });
-                } else if (type === 'chem-benzene') {
-                    n.push(createEl('diamond', sx, sy, 100, 100, { strokeColor: "#a78bfa", strokeWidth: 2 }));
-                    n.push(createEl('text', sx + 20, sy + 40, 60, 20, { text: "C₆H₆", fontSize: 20, strokeColor: "#18181B" }));
-                } else if (type === 'bio-cell') {
-                    n.push(createEl('ellipse', sx, sy, 200, 150, { strokeColor: "#4ade80", backgroundColor: "rgba(16,185,129,0.1)", fillStyle: "solid" }));
-                    n.push(createEl('ellipse', sx + 70, sy + 50, 60, 50, { strokeColor: "#fb7185", backgroundColor: "rgba(239,68,68,0.2)", fillStyle: "solid" }));
-                    n.push(createEl('text', sx + 80, sy + 70, 40, 20, { text: "Nucleus", fontSize: 14, strokeColor: "#18181B" }));
-                } else if (type === 'physics-circuit') {
-                    n.push(createEl('rectangle', sx, sy + 40, 20, 40, { strokeColor: "#fbbf24" }));
-                    n.push(createEl('line', sx + 20, sy + 60, 100, 0, { strokeColor: "#18181B", points: [[0,0],[100,0]] }));
-                    n.push(createEl('rectangle', sx + 120, sy + 40, 40, 40, { strokeColor: "#38bdf8" }));
-                    n.push(createEl('line', sx + 160, sy + 60, 100, 0, { strokeColor: "#18181B", points: [[0,0],[100,0]] }));
-                    n.push(createEl('line', sx + 260, sy + 60, 0, -100, { strokeColor: "#18181B", points: [[0,0],[0,-100]] }));
-                    n.push(createEl('line', sx + 260, sy - 40, -260, 0, { strokeColor: "#18181B", points: [[0,0],[-260,0]] }));
-                } else if (type === 'history-timeline') {
-                    n.push(createEl('line', sx, sy + 50, 400, 0, { strokeColor: "#a78bfa", strokeWidth: 3, points: [[0,0],[400,0]] }));
-                    for (let i = 0; i < 3; i++) {
-                        n.push(createEl('ellipse', sx + (i * 150), sy + 40, 20, 20, { strokeColor: "#f472b6", backgroundColor: "#f472b6", fillStyle: "solid" }));
-                        n.push(createEl('text', sx + (i * 150) - 20, sy + 80, 60, 20, { text: `Event ${i + 1}`, fontSize: 16, strokeColor: "#18181B" }));
-                    }
-                } else if (type === 'code-block') {
-                    n.push(createEl('rectangle', sx, sy, 300, 150, { strokeColor: "#1e1b4b", backgroundColor: "#1e1b4b", fillStyle: "solid", roundness: { type: 3 } }));
-                    n.push(createEl('text', sx + 10, sy + 10, 280, 130, { text: "def hello():\n  print('Hello World')", fontSize: 14, fontFamily: 3, strokeColor: "#4ade80" }));
+                } else if (type === 'chem') {
+                    n.push(createEl('diamond', sx, sy, 100, 100, { strokeColor: "#8B5CF6", strokeWidth: 2 }));
+                    n.push(createEl('text', sx + 20, sy + 40, 60, 20, { text: "C₆H₆", fontSize: 20, strokeColor: "#111827" }));
+                } else if (type === 'bio') {
+                    n.push(createEl('ellipse', sx, sy, 200, 150, { strokeColor: "#10B981", backgroundColor: "rgba(16,185,129,0.1)", fillStyle: "solid" }));
+                    n.push(createEl('ellipse', sx + 70, sy + 50, 60, 50, { strokeColor: "#EF4444", backgroundColor: "rgba(239,68,68,0.2)", fillStyle: "solid" }));
+                    n.push(createEl('text', sx + 80, sy + 70, 40, 20, { text: "Nucleus", fontSize: 14, strokeColor: "#111827" }));
+                } else if (type === 'physics') {
+                    n.push(createEl('rectangle', sx, sy + 40, 20, 40, { strokeColor: "#F59E0B" }));
+                    n.push(createEl('line', sx + 20, sy + 60, 100, 0, { strokeColor: "#111827", points: [[0,0],[100,0]] }));
+                } else if (type === 'history') {
+                    n.push(createEl('line', sx, sy + 50, 400, 0, { strokeColor: "#8B5CF6", strokeWidth: 3, points: [[0,0],[400,0]] }));
+                } else if (type === 'code') {
+                    n.push(createEl('rectangle', sx, sy, 300, 150, { strokeColor: "#1E1B4B", backgroundColor: "#1E1B4B", fillStyle: "solid", roundness: { type: 3 } }));
+                    n.push(createEl('text', sx + 10, sy + 10, 280, 130, { text: "def hello():\n  print('Hello')", fontSize: 14, fontFamily: 3, strokeColor: "#10B981" }));
                 }
-                if (n.length > 0) {
-                    excalidrawAPI.updateScene({ elements: [...elements, ...n] });
-                    setTimeout(forceSyncScene, 50);
-                }
-                toolkitModal.style.display = 'none';
+                
+                if (n.length > 0) excalidrawAPI.updateScene({ elements: [...elements, ...n] });
             }
 
-            const mathModal = document.getElementById('math-modal');
-            const mathInput = document.getElementById('math-input');
-            const mathPreview = document.getElementById('math-preview');
-
+            // Math modal
             document.getElementById('btn-math').addEventListener('click', () => {
-                deselectTools();
-                mathModal.style.display = 'flex';
-                mathInput.value = '';
-                mathPreview.innerHTML = '';
+                document.getElementById('math-modal').classList.add('active');
+                document.getElementById('math-input').value = '';
+                document.getElementById('math-preview').innerHTML = '';
             });
-            document.getElementById('cancel-math-btn').addEventListener('click', () => { mathModal.style.display = 'none'; });
-            mathInput.addEventListener('input', () => {
-                try { katex.render(mathInput.value, mathPreview, { throwOnError: false, displayMode: true }); }
-                catch(e) { mathPreview.textContent = 'Invalid LaTeX'; }
+            
+            document.getElementById('close-math').addEventListener('click', () => {
+                document.getElementById('math-modal').classList.remove('active');
             });
-            document.getElementById('insert-math-btn').addEventListener('click', () => {
-                if (mathInput.value && excalidrawAPI) {
-                    const e = excalidrawAPI.getSceneElements();
-                    e.push(createEl('text', 150, 150, 200, 50, { text: mathInput.value, fontSize: 24, strokeColor: "#18181B" }));
-                    excalidrawAPI.updateScene({ elements: e });
-                    setTimeout(forceSyncScene, 50);
-                }
-                mathModal.style.display = 'none';
-            });
-
-            const recordBtn = document.getElementById('record-btn');
-            const recordBtnText = document.getElementById('record-btn-text');
-            const recordIndicator = document.getElementById('record-indicator');
-            const recordTimerEl = document.getElementById('record-timer');
-            const recordingNoticeBanner = document.getElementById('recording-notice-banner');
-            const mobileRecordBtn = document.getElementById('mobile-record-btn');
-
-            if (role === 'teacher') {
-                recordBtn.style.display = 'flex';
-                mobileRecordBtn.style.display = 'flex';
-                recordBtn.addEventListener('click', toggleRecording);
-            }
-
-            async function toggleRecording() {
-                if (mediaRecorder && mediaRecorder.state === 'recording') { stopRecording(); return; }
-                if (!navigator.mediaDevices || !navigator.mediaDevices.getDisplayMedia) {
-                    alert('Screen recording not supported. Try Chrome on desktop.');
-                    return;
-                }
+            
+            document.getElementById('math-input').addEventListener('input', () => {
                 try {
-                    recordStream = await navigator.mediaDevices.getDisplayMedia({ video: { cursor: 'always' }, audio: true });
-                } catch (err) {
-                    alert('Recording cancelled or permission denied.');
-                    return;
+                    katex.render(document.getElementById('math-input').value, document.getElementById('math-preview'), { throwOnError: false, displayMode: true });
+                } catch(e) {
+                    document.getElementById('math-preview').textContent = 'Invalid LaTeX';
                 }
-                recordedChunks = [];
-                let mimeType = 'video/webm;codecs=vp9,opus';
-                if (!MediaRecorder.isTypeSupported(mimeType)) mimeType = 'video/webm';
-                try { mediaRecorder = new MediaRecorder(recordStream, { mimeType }); }
-                catch (e) { mediaRecorder = new MediaRecorder(recordStream); }
-                mediaRecorder.ondataavailable = (e) => { if (e.data && e.data.size > 0) recordedChunks.push(e.data); };
-                mediaRecorder.onstop = () => {
-                    const blob = new Blob(recordedChunks, { type: 'video/webm' });
-                    const url = URL.createObjectURL(blob);
-                    const stamp = new Date().toISOString().replace(/[:.]/g, '-');
-                    const a = document.createElement('a');
-                    a.href = url;
-                    a.download = `PrimeBoard-${room}-${stamp}.webm`;
-                    document.body.appendChild(a);
-                    a.click();
-                    a.remove();
-                    setTimeout(() => URL.revokeObjectURL(url), 4000);
-                    if (recordStream) { recordStream.getTracks().forEach(t => t.stop()); recordStream = null; }
-                };
-                recordStream.getVideoTracks()[0].addEventListener('ended', () => {
-                    if (mediaRecorder && mediaRecorder.state === 'recording') stopRecording();
-                });
-                mediaRecorder.start(1000);
-                recordStartTime = Date.now();
-                recordBtn.classList.add('recording');
-                recordBtnText.textContent = 'Stop';
-                recordBtn.querySelector('i').className = 'fas fa-stop';
-                recordIndicator.style.display = 'flex';
-                recordTimerInterval = setInterval(updateRecordTimer, 1000);
-                updateRecordTimer();
-                sendMessage({ type: 'recording-status', active: true });
-            }
-
-            function stopRecording() {
-                if (mediaRecorder && mediaRecorder.state !== 'inactive') mediaRecorder.stop();
-                clearInterval(recordTimerInterval);
-                recordBtn.classList.remove('recording');
-                recordBtnText.textContent = 'Record';
-                recordBtn.querySelector('i').className = 'fas fa-video';
-                recordIndicator.style.display = 'none';
-                sendMessage({ type: 'recording-status', active: false });
-            }
-
-            function updateRecordTimer() {
-                const secs = Math.floor((Date.now() - recordStartTime) / 1000);
-                const m = Math.floor(secs / 60).toString().padStart(2, '0');
-                const s = (secs % 60).toString().padStart(2, '0');
-                recordTimerEl.textContent = `${m}:${s}`;
-            }
-
-            const pageTabsList = document.getElementById('page-tabs-list');
-            const addPageBtn = document.getElementById('add-page-btn');
-            if (role !== 'teacher') addPageBtn.style.display = 'none';
-
-            function renderPageTabs() {
-                pageTabsList.innerHTML = '';
-                pages.forEach(p => {
-                    const tab = document.createElement('div');
-                    tab.className = 'page-tab' + (p.id === currentPageId ? ' active' : '');
-                    tab.dataset.pageId = p.id;
-                    tab.innerHTML = `<span class="page-tab-name">${p.name}</span>` +
-                        (role === 'teacher' && pages.length > 1 ? `<i class="fas fa-times page-tab-close"></i>` : '');
-                    tab.addEventListener('click', (e) => {
-                        if (e.target.closest('.page-tab-close')) return;
-                        switchToPage(p.id, false);
-                    });
-                    if (role === 'teacher') {
-                        tab.addEventListener('dblclick', () => {
-                            const newName = prompt('Rename page:', p.name);
-                            if (newName && newName.trim()) {
-                                p.name = newName.trim().slice(0, 24);
-                                renderPageTabs();
-                                sendMessage({ type: 'pages-structure', pages: pages.map(x => ({ id: x.id, name: x.name })), currentPageId });
-                            }
-                        });
-                        const closeBtn = tab.querySelector('.page-tab-close');
-                        if (closeBtn) closeBtn.addEventListener('click', (e) => { e.stopPropagation(); deletePage(p.id); });
-                    }
-                    pageTabsList.appendChild(tab);
-                });
-            }
-
-            function saveCurrentPageSnapshot() {
-                if (!excalidrawAPI) return;
-                const page = pages.find(p => p.id === currentPageId);
-                if (page) {
-                    page.elements = excalidrawAPI.getSceneElements();
-                    page.bg = excalidrawAPI.getAppState().viewBackgroundColor;
+            });
+            
+            document.getElementById('insert-math').addEventListener('click', () => {
+                const value = document.getElementById('math-input').value;
+                if (value && excalidrawAPI) {
+                    const e = excalidrawAPI.getSceneElements();
+                    e.push(createEl('text', 150, 150, 200, 50, { text: value, fontSize: 24, strokeColor: "#111827" }));
+                    excalidrawAPI.updateScene({ elements: e });
+                    sendMessage({ type: 'scene-update', elements: e, appState: { viewBackgroundColor: excalidrawAPI.getAppState().viewBackgroundColor } });
                 }
-            }
+                document.getElementById('math-modal').classList.remove('active');
+            });
 
-            function switchToPage(pageId, remote) {
-                if (pageId === currentPageId && !remote) return;
-                if (!remote) saveCurrentPageSnapshot();
-                currentPageId = pageId;
-                const page = pages.find(p => p.id === pageId);
-                if (page && excalidrawAPI) {
-                    isRemoteUpdate = true;
-                    excalidrawAPI.updateScene({ elements: page.elements || [], appState: { viewBackgroundColor: page.bg || '#F7F7F9' } });
-                    setTimeout(forceSyncScene, 50);
-                }
-                renderPageTabs();
-                if (!remote && role === 'teacher') {
-                    sendMessage({ type: 'page-switch', pageId, elements: page ? page.elements : [], bg: page ? page.bg : '#F7F7F9' });
-                }
-            }
-
-            function addNewPage() {
-                saveCurrentPageSnapshot();
-                const id = 'page-' + Date.now();
-                const pg = { id, name: `Page ${pages.length + 1}`, elements: [], bg: '#F7F7F9' };
-                pages.push(pg);
-                currentPageId = id;
-                if (excalidrawAPI) {
-                    isRemoteUpdate = true;
-                    excalidrawAPI.updateScene({ elements: [], appState: { viewBackgroundColor: '#F7F7F9' } });
-                }
-                renderPageTabs();
-                sendMessage({ type: 'pages-structure', pages: pages.map(x => ({ id: x.id, name: x.name })), currentPageId });
-                sendMessage({ type: 'page-switch', pageId: id, elements: [], bg: '#F7F7F9' });
-            }
-
-            function deletePage(pageId) {
-                if (pages.length <= 1) return;
-                const idx = pages.findIndex(p => p.id === pageId);
-                if (idx === -1) return;
-                const wasActive = pageId === currentPageId;
-                pages.splice(idx, 1);
-                if (wasActive) {
-                    const next = pages[Math.max(0, idx - 1)];
-                    currentPageId = next.id;
-                    if (excalidrawAPI) {
-                        isRemoteUpdate = true;
-                        excalidrawAPI.updateScene({ elements: next.elements || [], appState: { viewBackgroundColor: next.bg || '#F7F7F9' } });
-                    }
-                }
-                renderPageTabs();
-                sendMessage({ type: 'pages-structure', pages: pages.map(x => ({ id: x.id, name: x.name })), currentPageId });
-                if (wasActive) {
-                    const p = pages.find(x => x.id === currentPageId);
-                    sendMessage({ type: 'page-switch', pageId: currentPageId, elements: p ? p.elements : [], bg: p ? p.bg : '#F7F7F9' });
-                }
-            }
-
-            addPageBtn.addEventListener('click', addNewPage);
-            document.getElementById('page-tabs-bar').style.display = 'flex';
-            renderPageTabs();
-
-            const graphModal = document.getElementById('graph-modal');
-            const graphCanvas = document.getElementById('graph-canvas');
-            const graphCtx = graphCanvas.getContext('2d');
-            const graphReadout = document.getElementById('graph-readout');
-            const graphError = document.getElementById('graph-error');
-
+            // Graph modal
             document.getElementById('btn-graph').addEventListener('click', () => {
-                deselectTools();
-                graphModal.style.display = 'flex';
+                document.getElementById('graph-modal').classList.add('active');
                 requestAnimationFrame(drawGraph);
             });
-            document.getElementById('cancel-graph-btn').addEventListener('click', () => { graphModal.style.display = 'none'; });
-
-            document.querySelectorAll('.graph-tab').forEach(tab => {
-                tab.addEventListener('click', () => {
-                    document.querySelectorAll('.graph-tab').forEach(t => t.classList.remove('active'));
-                    document.querySelectorAll('.graph-fields').forEach(f => f.classList.remove('active'));
-                    tab.classList.add('active');
-                    graphMode = tab.dataset.mode;
-                    document.getElementById(`fields-${graphMode}`).classList.add('active');
+            
+            document.getElementById('close-graph').addEventListener('click', () => {
+                document.getElementById('graph-modal').classList.remove('active');
+            });
+            
+            document.querySelectorAll('#graph-modal .role-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('#graph-modal .role-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    graphMode = btn.dataset.graph;
                     drawGraph();
                 });
             });
-
+            
             document.querySelectorAll('#graph-modal input').forEach(inp => {
                 inp.addEventListener('input', drawGraph);
             });
@@ -1700,360 +1013,306 @@
                     .replace(/\bexp\(/g, 'Math.exp(')
                     .replace(/\babs\(/g, 'Math.abs(')
                     .replace(/\bx\b/g, '(' + xVal + ')');
-                if (!/^[0-9+\-*/().,\sA-Za-z]*$/.test(e)) throw new Error('Invalid characters');
+                if (!/^[0-9+\-*/().,\sA-Za-z]*$/.test(e)) throw new Error('Invalid');
                 return Function('"use strict"; return (' + e + ')')();
             }
 
             function drawGraph() {
-                const wrap = graphCanvas.parentElement;
-                const w = wrap.clientWidth || 580, h = 260;
+                const canvas = document.getElementById('graph-canvas');
+                const ctx = canvas.getContext('2d');
+                const wrap = canvas.parentElement;
+                const w = wrap.clientWidth || 500, h = 240;
                 const dpr = window.devicePixelRatio || 1;
-                graphCanvas.width = w * dpr;
-                graphCanvas.height = h * dpr;
-                graphCanvas.style.width = w + 'px';
-                graphCanvas.style.height = h + 'px';
-                graphCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
-                graphCtx.clearRect(0, 0, w, h);
-                graphError.textContent = '';
-                graphReadout.textContent = '';
+                canvas.width = w * dpr;
+                canvas.height = h * dpr;
+                canvas.style.width = w + 'px';
+                canvas.style.height = h + 'px';
+                ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+                ctx.clearRect(0, 0, w, h);
+                document.getElementById('graph-error').textContent = '';
 
                 let points = [];
                 let xMin = -10, xMax = 10, yMin = -2, yMax = 2;
+                
                 try {
                     if (graphMode === 'function') {
-                        xMin = parseFloat(document.getElementById('fn-xmin').value) || -10;
-                        xMax = parseFloat(document.getElementById('fn-xmax').value) || 10;
+                        xMin = parseFloat(document.getElementById('fn-min').value) || -10;
+                        xMax = parseFloat(document.getElementById('fn-max').value) || 10;
                         const expr = document.getElementById('fn-expr').value;
-                        const steps = 200;
-                        for (let i = 0; i <= steps; i++) {
-                            const x = xMin + (xMax - xMin) * i / steps;
+                        for (let i = 0; i <= 200; i++) {
+                            const x = xMin + (xMax - xMin) * i / 200;
                             const y = safeEvalExpr(expr, x);
-                            if (!isFinite(y) || isNaN(y)) continue;
-                            points.push({ x, y });
-                            if (y < yMin) yMin = y;
-                            if (y > yMax) yMax = y;
+                            if (isFinite(y) && !isNaN(y)) points.push({ x, y });
                         }
-                        graphReadout.textContent = `y = ${expr}, x ∈ [${xMin}, ${xMax}]`;
                     } else if (graphMode === 'projectile') {
-                        const u = parseFloat(document.getElementById('pr-u').value) || 20;
-                        const ang = parseFloat(document.getElementById('pr-angle').value) || 45;
-                        const g = parseFloat(document.getElementById('pr-g').value) || 9.8;
-                        const rad = ang * Math.PI / 180;
-                        const T = 2 * u * Math.sin(rad) / g;
-                        const steps = 150;
-                        for (let i = 0; i <= steps; i++) {
-                            const t = T * i / steps;
-                            const x = u * Math.cos(rad) * t;
-                            const y = u * Math.sin(rad) * t - 0.5 * g * t * t;
-                            points.push({ x, y });
-                            if (x > xMax) xMax = x;
-                            if (y > yMax) yMax = y;
-                            if (y < yMin) yMin = y;
+                        const u = 20, ang = 45 * Math.PI / 180, g = 9.8;
+                        const T = 2 * u * Math.sin(ang) / g;
+                        for (let i = 0; i <= 150; i++) {
+                            const t = T * i / 150;
+                            points.push({ x: u * Math.cos(ang) * t, y: u * Math.sin(ang) * t - 0.5 * g * t * t });
                         }
                         xMin = 0; yMin = 0;
-                        graphReadout.textContent = `Range: ${(u * u * Math.sin(2 * rad) / g).toFixed(1)}m, H: ${(u * u * Math.sin(rad) * Math.sin(rad) / (2 * g)).toFixed(1)}m`;
                     } else if (graphMode === 'shm') {
-                        const A = parseFloat(document.getElementById('shm-a').value) || 1;
-                        const w2 = parseFloat(document.getElementById('shm-w').value) || 2;
-                        const phi = parseFloat(document.getElementById('shm-phi').value) || 0;
-                        xMin = 0;
+                        const A = 1, w2 = 2, phi = 0;
                         xMax = 2 * Math.PI / w2 * 2;
-                        const steps = 200;
-                        for (let i = 0; i <= steps; i++) {
-                            const x = xMin + (xMax - xMin) * i / steps;
-                            const y = A * Math.cos(w2 * x + phi);
-                            points.push({ x, y });
+                        for (let i = 0; i <= 200; i++) {
+                            const x = xMin + (xMax - xMin) * i / 200;
+                            points.push({ x, y: A * Math.cos(w2 * x + phi) });
                         }
-                        yMin = -Math.abs(A) - 0.2;
-                        yMax = Math.abs(A) + 0.2;
-                        graphReadout.textContent = `A=${A}, ω=${w2} rad/s, T=${(2 * Math.PI / w2).toFixed(2)}s`;
+                        yMin = -1.2; yMax = 1.2;
                     }
                 } catch (err) {
-                    graphError.textContent = 'Error: ' + err.message;
+                    document.getElementById('graph-error').textContent = err.message;
                     return;
                 }
 
                 if (!points.length) {
-                    graphError.textContent = 'No points to plot.';
+                    document.getElementById('graph-error').textContent = 'No points to plot';
                     return;
                 }
+
                 const pad = 36;
                 const sx = (x) => pad + (x - xMin) / (xMax - xMin) * (w - 2 * pad);
                 const sy = (y) => h - pad - (y - yMin) / (yMax - yMin) * (h - 2 * pad);
 
-                graphCtx.strokeStyle = 'rgba(255,255,255,0.07)';
-                graphCtx.lineWidth = 1;
+                // Grid
+                ctx.strokeStyle = 'rgba(255,255,255,0.1)';
+                ctx.lineWidth = 1;
                 for (let i = 0; i <= 5; i++) {
                     const gx = pad + (w - 2 * pad) * i / 5;
                     const gy = pad + (h - 2 * pad) * i / 5;
-                    graphCtx.beginPath();
-                    graphCtx.moveTo(gx, pad);
-                    graphCtx.lineTo(gx, h - pad);
-                    graphCtx.stroke();
-                    graphCtx.beginPath();
-                    graphCtx.moveTo(pad, gy);
-                    graphCtx.lineTo(w - pad, gy);
-                    graphCtx.stroke();
+                    ctx.beginPath(); ctx.moveTo(gx, pad); ctx.lineTo(gx, h - pad); ctx.stroke();
+                    ctx.beginPath(); ctx.moveTo(pad, gy); ctx.lineTo(w - pad, gy); ctx.stroke();
                 }
-                graphCtx.strokeStyle = 'rgba(255,255,255,0.3)';
+
+                // Axes
+                ctx.strokeStyle = 'rgba(255,255,255,0.3)';
                 const x0 = sx(0), y0 = sy(0);
-                if (x0 >= pad && x0 <= w - pad) {
-                    graphCtx.beginPath();
-                    graphCtx.moveTo(x0, pad);
-                    graphCtx.lineTo(x0, h - pad);
-                    graphCtx.stroke();
-                }
-                if (y0 >= pad && y0 <= h - pad) {
-                    graphCtx.beginPath();
-                    graphCtx.moveTo(pad, y0);
-                    graphCtx.lineTo(w - pad, y0);
-                    graphCtx.stroke();
-                }
+                if (x0 >= pad && x0 <= w - pad) { ctx.beginPath(); ctx.moveTo(x0, pad); ctx.lineTo(x0, h - pad); ctx.stroke(); }
+                if (y0 >= pad && y0 <= h - pad) { ctx.beginPath(); ctx.moveTo(pad, y0); ctx.lineTo(w - pad, y0); ctx.stroke(); }
 
-                graphCtx.fillStyle = 'rgba(255,255,255,0.6)';
-                graphCtx.font = '10px JetBrains Mono, monospace';
-                graphCtx.textAlign = 'center';
-                for (let i = 0; i <= 5; i++) {
-                    const xv = xMin + (xMax - xMin) * i / 5;
-                    const yv = yMin + (yMax - yMin) * i / 5;
-                    graphCtx.fillText(xv.toFixed(1), pad + (w - 2 * pad) * i / 5, h - pad + 14);
-                    graphCtx.textAlign = 'right';
-                    graphCtx.fillText(yv.toFixed(1), pad - 4, h - pad - (h - 2 * pad) * i / 5 + 4);
-                    graphCtx.textAlign = 'center';
-                }
-
-                graphCtx.beginPath();
-                graphCtx.strokeStyle = '#7c6af7';
-                graphCtx.lineWidth = 2.5;
-                graphCtx.shadowColor = 'rgba(124,106,247,0.8)';
-                graphCtx.shadowBlur = 8;
+                // Curve
+                ctx.beginPath();
+                ctx.strokeStyle = '#8B5CF6';
+                ctx.lineWidth = 2.5;
+                ctx.shadowColor = 'rgba(139, 92, 246, 0.5)';
+                ctx.shadowBlur = 8;
                 let first = true;
                 points.forEach(pt => {
                     const px = sx(pt.x), py = sy(pt.y);
                     if (py < -50 || py > h + 50) { first = true; return; }
-                    if (first) { graphCtx.moveTo(px, py); first = false; }
-                    else { graphCtx.lineTo(px, py); }
+                    if (first) { ctx.moveTo(px, py); first = false; }
+                    else ctx.lineTo(px, py);
                 });
-                graphCtx.stroke();
-                graphCtx.shadowBlur = 0;
+                ctx.stroke();
+                ctx.shadowBlur = 0;
             }
 
-            document.getElementById('insert-graph-btn').addEventListener('click', () => {
-                if (!excalidrawAPI || !graphCanvas) return;
+            document.getElementById('insert-graph').addEventListener('click', () => {
+                if (!excalidrawAPI) return;
                 drawGraph();
-                const imgW = 560, imgH = 280, framePadding = 16, frameX = 100, frameY = 100;
-                const frameW = imgW + framePadding * 2, frameH = imgH + framePadding * 2;
+                const canvas = document.getElementById('graph-canvas');
+                const imgW = 500, imgH = 240;
                 const elements = excalidrawAPI.getSceneElements();
-                elements.push(createEl('rectangle', frameX, frameY, frameW, frameH, {
-                    backgroundColor: "#FFFFFF",
-                    strokeColor: "#d4d4d8",
-                    strokeWidth: 1,
-                    fillStyle: "solid",
-                    roughness: 0,
-                    roundness: { type: 3 },
-                    opacity: 100
+                
+                // White background frame
+                elements.push(createEl('rectangle', 100, 100, imgW + 32, imgH + 32, {
+                    backgroundColor: "#FFFFFF", strokeColor: "#E5E7EB", strokeWidth: 1,
+                    fillStyle: "solid", roughness: 0, roundness: { type: 3 }
                 }));
-                elements.push(createEl('image', frameX + framePadding, frameY + framePadding, imgW, imgH, {
-                    type: 'image',
-                    fileId: null,
-                    status: 'saved',
-                    scale: [1, 1]
+                
+                // Graph image
+                elements.push(createEl('image', 116, 116, imgW, imgH, {
+                    type: 'image', fileId: null, status: 'saved', scale: [1, 1]
                 }));
+                
                 excalidrawAPI.updateScene({ elements });
-                setTimeout(forceSyncScene, 100);
-                graphModal.style.display = 'none';
+                sendMessage({ type: 'scene-update', elements, appState: { viewBackgroundColor: excalidrawAPI.getAppState().viewBackgroundColor } });
+                document.getElementById('graph-modal').classList.remove('active');
             });
 
-            isLocked = false;
-            lockBtn.addEventListener('click', () => {
-                isLocked = !isLocked;
-                lockBtn.classList.toggle('active', isLocked);
-                lockBtn.querySelector('i').className = isLocked ? 'fas fa-lock' : 'fas fa-lock-open';
-                lockedBanner.style.display = 'none';
-                sendMessage({ type: 'set-lock', locked: isLocked });
-            });
-
-            document.getElementById('btn-theme').addEventListener('click', () => {
-                currentTheme = currentTheme === 'light' ? 'dark' : 'light';
-                if (excalidrawAPI) excalidrawAPI.updateScene({ appState: { theme: currentTheme } });
-            });
-
-            const addStudentModal = document.getElementById('add-student-modal');
-            const emailInput = document.getElementById('email-input');
-            const emailList = document.getElementById('email-list');
-
-            addStudentBtn.addEventListener('click', () => { addStudentModal.style.display = 'flex'; });
-            document.getElementById('cancel-add-btn').addEventListener('click', () => {
-                addStudentModal.style.display = 'none';
-                emailTags = [];
-                updateEmailList();
-                emailInput.value = '';
-            });
-            emailInput.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter' || e.key === ',') {
-                    e.preventDefault();
-                    parseAndAddEmails();
-                }
-            });
-            function parseAndAddEmails() {
-                const emails = emailInput.value.split(/[,\s]+/).filter(e => e.trim());
-                emails.forEach(em => {
-                    const c = em.trim().toLowerCase();
-                    if (c.includes('@') && !emailTags.includes(c)) emailTags.push(c);
-                });
-                updateEmailList();
-                emailInput.value = '';
-            }
-            function updateEmailList() {
-                if (emailTags.length === 0) {
-                    emailList.innerHTML = '<span style="color:var(--text-muted);font-size:.75rem;font-weight:600;">No emails added yet</span>';
+            // Spotlight
+            document.getElementById('btn-spotlight').addEventListener('click', () => {
+                isSpotlightActive = !isSpotlightActive;
+                document.getElementById('btn-spotlight').classList.toggle('active', isSpotlightActive);
+                document.getElementById('spotlight-overlay').classList.toggle('active', isSpotlightActive);
+                
+                if (isSpotlightActive && role === 'teacher') {
+                    document.addEventListener('mousemove', handleSpotlight);
                 } else {
-                    emailList.innerHTML = emailTags.map((em, i) =>
-                        `<span class="email-tag">${em} <i class="fas fa-times" onclick="window.removeEmail(${i})"></i></span>`
-                    ).join('');
+                    document.removeEventListener('mousemove', handleSpotlight);
+                }
+            });
+
+            function handleSpotlight(e) {
+                const now = Date.now();
+                if (now - lastSpotlightSend > 33) {
+                    lastSpotlightSend = now;
+                    document.getElementById('spotlight-overlay').style.setProperty('--sx', e.clientX + 'px');
+                    document.getElementById('spotlight-overlay').style.setProperty('--sy', e.clientY + 'px');
+                    sendMessage({ type: 'spotlight-update', x: e.clientX, y: e.clientY });
                 }
             }
-            window.removeEmail = (i) => { emailTags.splice(i, 1); updateEmailList(); };
-            updateEmailList();
 
-            document.getElementById('send-invites-btn').addEventListener('click', () => {
-                parseAndAddEmails();
-                if (emailTags.length === 0) {
-                    alert('Please add at least one email address');
+            // Recording
+            document.getElementById('btn-record').addEventListener('click', async () => {
+                if (mediaRecorder && mediaRecorder.state === 'recording') {
+                    mediaRecorder.stop();
+                    document.getElementById('recording-indicator').classList.remove('active');
                     return;
                 }
-                sendMessage({
-                    type: 'email-invites',
-                    room: roomInput.value,
-                    emails: emailTags,
-                    inviteUrl: `${window.location.origin}${window.location.pathname}?room=${encodeURIComponent(roomInput.value)}`,
-                    teacherName: nameInput.value
-                });
-                alert('Invite request sent to server!');
-                addStudentModal.style.display = 'none';
-                emailTags = [];
-                updateEmailList();
-                emailInput.value = '';
-            });
-
-            let resizeTimer;
-            window.addEventListener('resize', () => {
-                clearTimeout(resizeTimer);
-                resizeTimer = setTimeout(() => {
-                    closeAllPopups();
-                    if (graphModal.style.display === 'flex') drawGraph();
-                }, 200);
-            });
-
-            const root = ReactDOM.createRoot(document.getElementById('root'));
-            root.render(React.createElement(Excalidraw, {
-                theme: 'light',
-                initialData: {
-                    appState: { viewBackgroundColor: '#F7F7F9', gridSize: 0, theme: 'light' },
-                    elements: [],
-                },
-                onChange: (elements, appState) => {
-                    if (isRemoteUpdate) { isRemoteUpdate = false; return; }
-                    const now = Date.now();
-                    if (now - lastSendTime >= 50) {
-                        lastSendTime = now;
-                        sendMessage({
-                            type: 'scene-update',
-                            elements,
-                            appState: { viewBackgroundColor: appState.viewBackgroundColor }
-                        });
-                    }
-                },
-                excalidrawAPI: (api) => { excalidrawAPI = api; },
-            }));
-
-            function connect() {
-                statusDot.className = 'connecting';
-                socket = new WebSocket(window.PRIMEBOARD_RELAY_URL);
-                socket.addEventListener('open', () => {
-                    statusDot.className = 'connected';
-                    sendMessage({ type: 'join', room, role, name });
-                });
-                socket.addEventListener('message', (event) => {
-                    const data = JSON.parse(event.data);
-                    if (data.type === 'state' || data.type === 'lock-changed') {
-                        isLocked = data.locked;
-                        if (role === 'student') {
-                            lockedBanner.style.display = isLocked ? 'flex' : 'none';
-                            if (excalidrawAPI) {
-                                excalidrawAPI.updateScene({ appState: { viewModeEnabled: isLocked } });
-                            }
-                        }
-                    }
-                    if (data.type === 'scene-update' && excalidrawAPI) {
-                        isRemoteUpdate = true;
-                        excalidrawAPI.updateScene({ elements: data.elements });
-                        if (data.appState && data.appState.viewBackgroundColor) {
-                            excalidrawAPI.updateScene({ appState: { viewBackgroundColor: data.appState.viewBackgroundColor } });
-                        }
-                    }
-                    if (data.type === 'roster' && data.users) {
-                        studentCount.textContent = data.users.length;
-                    }
-                    if (data.type === 'timer-update') {
-                        timeLeft = data.timeLeft;
-                        updateTimerDisplay();
-                        if (data.action === 'start' && !isTimerRunning) startTimerLocal();
-                        if (data.action === 'pause') pauseTimerLocal();
-                        if (data.action === 'reset') {
-                            pauseTimerLocal();
-                            timeLeft = data.timeLeft;
-                            updateTimerDisplay();
-                        }
-                    }
-                    if (data.type === 'spotlight-update') {
-                        if (data.active) {
-                            spotlightOverlay.style.display = 'block';
-                            if (role !== 'teacher') spotlightHandle.style.display = 'flex';
-                            spotlightOverlay.style.setProperty('--sx', `${data.x}px`);
-                            spotlightOverlay.style.setProperty('--sy', `${data.y}px`);
-                        } else {
-                            spotlightOverlay.style.display = 'none';
-                            spotlightHandle.style.display = 'none';
-                        }
-                    }
-                    if (data.type === 'pages-structure' && role === 'student') {
-                        data.pages.forEach(p => {
-                            if (!pages.find(x => x.id === p.id)) {
-                                pages.push({ id: p.id, name: p.name, elements: [], bg: '#F7F7F9' });
-                            } else {
-                                const pg = pages.find(x => x.id === p.id);
-                                if (pg) pg.name = p.name;
-                            }
-                        });
-                        pages = pages.filter(p => data.pages.find(x => x.id === p.id));
-                        renderPageTabs();
-                    }
-                    if (data.type === 'page-switch' && role === 'student') {
-                        const page = pages.find(p => p.id === data.pageId);
-                        if (page) {
-                            page.elements = data.elements || [];
-                            page.bg = data.bg || '#F7F7F9';
-                        } else {
-                            pages.push({ id: data.pageId, name: data.pageId, elements: data.elements || [], bg: data.bg || '#F7F7F9' });
-                        }
-                        switchToPage(data.pageId, true);
-                    }
-                });
-                socket.addEventListener('close', () => {
-                    statusDot.className = 'connecting';
-                    setTimeout(connect, 2000);
-                });
-                socket.addEventListener('error', () => {
-                    statusDot.className = 'error';
-                });
-            }
-            function sendMessage(payload) {
-                if (socket && socket.readyState === WebSocket.OPEN) {
-                    socket.send(JSON.stringify(payload));
+                
+                try {
+                    recordStream = await navigator.mediaDevices.getDisplayMedia({ video: { cursor: 'always' }, audio: true });
+                    recordedChunks = [];
+                    mediaRecorder = new MediaRecorder(recordStream);
+                    
+                    mediaRecorder.ondataavailable = (e) => { if (e.data.size > 0) recordedChunks.push(e.data); };
+                    mediaRecorder.onstop = () => {
+                        const blob = new Blob(recordedChunks, { type: 'video/webm' });
+                        const url = URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = `PrimeBoard-${room}-${Date.now()}.webm`;
+                        a.click();
+                        URL.revokeObjectURL(url);
+                    };
+                    
+                    mediaRecorder.start(1000);
+                    recStart = Date.now();
+                    document.getElementById('recording-indicator').classList.add('active');
+                    recInterval = setInterval(() => {
+                        const s = Math.floor((Date.now() - recStart) / 1000);
+                        document.getElementById('rec-timer').textContent = `${Math.floor(s/60).toString().padStart(2,'0')}:${(s%60).toString().padStart(2,'0')}`;
+                    }, 1000);
+                } catch (err) {
+                    alert('Recording cancelled');
                 }
+            });
+
+            // Undo/Redo
+            document.getElementById('btn-undo').addEventListener('click', () => { if (excalidrawAPI) excalidrawAPI.undo(); });
+            document.getElementById('btn-redo').addEventListener('click', () => { if (excalidrawAPI) excalidrawAPI.redo(); });
+
+            // Share button
+            document.getElementById('btn-share').addEventListener('click', () => {
+                const url = `${window.location.origin}${window.location.pathname}?room=${encodeURIComponent(room)}`;
+                navigator.clipboard.writeText(url).then(() => {
+                    alert('Invite link copied to clipboard!');
+                });
+            });
+
+            // Grid options
+            document.querySelectorAll('.grid-option').forEach(opt => {
+                if (opt.parentElement.classList.contains('grid-options')) {
+                    opt.addEventListener('click', () => {
+                        document.querySelectorAll('.grid-options .grid-option').forEach(o => o.classList.remove('active'));
+                        opt.classList.add('active');
+                        if (excalidrawAPI) {
+                            const grid = opt.dataset.grid;
+                            const sizes = { none: 0, dot: 20, square: 20, graph: 20, hybrid: 20, diamond: 20 };
+                            excalidrawAPI.updateScene({ appState: { gridSize: sizes[grid] || 0 } });
+                        }
+                    });
+                }
+            });
+
+            // Close modals on outside click
+            document.querySelectorAll('.modal-overlay').forEach(modal => {
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) modal.classList.remove('active');
+                });
+            });
+
+            // Close panels on outside click
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('#pen-popup') && !e.target.closest('#btn-pen')) {
+                    document.getElementById('pen-popup').classList.remove('active');
+                }
+                if (!e.target.closest('#right-panel') && !e.target.closest('#btn-bg')) {
+                    document.getElementById('right-panel').classList.remove('active');
+                }
+            });
+        }
+
+        // Pen definitions
+        const PEN_TYPES = {
+            writing: [
+                { id: 'fine-liner', name: 'Fine Liner', desc: '0.3mm', strokeWidth: 1, roughness: 0, opacity: 100, fillStyle: 'solid', icon: 'pen-nib' },
+                { id: 'ballpoint', name: 'Ballpoint', desc: '0.7mm', strokeWidth: 2, roughness: 0, opacity: 100, fillStyle: 'solid', icon: 'pen' },
+                { id: 'gel-pen', name: 'Gel Pen', desc: '0.5mm', strokeWidth: 1.5, roughness: 0, opacity: 100, fillStyle: 'solid', icon: 'pen-fancy' },
+                { id: 'pencil', name: 'Pencil', desc: 'Sketch', strokeWidth: 1.5, roughness: 2, opacity: 85, fillStyle: 'solid', icon: 'pencil-alt' },
+            ],
+            art: [
+                { id: 'fountain', name: 'Fountain', desc: 'Elegant', strokeWidth: 2.5, roughness: 0.3, opacity: 100, fillStyle: 'solid', icon: 'feather-alt' },
+                { id: 'brush', name: 'Brush', desc: 'Soft', strokeWidth: 4, roughness: 1, opacity: 85, fillStyle: 'solid', icon: 'paint-brush' },
+                { id: 'calligraphy', name: 'Calligraphy', desc: 'Angled', strokeWidth: 3, roughness: 0, opacity: 100, fillStyle: 'solid', icon: 'signature' },
+                { id: 'ink', name: 'Dip Ink', desc: 'Traditional', strokeWidth: 2, roughness: 1.5, opacity: 95, fillStyle: 'solid', icon: 'pen-nib' },
+            ],
+            highlight: [
+                { id: 'marker', name: 'Marker', desc: 'Bold', strokeWidth: 6, roughness: 0, opacity: 70, fillStyle: 'solid', icon: 'highlighter' },
+                { id: 'highlighter', name: 'Highlight', desc: 'Translucent', strokeWidth: 16, roughness: 0, opacity: 30, fillStyle: 'solid', icon: 'highlighter' },
+                { id: 'crayon', name: 'Crayon', desc: 'Waxy', strokeWidth: 5, roughness: 2.5, opacity: 80, fillStyle: 'solid', icon: 'palette' },
+                { id: 'chalk', name: 'Chalk', desc: 'Dusty', strokeWidth: 3, roughness: 3, opacity: 75, fillStyle: 'solid', icon: 'chalkboard' },
+            ]
+        };
+
+        function renderPenGrids() {
+            Object.keys(PEN_TYPES).forEach(category => {
+                const grid = document.getElementById(`pen-grid-${category}`);
+                if (!grid) return;
+                grid.innerHTML = '';
+                PEN_TYPES[category].forEach(pen => {
+                    const item = document.createElement('div');
+                    item.className = 'pen-item' + (pen.id === currentPenId ? ' active' : '');
+                    item.innerHTML = `
+                        <div class="pen-preview"><i class="fas fa-${pen.icon}" style="font-size:18px;"></i></div>
+                        <div class="pen-info">
+                            <div class="pen-name">${pen.name}</div>
+                            <div class="pen-desc">${pen.desc}</div>
+                        </div>
+                    `;
+                    item.addEventListener('click', () => selectPen(pen));
+                    grid.appendChild(item);
+                });
+            });
+        }
+
+        function selectPen(pen) {
+            currentPenId = pen.id;
+            if (excalidrawAPI) {
+                excalidrawAPI.updateScene({
+                    appState: {
+                        currentItemStrokeWidth: pen.strokeWidth,
+                        currentItemRoughness: pen.roughness,
+                        currentItemOpacity: pen.opacity,
+                        currentItemFillStyle: pen.fillStyle,
+                    }
+                });
+                excalidrawAPI.setActiveTool({ type: 'freedraw' });
             }
-            connect();
+            document.querySelectorAll('.pen-item').forEach(el => {
+                el.classList.toggle('active', el.querySelector('.pen-name').textContent === pen.name);
+            });
+        }
+
+        function initColorGrid() {
+            const colors = ['#F3E8FF', '#FEF9C3', '#FED7AA', '#FECACA', '#DBEAFE', '#D1FAE5', '#FFFFFF', '#F3F4F6', '#E5E7EB', '#111827'];
+            const grid = document.getElementById('color-grid');
+            colors.forEach((color, i) => {
+                const swatch = document.createElement('div');
+                swatch.className = 'color-swatch' + (i === 0 ? ' active' : '');
+                swatch.style.backgroundColor = color;
+                swatch.addEventListener('click', () => {
+                    document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('active'));
+                    swatch.classList.add('active');
+                    if (excalidrawAPI) {
+                        excalidrawAPI.updateScene({ appState: { viewBackgroundColor: color } });
+                        sendMessage({ type: 'scene-update', elements: excalidrawAPI.getSceneElements(), appState: { viewBackgroundColor: color } });
+                    }
+                });
+                grid.appendChild(swatch);
+            });
         }
     </script>
 </body>
