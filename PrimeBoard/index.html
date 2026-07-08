@@ -89,7 +89,7 @@
             border-right: 1px solid var(--glass-border);
             backdrop-filter: blur(20px) saturate(1.1);
             z-index: 1100;
-            display: flex;
+            display: none;
             flex-direction: column;
             align-items: center;
             padding: 10px 0;
@@ -638,11 +638,14 @@
             font-weight: 700;
             font-size: 0.8rem;
             cursor: pointer;
+            transition: all 0.2s ease;
         }
+        .role-toggle button:hover { transform: scale(1.02); }
         .role-toggle button.active {
             border-color: var(--accent-primary);
             color: var(--text-primary);
             background: rgba(79, 70, 229, 0.1);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
         }
         
         #enter-btn {
@@ -657,7 +660,9 @@
             background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
             color: #fff;
             box-shadow: 0 4px 20px rgba(79, 70, 229, 0.3);
+            transition: all 0.2s ease;
         }
+        #enter-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(79, 70, 229, 0.4); }
         #setup-error { color: var(--accent-danger); font-size: 0.75rem; margin-top: 12px; min-height: 1.2em; font-weight: 700; }
 
         #add-student-modal, #toolkit-modal, #math-modal, #graph-modal {
@@ -918,7 +923,7 @@
         </div>
     </div>
 
-    <div id="sidebar" style="display:none;">
+    <div id="sidebar">
         <div class="sb-brand" title="PrimeBoard"><i class="fas fa-atom"></i></div>
         
         <div class="sb-room">
@@ -1116,6 +1121,21 @@
         import * as ExcalidrawLib from "https://esm.sh/@excalidraw/excalidraw@0.18.0/dist/dev/index.js?external=react,react-dom";
         const { Excalidraw } = ExcalidrawLib;
 
+        // Global variables
+        let excalidrawAPI = null;
+        let isRemoteUpdate = false;
+        let lastSendTime = 0;
+        let currentPenId = 'ballpoint';
+        let socket = null;
+        let isLocked = false;
+        let pages = [{ id: 'page-1', name: 'Page 1', elements: [], bg: '#FFFFFF' }];
+        let currentPageId = 'page-1';
+        let timerInterval = null, timeLeft = 300, isTimerRunning = false;
+        let mediaRecorder = null, recordedChunks = [], recordStream = null, recStart = 0, recInterval = null;
+        let emailTags = [];
+        let graphMode = 'function';
+        let isSpotlightActive = false, lastSpotlightSend = 0;
+
         function randomRoomCode() {
             const w = ['MAPLE','RIVER','COMET','TIGER','ORBIT','PRISM','EAGLE','DELTA'][Math.floor(Math.random()*8)];
             return `${w}-${Math.floor(100+Math.random()*900)}`;
@@ -1229,6 +1249,7 @@
             document.addEventListener('mouseup', endDrag);
         }
 
+        // Setup event listeners
         const setupScreen = document.getElementById('setup-screen');
         const roleTeacherBtn = document.getElementById('role-teacher');
         const roleStudentBtn = document.getElementById('role-student');
@@ -1247,29 +1268,40 @@
             roleTeacherBtn.classList.remove('active');
             roomLabel.textContent = 'Class room code (from your invite link)';
         }
+
         roleTeacherBtn.addEventListener('click', () => {
             selectedRole = 'teacher';
             roleTeacherBtn.classList.add('active');
             roleStudentBtn.classList.remove('active');
         });
+
         roleStudentBtn.addEventListener('click', () => {
             selectedRole = 'student';
             roleStudentBtn.classList.add('active');
             roleTeacherBtn.classList.remove('active');
         });
+
         enterBtn.addEventListener('click', () => {
             const name = nameInput.value.trim();
             let room = roomInput.value.trim().toUpperCase().replace(/\s+/g, '-');
-            if (!name) { setupError.textContent = 'Please enter your name.'; return; }
-            if (selectedRole === 'teacher' && !room) room = randomRoomCode();
-            if (!room) { setupError.textContent = 'Please enter the room code.'; return; }
+            if (!name) { 
+                setupError.textContent = 'Please enter your name.'; 
+                return; 
+            }
+            if (selectedRole === 'teacher' && !room) {
+                room = randomRoomCode();
+            }
+            if (!room) { 
+                setupError.textContent = 'Please enter the room code.'; 
+                return; 
+            }
             setupError.textContent = '';
             setupScreen.style.display = 'none';
             document.getElementById('sidebar').style.display = 'flex';
-            startBoard({ name, role: selectedRole, room });
+            startBoard(name, selectedRole, room);
         });
 
-        function startBoard({ name, role, room }) {
+        function startBoard(name, role, room) {
             document.getElementById('sb-room-code').textContent = room;
             const lockBtn = document.getElementById('lock-btn');
             const recordBtn = document.getElementById('record-btn');
@@ -1298,11 +1330,6 @@
                     }, 1800);
                 });
             });
-
-            let excalidrawAPI = null;
-            let isRemoteUpdate = false;
-            let lastSendTime = 0;
-            let currentPenId = 'ballpoint';
 
             function forceSyncScene() {
                 if (!excalidrawAPI) return;
@@ -1432,7 +1459,6 @@
             const timerSecInput = document.getElementById('timer-sec');
             const timerControls = document.getElementById('timer-controls-container');
             const timerInputs = document.getElementById('timer-inputs-container');
-            let timerInterval = null, timeLeft = 300, isTimerRunning = false;
 
             document.getElementById('btn-timer').addEventListener('click', () => {
                 deselectTools();
@@ -1580,7 +1606,6 @@
             const graphCtx = graphCanvas.getContext('2d');
             const graphReadout = document.getElementById('graph-readout');
             const graphError = document.getElementById('graph-error');
-            let graphMode = 'function';
 
             document.getElementById('btn-graph').addEventListener('click', () => {
                 deselectTools();
@@ -1795,7 +1820,6 @@
 
             const spotlightOverlay = document.getElementById('spotlight-overlay');
             const spotlightHandle = document.getElementById('spotlight-handle');
-            let isSpotlightActive = false, lastSpotlightSend = 0;
 
             document.getElementById('btn-spotlight').addEventListener('click', () => {
                 deselectTools();
@@ -1831,7 +1855,6 @@
                 }
             }
 
-            let isLocked = false;
             lockBtn.addEventListener('click', () => {
                 isLocked = !isLocked;
                 lockBtn.classList.toggle('active', isLocked);
@@ -1847,8 +1870,6 @@
                 if (excalidrawAPI) excalidrawAPI.redo();
             });
 
-            let pages = [{ id: 'page-1', name: 'Page 1', elements: [], bg: '#FFFFFF' }];
-            let currentPageId = 'page-1';
             const pageTabsList = document.getElementById('page-tabs-list');
             const addPageBtn = document.getElementById('add-page-btn');
             if (role !== 'teacher') addPageBtn.style.display = 'none';
@@ -1969,11 +1990,6 @@
             document.getElementById('page-tabs-bar').style.display = 'flex';
             renderPageTabs();
 
-            const recordBtn = document.getElementById('record-btn');
-            const recIndicator = document.getElementById('rec-indicator');
-            const recTimerEl = document.getElementById('rec-timer');
-            let mediaRecorder = null, recordedChunks = [], recordStream = null, recStart = 0, recInterval = null;
-
             recordBtn.addEventListener('click', toggleRecording);
 
             async function toggleRecording() {
@@ -2051,7 +2067,6 @@
             const addStudentModal = document.getElementById('add-student-modal');
             const emailInput = document.getElementById('email-input');
             const emailList = document.getElementById('email-list');
-            let emailTags = [];
 
             addStudentBtn.addEventListener('click', () => {
                 addStudentModal.style.display = 'flex';
@@ -2148,8 +2163,8 @@
                 },
             }));
 
-            let socket = null;
             function connect() {
+                const onlineDot = document.getElementById('sb-online-dot');
                 onlineDot.className = 'sb-online-dot connecting';
                 socket = new WebSocket(window.PRIMEBOARD_RELAY_URL);
                 socket.addEventListener('open', () => {
@@ -2192,11 +2207,15 @@
                     }
                     if (data.type === 'spotlight-update') {
                         if (data.active) {
+                            const spotlightOverlay = document.getElementById('spotlight-overlay');
+                            const spotlightHandle = document.getElementById('spotlight-handle');
                             spotlightOverlay.style.display = 'block';
                             if (role !== 'teacher') spotlightHandle.style.display = 'flex';
                             spotlightOverlay.style.setProperty('--sx', `${data.x}px`);
                             spotlightOverlay.style.setProperty('--sy', `${data.y}px`);
                         } else {
+                            const spotlightOverlay = document.getElementById('spotlight-overlay');
+                            const spotlightHandle = document.getElementById('spotlight-handle');
                             spotlightOverlay.style.display = 'none';
                             spotlightHandle.style.display = 'none';
                         }
@@ -2230,10 +2249,12 @@
                     }
                 });
                 socket.addEventListener('close', () => {
+                    const onlineDot = document.getElementById('sb-online-dot');
                     onlineDot.className = 'sb-online-dot connecting';
                     setTimeout(connect, 2000);
                 });
                 socket.addEventListener('error', () => {
+                    const onlineDot = document.getElementById('sb-online-dot');
                     onlineDot.className = 'sb-online-dot error';
                 });
             }
