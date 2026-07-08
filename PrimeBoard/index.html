@@ -63,11 +63,14 @@
         .excalidraw [data-testid="main-menu-trigger"],
         .excalidraw .main-menu-trigger { display: none !important; }
 
-        /* Hide native Excalidraw bottom-left zoom/undo-redo control panel */
-        .excalidraw .layer-ui__wrapper__footer-left,
-        .excalidraw .layer-ui__wrapper__footer-left-inner,
-        .excalidraw .undo-redo-buttons,
-        .excalidraw .zoom-actions { display: none !important; }
+        /* Hide native Excalidraw undo/redo buttons only (zoom control stays visible) */
+        .excalidraw .undo-redo-buttons { display: none !important; }
+
+        /* Shrink (but keep visible & working) the native Excalidraw zoom control */
+        .excalidraw .zoom-actions {
+            transform: scale(0.72);
+            transform-origin: bottom left;
+        }
 
         /* Header - Gen Z Style */
         #header {
@@ -1263,10 +1266,13 @@
             setupPenControls();
             renderPageTabs();
 
-            // Hide native Excalidraw hamburger menu + bottom-left zoom/undo-redo panel.
-            // These are rendered internally by Excalidraw and get re-created on every
-            // scene update, so CSS alone can lose the race — a MutationObserver keeps
-            // them hidden permanently regardless of internal re-renders.
+            // Hide native Excalidraw hamburger menu + undo/redo buttons only.
+            // The native zoom control (-, %, +, fit-to-view) is left alone —
+            // it stays visible and working, just shrunk via CSS above.
+            // These elements are rendered internally by Excalidraw and get
+            // re-created on every scene update, so CSS alone can lose the race —
+            // a MutationObserver keeps them hidden permanently regardless of
+            // internal re-renders.
             function hideNativeExcalidrawChrome() {
                 const rootEl = document.getElementById('root');
                 if (!rootEl) return;
@@ -1280,17 +1286,7 @@
                     wrapper.style.display = 'none';
                 }
 
-                // Bottom-left zoom % / zoom in-out / undo-redo cluster
-                const zoomBtn = rootEl.querySelector(
-                    '[data-testid="zoom-in-button"], [data-testid="zoom-out-button"], [data-testid="reset-zoom-button"]'
-                );
-                if (zoomBtn) {
-                    const footerLeft =
-                        zoomBtn.closest('.layer-ui__wrapper__footer-left') ||
-                        zoomBtn.closest('.zoom-actions')?.parentElement ||
-                        zoomBtn.closest('.zoom-actions');
-                    if (footerLeft) footerLeft.style.display = 'none';
-                }
+                // Undo / Redo buttons
                 const undoBtn = rootEl.querySelector(
                     '[data-testid="undo-button"], [data-testid="redo-button"]'
                 );
