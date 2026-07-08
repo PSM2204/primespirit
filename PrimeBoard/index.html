@@ -67,7 +67,6 @@
         touch-action:manipulation;
     }
 
-    /* ─── CANVAS ROOT ────────────────────────────────────── */
     #root {
         position:fixed;
         top: calc(var(--topbar-h) + var(--pagetabs-h) + var(--safe-top));
@@ -76,7 +75,6 @@
         bottom: var(--safe-bottom);
     }
 
-    /* ─── MINIMAL TOPBAR ────────────────────────────────── */
     #topbar {
         position:fixed;
         top: var(--safe-top);
@@ -102,7 +100,7 @@
         color: var(--text);
         flex-shrink: 0;
     }
-    #brand i { color: var(--accent); font-size: 1rem; filter: drop-shadow(0 0 6px rgba(124,106,247,0.5)); }
+    #brand i { color: var(--accent); font-size: 1rem; }
 
     #room-pill {
         display:flex;
@@ -120,7 +118,6 @@
     #status-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--text3); flex-shrink: 0; }
     #status-dot.connected { background: var(--green); box-shadow: 0 0 8px var(--green); }
     #status-dot.connecting { background: var(--yellow); animation: blink 1.2s infinite; }
-    #status-dot.error { background: var(--red); }
     @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
 
     #online-pill {
@@ -171,7 +168,6 @@
     }
     .rec-dot { width:7px; height:7px; border-radius:50%; background:var(--red); animation:blink 0.9s infinite; }
 
-    /* ── PAGE TABS ──────────────────────────────────────── */
     #page-tabs-bar {
         position:fixed;
         top:calc(var(--topbar-h) + var(--safe-top));
@@ -201,7 +197,7 @@
         color:var(--text); border-color:rgba(124,106,247,0.4);
         background:rgba(124,106,247,0.12);
     }
-    .page-tab-close { font-size:0.55rem; opacity:0.5; transition:opacity 0.15s; }
+    .page-tab-close { font-size:0.55rem; opacity:0.5; transition:opacity 0.15s; cursor:pointer; }
     .page-tab-close:hover { opacity:1; color:var(--red); }
     #add-page-btn {
         flex-shrink:0; width:26px; height:26px; border-radius:var(--r);
@@ -210,7 +206,6 @@
     }
     #add-page-btn:hover { color:var(--green); border-color:var(--green); background:rgba(74,222,128,0.06); }
 
-    /* ─── LEFT SIDEBAR (MIRO STYLE) ──────────────────────── */
     #sidebar {
         position: fixed;
         left: 0;
@@ -265,17 +260,6 @@
         color: #fff;
         box-shadow: 0 0 12px rgba(124,106,247,0.4);
     }
-    .sidebar-btn.active::before {
-        content: '';
-        position: absolute;
-        left: -8px;
-        top: 50%;
-        transform: translateY(-50%);
-        width: 3px;
-        height: 20px;
-        background: var(--accent);
-        border-radius: 0 4px 4px 0;
-    }
 
     .sidebar-btn[title]::after {
         content: attr(title);
@@ -306,7 +290,6 @@
         margin: 4px 0;
     }
 
-    /* ─── POPOVERS ─────────────────────────────────────── */
     .popover {
         position: fixed;
         z-index: 2000;
@@ -382,7 +365,6 @@
     }
     .color-dot:hover { transform: scale(1.15); }
     .color-dot.active { border-color: rgba(255,255,255,0.8); box-shadow: 0 0 0 2px rgba(255,255,255,0.2); }
-    #stroke-custom { width: 24px; height: 24px; border-radius: 50%; border: 2px solid var(--border2); cursor: pointer; padding: 0; background: transparent; }
 
     .slider-row { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
     .slider-row label { font-size: 0.6rem; font-weight: 700; color: var(--text3); text-transform: uppercase; letter-spacing: 0.05em; min-width: 50px; }
@@ -393,7 +375,7 @@
         cursor: pointer;
         -webkit-appearance: none;
         appearance: none;
-        background: linear-gradient(to right, var(--accent) 0%, var(--accent) var(--pct,50%), rgba(255,255,255,0.1) var(--pct,50%), rgba(255,255,255,0.1) 100%);
+        background: linear-gradient(to right, var(--accent) 0%, var(--accent) 50%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0.1) 100%);
         outline: none;
         border: none;
     }
@@ -405,7 +387,6 @@
         background: #fff;
         border: 2px solid var(--accent);
         cursor: pointer;
-        box-shadow: 0 0 6px rgba(124,106,247,0.4);
     }
     .slider-val { font-size: 0.6rem; font-weight: 700; color: var(--text2); font-family: 'JetBrains Mono', monospace; min-width: 32px; text-align: right; }
 
@@ -433,7 +414,6 @@
         text-shadow: 0 1px 3px rgba(0,0,0,0.6);
     }
 
-    /* ── MODALS ────────────────────────────────────────── */
     .modal-overlay {
         position: fixed;
         inset: 0;
@@ -444,9 +424,8 @@
         background: rgba(8,8,16,0.85);
         backdrop-filter: blur(8px);
         padding: 20px;
-        animation: fadeIn 0.15s ease;
     }
-    @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+    .modal-overlay.active { display: flex; }
 
     .modal-card {
         width: min(520px, 95vw);
@@ -565,7 +544,6 @@
     .email-tag i { cursor:pointer; opacity:0.6; font-size:0.55rem; }
     .email-tag i:hover { opacity:1; color:var(--red); }
 
-    /* Setup Screen */
     #setup-screen {
         position: fixed;
         inset: 0;
@@ -621,7 +599,6 @@
     #enter-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(124,106,247,0.4); }
     #setup-err { color: var(--red); font-size: 0.72rem; margin-top: 10px; min-height: 1.1em; font-weight: 600; }
 
-    /* Spotlight */
     #spotlight-overlay {
         position: fixed;
         inset: 0;
@@ -654,7 +631,6 @@
     #spotlight-handle:hover { transform: translate(-50%,-50%) scale(1.15); }
     #spotlight-handle:active { cursor: grabbing; }
 
-    /* Banners */
     #locked-banner {
         position: fixed;
         bottom: 20px;
@@ -686,14 +662,12 @@
     }
     #recording-notice i { color:var(--red); }
 
-    /* Excalidraw overrides */
     .excalidraw .App-toolbar,
     .excalidraw .Island.App-toolbar-content > div:last-child,
     .excalidraw .panelColumn,
     .excalidraw [class*="properties"] { display: none !important; }
     .excalidraw { touch-action: none; }
 
-    /* Responsive */
     @media(max-width: 768px) {
         #sidebar { width: 48px; }
         #root { left: 48px; }
@@ -707,7 +681,6 @@
 </head>
 <body>
 
-<!-- SETUP SCREEN -->
 <div id="setup-screen">
     <div id="setup-card">
         <h1>Prime<span>Board</span></h1>
@@ -726,7 +699,6 @@
     </div>
 </div>
 
-<!-- MINIMAL TOPBAR -->
 <div id="topbar" style="display:none">
     <div id="brand"><i class="fas fa-atom"></i> PrimeBoard</div>
     <div id="room-pill"><span id="status-dot"></span> <span id="room-pill-code">—</span></div>
@@ -741,15 +713,12 @@
     </div>
 </div>
 
-<!-- PAGE TABS -->
 <div id="page-tabs-bar">
     <div id="page-tabs-list"></div>
     <button id="add-page-btn" title="Add Page"><i class="fas fa-plus"></i></button>
 </div>
 
-<!-- LEFT SIDEBAR (MIRO STYLE) -->
 <div id="sidebar" style="display:none">
-    <!-- Tools Section -->
     <div class="sidebar-section">
         <button class="sidebar-btn" id="tool-select" title="Select (V)"><i class="fas fa-mouse-pointer"></i></button>
         <button class="sidebar-btn" id="tool-hand" title="Hand Tool (H)"><i class="fas fa-hand"></i></button>
@@ -757,7 +726,6 @@
         <button class="sidebar-btn" id="tool-eraser" title="Eraser (E)"><i class="fas fa-eraser"></i></button>
     </div>
 
-    <!-- Shapes Section -->
     <div class="sidebar-section">
         <button class="sidebar-btn" id="tool-rect" title="Rectangle (R)"><i class="far fa-square"></i></button>
         <button class="sidebar-btn" id="tool-circle" title="Circle (O)"><i class="far fa-circle"></i></button>
@@ -765,7 +733,6 @@
         <button class="sidebar-btn" id="tool-arrow" title="Arrow"><i class="fas fa-arrow-right"></i></button>
     </div>
 
-    <!-- Text & Media -->
     <div class="sidebar-section">
         <button class="sidebar-btn" id="tool-text" title="Text (T)"><i class="fas fa-font"></i></button>
         <button class="sidebar-btn" id="tool-image" title="Image"><i class="fas fa-image"></i></button>
@@ -773,14 +740,12 @@
 
     <div class="sidebar-divider"></div>
 
-    <!-- Smart Tools -->
     <div class="sidebar-section">
         <button class="sidebar-btn" id="btn-math" title="Math Equation"><i class="fas fa-square-root-alt"></i></button>
         <button class="sidebar-btn" id="btn-convert" title="Convert to LaTeX"><i class="fas fa-magic"></i></button>
         <button class="sidebar-btn" id="btn-toolkit" title="Toolkit"><i class="fas fa-graduation-cap"></i></button>
     </div>
 
-    <!-- Board Settings -->
     <div class="sidebar-section">
         <button class="sidebar-btn" id="btn-bg" title="Background"><i class="fas fa-fill-drip"></i></button>
         <button class="sidebar-btn" id="btn-spotlight" title="Spotlight"><i class="fas fa-lightbulb"></i></button>
@@ -789,14 +754,12 @@
 
     <div class="sidebar-divider"></div>
 
-    <!-- Bottom Actions -->
     <div class="sidebar-section" style="margin-top:auto; padding-bottom:12px">
         <button class="sidebar-btn" id="btn-undo" title="Undo"><i class="fas fa-undo"></i></button>
         <button class="sidebar-btn" id="btn-redo" title="Redo"><i class="fas fa-redo"></i></button>
     </div>
 </div>
 
-<!-- PEN POPOVER -->
 <div id="pen-popover" class="popover">
     <div class="popover-head">
         <span>Drawing Tools</span>
@@ -819,7 +782,6 @@
     </div>
 </div>
 
-<!-- BG POPOVER -->
 <div id="bg-popover" class="popover" style="min-width:220px">
     <div class="popover-head">
         <span>Background</span>
@@ -831,15 +793,12 @@
     </div>
 </div>
 
-<!-- SPOTLIGHT -->
 <div id="spotlight-overlay"></div>
 <div id="spotlight-handle"><i class="fas fa-crosshairs"></i></div>
 
-<!-- BANNERS -->
 <div id="locked-banner"><i class="fas fa-lock"></i> Drawing locked by teacher</div>
 <div id="recording-notice"><i class="fas fa-video"></i> Recording in progress</div>
 
-<!-- MATH MODAL -->
 <div class="modal-overlay" id="math-modal">
     <div class="modal-card">
         <div class="modal-header">
@@ -859,7 +818,6 @@
     </div>
 </div>
 
-<!-- TOOLKIT MODAL -->
 <div class="modal-overlay" id="toolkit-modal">
     <div class="modal-card">
         <div class="modal-header">
@@ -880,7 +838,6 @@
     </div>
 </div>
 
-<!-- ADD STUDENT MODAL -->
 <div class="modal-overlay" id="add-student-modal">
     <div class="modal-card">
         <div class="modal-header">
@@ -931,6 +888,17 @@ const PEN_TYPES = [
 const COLORS = ['#f1f5f9','#000000','#fb7185','#fbbf24','#4ade80','#38bdf8','#a78bfa','#f472b6','#fb923c'];
 const BG_COLORS = ['#111118','#1e1b4b','#ffffff','#f1f5f9','#fef9c3','#e0f2fe','#e8f5e9','#000000'];
 
+let excalidrawAPI = null;
+let isRemoteUpdate = false;
+let currentPen = PEN_TYPES[0];
+let strokeColor = '#f1f5f9';
+let isLocked = false;
+let pages = [{ id:'page-1', name:'Page 1', elements:[], bg:'#111118' }];
+let currentPageId = 'page-1';
+let ws = null;
+let lastSendTime = 0;
+
+// Setup
 const setupScreen = document.getElementById('setup-screen');
 const enterBtn = document.getElementById('enter-btn');
 const setupErr = document.getElementById('setup-err');
@@ -977,38 +945,14 @@ enterBtn.onclick = () => {
     initBoard({ name, role: selectedRole, room });
 };
 
-const POPOVERS = ['pen-popover', 'bg-popover'];
 function closePopovers() {
-    POPOVERS.forEach(id => document.getElementById(id).style.display = 'none');
+    document.getElementById('pen-popover').style.display = 'none';
+    document.getElementById('bg-popover').style.display = 'none';
     document.querySelectorAll('.sidebar-btn').forEach(b => b.classList.remove('active'));
 }
-document.querySelectorAll('[data-close]').forEach(btn => {
-    btn.onclick = (e) => {
-        e.stopPropagation();
-        document.getElementById(btn.dataset.close).style.display = 'none';
-        document.querySelectorAll('.sidebar-btn').forEach(b => b.classList.remove('active'));
-    };
-});
-document.addEventListener('click', (e) => {
-    POPOVERS.forEach(id => {
-        const p = document.getElementById(id);
-        if (p.style.display !== 'block') return;
-        const btn = document.querySelector(`[data-popover="${id}"]`);
-        if (!p.contains(e.target) && (!btn || !btn.contains(e.target))) {
-            p.style.display = 'none';
-            document.querySelectorAll('.sidebar-btn').forEach(b => b.classList.remove('active'));
-        }
-    });
-});
 
 function initBoard({ name, role, room }) {
-    let excalidrawAPI = null;
-    let isRemoteUpdate = false;
-    let currentPen = PEN_TYPES[0];
-    let strokeColor = '#f1f5f9';
-    let isLocked = false;
-
-    // Build pen popover
+    // Build pen types
     const penTypes = document.getElementById('pen-types');
     PEN_TYPES.forEach(pen => {
         const btn = document.createElement('div');
@@ -1023,6 +967,7 @@ function initBoard({ name, role, room }) {
         penTypes.appendChild(btn);
     });
 
+    // Build stroke colors
     const strokeColors = document.getElementById('stroke-colors');
     COLORS.forEach(c => {
         const dot = document.createElement('div');
@@ -1038,26 +983,25 @@ function initBoard({ name, role, room }) {
         strokeColors.appendChild(dot);
     });
 
+    // Thickness slider
     const thicknessSlider = document.getElementById('thickness');
     const thicknessVal = document.getElementById('thickness-val');
-    const opacitySlider = document.getElementById('opacity');
-    const opacityVal = document.getElementById('opacity-val');
-
     thicknessSlider.oninput = (e) => {
         currentPen.strokeWidth = parseFloat(e.target.value);
         thicknessVal.textContent = currentPen.strokeWidth;
-        const pct = ((currentPen.strokeWidth - 1) / 29 * 100);
-        thicknessSlider.style.setProperty('--pct', pct + '%');
-        applyPen();
-    };
-    opacitySlider.oninput = (e) => {
-        currentPen.opacity = parseInt(e.target.value);
-        opacityVal.textContent = currentPen.opacity + '%';
-        const pct = ((currentPen.opacity - 10) / 90 * 100);
-        opacitySlider.style.setProperty('--pct', pct + '%');
         applyPen();
     };
 
+    // Opacity slider
+    const opacitySlider = document.getElementById('opacity');
+    const opacityVal = document.getElementById('opacity-val');
+    opacitySlider.oninput = (e) => {
+        currentPen.opacity = parseInt(e.target.value);
+        opacityVal.textContent = currentPen.opacity + '%';
+        applyPen();
+    };
+
+    // Custom stroke color
     document.getElementById('stroke-custom').oninput = (e) => {
         strokeColor = e.target.value;
         document.querySelectorAll('.color-dot').forEach(d => d.classList.remove('active'));
@@ -1085,7 +1029,10 @@ function initBoard({ name, role, room }) {
         swatch.style.backgroundColor = c;
         swatch.dataset.color = c;
         if (c === '#ffffff' || c === '#f1f5f9') swatch.style.border = '2px solid #cbd5e1';
-        swatch.onclick = (e) => { e.stopPropagation(); applyBg(c); };
+        swatch.onclick = (e) => { 
+            e.stopPropagation(); 
+            applyBg(c); 
+        };
         bgColors.appendChild(swatch);
     });
     document.getElementById('bg-custom').oninput = (e) => applyBg(e.target.value);
@@ -1098,8 +1045,8 @@ function initBoard({ name, role, room }) {
         });
     }
 
-    // Sidebar buttons
-    const toolMap = {
+    // Tool buttons
+    const tools = {
         'tool-select': 'selection',
         'tool-hand': 'hand',
         'tool-pen': 'freedraw',
@@ -1111,18 +1058,19 @@ function initBoard({ name, role, room }) {
         'tool-text': 'text',
     };
 
-    Object.entries(toolMap).forEach(([id, type]) => {
+    Object.entries(tools).forEach(([id, type]) => {
         const btn = document.getElementById(id);
-        if (!btn) return;
-        btn.onclick = () => {
-            closePopovers();
-            if (excalidrawAPI) excalidrawAPI.setActiveTool({ type });
-            document.querySelectorAll('.sidebar-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-        };
+        if (btn) {
+            btn.onclick = () => {
+                closePopovers();
+                if (excalidrawAPI) excalidrawAPI.setActiveTool({ type });
+                document.querySelectorAll('.sidebar-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+            };
+        }
     });
 
-    document.getElementById('tool-pen').dataset.popover = 'pen-popover';
+    // Pen button with popover
     document.getElementById('tool-pen').onclick = (e) => {
         e.stopPropagation();
         const p = document.getElementById('pen-popover');
@@ -1136,7 +1084,7 @@ function initBoard({ name, role, room }) {
         }
     };
 
-    document.getElementById('btn-bg').dataset.popover = 'bg-popover';
+    // BG button with popover
     document.getElementById('btn-bg').onclick = (e) => {
         e.stopPropagation();
         const p = document.getElementById('bg-popover');
@@ -1148,15 +1096,36 @@ function initBoard({ name, role, room }) {
         }
     };
 
+    // Close popover buttons
+    document.querySelectorAll('.popover-close').forEach(btn => {
+        btn.onclick = (e) => {
+            e.stopPropagation();
+            const popoverId = btn.dataset.close;
+            document.getElementById(popoverId).style.display = 'none';
+            document.querySelectorAll('.sidebar-btn').forEach(b => b.classList.remove('active'));
+        };
+    });
+
+    // Click outside to close popovers
+    document.addEventListener('click', (e) => {
+        ['pen-popover', 'bg-popover'].forEach(id => {
+            const p = document.getElementById(id);
+            if (p.style.display === 'block' && !p.contains(e.target)) {
+                p.style.display = 'none';
+                document.querySelectorAll('.sidebar-btn').forEach(b => b.classList.remove('active'));
+            }
+        });
+    });
+
     // Math modal
     document.getElementById('btn-math').onclick = () => {
         closePopovers();
         document.getElementById('math-input').value = '';
         document.getElementById('math-preview').innerHTML = '';
-        document.getElementById('math-modal').style.display = 'flex';
+        document.getElementById('math-modal').classList.add('active');
     };
-    document.getElementById('close-math').onclick = () => document.getElementById('math-modal').style.display = 'none';
-    document.getElementById('cancel-math').onclick = () => document.getElementById('math-modal').style.display = 'none';
+    document.getElementById('close-math').onclick = () => document.getElementById('math-modal').classList.remove('active');
+    document.getElementById('cancel-math').onclick = () => document.getElementById('math-modal').classList.remove('active');
 
     const mathInput = document.getElementById('math-input');
     const mathPreview = document.getElementById('math-preview');
@@ -1169,7 +1138,7 @@ function initBoard({ name, role, room }) {
             const els = excalidrawAPI.getSceneElements();
             excalidrawAPI.updateScene({ elements: [...els, mkEl('text', 150, 150, 200, 50, { text: mathInput.value, fontSize: 24, strokeColor: '#f1f5f9' })] });
         }
-        document.getElementById('math-modal').style.display = 'none';
+        document.getElementById('math-modal').classList.remove('active');
     };
 
     // Convert to LaTeX
@@ -1188,9 +1157,9 @@ function initBoard({ name, role, room }) {
             mathInput.value = detected;
             try { katex.render(detected, mathPreview, { throwOnError: false, displayMode: true }); }
             catch(e) {}
-            document.getElementById('math-modal').style.display = 'flex';
+            document.getElementById('math-modal').classList.add('active');
         } else {
-            alert('Could not detect math pattern. Try drawing clearer symbols like: √, , Σ, fractions, or exponents.');
+            alert('Could not detect math pattern. Try drawing clearer symbols.');
         }
     };
 
@@ -1215,21 +1184,20 @@ function initBoard({ name, role, room }) {
         if (height > 60 && aspectRatio < 0.5) return '\\int';
         if (width > 40 && height > 30 && aspectRatio > 1) return '\\sum';
         if (width > 50 && height > 40) return '\\frac{}{}';
-        if (width < 30 && height < 20) return '^{}';
         return null;
     }
 
     // Toolkit
     document.getElementById('btn-toolkit').onclick = () => {
         closePopovers();
-        document.getElementById('toolkit-modal').style.display = 'flex';
+        document.getElementById('toolkit-modal').classList.add('active');
     };
-    document.getElementById('close-toolkit').onclick = () => document.getElementById('toolkit-modal').style.display = 'none';
+    document.getElementById('close-toolkit').onclick = () => document.getElementById('toolkit-modal').classList.remove('active');
 
     document.querySelectorAll('.toolkit-item').forEach(item => {
         item.onclick = () => {
             applyToolkit(item.dataset.tool);
-            document.getElementById('toolkit-modal').style.display = 'none';
+            document.getElementById('toolkit-modal').classList.remove('active');
         };
     });
 
@@ -1314,9 +1282,7 @@ function initBoard({ name, role, room }) {
     document.getElementById('btn-undo').onclick = () => { if (excalidrawAPI) excalidrawAPI.undo(); };
     document.getElementById('btn-redo').onclick = () => { if (excalidrawAPI) excalidrawAPI.redo(); };
 
-    // ─ PAGES ──────────────────────────────────────────
-    let pages = [{ id:'page-1', name:'Page 1', elements:[], bg:'#111118' }];
-    let currentPageId = 'page-1';
+    // Pages
     const pageTabsList = document.getElementById('page-tabs-list');
     const addPageBtn = document.getElementById('add-page-btn');
     if (role !== 'teacher') addPageBtn.style.display = 'none';
@@ -1329,14 +1295,24 @@ function initBoard({ name, role, room }) {
             tab.dataset.pageId = p.id;
             tab.innerHTML = `<span>${p.name}</span>` +
                 (role==='teacher' && pages.length>1 ? `<i class="fas fa-times page-tab-close"></i>` : '');
-            tab.addEventListener('click', e => { if (e.target.closest('.page-tab-close')) return; switchToPage(p.id, false); });
+            tab.addEventListener('click', e => { 
+                if (e.target.closest('.page-tab-close')) return; 
+                switchToPage(p.id, false); 
+            });
             if (role === 'teacher') {
                 tab.addEventListener('dblclick', () => {
                     const nn = prompt('Rename page:', p.name);
-                    if (nn?.trim()) { p.name=nn.trim().slice(0,24); renderPageTabs(); sendMsg({type:'pages-structure',pages:pages.map(x=>({id:x.id,name:x.name})),currentPageId}); }
+                    if (nn?.trim()) { 
+                        p.name = nn.trim().slice(0,24); 
+                        renderPageTabs(); 
+                        sendMsg({type:'pages-structure',pages:pages.map(x=>({id:x.id,name:x.name})),currentPageId}); 
+                    }
                 });
                 const close = tab.querySelector('.page-tab-close');
-                if (close) close.addEventListener('click', e => { e.stopPropagation(); deletePage(p.id); });
+                if (close) close.addEventListener('click', e => { 
+                    e.stopPropagation(); 
+                    deletePage(p.id); 
+                });
             }
             pageTabsList.appendChild(tab);
         });
@@ -1345,7 +1321,10 @@ function initBoard({ name, role, room }) {
     function saveCurrentSnapshot() {
         if (!excalidrawAPI) return;
         const page = pages.find(p => p.id===currentPageId);
-        if (page) { page.elements = excalidrawAPI.getSceneElements(); page.bg = excalidrawAPI.getAppState().viewBackgroundColor; }
+        if (page) { 
+            page.elements = excalidrawAPI.getSceneElements(); 
+            page.bg = excalidrawAPI.getAppState().viewBackgroundColor; 
+        }
     }
 
     function switchToPage(pageId, remote) {
@@ -1365,8 +1344,12 @@ function initBoard({ name, role, room }) {
         saveCurrentSnapshot();
         const id = 'page-'+Date.now();
         const pg = { id, name:`Page ${pages.length+1}`, elements:[], bg:'#111118' };
-        pages.push(pg); currentPageId = id;
-        if (excalidrawAPI) { isRemoteUpdate=true; excalidrawAPI.updateScene({ elements:[], appState:{ viewBackgroundColor:'#111118' } }); }
+        pages.push(pg); 
+        currentPageId = id;
+        if (excalidrawAPI) { 
+            isRemoteUpdate=true; 
+            excalidrawAPI.updateScene({ elements:[], appState:{ viewBackgroundColor:'#111118' } }); 
+        }
         renderPageTabs();
         sendMsg({ type:'pages-structure', pages:pages.map(x=>({id:x.id,name:x.name})), currentPageId });
         sendMsg({ type:'page-switch', pageId:id, elements:[], bg:'#111118' });
@@ -1381,7 +1364,10 @@ function initBoard({ name, role, room }) {
         if (wasActive) {
             const next = pages[Math.max(0,idx-1)];
             currentPageId = next.id;
-            if (excalidrawAPI) { isRemoteUpdate=true; excalidrawAPI.updateScene({ elements:next.elements||[], appState:{ viewBackgroundColor:next.bg||'#111118' } }); }
+            if (excalidrawAPI) { 
+                isRemoteUpdate=true; 
+                excalidrawAPI.updateScene({ elements:next.elements||[], appState:{ viewBackgroundColor:next.bg||'#111118' } }); 
+            }
         }
         renderPageTabs();
         sendMsg({ type:'pages-structure', pages:pages.map(x=>({id:x.id,name:x.name})), currentPageId });
@@ -1394,7 +1380,7 @@ function initBoard({ name, role, room }) {
     addPageBtn.addEventListener('click', addNewPage);
     renderPageTabs();
 
-    // ── RECORDING ─────────────────────────────────────
+    // Recording
     const recBtnText = document.getElementById('rec-btn-text');
     const recIndicator = document.getElementById('rec-indicator');
     const recTimerEl = document.getElementById('rec-timer');
@@ -1445,19 +1431,19 @@ function initBoard({ name, role, room }) {
         recTimerEl.textContent = `${Math.floor(s/60).toString().padStart(2,'0')}:${(s%60).toString().padStart(2,'0')}`;
     }
 
-    // ── ADD STUDENT ────────────────────────────────────
+    // Add Student
     const addStudentBtn = document.getElementById('add-student-btn');
     const emailInput = document.getElementById('email-input');
     const emailList = document.getElementById('email-list');
     let emails = [];
 
-    addStudentBtn.onclick = () => { document.getElementById('add-student-modal').style.display='flex'; };
-    document.getElementById('close-add-student').onclick = () => { document.getElementById('add-student-modal').style.display='none'; };
-    document.getElementById('cancel-add').onclick = () => { document.getElementById('add-student-modal').style.display='none'; };
+    addStudentBtn.onclick = () => { document.getElementById('add-student-modal').classList.add('active'); };
+    document.getElementById('close-add-student').onclick = () => { document.getElementById('add-student-modal').classList.remove('active'); };
+    document.getElementById('cancel-add').onclick = () => { document.getElementById('add-student-modal').classList.remove('active'); };
 
     function renderEmailTags() {
         emailList.innerHTML = emails.map((e,i) =>
-            `<span class="email-tag">${e}<i class="fas fa-times" onclick="removeEmail(${i})"></i></span>`
+            `<span class="email-tag">${e}<i class="fas fa-times" onclick="window.removeEmail(${i})"></i></span>`
         ).join('');
     }
     window.removeEmail = (i) => { emails.splice(i,1); renderEmailTags(); };
@@ -1471,11 +1457,10 @@ function initBoard({ name, role, room }) {
     });
     document.getElementById('send-invites').onclick = () => {
         alert(`Invites to be sent to: ${emails.join(', ')||'(none added)'}`);
-        emails=[]; renderEmailTags(); document.getElementById('add-student-modal').style.display='none';
+        emails=[]; renderEmailTags(); document.getElementById('add-student-modal').classList.remove('active');
     };
 
-    // ── WEBSOCKET ──────────────────────────────────────
-    let ws = null, lastSendTime = 0;
+    // WebSocket
     function connectWS() {
         const dot = document.getElementById('status-dot');
         dot.className = 'connecting';
@@ -1521,7 +1506,7 @@ function initBoard({ name, role, room }) {
     }
     connectWS();
 
-    // ── EXCALIDRAW RENDER ──────────────────────────────
+    // Render Excalidraw
     const root = ReactDOM.createRoot(document.getElementById('root'));
     root.render(React.createElement(Excalidraw, {
         theme: 'dark',
