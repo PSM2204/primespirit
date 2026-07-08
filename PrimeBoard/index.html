@@ -32,8 +32,6 @@
     <style>
         :root {
             --bg-deep: #F5F5F7;
-            --bg-mid: #FFFFFF;
-            --bg-light: #EDEDF2;
             --glass-bg: rgba(255, 255, 255, 0.88);
             --glass-border: rgba(15, 15, 20, 0.09);
             --glass-highlight: rgba(15, 15, 20, 0.045);
@@ -54,15 +52,12 @@
             --radius-lg: 14px;
             --radius-xl: 18px;
             
-            --shadow-glow: 0 0 0 3px rgba(79, 70, 229, 0.08);
             --shadow-card: 0 4px 20px rgba(15, 15, 20, 0.09);
+            --shadow-heavy: 0 8px 32px rgba(15, 15, 20, 0.15);
             --transition-bounce: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
             --transition-smooth: all 0.18s ease;
             
-            --sidebar-width: 60px;
-            --topbar-height: 52px;
-            --pagetabs-height: 38px;
-            --mobile-toolbar-height: 60px;
+            --sidebar-width: 56px;
             --safe-top: env(safe-area-inset-top, 0px);
             --safe-bottom: env(safe-area-inset-bottom, 0px);
         }
@@ -75,7 +70,7 @@
             -webkit-user-select: none;
             user-select: none;
         }
-        #root { position: absolute; top: calc(var(--topbar-height) + var(--pagetabs-height) + var(--safe-top)); left: 0; right: 0; bottom: 0; }
+        #root { position: absolute; top: 0; left: var(--sidebar-width); right: 0; bottom: 0; }
 
         .excalidraw .Island.App-toolbar-content > div:last-child,
         .excalidraw .panelColumn,
@@ -84,224 +79,213 @@
         }
         .excalidraw { touch-action: none; }
 
-        #topbar {
-            position: fixed; top: var(--safe-top); left: 0; right: 0; height: var(--topbar-height); z-index: 1000;
-            display: flex; align-items: center; gap: 10px; padding: 0 14px;
-            background: var(--glass-bg); backdrop-filter: blur(20px) saturate(1.1);
-            border-bottom: 1px solid var(--glass-border);
-        }
-        #brand { display: flex; align-items: center; gap: 8px; color: var(--text-primary); font-weight: 800; font-size: 0.95rem; letter-spacing: -0.02em; }
-        #brand i { color: var(--accent-primary); font-size: 1.05rem; }
-        #brand .sub { color: var(--text-muted); font-weight: 600; font-size: 0.65rem; margin-left: 2px; display: none; }
-        @media(min-width:768px){#brand .sub{display:inline}}
-        
-        #room-pill {
-            display: flex; align-items: center; gap: 6px;
-            background: var(--glass-highlight); border: 1px solid var(--glass-border);
-            padding: 5px 12px; border-radius: 100px; color: var(--text-secondary);
-            font-size: 0.7rem; font-family: 'JetBrains Mono', monospace;
-        }
-        #room-pill b { color: var(--accent-tertiary); letter-spacing: 0.03em; }
-        
-        #online-students {
-            display: flex; align-items: center; gap: 5px;
-            background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.25);
-            padding: 5px 12px; border-radius: 100px; color: var(--accent-success);
-            font-size: 0.7rem; font-weight: 700;
-        }
-        
-        .topbar-btn {
-            display: flex; align-items: center; gap: 5px;
-            background: transparent; border: 1px solid transparent;
-            font-weight: 700; font-size: 0.7rem;
-            padding: 6px 12px; border-radius: var(--radius-sm); cursor: pointer;
-            transition: var(--transition-bounce);
-            color: var(--text-secondary);
-            min-height: 32px;
-        }
-        .topbar-btn:hover { background: var(--glass-highlight); }
-        .topbar-btn.icon-only {
-            padding: 0; width: 34px; height: 34px; justify-content: center;
-            border: 1px solid var(--glass-border);
-        }
-        .topbar-btn.icon-only span { display: none; }
-        
-        #lock-btn {
-            border-color: rgba(239, 68, 68, 0.3); color: var(--accent-danger);
-            background: rgba(239, 68, 68, 0.08);
-        }
-        #lock-btn:hover { background: rgba(239, 68, 68, 0.15); }
-        #lock-btn.unlocked { 
-            border-color: rgba(16, 185, 129, 0.3); color: var(--accent-success); 
-            background: rgba(16, 185, 129, 0.08); 
-        }
-        #lock-btn.unlocked:hover { background: rgba(16, 185, 129, 0.15); }
-        
-        #invite-btn, #add-student-btn {
-            background: rgba(79, 70, 229, 0.1); border-color: rgba(79, 70, 229, 0.25);
-            color: var(--accent-primary);
-        }
-        #invite-btn:hover, #add-student-btn:hover { background: rgba(79, 70, 229, 0.2); }
-        #add-student-btn { 
-            background: rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.25); 
-            color: var(--accent-success); 
-        }
-        #add-student-btn:hover { background: rgba(16, 185, 129, 0.2); }
-        #exit-btn { color: var(--accent-danger); }
-        
-        .topbar-spacer { flex: 1; }
-
-        .menu-row-item {
-            display: flex; align-items: center; gap: 10px; width: 100%;
-            background: transparent; border: none; text-decoration: none;
-            color: var(--text-primary); font-weight: 700; font-size: 0.78rem;
-            padding: 9px 10px; border-radius: var(--radius-sm); cursor: pointer;
-            transition: var(--transition-smooth);
-        }
-        .menu-row-item i { width: 16px; text-align: center; color: var(--text-muted); font-size: 0.8rem; }
-        .menu-row-item:hover { background: var(--glass-highlight); }
-        #exit-btn.menu-row-item i { color: var(--accent-danger); }
-        
-        #status-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--text-muted); transition: var(--transition-smooth); }
-        #status-dot.connected { background: var(--accent-success); box-shadow: 0 0 10px var(--accent-success); }
-        #status-dot.connecting { background: var(--accent-warning); animation: pulse-dot 1.5s infinite; }
-        #status-dot.error { background: var(--accent-danger); }
-        @keyframes pulse-dot { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
-        
-        #locked-banner {
-            position: fixed; bottom: calc(var(--mobile-toolbar-height) + 20px + var(--safe-bottom)); left: 50%; transform: translateX(-50%); z-index: 1000;
-            display: none; align-items: center; gap: 10px;
-            background: rgba(239, 68, 68, 0.12); border: 1px solid rgba(239, 68, 68, 0.25);
-            color: var(--text-primary); padding: 10px 20px; border-radius: 100px;
-            font-size: 0.75rem; font-weight: 700; backdrop-filter: blur(10px);
-            box-shadow: 0 4px 20px rgba(239, 68, 68, 0.15);
-            max-width: 90vw;
-        }
-        #locked-banner i { color: var(--accent-danger); }
-
-        #record-btn { border-color: rgba(239, 68, 68, 0.3); color: var(--accent-danger); background: rgba(239, 68, 68, 0.08); }
-        #record-btn:hover { background: rgba(239, 68, 68, 0.15); }
-        #record-btn.recording {
-            background: var(--accent-danger); color: #fff; border-color: var(--accent-danger);
-            animation: recPulseBtn 1.4s infinite;
-        }
-        @keyframes recPulseBtn { 0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,0.5);} 50%{box-shadow:0 0 0 6px rgba(239,68,68,0);} }
-        #record-indicator {
-            display: none; align-items: center; gap: 6px;
-            background: rgba(239, 68, 68, 0.12); border: 1px solid rgba(239, 68, 68, 0.3);
-            padding: 5px 12px; border-radius: 100px; color: var(--accent-danger);
-            font-size: 0.7rem; font-weight: 800; font-family: 'JetBrains Mono', monospace;
-        }
-        .rec-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent-danger); animation: pulse-dot 1s infinite; }
-        #recording-notice-banner {
-            position: fixed; top: calc(var(--topbar-height) + var(--pagetabs-height) + 10px + var(--safe-top)); left: 50%; transform: translateX(-50%); z-index: 999;
-            display: none; align-items: center; gap: 8px;
-            background: rgba(239, 68, 68, 0.14); border: 1px solid rgba(239, 68, 68, 0.3);
-            color: var(--text-primary); padding: 7px 16px; border-radius: 100px;
-            font-size: 0.7rem; font-weight: 700; backdrop-filter: blur(10px);
-        }
-        #recording-notice-banner i { color: var(--accent-danger); }
-
-        #page-tabs-bar {
-            display: none; position: fixed; left: 0; right: 0;
-            top: calc(var(--topbar-height) + var(--safe-top)); height: var(--pagetabs-height);
-            z-index: 999; align-items: center; gap: 6px;
-            padding: 0 14px 0 calc(var(--sidebar-width) + 14px);
-            background: rgba(15, 12, 41, 0.5); border-bottom: 1px solid var(--glass-border);
-            backdrop-filter: blur(16px) saturate(1.05);
-        }
-        #page-tabs-list { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; flex: 1; height: 100%; align-items: center; }
-        #page-tabs-list::-webkit-scrollbar { display: none; }
-        .page-tab {
-            display: flex; align-items: center; gap: 8px;
-            padding: 6px 12px; border-radius: var(--radius-sm);
-            background: var(--glass-highlight); border: 1px solid transparent;
-            color: var(--text-muted); font-size: 0.7rem; font-weight: 700;
-            cursor: pointer; transition: var(--transition-bounce); white-space: nowrap; flex-shrink: 0;
-        }
-        .page-tab:hover { color: var(--text-primary); background: rgba(15,15,20,0.05); }
-        .page-tab.active {
-            color: var(--accent-primary); border-color: rgba(79,70,229,0.3);
-            background: rgba(79,70,229,0.1);
-        }
-        .page-tab-close { font-size: 0.6rem; opacity: 0.6; transition: var(--transition-smooth); padding: 2px; }
-        .page-tab-close:hover { opacity: 1; color: var(--accent-danger); }
-        #add-page-btn {
-            flex-shrink: 0; width: 30px; height: 30px; border-radius: var(--radius-sm);
-            border: 1px dashed var(--glass-border); background: transparent; color: var(--text-muted);
-            cursor: pointer; transition: var(--transition-bounce); display: flex; align-items: center; justify-content: center;
-        }
-        #add-page-btn:hover { color: var(--accent-success); border-color: var(--accent-success); background: rgba(16,185,129,0.08); transform: scale(1.08); }
-
-        @media(max-width: 768px) {
-            #page-tabs-bar {
-                top: calc(var(--topbar-height) + var(--safe-top));
-                padding: 0 8px; height: 38px;
-            }
-        }
-
-        #left-sidebar {
-            position: fixed; left: 12px; top: 50%; bottom: auto; transform: translateY(-50%);
-            width: 48px; max-height: calc(100vh - var(--topbar-height) - var(--pagetabs-height) - 40px);
-            background: var(--glass-bg); border: 1px solid var(--glass-border);
-            border-radius: var(--radius-xl);
-            backdrop-filter: blur(20px) saturate(1.1); z-index: 1100;
-            display: flex; flex-direction: column; align-items: center;
-            padding: 8px; gap: 3px;
+        /* ── LEFT SIDEBAR (Main Navigation - Miro Style) ── */
+        #sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: var(--sidebar-width);
+            background: var(--glass-bg);
+            border-right: 1px solid var(--glass-border);
+            backdrop-filter: blur(20px) saturate(1.1);
+            z-index: 1100;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 10px 0;
+            gap: 2px;
             overflow-y: auto;
             scrollbar-width: none;
-            box-shadow: var(--shadow-card);
         }
-        #left-sidebar::-webkit-scrollbar { display: none; }
-        
+        #sidebar::-webkit-scrollbar { display: none; }
+
+        .sb-brand {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border-radius: var(--radius-md);
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            color: #fff;
+            font-size: 1rem;
+            margin-bottom: 6px;
+            flex-shrink: 0;
+            box-shadow: 0 2px 8px rgba(79, 70, 229, 0.3);
+        }
+
+        .sb-room {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+            padding: 6px 4px;
+            width: 100%;
+            flex-shrink: 0;
+        }
+        .sb-room-code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.55rem;
+            font-weight: 700;
+            color: var(--accent-primary);
+            background: rgba(79, 70, 229, 0.08);
+            padding: 2px 6px;
+            border-radius: 4px;
+            max-width: 48px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            text-align: center;
+        }
+        .sb-online {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            font-size: 0.55rem;
+            font-weight: 700;
+            color: var(--accent-success);
+        }
+        .sb-online-dot {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: var(--accent-success);
+            box-shadow: 0 0 4px var(--accent-success);
+        }
+        .sb-online-dot.connecting { background: var(--accent-warning); box-shadow: 0 0 4px var(--accent-warning); animation: pulse-dot 1.5s infinite; }
+        .sb-online-dot.error { background: var(--accent-danger); box-shadow: 0 0 4px var(--accent-danger); }
+        @keyframes pulse-dot { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
         .sidebar-btn {
-            width: 36px; height: 36px; border-radius: var(--radius-sm);
-            display: flex; align-items: center; justify-content: center;
-            font-size: 0.9rem; border: 1px solid transparent;
-            background: transparent; color: var(--text-secondary);
-            cursor: pointer; transition: var(--transition-bounce);
-            position: relative; overflow: hidden;
+            width: 38px;
+            height: 38px;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            border: 1px solid transparent;
+            background: transparent;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: var(--transition-bounce);
+            position: relative;
             flex-shrink: 0;
         }
         .sidebar-btn::before {
-            content: ''; position: absolute; inset: 0; border-radius: inherit;
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
             background: var(--accent-primary);
-            opacity: 0; transition: opacity 0.2s ease; z-index: -1;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+            z-index: -1;
         }
         .sidebar-btn:hover { 
             color: var(--text-primary); 
-            background: var(--glass-highlight); border-color: var(--glass-border);
+            background: var(--glass-highlight);
         }
         .sidebar-btn.active { 
-            color: #fff; border-color: transparent; 
+            color: #fff;
+            border-color: transparent;
         }
         .sidebar-btn.active::before { opacity: 1; }
-        .sidebar-divider { width: 22px; height: 1px; background: var(--glass-border); margin: 3px 0; flex-shrink: 0; }
-
+        .sidebar-btn.danger { color: var(--accent-danger); }
+        .sidebar-btn.danger:hover { background: rgba(239, 68, 68, 0.1); }
+        .sidebar-btn.danger.recording {
+            background: var(--accent-danger);
+            color: #fff;
+            animation: recPulse 1.4s infinite;
+        }
+        @keyframes recPulse { 0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,0.5);} 50%{box-shadow:0 0 0 5px rgba(239,68,68,0);} }
+        
         .sidebar-btn[title]:hover::after {
-            content: attr(title); position: absolute; left: 44px; top: 50%;
-            transform: translateY(-50%); padding: 5px 10px; border-radius: var(--radius-sm);
-            background: var(--text-primary); border: 1px solid var(--glass-border);
-            color: #fff; font-size: 0.65rem; font-weight: 700;
-            white-space: nowrap; z-index: 9999; pointer-events: none;
+            content: attr(title);
+            position: absolute;
+            left: 48px;
+            top: 50%;
+            transform: translateY(-50%);
+            padding: 5px 10px;
+            border-radius: var(--radius-sm);
+            background: var(--text-primary);
+            color: #fff;
+            font-size: 0.65rem;
+            font-weight: 700;
+            white-space: nowrap;
+            z-index: 9999;
+            pointer-events: none;
             box-shadow: var(--shadow-card);
         }
 
-        #right-panels { position: fixed; right: 16px; top: calc(var(--topbar-height) + var(--pagetabs-height) + 20px + var(--safe-top)); z-index: 1100; display: flex; flex-direction: column; gap: 12px; max-width: calc(100vw - 100px); }
+        .sb-divider {
+            width: 28px;
+            height: 1px;
+            background: var(--glass-border);
+            margin: 4px 0;
+            flex-shrink: 0;
+        }
+
+        .sb-rec-indicator {
+            display: none;
+            align-items: center;
+            gap: 3px;
+            padding: 2px 5px;
+            background: rgba(239, 68, 68, 0.12);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 100px;
+            color: var(--accent-danger);
+            font-size: 0.55rem;
+            font-weight: 800;
+            font-family: 'JetBrains Mono', monospace;
+            flex-shrink: 0;
+        }
+        .sb-rec-dot {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: var(--accent-danger);
+            animation: pulse-dot 1s infinite;
+        }
+
+        .sb-spacer { flex: 1; }
+
+        /* ── RIGHT PANELS ───────────────────────────────── */
+        #right-panels {
+            position: fixed;
+            right: 16px;
+            top: 16px;
+            z-index: 1100;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-width: calc(100vw - 100px);
+        }
         
         #timer-widget {
-            background: var(--glass-bg); border: 1px solid var(--glass-border);
-            border-radius: var(--radius-lg); padding: 14px; min-width: 180px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            padding: 14px;
+            min-width: 180px;
             backdrop-filter: blur(20px) saturate(1.1);
-            box-shadow: var(--shadow-card); display: none; flex-direction: column; align-items: center;
+            box-shadow: var(--shadow-card);
+            display: none;
+            flex-direction: column;
+            align-items: center;
             animation: slideInRight 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
         @keyframes slideInRight { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
         
         #timer-display {
-            font-size: 2.2rem; font-weight: 800; color: var(--accent-primary);
-            font-family: 'JetBrains Mono', monospace; letter-spacing: 2px;
-            margin-bottom: 10px; text-shadow: 0 0 20px rgba(79, 70, 229, 0.4);
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--accent-primary);
+            font-family: 'JetBrains Mono', monospace;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+            text-shadow: 0 0 20px rgba(79, 70, 229, 0.4);
         }
         #timer-display.warning { color: var(--accent-warning); text-shadow: 0 0 20px rgba(245, 158, 11, 0.4); }
         #timer-display.danger { color: var(--accent-danger); text-shadow: 0 0 20px rgba(239, 68, 68, 0.4); animation: pulse-timer 1s infinite; }
@@ -309,10 +293,17 @@
         
         .timer-controls { display: flex; gap: 6px; width: 100%; margin-bottom: 10px; }
         .timer-btn {
-            flex: 1; padding: 7px; border-radius: var(--radius-sm); border: none;
-            background: var(--glass-highlight); color: var(--text-primary);
-            font-weight: 700; font-size: 0.65rem; cursor: pointer;
-            transition: var(--transition-bounce); font-family: 'Nunito', sans-serif;
+            flex: 1;
+            padding: 7px;
+            border-radius: var(--radius-sm);
+            border: none;
+            background: var(--glass-highlight);
+            color: var(--text-primary);
+            font-weight: 700;
+            font-size: 0.65rem;
+            cursor: pointer;
+            transition: var(--transition-bounce);
+            font-family: 'Nunito', sans-serif;
         }
         .timer-btn:hover { transform: scale(1.05); }
         .timer-btn.start { background: var(--accent-success); color: #ffffff; }
@@ -321,14 +312,80 @@
         
         .timer-inputs { display: flex; gap: 5px; width: 100%; align-items: center; }
         .timer-inputs input {
-            width: 100%; background: var(--glass-highlight); border: 1px solid var(--glass-border);
-            color: var(--text-primary); padding: 6px; border-radius: var(--radius-sm);
-            text-align: center; font-size: 0.8rem; font-family: 'JetBrains Mono', monospace;
-            transition: var(--transition-smooth);
+            width: 100%;
+            background: var(--glass-highlight);
+            border: 1px solid var(--glass-border);
+            color: var(--text-primary);
+            padding: 6px;
+            border-radius: var(--radius-sm);
+            text-align: center;
+            font-size: 0.8rem;
+            font-family: 'JetBrains Mono', monospace;
         }
-        .timer-inputs input:focus { outline: none; border-color: var(--accent-primary); box-shadow: 0 0 8px rgba(79, 70, 229, 0.3); }
+        .timer-inputs input:focus { outline: none; border-color: var(--accent-primary); }
         .timer-inputs span { color: var(--text-muted); font-weight: 800; font-family: 'JetBrains Mono', monospace; }
 
+        /* ── PAGE TABS BAR ──────────────────────────────── */
+        #page-tabs-bar {
+            position: fixed;
+            top: 10px;
+            left: calc(var(--sidebar-width) + 12px);
+            right: 220px;
+            height: 36px;
+            z-index: 999;
+            display: none;
+            align-items: center;
+            gap: 6px;
+            padding: 0 10px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-md);
+            backdrop-filter: blur(16px);
+            box-shadow: var(--shadow-card);
+        }
+        #page-tabs-list { display: flex; gap: 4px; overflow-x: auto; scrollbar-width: none; flex: 1; height: 100%; align-items: center; }
+        #page-tabs-list::-webkit-scrollbar { display: none; }
+        .page-tab {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 10px;
+            border-radius: var(--radius-sm);
+            background: transparent;
+            border: 1px solid transparent;
+            color: var(--text-muted);
+            font-size: 0.68rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition-bounce);
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        .page-tab:hover { color: var(--text-primary); background: var(--glass-highlight); }
+        .page-tab.active {
+            color: var(--accent-primary);
+            border-color: rgba(79, 70, 229, 0.3);
+            background: rgba(79, 70, 229, 0.08);
+        }
+        .page-tab-close { font-size: 0.6rem; opacity: 0.5; padding: 2px; cursor: pointer; }
+        .page-tab-close:hover { opacity: 1; color: var(--accent-danger); }
+        #add-page-btn {
+            flex-shrink: 0;
+            width: 28px;
+            height: 28px;
+            border-radius: var(--radius-sm);
+            border: 1px dashed var(--glass-border);
+            background: transparent;
+            color: var(--text-muted);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+        }
+        #add-page-btn:hover { color: var(--accent-success); border-color: var(--accent-success); background: rgba(16, 185, 129, 0.08); }
+
+        /* ── MINIMALIST POPUPS ─────────────────────────── */
         .minimal-popup {
             display: none;
             position: fixed;
@@ -337,7 +394,7 @@
             border: 1px solid var(--glass-border);
             border-radius: var(--radius-lg);
             backdrop-filter: blur(24px) saturate(1.1);
-            box-shadow: 0 10px 32px rgba(15, 15, 20, 0.14), 0 0 0 1px rgba(15,15,20,0.04);
+            box-shadow: var(--shadow-heavy);
             animation: popIn 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
             max-width: calc(100vw - 32px);
             max-height: calc(100vh - 100px);
@@ -346,7 +403,9 @@
         @keyframes popIn { from { opacity: 0; transform: scale(0.92) translateY(8px); } to { opacity: 1; transform: scale(1) translateY(0); } }
         
         .popup-header {
-            display: flex; align-items: center; justify-content: space-between;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
             padding: 10px 14px;
             border-bottom: 1px solid var(--glass-border);
             cursor: move;
@@ -355,24 +414,31 @@
             font-weight: 800;
             background: var(--glass-highlight);
             user-select: none;
-            letter-spacing: -0.01em;
         }
         .popup-header-left { display: flex; align-items: center; gap: 8px; }
         .popup-header i { color: var(--accent-primary); font-size: 0.75rem; }
         .popup-close-btn {
-            background: transparent; border: none; color: var(--text-muted);
-            cursor: pointer; font-size: 0.9rem; padding: 4px 8px; border-radius: var(--radius-sm);
-            transition: var(--transition-smooth);
-            min-width: 28px; min-height: 28px;
-            display: flex; align-items: center; justify-content: center;
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 0.9rem;
+            padding: 4px 8px;
+            border-radius: var(--radius-sm);
+            min-width: 28px;
+            min-height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         .popup-close-btn:hover { color: var(--accent-danger); background: rgba(239, 68, 68, 0.1); }
         .popup-content { padding: 14px; overflow-y: auto; max-height: calc(100vh - 200px); }
 
+        /* ── PEN SELECTOR POPUP ────────────────────────── */
         #pen-popup {
             width: 320px;
-            right: 20px;
-            top: calc(var(--topbar-height) + var(--pagetabs-height) + 20px + var(--safe-top));
+            left: calc(var(--sidebar-width) + 12px);
+            top: 60px;
         }
         
         .pen-category { margin-bottom: 14px; }
@@ -413,42 +479,25 @@
             box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2);
         }
         .pen-preview {
-            width: 32px; height: 32px;
-            display: flex; align-items: center; justify-content: center;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             flex-shrink: 0;
         }
         .pen-preview svg { width: 100%; height: 100%; }
         .pen-info { display: flex; flex-direction: column; min-width: 0; flex: 1; }
-        .pen-name {
-            color: var(--text-primary);
-            font-size: 0.78rem;
-            font-weight: 700;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        .pen-desc {
-            color: var(--text-muted);
-            font-size: 0.6rem;
-            font-weight: 600;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        .pen-check {
-            position: absolute;
-            top: 4px; right: 4px;
-            color: var(--accent-primary);
-            font-size: 0.7rem;
-            opacity: 0;
-            transition: opacity 0.2s;
-        }
+        .pen-name { color: var(--text-primary); font-size: 0.78rem; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .pen-desc { color: var(--text-muted); font-size: 0.6rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .pen-check { position: absolute; top: 4px; right: 4px; color: var(--accent-primary); font-size: 0.7rem; opacity: 0; }
         .pen-item.selected .pen-check { opacity: 1; }
 
+        /* ── BACKGROUND COLOR POPUP ────────────────────── */
         #bg-color-popup {
             width: 240px;
-            right: 20px;
-            top: calc(var(--topbar-height) + var(--pagetabs-height) + 20px + var(--safe-top));
+            left: calc(var(--sidebar-width) + 12px);
+            top: 60px;
         }
         
         .color-grid {
@@ -458,141 +507,203 @@
             margin-bottom: 12px;
         }
         .color-swatch {
-            width: 100%; aspect-ratio: 1; border-radius: var(--radius-sm);
-            cursor: pointer; border: 2px solid rgba(15,15,20,0.1);
+            width: 100%;
+            aspect-ratio: 1;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            border: 2px solid rgba(15, 15, 20, 0.1);
             transition: var(--transition-bounce);
-            box-shadow: inset 0 1px 2px rgba(0,0,0,0.08);
             position: relative;
         }
-        .color-swatch:hover { 
-            transform: scale(1.1); 
-            border-color: rgba(15,15,20,0.25); 
-            z-index: 1;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-        }
-        .color-swatch.selected { 
-            border-color: var(--accent-primary) !important; 
-            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2), 0 4px 10px rgba(0,0,0,0.15);
+        .color-swatch:hover { transform: scale(1.1); border-color: rgba(15, 15, 20, 0.25); }
+        .color-swatch.selected {
+            border-color: var(--accent-primary) !important;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
             transform: scale(1.06);
         }
         .color-swatch.selected::after {
-            content: '✓'; position: absolute; inset: 0;
-            display: flex; align-items: center; justify-content: center;
-            color: #fff; font-size: 1rem; font-weight: 800;
+            content: '✓';
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 1rem;
+            font-weight: 800;
             text-shadow: 0 1px 3px rgba(0,0,0,0.5);
         }
         
         .custom-color-row {
-            display: flex; align-items: center; gap: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
             border-top: 1px solid var(--glass-border);
             padding-top: 12px;
         }
-        .custom-color-row span {
-            color: var(--text-secondary);
-            font-size: 0.7rem;
-            font-weight: 700;
-            white-space: nowrap;
-        }
+        .custom-color-row span { color: var(--text-secondary); font-size: 0.7rem; font-weight: 700; }
         #custom-bg-picker {
-            flex: 1; height: 34px; border: 2px solid var(--glass-border);
-            border-radius: var(--radius-sm); cursor: pointer; background: transparent;
+            flex: 1;
+            height: 34px;
+            border: 2px solid var(--glass-border);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            background: transparent;
             padding: 2px;
-            transition: var(--transition-smooth);
         }
-        #custom-bg-picker:hover { border-color: var(--accent-primary); }
 
+        /* ── FOG OF WAR ─────────────────────────────────── */
         #spotlight-overlay {
-            position: fixed; inset: 0; z-index: 1500;
+            position: fixed;
+            inset: 0;
+            z-index: 1500;
             background: radial-gradient(circle 280px at var(--sx, 50%) var(--sy, 50%), transparent 0%, rgba(15, 12, 41, 0.97) 100%);
-            pointer-events: none; display: none; transition: background 0.08s ease-out;
+            pointer-events: none;
+            display: none;
         }
         
         #spotlight-handle {
-            position: fixed; width: 40px; height: 40px; border-radius: 50%;
-            background: rgba(79, 70, 229, 0.3); border: 2px solid var(--accent-primary);
-            box-shadow: 0 0 20px rgba(79, 70, 229, 0.5); cursor: grab; z-index: 1501;
-            display: none; align-items: center; justify-content: center;
-            color: #fff; font-size: 1.1rem; transition: transform 0.2s ease;
-            left: var(--hx, 50%); top: var(--hy, 50%);
+            position: fixed;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(79, 70, 229, 0.3);
+            border: 2px solid var(--accent-primary);
+            box-shadow: 0 0 20px rgba(79, 70, 229, 0.5);
+            cursor: grab;
+            z-index: 1501;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 1.1rem;
+            left: var(--hx, 50%);
+            top: var(--hy, 50%);
             transform: translate(-50%, -50%);
         }
-        #spotlight-handle:hover { transform: translate(-50%, -50%) scale(1.2); }
-        #spotlight-handle:active { cursor: grabbing; transform: translate(-50%, -50%) scale(0.9); }
-        #spotlight-handle i { pointer-events: none; }
+        #spotlight-handle:active { cursor: grabbing; }
 
+        /* ── SETUP SCREEN ──────────────────────────────── */
         #setup-screen {
-            position: fixed; inset: 0; z-index: 3000;
-            display: flex; align-items: center; justify-content: center;
+            position: fixed;
+            inset: 0;
+            z-index: 3000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             background: radial-gradient(circle at center, #FFFFFF 0%, #EFEFF3 100%);
             padding: 20px;
         }
         #setup-card {
-            width: min(440px, 95vw); background: var(--glass-bg);
-            border: 1px solid var(--glass-border); border-radius: var(--radius-xl);
-            padding: 36px 28px; text-align: center;
+            width: min(440px, 95vw);
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-xl);
+            padding: 36px 28px;
+            text-align: center;
             backdrop-filter: blur(24px) saturate(1.1);
-            box-shadow: var(--shadow-card), var(--shadow-glow);
+            box-shadow: var(--shadow-card);
             animation: floatUp 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
         @keyframes floatUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
         
-        #setup-card h1 { 
-            color: var(--text-primary); font-size: 1.7rem; font-weight: 800; 
-            margin-bottom: 6px; letter-spacing: -0.03em;
+        #setup-card h1 {
+            color: var(--text-primary);
+            font-size: 1.7rem;
+            font-weight: 800;
+            margin-bottom: 6px;
         }
-        #setup-card h1 span { 
+        #setup-card h1 span {
             background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
-        #setup-card p.tagline { color: var(--text-muted); font-size: 0.75rem; margin-bottom: 28px; font-weight: 600; letter-spacing: 0.05em; }
-        #setup-card label { display: block; text-align: left; color: var(--text-secondary); font-size: 0.68rem; font-weight: 800; letter-spacing: 0.08em; margin: 18px 0 6px; text-transform: uppercase; }
+        #setup-card p.tagline {
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            margin-bottom: 28px;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+        }
+        #setup-card label {
+            display: block;
+            text-align: left;
+            color: var(--text-secondary);
+            font-size: 0.68rem;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            margin: 18px 0 6px;
+            text-transform: uppercase;
+        }
         #setup-card input {
-            width: 100%; background: var(--glass-highlight); border: 1px solid var(--glass-border);
-            color: var(--text-primary); padding: 12px 14px; border-radius: var(--radius-md);
-            font-size: 0.95rem; outline: none; margin-bottom: 8px; font-weight: 600;
+            width: 100%;
+            background: var(--glass-highlight);
+            border: 1px solid var(--glass-border);
+            color: var(--text-primary);
+            padding: 12px 14px;
+            border-radius: var(--radius-md);
+            font-size: 0.95rem;
+            outline: none;
+            margin-bottom: 8px;
+            font-weight: 600;
         }
-        #setup-card input:focus { border-color: var(--accent-primary); box-shadow: 0 0 12px rgba(79, 70, 229, 0.25); }
-        #setup-card input::placeholder { color: var(--text-muted); font-weight: 400; }
+        #setup-card input:focus { border-color: var(--accent-primary); }
         
         .role-toggle { display: flex; gap: 8px; margin-top: 6px; }
         .role-toggle button {
-            flex: 1; padding: 12px; border-radius: var(--radius-md);
-            border: 1px solid var(--glass-border); background: var(--glass-highlight);
-            color: var(--text-muted); font-weight: 700; font-size: 0.8rem;
-            cursor: pointer; transition: var(--transition-bounce);
+            flex: 1;
+            padding: 12px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--glass-border);
+            background: var(--glass-highlight);
+            color: var(--text-muted);
+            font-weight: 700;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: var(--transition-bounce);
         }
-        .role-toggle button:hover { transform: scale(1.03); }
         .role-toggle button.active {
-            border-color: var(--accent-primary); color: var(--text-primary);
-            background: linear-gradient(135deg, rgba(79,70,229,0.15), rgba(129,140,248,0.1));
-            box-shadow: 0 0 16px rgba(79, 70, 229, 0.2);
+            border-color: var(--accent-primary);
+            color: var(--text-primary);
+            background: rgba(79, 70, 229, 0.1);
         }
         
         #enter-btn {
-            width: 100%; margin-top: 28px; padding: 14px; border-radius: var(--radius-md);
-            border: none; font-weight: 800; font-size: 0.95rem; cursor: pointer;
+            width: 100%;
+            margin-top: 28px;
+            padding: 14px;
+            border-radius: var(--radius-md);
+            border: none;
+            font-weight: 800;
+            font-size: 0.95rem;
+            cursor: pointer;
             background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
-            color: #fff; letter-spacing: 0.02em;
-            transition: var(--transition-bounce);
+            color: #fff;
             box-shadow: 0 4px 20px rgba(79, 70, 229, 0.3);
         }
-        #enter-btn:hover { transform: scale(1.03) translateY(-2px); box-shadow: 0 8px 30px rgba(79, 70, 229, 0.4); }
-        #enter-btn:active { transform: scale(0.98); }
         #setup-error { color: var(--accent-danger); font-size: 0.75rem; margin-top: 12px; min-height: 1.2em; font-weight: 700; }
 
+        /* ── MODALS ─────────────────────────────────────── */
         #add-student-modal, #toolkit-modal, #math-modal, #graph-modal {
-            position: fixed; inset: 0; z-index: 4000;
-            display: none; align-items: center; justify-content: center;
-            background: rgba(15, 12, 41, 0.85); backdrop-filter: blur(8px); padding: 20px;
-            animation: fadeIn 0.2s ease;
+            position: fixed;
+            inset: 0;
+            z-index: 4000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            background: rgba(15, 12, 41, 0.6);
+            backdrop-filter: blur(8px);
+            padding: 20px;
         }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         
         #add-student-card, #toolkit-card, #math-card, #graph-card {
-            width: min(460px, 95vw); background: var(--glass-bg);
-            border: 1px solid var(--glass-border); border-radius: var(--radius-xl);
-            padding: 28px 24px; backdrop-filter: blur(24px) saturate(1.1);
-            box-shadow: var(--shadow-card), var(--shadow-glow);
+            width: min(460px, 95vw);
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-xl);
+            padding: 28px 24px;
+            backdrop-filter: blur(24px) saturate(1.1);
+            box-shadow: var(--shadow-heavy);
             animation: popIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
             max-height: 90vh;
             overflow-y: auto;
@@ -601,293 +712,225 @@
         #graph-card { width: min(680px, 95vw); }
         
         #add-student-card h3, #toolkit-card h3, #math-card h3, #graph-card h3 {
-            color: var(--text-primary); font-size: 1.1rem; font-weight: 800;
-            margin-bottom: 6px; display: flex; align-items: center; gap: 10px;
-            letter-spacing: -0.02em;
+            color: var(--text-primary);
+            font-size: 1.1rem;
+            font-weight: 800;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
         #add-student-card h3 i, #toolkit-card h3 i, #math-card h3 i, #graph-card h3 i { color: var(--accent-success); }
-        #add-student-card p, #toolkit-card p, #graph-card p { color: var(--text-muted); font-size: 0.75rem; margin-bottom: 20px; font-weight: 600; }
-        #add-student-card label { display: block; text-align: left; color: var(--text-secondary); font-size: 0.68rem; font-weight: 800; letter-spacing: 0.08em; margin: 16px 0 6px; text-transform: uppercase; }
+        #add-student-card p, #toolkit-card p, #graph-card p {
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        #add-student-card label {
+            display: block;
+            text-align: left;
+            color: var(--text-secondary);
+            font-size: 0.68rem;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            margin: 16px 0 6px;
+            text-transform: uppercase;
+        }
         
-        .suggestions-container { position: relative; width: 100%; }
         #add-student-card input, #math-input {
-            width: 100%; background: var(--glass-highlight); border: 1px solid var(--glass-border);
-            color: var(--text-primary); padding: 12px 14px; border-radius: var(--radius-md);
-            font-size: 0.9rem; outline: none; margin-bottom: 8px; font-weight: 600;
-            transition: var(--transition-smooth);
+            width: 100%;
+            background: var(--glass-highlight);
+            border: 1px solid var(--glass-border);
+            color: var(--text-primary);
+            padding: 12px 14px;
+            border-radius: var(--radius-md);
+            font-size: 0.9rem;
+            outline: none;
+            margin-bottom: 8px;
             font-family: 'Nunito', sans-serif;
         }
         #math-input { min-height: 80px; resize: vertical; }
-        #add-student-card input:focus, #math-input:focus { border-color: var(--accent-success); box-shadow: 0 0 12px rgba(16, 185, 129, 0.2); }
+        #add-student-card input:focus, #math-input:focus { border-color: var(--accent-success); }
         
-        #email-suggestions {
-            position: absolute; top: 100%; left: 0; right: 0;
-            background: var(--bg-light); border: 1px solid var(--glass-border);
-            border-radius: var(--radius-md); margin-top: 6px; max-height: 150px;
-            overflow-y: auto; z-index: 100; display: none;
-            box-shadow: var(--shadow-card);
+        #email-list {
+            max-height: 140px;
+            overflow-y: auto;
+            margin: 12px 0;
+            background: var(--glass-highlight);
+            border-radius: var(--radius-md);
+            padding: 8px;
+            min-height: 40px;
         }
-        .suggestion-item { padding: 10px 14px; color: var(--text-primary); cursor: pointer; font-size: 0.85rem; border-bottom: 1px solid var(--glass-border); transition: var(--transition-smooth); font-weight: 600; }
-        .suggestion-item:hover { background: rgba(79, 70, 229, 0.1); color: var(--accent-primary); }
-        .suggestion-item:last-child { border-bottom: none; }
-        
-        #email-list { max-height: 140px; overflow-y: auto; margin: 12px 0; background: var(--glass-highlight); border-radius: var(--radius-md); padding: 8px; min-height: 40px; }
         .email-tag {
-            display: inline-flex; align-items: center; gap: 6px;
-            background: rgba(16, 185, 129, 0.1); border: 1px solid var(--accent-success);
-            color: var(--accent-success); padding: 4px 10px; border-radius: 100px;
-            font-size: 0.7rem; margin: 3px; font-weight: 700;
-            transition: var(--transition-bounce);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid var(--accent-success);
+            color: var(--accent-success);
+            padding: 4px 10px;
+            border-radius: 100px;
+            font-size: 0.7rem;
+            margin: 3px;
+            font-weight: 700;
         }
-        .email-tag:hover { transform: scale(1.05); }
-        .email-tag i { cursor: pointer; font-size: 0.6rem; opacity: 0.7; transition: var(--transition-smooth); }
+        .email-tag i { cursor: pointer; font-size: 0.6rem; opacity: 0.7; }
         .email-tag i:hover { opacity: 1; color: var(--accent-danger); }
         
         .btn-row { display: flex; gap: 8px; margin-top: 20px; }
         .btn-row button {
-            flex: 1; padding: 12px; border-radius: var(--radius-md); border: none;
-            font-weight: 800; font-size: 0.85rem; cursor: pointer;
-            transition: var(--transition-bounce); font-family: 'Nunito', sans-serif;
+            flex: 1;
+            padding: 12px;
+            border-radius: var(--radius-md);
+            border: none;
+            font-weight: 800;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: var(--transition-bounce);
+            font-family: 'Nunito', sans-serif;
         }
-        .btn-row button:hover { transform: scale(1.03); }
-        #send-invites-btn, #insert-math-btn, #insert-graph-btn { 
-            background: linear-gradient(135deg, var(--accent-success), #22d3ee); color: #ffffff;
-            box-shadow: 0 4px 16px rgba(16, 185, 129, 0.25);
+        #send-invites-btn, #insert-math-btn, #insert-graph-btn {
+            background: linear-gradient(135deg, var(--accent-success), #22d3ee);
+            color: #ffffff;
         }
-        #cancel-add-btn, #cancel-math-btn, #close-toolkit-btn, #cancel-graph-btn { background: rgba(15,15,20,0.055); color: var(--text-primary); border: 1px solid var(--glass-border); }
+        #cancel-add-btn, #cancel-math-btn, #close-toolkit-btn, #cancel-graph-btn {
+            background: rgba(15, 15, 20, 0.055);
+            color: var(--text-primary);
+            border: 1px solid var(--glass-border);
+        }
         
-        .toolkit-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; margin-top: 16px; }
+        .toolkit-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            gap: 10px;
+            margin-top: 16px;
+        }
         .toolkit-item {
-            background: rgba(15,15,20,0.035); border: 1px solid var(--glass-border);
-            border-radius: var(--radius-md); padding: 16px 12px; text-align: center;
-            cursor: pointer; transition: var(--transition-bounce);
-            display: flex; flex-direction: column; align-items: center; gap: 8px;
+            background: rgba(15, 15, 20, 0.035);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-md);
+            padding: 16px 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition-bounce);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
         }
-        .toolkit-item:hover { 
-            background: rgba(79, 70, 229, 0.1); border-color: var(--accent-primary); 
-            transform: translateY(-3px); box-shadow: 0 8px 24px rgba(79, 70, 229, 0.15);
+        .toolkit-item:hover {
+            background: rgba(79, 70, 229, 0.1);
+            border-color: var(--accent-primary);
+            transform: translateY(-3px);
         }
-        .toolkit-item i { font-size: 1.4rem; color: var(--accent-primary); transition: var(--transition-bounce); }
-        .toolkit-item:hover i { transform: scale(1.1); color: var(--accent-secondary); }
+        .toolkit-item i { font-size: 1.4rem; color: var(--accent-primary); }
         .toolkit-item span { color: var(--text-primary); font-size: 0.8rem; font-weight: 700; }
         .toolkit-item .sub-text { color: var(--text-muted); font-size: 0.6rem; font-weight: 600; }
 
+        /* ── GRAPHING TOOL ──────────────────────────────── */
         .graph-tabs { display: flex; gap: 6px; margin-bottom: 14px; flex-wrap: wrap; }
         .graph-tab {
-            padding: 7px 13px; border-radius: 100px; border: 1px solid var(--glass-border);
-            background: var(--glass-highlight); color: var(--text-secondary);
-            font-size: 0.7rem; font-weight: 700; cursor: pointer; transition: var(--transition-bounce);
+            padding: 7px 13px;
+            border-radius: 100px;
+            border: 1px solid var(--glass-border);
+            background: var(--glass-highlight);
+            color: var(--text-secondary);
+            font-size: 0.7rem;
+            font-weight: 700;
+            cursor: pointer;
         }
-        .graph-tab:hover { transform: scale(1.04); }
         .graph-tab.active {
-            border-color: var(--accent-tertiary); color: #fff;
-            background: linear-gradient(135deg, rgba(14,165,233,0.3), rgba(79,70,229,0.2));
-            box-shadow: 0 0 12px rgba(14,165,233,0.25);
+            border-color: var(--accent-tertiary);
+            color: #fff;
+            background: linear-gradient(135deg, rgba(14, 165, 233, 0.3), rgba(79, 70, 229, 0.2));
         }
         .graph-fields { display: none; }
         .graph-fields.active { display: flex; flex-direction: column; gap: 10px; }
         .graph-field-row { display: flex; gap: 8px; align-items: center; }
         .graph-field-row label {
-            min-width: 78px; color: var(--text-secondary); font-size: 0.68rem;
-            font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; margin: 0;
+            min-width: 78px;
+            color: var(--text-secondary);
+            font-size: 0.68rem;
+            font-weight: 800;
+            text-transform: uppercase;
         }
         .graph-field-row input {
-            flex: 1; background: var(--glass-highlight); border: 1px solid var(--glass-border);
-            color: var(--text-primary); padding: 9px 12px; border-radius: var(--radius-sm);
-            font-size: 0.85rem; outline: none; font-family: 'JetBrains Mono', monospace;
+            flex: 1;
+            background: var(--glass-highlight);
+            border: 1px solid var(--glass-border);
+            color: var(--text-primary);
+            padding: 9px 12px;
+            border-radius: var(--radius-sm);
+            font-size: 0.85rem;
+            outline: none;
+            font-family: 'JetBrains Mono', monospace;
         }
-        .graph-field-row input:focus { border-color: var(--accent-tertiary); box-shadow: 0 0 10px rgba(14,165,233,0.2); }
-        .graph-hint { color: var(--text-muted); font-size: 0.65rem; margin-top: -4px; margin-bottom: 4px; font-weight: 600; }
+        .graph-field-row input:focus { border-color: var(--accent-tertiary); }
+        .graph-hint { color: var(--text-muted); font-size: 0.65rem; margin-top: -4px; font-weight: 600; }
         #graph-canvas-wrap {
-            margin-top: 14px; background: #05070f; border: 1px solid var(--glass-border);
-            border-radius: var(--radius-md); overflow: hidden; position: relative;
+            margin-top: 14px;
+            background: #05070f;
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-md);
+            overflow: hidden;
         }
-        #graph-canvas { width: 100%; height: 260px; display: block; touch-action: none; }
+        #graph-canvas { width: 100%; height: 260px; display: block; }
         #graph-readout {
-            margin-top: 8px; color: var(--accent-tertiary); font-size: 0.7rem;
-            font-family: 'JetBrains Mono', monospace; font-weight: 700; min-height: 1.2em;
+            margin-top: 8px;
+            color: var(--accent-tertiary);
+            font-size: 0.7rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            min-height: 1.2em;
         }
         #graph-error { color: var(--accent-danger); font-size: 0.7rem; font-weight: 700; margin-top: 6px; min-height: 1.2em; }
 
-        .excalidraw .App-toolbar {
-            position: fixed !important; 
-            top: calc(var(--topbar-height) + var(--pagetabs-height) + var(--safe-top)) !important; 
-            left: calc(var(--sidebar-width) + 14px) !important; 
-            right: 280px !important;
-            z-index: 997 !important; 
-            background: var(--glass-bg) !important;
-            backdrop-filter: blur(20px) saturate(1.1) !important;
-            border-radius: 0 0 var(--radius-lg) var(--radius-lg) !important;
-            border: 1px solid var(--glass-border) !important; 
-            border-top: none !important;
-            padding: 8px 14px !important; 
-            box-shadow: var(--shadow-card) !important;
-            overflow-x: auto;
-            scrollbar-width: none;
-        }
-        .excalidraw .App-toolbar::-webkit-scrollbar { display: none; }
-
-        #mobile-toolbar {
-            display: none;
+        #locked-banner {
             position: fixed;
-            bottom: var(--safe-bottom);
-            left: 0; right: 0;
-            height: var(--mobile-toolbar-height);
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px) saturate(1.1);
-            border-top: 1px solid var(--glass-border);
-            z-index: 1100;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            display: none;
             align-items: center;
-            justify-content: space-around;
-            padding: 0 8px;
-            padding-bottom: var(--safe-bottom);
-            overflow-x: auto;
-        }
-        .mobile-tool-btn {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 3px;
-            padding: 6px 4px;
-            background: transparent;
-            border: none;
-            color: var(--text-muted);
-            cursor: pointer;
-            font-size: 0.6rem;
+            gap: 10px;
+            background: rgba(239, 68, 68, 0.12);
+            border: 1px solid rgba(239, 68, 68, 0.25);
+            color: var(--text-primary);
+            padding: 10px 20px;
+            border-radius: 100px;
+            font-size: 0.75rem;
             font-weight: 700;
-            transition: var(--transition-bounce);
-            border-radius: var(--radius-sm);
-            min-height: 48px;
-            min-width: 48px;
+            backdrop-filter: blur(10px);
+            max-width: 90vw;
         }
-        .mobile-tool-btn i { font-size: 1.1rem; }
-        .mobile-tool-btn:hover, .mobile-tool-btn.active {
-            color: var(--accent-primary);
-            background: var(--glass-highlight);
-        }
-        .mobile-tool-btn.active {
-            color: var(--accent-primary);
-            background: rgba(79,70,229,0.1);
-        }
+        #locked-banner i { color: var(--accent-danger); }
 
-        @media(max-width: 1024px) {
-            .excalidraw .App-toolbar { right: 220px !important; }
-            #right-panels { right: 12px; }
-        }
-        
-        @media(max-width: 900px) {
-            .excalidraw .App-toolbar { right: 20px !important; }
-            #right-panels { 
-                position: fixed; 
-                right: 10px; 
-                top: auto; 
-                bottom: calc(var(--mobile-toolbar-height) + 10px + var(--safe-bottom));
-                flex-direction: row-reverse;
-            }
-            #timer-widget { min-width: 160px; }
+        /* ── RESPONSIVE ─────────────────────────────────── */
+        @media(max-width: 768px) {
+            :root { --sidebar-width: 48px; }
+            .sidebar-btn { width: 34px; height: 34px; font-size: 0.85rem; }
+            .sb-brand { width: 32px; height: 32px; font-size: 0.9rem; }
+            .sb-room-code { font-size: 0.5rem; }
+            .sb-online { font-size: 0.5rem; }
+            .sidebar-btn[title]:hover::after { display: none; }
+            #page-tabs-bar { right: 10px; }
+            #pen-popup, #bg-color-popup { width: calc(100vw - 70px); }
+            .pen-grid { grid-template-columns: 1fr; }
+            #timer-widget { min-width: 150px; }
             #timer-display { font-size: 1.8rem; }
         }
         
-        @media(max-width: 768px) {
-            :root {
-                --topbar-height: 50px;
-                --pagetabs-height: 38px;
-                --mobile-toolbar-height: 60px;
-            }
-            
-            #root { 
-                top: calc(var(--topbar-height) + var(--pagetabs-height) + var(--safe-top)); 
-                bottom: var(--mobile-toolbar-height);
-            }
-            
-            #topbar { 
-                padding: 0 10px; 
-                gap: 6px;
-                height: var(--topbar-height);
-            }
-            #brand { font-size: 0.85rem; gap: 6px; }
-            #brand i { font-size: 0.95rem; }
-            #room-pill { padding: 4px 10px; font-size: 0.65rem; }
-            #online-students { padding: 4px 10px; font-size: 0.65rem; }
-            .topbar-btn { padding: 5px 10px; font-size: 0.65rem; min-height: 28px; }
-            .topbar-btn span { display: none; }
-            .topbar-btn i { font-size: 0.85rem; }
-            
-            #left-sidebar { display: none; }
-            #mobile-toolbar { display: flex; }
-            
-            .excalidraw .App-toolbar {
-                left: 10px !important;
-                right: 10px !important;
-                padding: 6px 10px !important;
-            }
-            
-            #pen-popup, #bg-color-popup {
-                position: fixed !important;
-                left: 10px !important;
-                right: 10px !important;
-                top: auto !important;
-                bottom: calc(var(--mobile-toolbar-height) + 10px + var(--safe-bottom)) !important;
-                width: auto !important;
-                max-height: 70vh;
-            }
-            
-            .pen-grid { grid-template-columns: repeat(2, 1fr); }
-            .color-grid { grid-template-columns: repeat(4, 1fr); }
-            
-            #timer-widget { 
-                min-width: 140px; 
-                padding: 10px;
-            }
-            #timer-display { font-size: 1.6rem; }
-            
-            #locked-banner {
-                bottom: calc(var(--mobile-toolbar-height) + 10px + var(--safe-bottom));
-                font-size: 0.7rem;
-                padding: 8px 16px;
-            }
-            
-            .sidebar-btn[title]:hover::after { display: none; }
-            
-            #add-student-card, #toolkit-card, #math-card, #graph-card {
-                padding: 22px 18px;
-            }
+        @media(max-width: 480px) {
             .toolkit-grid { grid-template-columns: repeat(2, 1fr); }
             #graph-canvas { height: 200px; }
-        }
-        
-        @media(max-width: 480px) {
-            #brand .sub { display: none; }
-            #online-students { display: none !important; }
-            .pen-grid { grid-template-columns: 1fr; }
-            .toolkit-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
-            .toolkit-item { padding: 12px 8px; }
-            .toolkit-item i { font-size: 1.2rem; }
-            .toolkit-item span { font-size: 0.72rem; }
-        }
-        
-        @media(max-height: 500px) and (orientation: landscape) {
-            :root { --topbar-height: 44px; --mobile-toolbar-height: 50px; }
-            #pen-popup, #bg-color-popup {
-                max-height: 80vh;
-                bottom: calc(var(--mobile-toolbar-height) + 5px + var(--safe-bottom)) !important;
-            }
-        }
-        
-        @media (hover: none) and (pointer: coarse) {
-            .sidebar-btn, .mobile-tool-btn, .topbar-btn, .timer-btn, .pen-item, .color-swatch {
-                min-height: 40px;
-                min-width: 40px;
-            }
-            .sidebar-btn { width: 44px; height: 44px; }
-            .pen-item { padding: 12px; }
         }
     </style>
 </head>
 <body>
 
+    <!-- SETUP SCREEN -->
     <div id="setup-screen">
         <div id="setup-card">
             <h1>Prime<span>Board</span></h1>
@@ -906,58 +949,54 @@
         </div>
     </div>
 
-    <div id="topbar" style="display:none;">
-        <div id="brand"><i class="fas fa-atom"></i> PrimeBoard</div>
-        <div id="room-pill"><span id="status-dot"></span> <b id="room-pill-code">-</b></div>
-        <div id="online-students" style="display:none;"><i class="fas fa-users"></i> <span id="student-count">1</span></div>
-        <div class="topbar-spacer"></div>
-        <button id="lock-btn" class="topbar-btn icon-only" style="display:none;" title="Lock drawing"><i class="fas fa-lock"></i><span id="lock-btn-text" style="display:none;">Locked</span></button>
-        <button id="record-btn" class="topbar-btn icon-only" style="display:none;" title="Record class"><i class="fas fa-video"></i><span id="record-btn-text" style="display:none;">Record</span></button>
-        <div id="record-indicator"><span class="rec-dot"></span> <span id="record-timer">00:00</span></div>
-        <button id="more-menu-btn" class="topbar-btn icon-only" title="More"><i class="fas fa-ellipsis-h"></i></button>
-    </div>
-
-    <div id="more-menu" class="minimal-popup" style="width:200px; right:14px; top:calc(var(--topbar-height) + 6px + var(--safe-top));">
-        <div class="popup-content" style="padding:6px;">
-            <button class="menu-row-item" id="invite-btn" style="display:none;"><i class="fas fa-link"></i> Invite students</button>
-            <button class="menu-row-item" id="add-student-btn" style="display:none;"><i class="fas fa-user-plus"></i> Add by email</button>
-            <button class="menu-row-item" id="btn-theme"><i class="fas fa-circle-half-stroke"></i> Toggle theme</button>
-            <a class="menu-row-item" id="exit-btn" href="../index.html"><i class="fas fa-arrow-right-from-bracket"></i> Exit board</a>
+    <!-- LEFT SIDEBAR (All Navigation) -->
+    <div id="sidebar" style="display:none;">
+        <div class="sb-brand" title="PrimeBoard"><i class="fas fa-atom"></i></div>
+        
+        <div class="sb-room">
+            <div class="sb-room-code" id="sb-room-code">—</div>
+            <div class="sb-online">
+                <span class="sb-online-dot" id="sb-online-dot"></span>
+                <span id="sb-online-count">1</span>
+            </div>
         </div>
+
+        <button class="sidebar-btn danger" id="lock-btn" title="Lock Drawing" style="display:none;"><i class="fas fa-lock"></i></button>
+        <button class="sidebar-btn danger" id="record-btn" title="Record Class" style="display:none;"><i class="fas fa-video"></i></button>
+        <div class="sb-rec-indicator" id="rec-indicator"><span class="sb-rec-dot"></span><span id="rec-timer">00:00</span></div>
+
+        <div class="sb-divider"></div>
+
+        <button class="sidebar-btn" id="btn-toolkit" title="Smart Toolkit"><i class="fas fa-graduation-cap"></i></button>
+        <button class="sidebar-btn" id="btn-pen" title="Pen Types"><i class="fas fa-pen-nib"></i></button>
+        <button class="sidebar-btn" id="btn-graph" title="Graph Plotter"><i class="fas fa-chart-line"></i></button>
+        <button class="sidebar-btn" id="btn-spotlight" title="Fog of War"><i class="fas fa-lightbulb"></i></button>
+
+        <div class="sb-divider"></div>
+
+        <button class="sidebar-btn" id="btn-timer" title="Timer"><i class="fas fa-stopwatch"></i></button>
+        <button class="sidebar-btn" id="btn-math" title="Math Equation"><i class="fas fa-square-root-alt"></i></button>
+        <button class="sidebar-btn" id="btn-bg-color" title="Background"><i class="fas fa-fill-drip"></i></button>
+
+        <div class="sb-divider"></div>
+
+        <button class="sidebar-btn" id="btn-add-student" title="Add Student" style="display:none;"><i class="fas fa-user-plus"></i></button>
+        <button class="sidebar-btn" id="btn-invite" title="Copy Invite Link" style="display:none;"><i class="fas fa-link"></i></button>
+
+        <div class="sb-spacer"></div>
+
+        <button class="sidebar-btn" id="btn-undo" title="Undo"><i class="fas fa-undo"></i></button>
+        <button class="sidebar-btn" id="btn-redo" title="Redo"><i class="fas fa-redo"></i></button>
+        <a class="sidebar-btn" id="btn-exit" href="../index.html" title="Exit"><i class="fas fa-arrow-right-from-bracket"></i></a>
     </div>
 
-    <div id="locked-banner"><i class="fas fa-lock"></i> Drawing locked — pan & zoom only</div>
-    <div id="recording-notice-banner"><i class="fas fa-video"></i> This class is being recorded</div>
-
+    <!-- PAGE TABS BAR -->
     <div id="page-tabs-bar">
         <div id="page-tabs-list"></div>
         <button id="add-page-btn" title="Add Page"><i class="fas fa-plus"></i></button>
     </div>
 
-    <div id="left-sidebar" style="display:none;">
-        <button class="sidebar-btn" id="btn-toolkit" title="Smart Toolkit"><i class="fas fa-graduation-cap"></i></button>
-        <button class="sidebar-btn" id="btn-pen" title="Pen Types"><i class="fas fa-pen-nib"></i></button>
-        <button class="sidebar-btn" id="btn-graph" title="Graphing Tool"><i class="fas fa-chart-line"></i></button>
-        <button class="sidebar-btn" id="btn-spotlight" title="Fog of War"><i class="fas fa-lightbulb"></i></button>
-        <div class="sidebar-divider"></div>
-        <button class="sidebar-btn" id="btn-timer" title="Timer"><i class="fas fa-stopwatch"></i></button>
-        <button class="sidebar-btn" id="btn-math" title="Math Equation"><i class="fas fa-square-root-alt"></i></button>
-        <div class="sidebar-divider"></div>
-        <button class="sidebar-btn" id="btn-bg-color" title="Background"><i class="fas fa-fill-drip"></i></button>
-    </div>
-
-    <div id="mobile-toolbar" style="display:none;">
-        <button class="mobile-tool-btn" data-action="toolkit"><i class="fas fa-graduation-cap"></i><span>Tools</span></button>
-        <button class="mobile-tool-btn" data-action="pen"><i class="fas fa-pen-nib"></i><span>Pens</span></button>
-        <button class="mobile-tool-btn" data-action="graph"><i class="fas fa-chart-line"></i><span>Graph</span></button>
-        <button class="mobile-tool-btn" data-action="spotlight"><i class="fas fa-lightbulb"></i><span>Spot</span></button>
-        <button class="mobile-tool-btn" data-action="timer"><i class="fas fa-stopwatch"></i><span>Timer</span></button>
-        <button class="mobile-tool-btn" data-action="math"><i class="fas fa-square-root-alt"></i><span>Math</span></button>
-        <button class="mobile-tool-btn" data-action="bg"><i class="fas fa-fill-drip"></i><span>BG</span></button>
-        <button class="mobile-tool-btn" data-action="pages"><i class="fas fa-copy"></i><span>Pages</span></button>
-        <button class="mobile-tool-btn" id="mobile-record-btn" data-action="record" style="display:none;"><i class="fas fa-video"></i><span>Rec</span></button>
-    </div>
-
+    <!-- RIGHT PANELS -->
     <div id="right-panels">
         <div id="timer-widget">
             <div id="timer-display">05:00</div>
@@ -974,9 +1013,14 @@
         </div>
     </div>
 
+    <!-- SPOTLIGHT -->
     <div id="spotlight-overlay"></div>
     <div id="spotlight-handle"><i class="fas fa-crosshairs"></i></div>
 
+    <!-- LOCKED BANNER -->
+    <div id="locked-banner"><i class="fas fa-lock"></i> Drawing locked — pan & zoom only</div>
+
+    <!-- PEN SELECTOR POPUP -->
     <div id="pen-popup" class="minimal-popup">
         <div class="popup-header">
             <div class="popup-header-left">
@@ -1001,6 +1045,7 @@
         </div>
     </div>
 
+    <!-- BACKGROUND COLOR POPUP -->
     <div id="bg-color-popup" class="minimal-popup">
         <div class="popup-header">
             <div class="popup-header-left">
@@ -1018,6 +1063,7 @@
         </div>
     </div>
 
+    <!-- TOOLKIT MODAL -->
     <div id="toolkit-modal">
         <div id="toolkit-card">
             <h3><i class="fas fa-graduation-cap"></i> Smart Educational Toolkit</h3>
@@ -1034,6 +1080,7 @@
         </div>
     </div>
 
+    <!-- MATH MODAL -->
     <div id="math-modal">
         <div id="math-card">
             <h3><i class="fas fa-square-root-alt"></i> Insert LaTeX Math Equation</h3>
@@ -1047,10 +1094,11 @@
         </div>
     </div>
 
+    <!-- GRAPH MODAL -->
     <div id="graph-modal">
         <div id="graph-card">
             <h3><i class="fas fa-chart-line"></i> Live Graphing Tool</h3>
-            <p>Plot a function or physics motion, then drop it onto the board as an image.</p>
+            <p>Plot a function or physics motion, then drop it onto the board as a framed image.</p>
             <div class="graph-tabs">
                 <button class="graph-tab active" data-mode="function">f(x) Function</button>
                 <button class="graph-tab" data-mode="projectile">Projectile Motion</button>
@@ -1088,15 +1136,13 @@
         </div>
     </div>
 
+    <!-- ADD STUDENT MODAL -->
     <div id="add-student-modal">
         <div id="add-student-card">
             <h3><i class="fas fa-user-plus"></i> Add Students by Email</h3>
             <p>Enter student email addresses. The server will send them an invite link via Brevo.</p>
             <label>Email addresses (comma separated)</label>
-            <div class="suggestions-container">
-                <input id="email-input" type="email" placeholder="student1@email.com, student2@email.com" autocomplete="off">
-                <div id="email-suggestions"></div>
-            </div>
+            <input id="email-input" type="email" placeholder="student1@email.com, student2@email.com" autocomplete="off">
             <div id="email-list"></div>
             <div class="btn-row">
                 <button id="cancel-add-btn">Cancel</button>
@@ -1163,7 +1209,7 @@
 
         function closeAllPopups() {
             document.querySelectorAll('.minimal-popup').forEach(p => p.style.display = 'none');
-            document.querySelectorAll('.sidebar-btn, .mobile-tool-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.sidebar-btn').forEach(b => b.classList.remove('active'));
         }
         
         function togglePopup(popupId, btnEl) {
@@ -1179,9 +1225,8 @@
         document.querySelectorAll('[data-close]').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 e.stopPropagation();
-                const popupId = btn.dataset.close;
-                document.getElementById(popupId).style.display = 'none';
-                document.querySelectorAll('.sidebar-btn, .mobile-tool-btn').forEach(b => b.classList.remove('active'));
+                document.getElementById(btn.dataset.close).style.display = 'none';
+                document.querySelectorAll('.sidebar-btn').forEach(b => b.classList.remove('active'));
             });
         });
 
@@ -1191,7 +1236,7 @@
                     const triggerBtn = document.querySelector(`[data-popup="${popup.id}"]`);
                     if (triggerBtn && !triggerBtn.contains(e.target)) {
                         popup.style.display = 'none';
-                        document.querySelectorAll('.sidebar-btn, .mobile-tool-btn').forEach(b => b.classList.remove('active'));
+                        document.querySelectorAll('.sidebar-btn').forEach(b => b.classList.remove('active'));
                     }
                 }
             });
@@ -1223,87 +1268,96 @@
                 if (e.target.closest('.popup-close-btn')) return;
                 startDrag(e.clientX, e.clientY);
             });
-            header.addEventListener('touchstart', (e) => {
-                if (e.target.closest('.popup-close-btn')) return;
-                const t = e.touches[0];
-                startDrag(t.clientX, t.clientY);
-            }, { passive: true });
-            
             document.addEventListener('mousemove', (e) => doDrag(e.clientX, e.clientY));
-            document.addEventListener('touchmove', (e) => {
-                if (isDragging) {
-                    const t = e.touches[0];
-                    doDrag(t.clientX, t.clientY);
-                }
-            }, { passive: true });
-            
             document.addEventListener('mouseup', endDrag);
-            document.addEventListener('touchend', endDrag);
         }
 
-        const setupScreen=document.getElementById('setup-screen');
-        const roleTeacherBtn=document.getElementById('role-teacher');
-        const roleStudentBtn=document.getElementById('role-student');
-        const nameInput=document.getElementById('name-input');
-        const roomInput=document.getElementById('room-input');
-        const roomLabel=document.getElementById('room-label');
-        const enterBtn=document.getElementById('enter-btn');
-        const setupError=document.getElementById('setup-error');
-        let selectedRole='teacher';
+        const setupScreen = document.getElementById('setup-screen');
+        const roleTeacherBtn = document.getElementById('role-teacher');
+        const roleStudentBtn = document.getElementById('role-student');
+        const nameInput = document.getElementById('name-input');
+        const roomInput = document.getElementById('room-input');
+        const roomLabel = document.getElementById('room-label');
+        const enterBtn = document.getElementById('enter-btn');
+        const setupError = document.getElementById('setup-error');
+        let selectedRole = 'teacher';
 
-        const inviteRoom=getQueryParam('room');
-        if(inviteRoom){
-            roomInput.value=inviteRoom;selectedRole='student';
-            roleStudentBtn.classList.add('active');roleTeacherBtn.classList.remove('active');
-            roomLabel.textContent='Class room code (from your invite link)';
+        const inviteRoom = getQueryParam('room');
+        if (inviteRoom) {
+            roomInput.value = inviteRoom;
+            selectedRole = 'student';
+            roleStudentBtn.classList.add('active');
+            roleTeacherBtn.classList.remove('active');
+            roomLabel.textContent = 'Class room code (from your invite link)';
         }
-        roleTeacherBtn.addEventListener('click',()=>{selectedRole='teacher';roleTeacherBtn.classList.add('active');roleStudentBtn.classList.remove('active');});
-        roleStudentBtn.addEventListener('click',()=>{selectedRole='student';roleStudentBtn.classList.add('active');roleTeacherBtn.classList.remove('active');});
-        enterBtn.addEventListener('click',()=>{
-            const name=nameInput.value.trim();
-            let room=roomInput.value.trim().toUpperCase().replace(/\s+/g,'-');
-            if(!name){setupError.textContent='Please enter your name.';return;}
-            if(selectedRole==='teacher'&&!room)room=randomRoomCode();
-            if(!room){setupError.textContent='Please enter the room code.';return;}
-            setupError.textContent='';
-            setupScreen.style.display='none';
-            document.getElementById('topbar').style.display='flex';
-            document.getElementById('left-sidebar').style.display='flex';
-            document.getElementById('mobile-toolbar').style.display='flex';
-            startBoard({name,role:selectedRole,room});
+        roleTeacherBtn.addEventListener('click', () => {
+            selectedRole = 'teacher';
+            roleTeacherBtn.classList.add('active');
+            roleStudentBtn.classList.remove('active');
+        });
+        roleStudentBtn.addEventListener('click', () => {
+            selectedRole = 'student';
+            roleStudentBtn.classList.add('active');
+            roleTeacherBtn.classList.remove('active');
+        });
+        enterBtn.addEventListener('click', () => {
+            const name = nameInput.value.trim();
+            let room = roomInput.value.trim().toUpperCase().replace(/\s+/g, '-');
+            if (!name) { setupError.textContent = 'Please enter your name.'; return; }
+            if (selectedRole === 'teacher' && !room) room = randomRoomCode();
+            if (!room) { setupError.textContent = 'Please enter the room code.'; return; }
+            setupError.textContent = '';
+            setupScreen.style.display = 'none';
+            document.getElementById('sidebar').style.display = 'flex';
+            startBoard({ name, role: selectedRole, room });
         });
 
-        function startBoard({name,role,room}) {
-            document.getElementById('room-pill-code').textContent=room;
-            const lockBtn=document.getElementById('lock-btn');
-            const lockBtnText=document.getElementById('lock-btn-text');
-            const inviteBtn=document.getElementById('invite-btn');
-            const addStudentBtn=document.getElementById('add-student-btn');
-            const onlineStudents=document.getElementById('online-students');
-            const studentCount=document.getElementById('student-count');
-            const statusDot=document.getElementById('status-dot');
-            const lockedBanner=document.getElementById('locked-banner');
+        function startBoard({ name, role, room }) {
+            document.getElementById('sb-room-code').textContent = room;
+            const lockBtn = document.getElementById('lock-btn');
+            const recordBtn = document.getElementById('record-btn');
+            const addStudentBtn = document.getElementById('btn-add-student');
+            const inviteBtn = document.getElementById('btn-invite');
+            const onlineDot = document.getElementById('sb-online-dot');
+            const onlineCount = document.getElementById('sb-online-count');
+            const lockedBanner = document.getElementById('locked-banner');
 
-            if(role==='teacher'){
-                lockBtn.style.display='flex';inviteBtn.style.display='flex';
-                addStudentBtn.style.display='flex';onlineStudents.style.display='flex';
-            } else {
-                onlineStudents.style.display='flex';
+            if (role === 'teacher') {
+                lockBtn.style.display = 'flex';
+                recordBtn.style.display = 'flex';
+                addStudentBtn.style.display = 'flex';
+                inviteBtn.style.display = 'flex';
             }
 
-            const inviteUrl=`${window.location.origin}${window.location.pathname}?room=${encodeURIComponent(room)}`;
-            inviteBtn.addEventListener('click',()=>{
-                navigator.clipboard.writeText(inviteUrl).then(()=>{
-                    const o=inviteBtn.innerHTML;
-                    inviteBtn.innerHTML='<i class="fas fa-check"></i> <span>Copied!</span>';
-                    setTimeout(()=>{inviteBtn.innerHTML=o;},1800);
+            const inviteUrl = `${window.location.origin}${window.location.pathname}?room=${encodeURIComponent(room)}`;
+            inviteBtn.addEventListener('click', () => {
+                navigator.clipboard.writeText(inviteUrl).then(() => {
+                    const orig = inviteBtn.innerHTML;
+                    inviteBtn.innerHTML = '<i class="fas fa-check"></i>';
+                    inviteBtn.style.color = 'var(--accent-success)';
+                    setTimeout(() => {
+                        inviteBtn.innerHTML = orig;
+                        inviteBtn.style.color = '';
+                    }, 1800);
                 });
             });
 
-            let excalidrawAPI=null;
-            let isRemoteUpdate=false;
-            let lastSendTime=0;
+            let excalidrawAPI = null;
+            let isRemoteUpdate = false;
+            let lastSendTime = 0;
             let currentPenId = 'ballpoint';
+
+            // Force a full sync to all students
+            function forceSyncScene() {
+                if (!excalidrawAPI) return;
+                const elements = excalidrawAPI.getSceneElements();
+                const appState = excalidrawAPI.getAppState();
+                sendMessage({
+                    type: 'scene-update',
+                    elements,
+                    appState: { viewBackgroundColor: appState.viewBackgroundColor }
+                });
+            }
 
             function deselectTools() {
                 if (!excalidrawAPI) return;
@@ -1314,7 +1368,7 @@
                         excalidrawAPI.updateScene({
                             appState: { activeTool: { type: "selection", locked: false } }
                         });
-                    } catch(e2) { console.warn('Could not deselect tool', e2); }
+                    } catch(e2) {}
                 }
             }
 
@@ -1360,97 +1414,38 @@
             }
 
             renderPenGrids();
-
             makeDraggable(document.getElementById('pen-popup'));
             makeDraggable(document.getElementById('bg-color-popup'));
 
-            document.getElementById('more-menu-btn').addEventListener('click',(e)=>{
-                e.stopPropagation();
-                togglePopup('more-menu', document.getElementById('more-menu-btn'));
-            });
-            document.querySelectorAll('#more-menu .menu-row-item').forEach(item=>{
-                item.addEventListener('click',()=> setTimeout(closeAllPopups,150));
-            });
-
+            // Pen button
             document.getElementById('btn-pen').addEventListener('click', (e) => {
                 e.stopPropagation();
                 deselectTools();
                 togglePopup('pen-popup', document.getElementById('btn-pen'));
             });
+            document.getElementById('btn-pen').dataset.popup = 'pen-popup';
 
-            document.querySelectorAll('.mobile-tool-btn').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    deselectTools();
-                    const action = btn.dataset.action;
-                    const actionMap = {
-                        'toolkit': () => { document.getElementById('toolkit-modal').style.display = 'flex'; },
-                        'pen': () => togglePopup('pen-popup', btn),
-                        'graph': () => { document.getElementById('graph-modal').style.display = 'flex'; requestAnimationFrame(drawGraph); },
-                        'spotlight': () => document.getElementById('btn-spotlight').click(),
-                        'timer': () => document.getElementById('btn-timer').click(),
-                        'math': () => { document.getElementById('math-modal').style.display = 'flex'; },
-                        'bg': () => togglePopup('bg-color-popup', btn),
-                        'pages': () => { if(role==='teacher') addNewPage(); document.getElementById('page-tabs-bar').scrollIntoView({block:'start'}); },
-                        'record': () => { if(role==='teacher') toggleRecording(); },
-                    };
-                    if (actionMap[action]) actionMap[action]();
-                });
-            });
-
-            const btnSpotlight=document.getElementById('btn-spotlight');
-            const spotlightOverlay=document.getElementById('spotlight-overlay');
-            let isSpotlightActive=false, lastSpotlightSend=0;
-
-            btnSpotlight.addEventListener('click',()=>{
+            // Background button
+            document.getElementById('btn-bg-color').addEventListener('click', (e) => {
+                e.stopPropagation();
                 deselectTools();
-                isSpotlightActive=!isSpotlightActive;
-                btnSpotlight.classList.toggle('active',isSpotlightActive);
-                
-                if(role==='teacher'){
-                    sendMessage({type:'spotlight-update',active:isSpotlightActive});
-                    if(isSpotlightActive){
-                        document.addEventListener('mousemove',handleTeacherMouse);
-                        document.addEventListener('touchmove',handleTeacherTouch, { passive: true });
-                        spotlightOverlay.style.display='block';
-                    } else {
-                        document.removeEventListener('mousemove',handleTeacherMouse);
-                        document.removeEventListener('touchmove',handleTeacherTouch);
-                        spotlightOverlay.style.display='none';
-                    }
-                }
+                togglePopup('bg-color-popup', document.getElementById('btn-bg-color'));
             });
+            document.getElementById('btn-bg-color').dataset.popup = 'bg-color-popup';
 
-            function handleTeacherMouse(e){
-                const now=Date.now();
-                if(now-lastSpotlightSend>33){
-                    lastSpotlightSend=now;
-                    sendMessage({type:'spotlight-update',active:true,x:e.clientX,y:e.clientY});
-                }
-            }
-            function handleTeacherTouch(e){
-                const now=Date.now();
-                if(now-lastSpotlightSend>33 && e.touches[0]){
-                    lastSpotlightSend=now;
-                    sendMessage({type:'spotlight-update',active:true,x:e.touches[0].clientX,y:e.touches[0].clientY});
-                }
-            }
-
-            const btnBgColor = document.getElementById('btn-bg-color');
-            const bgColorPopup = document.getElementById('bg-color-popup');
-            const customBgPicker = document.getElementById('custom-bg-picker');
-            const colorGrid = document.getElementById('color-grid');
-
+            // Background colors
             const COLORS = [
-                {hex:'#FFFFFF', name:'White'},
-                {hex:'#F7F7F9', name:'Soft Gray'},
-                {hex:'#F1F5F9', name:'Cloud'},
-                {hex:'#E0F2FE', name:'Sky'},
-                {hex:'#E8F5E9', name:'Mint'},
-                {hex:'#FEF9C3', name:'Butter'},
-                {hex:'#1E1B4B', name:'Indigo'},
-                {hex:'#000000', name:'Midnight'}
+                { hex: '#FFFFFF', name: 'White' },
+                { hex: '#F7F7F9', name: 'Soft Gray' },
+                { hex: '#F1F5F9', name: 'Cloud' },
+                { hex: '#E0F2FE', name: 'Sky' },
+                { hex: '#E8F5E9', name: 'Mint' },
+                { hex: '#FEF9C3', name: 'Butter' },
+                { hex: '#1E1B4B', name: 'Indigo' },
+                { hex: '#000000', name: 'Midnight' }
             ];
+            const colorGrid = document.getElementById('color-grid');
+            const customBgPicker = document.getElementById('custom-bg-picker');
 
             COLORS.forEach(c => {
                 const swatch = document.createElement('div');
@@ -1475,582 +1470,893 @@
                     s.classList.remove('selected');
                     if (s.dataset.color === color) s.classList.add('selected');
                 });
+                // Sync background change to students immediately
+                setTimeout(forceSyncScene, 50);
             }
 
-            btnBgColor.addEventListener('click', (e) => {
-                e.stopPropagation();
-                deselectTools();
-                togglePopup('bg-color-popup', btnBgColor);
-            });
-
-            customBgPicker.addEventListener('input', (e) => {
-                applyBackgroundColor(e.target.value);
-            });
+            customBgPicker.addEventListener('input', (e) => applyBackgroundColor(e.target.value));
             customBgPicker.addEventListener('click', (e) => e.stopPropagation());
 
-            const timerWidget=document.getElementById('timer-widget');
-            const timerDisplay=document.getElementById('timer-display');
-            const timerStartBtn=document.getElementById('timer-start');
-            const timerPauseBtn=document.getElementById('timer-pause');
-            const timerResetBtn=document.getElementById('timer-reset');
-            const timerMinInput=document.getElementById('timer-min');
-            const timerSecInput=document.getElementById('timer-sec');
-            const timerControls=document.getElementById('timer-controls-container');
-            const timerInputs=document.getElementById('timer-inputs-container');
-            let timerInterval=null,timeLeft=300,isTimerRunning=false;
+            // Timer
+            const timerWidget = document.getElementById('timer-widget');
+            const timerDisplay = document.getElementById('timer-display');
+            const timerStartBtn = document.getElementById('timer-start');
+            const timerPauseBtn = document.getElementById('timer-pause');
+            const timerResetBtn = document.getElementById('timer-reset');
+            const timerMinInput = document.getElementById('timer-min');
+            const timerSecInput = document.getElementById('timer-sec');
+            const timerControls = document.getElementById('timer-controls-container');
+            const timerInputs = document.getElementById('timer-inputs-container');
+            let timerInterval = null, timeLeft = 300, isTimerRunning = false;
 
-            document.getElementById('btn-timer').addEventListener('click',()=>{
+            document.getElementById('btn-timer').addEventListener('click', () => {
                 deselectTools();
-                timerWidget.style.display=timerWidget.style.display==='flex'?'none':'flex';
+                timerWidget.style.display = timerWidget.style.display === 'flex' ? 'none' : 'flex';
             });
-            if(role!=='teacher'){timerControls.style.display='none';timerInputs.style.display='none';}
-
-            function formatTime(s){return `${Math.floor(s/60).toString().padStart(2,'0')}:${(s%60).toString().padStart(2,'0')}`;}
-            function updateTimerDisplay(){
-                timerDisplay.textContent=formatTime(timeLeft);
-                timerDisplay.className='';
-                if(timeLeft<=10&&timeLeft>0)timerDisplay.classList.add('danger');
-                else if(timeLeft<=60&&timeLeft>10)timerDisplay.classList.add('warning');
+            if (role !== 'teacher') {
+                timerControls.style.display = 'none';
+                timerInputs.style.display = 'none';
             }
-            function startTimerLocal(){if(isTimerRunning)return;isTimerRunning=true;timerInterval=setInterval(()=>{if(timeLeft>0){timeLeft--;updateTimerDisplay();}else{clearInterval(timerInterval);isTimerRunning=false;}},1000);}
-            function pauseTimerLocal(){clearInterval(timerInterval);isTimerRunning=false;}
-            function resetTimerLocal(){pauseTimerLocal();timeLeft=(parseInt(timerMinInput.value)||0)*60+(parseInt(timerSecInput.value)||0);updateTimerDisplay();}
 
-            if(role==='teacher'){
-                timerStartBtn.addEventListener('click',()=>{if(timeLeft===0)resetTimerLocal();startTimerLocal();sendMessage({type:'timer-update',action:'start',timeLeft});});
-                timerPauseBtn.addEventListener('click',()=>{pauseTimerLocal();sendMessage({type:'timer-update',action:'pause',timeLeft});});
-                timerResetBtn.addEventListener('click',()=>{resetTimerLocal();sendMessage({type:'timer-update',action:'reset',timeLeft});});
-                timerMinInput.addEventListener('change',resetTimerLocal);
-                timerSecInput.addEventListener('change',resetTimerLocal);
+            function formatTime(s) {
+                return `${Math.floor(s/60).toString().padStart(2,'0')}:${(s%60).toString().padStart(2,'0')}`;
+            }
+            function updateTimerDisplay() {
+                timerDisplay.textContent = formatTime(timeLeft);
+                timerDisplay.className = '';
+                if (timeLeft <= 10 && timeLeft > 0) timerDisplay.classList.add('danger');
+                else if (timeLeft <= 60 && timeLeft > 10) timerDisplay.classList.add('warning');
+            }
+            function startTimerLocal() {
+                if (isTimerRunning) return;
+                isTimerRunning = true;
+                timerInterval = setInterval(() => {
+                    if (timeLeft > 0) { timeLeft--; updateTimerDisplay(); }
+                    else { clearInterval(timerInterval); isTimerRunning = false; }
+                }, 1000);
+            }
+            function pauseTimerLocal() { clearInterval(timerInterval); isTimerRunning = false; }
+            function resetTimerLocal() {
+                pauseTimerLocal();
+                timeLeft = (parseInt(timerMinInput.value) || 0) * 60 + (parseInt(timerSecInput.value) || 0);
+                updateTimerDisplay();
+            }
+
+            if (role === 'teacher') {
+                timerStartBtn.addEventListener('click', () => {
+                    if (timeLeft === 0) resetTimerLocal();
+                    startTimerLocal();
+                    sendMessage({ type: 'timer-update', action: 'start', timeLeft });
+                });
+                timerPauseBtn.addEventListener('click', () => {
+                    pauseTimerLocal();
+                    sendMessage({ type: 'timer-update', action: 'pause', timeLeft });
+                });
+                timerResetBtn.addEventListener('click', () => {
+                    resetTimerLocal();
+                    sendMessage({ type: 'timer-update', action: 'reset', timeLeft });
+                });
+                timerMinInput.addEventListener('change', resetTimerLocal);
+                timerSecInput.addEventListener('change', resetTimerLocal);
             }
             updateTimerDisplay();
 
-            const toolkitModal=document.getElementById('toolkit-modal');
-            document.getElementById('btn-toolkit').addEventListener('click',()=>{
+            // Toolkit
+            const toolkitModal = document.getElementById('toolkit-modal');
+            document.getElementById('btn-toolkit').addEventListener('click', () => {
                 deselectTools();
-                toolkitModal.style.display='flex';
+                toolkitModal.style.display = 'flex';
             });
-            document.getElementById('close-toolkit-btn').addEventListener('click',()=>{toolkitModal.style.display='none';});
-
-            document.querySelectorAll('.toolkit-item').forEach(item=>{
-                item.addEventListener('click',()=>{applyToolkit(item.dataset.tool);});
+            document.getElementById('close-toolkit-btn').addEventListener('click', () => {
+                toolkitModal.style.display = 'none';
             });
 
-            function applyToolkit(type){
-                if(!excalidrawAPI)return;
-                const elements=excalidrawAPI.getSceneElements();
-                let n=[];const sx=100,sy=100;
-
-                if(type==='grid'){
-                    const a=excalidrawAPI.getAppState();
-                    excalidrawAPI.updateScene({appState:{gridSize:a.gridSize?0:20}});
-                } else if(type==='chem-benzene'){
-                    n.push(createEl('diamond',sx,sy,100,100,{strokeColor:"#a78bfa",strokeWidth:2}));
-                    n.push(createEl('text',sx+20,sy+40,60,20,{text:"C₆H₆",fontSize:20,strokeColor:"#f1f5f9"}));
-                } else if(type==='bio-cell'){
-                    n.push(createEl('ellipse',sx,sy,200,150,{strokeColor:"#4ade80",backgroundColor:"rgba(16,185,129,0.1)",fillStyle:"solid"}));
-                    n.push(createEl('ellipse',sx+70,sy+50,60,50,{strokeColor:"#fb7185",backgroundColor:"rgba(239,68,68,0.2)",fillStyle:"solid"}));
-                    n.push(createEl('text',sx+80,sy+70,40,20,{text:"Nucleus",fontSize:14,strokeColor:"#f1f5f9"}));
-                } else if(type==='physics-circuit'){
-                    n.push(createEl('rectangle',sx,sy+40,20,40,{strokeColor:"#fbbf24"}));
-                    n.push(createEl('line',sx+20,sy+60,100,0,{strokeColor:"#f1f5f9",points:[[0,0],[100,0]]}));
-                    n.push(createEl('rectangle',sx+120,sy+40,40,40,{strokeColor:"#38bdf8"}));
-                    n.push(createEl('line',sx+160,sy+60,100,0,{strokeColor:"#f1f5f9",points:[[0,0],[100,0]]}));
-                    n.push(createEl('line',sx+260,sy+60,0,-100,{strokeColor:"#f1f5f9",points:[[0,0],[0,-100]]}));
-                    n.push(createEl('line',sx+260,sy-40,-260,0,{strokeColor:"#f1f5f9",points:[[0,0],[-260,0]]}));
-                } else if(type==='history-timeline'){
-                    n.push(createEl('line',sx,sy+50,400,0,{strokeColor:"#a78bfa",strokeWidth:3,points:[[0,0],[400,0]]}));
-                    for(let i=0;i<3;i++){
-                        n.push(createEl('ellipse',sx+(i*150),sy+40,20,20,{strokeColor:"#f472b6",backgroundColor:"#f472b6",fillStyle:"solid"}));
-                        n.push(createEl('text',sx+(i*150)-20,sy+80,60,20,{text:`Event ${i+1}`,fontSize:16,strokeColor:"#f1f5f9"}));
-                    }
-                } else if(type==='code-block'){
-                    n.push(createEl('rectangle',sx,sy,300,150,{strokeColor:"#1e1b4b",backgroundColor:"#1e1b4b",fillStyle:"solid",roundness:{type:3}}));
-                    n.push(createEl('text',sx+10,sy+10,280,130,{text:"def hello():\n  print('Hello World')",fontSize:14,fontFamily:3,strokeColor:"#4ade80"}));
-                }
-                if(n.length>0) excalidrawAPI.updateScene({elements:[...elements,...n]});
-                toolkitModal.style.display='none';
-            }
-
-            const mathModal=document.getElementById('math-modal');
-            const mathInput=document.getElementById('math-input');
-            const mathPreview=document.getElementById('math-preview');
-
-            document.getElementById('btn-math').addEventListener('click',()=>{
-                deselectTools();
-                mathModal.style.display='flex';mathInput.value='';mathPreview.innerHTML='';
-            });
-            document.getElementById('cancel-math-btn').addEventListener('click',()=>{mathModal.style.display='none';});
-            mathInput.addEventListener('input',()=>{
-                try{katex.render(mathInput.value,mathPreview,{throwOnError:false,displayMode:true});}
-                catch(e){mathPreview.textContent='Invalid LaTeX';}
-            });
-            document.getElementById('insert-math-btn').addEventListener('click',()=>{
-                if(mathInput.value&&excalidrawAPI){
-                    const e=excalidrawAPI.getSceneElements();
-                    e.push(createEl('text',150,150,200,50,{text:mathInput.value,fontSize:24,strokeColor:"#f1f5f9"}));
-                    excalidrawAPI.updateScene({elements:e});
-                }
-                mathModal.style.display='none';
-            });
-
-            const recordBtn=document.getElementById('record-btn');
-            const recordBtnText=document.getElementById('record-btn-text');
-            const recordIndicator=document.getElementById('record-indicator');
-            const recordTimerEl=document.getElementById('record-timer');
-            const recordingNoticeBanner=document.getElementById('recording-notice-banner');
-            const mobileRecordBtn=document.getElementById('mobile-record-btn');
-            let mediaRecorder=null, recordedChunks=[], recordStream=null, recordStartTime=0, recordTimerInterval=null;
-
-            if(role==='teacher'){
-                recordBtn.style.display='flex';
-                mobileRecordBtn.style.display='flex';
-                recordBtn.addEventListener('click',toggleRecording);
-            }
-
-            async function toggleRecording(){
-                if(mediaRecorder && mediaRecorder.state==='recording'){ stopRecording(); return; }
-                if(!navigator.mediaDevices || !navigator.mediaDevices.getDisplayMedia){
-                    alert('Screen recording is not supported on this browser/device. Try Chrome or Edge on desktop.');
-                    return;
-                }
-                try{
-                    recordStream = await navigator.mediaDevices.getDisplayMedia({ video:{ cursor:'always' }, audio:true });
-                } catch(err){
-                    alert('Recording needs screen-share permission. It was cancelled or denied.');
-                    return;
-                }
-                recordedChunks=[];
-                let mimeType='video/webm;codecs=vp9,opus';
-                if(!window.MediaRecorder || !MediaRecorder.isTypeSupported(mimeType)) mimeType='video/webm';
-                try{ mediaRecorder=new MediaRecorder(recordStream,{mimeType}); }
-                catch(e){ mediaRecorder=new MediaRecorder(recordStream); }
-
-                mediaRecorder.ondataavailable=(e)=>{ if(e.data && e.data.size>0) recordedChunks.push(e.data); };
-                mediaRecorder.onstop=()=>{
-                    const blob=new Blob(recordedChunks,{type:'video/webm'});
-                    const url=URL.createObjectURL(blob);
-                    const stamp=new Date().toISOString().replace(/[:.]/g,'-');
-                    const a=document.createElement('a');
-                    a.href=url; a.download=`PrimeBoard-${room}-${stamp}.webm`;
-                    document.body.appendChild(a); a.click(); a.remove();
-                    setTimeout(()=>URL.revokeObjectURL(url),4000);
-                    if(recordStream){ recordStream.getTracks().forEach(t=>t.stop()); recordStream=null; }
-                };
-                recordStream.getVideoTracks()[0].addEventListener('ended',()=>{
-                    if(mediaRecorder && mediaRecorder.state==='recording') stopRecording();
+            document.querySelectorAll('.toolkit-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    applyToolkit(item.dataset.tool);
                 });
+            });
 
-                mediaRecorder.start(1000);
-                recordStartTime=Date.now();
-                recordBtn.classList.add('recording');
-                recordBtnText.textContent='Stop';
-                recordBtn.querySelector('i').className='fas fa-stop';
-                recordIndicator.style.display='flex';
-                recordTimerInterval=setInterval(updateRecordTimer,1000);
-                updateRecordTimer();
-                sendMessage({type:'recording-status',active:true});
-            }
+            function applyToolkit(type) {
+                if (!excalidrawAPI) return;
+                const elements = excalidrawAPI.getSceneElements();
+                let n = [];
+                const sx = 100, sy = 100;
 
-            function stopRecording(){
-                if(mediaRecorder && mediaRecorder.state!=='inactive') mediaRecorder.stop();
-                clearInterval(recordTimerInterval);
-                recordBtn.classList.remove('recording');
-                recordBtnText.textContent='Record';
-                recordBtn.querySelector('i').className='fas fa-video';
-                recordIndicator.style.display='none';
-                sendMessage({type:'recording-status',active:false});
-            }
-
-            function updateRecordTimer(){
-                const secs=Math.floor((Date.now()-recordStartTime)/1000);
-                const m=Math.floor(secs/60).toString().padStart(2,'0');
-                const s=(secs%60).toString().padStart(2,'0');
-                recordTimerEl.textContent=`${m}:${s}`;
-            }
-
-            let pages=[{id:'page-1',name:'Page 1',elements:[],bg:'#F7F7F9'}];
-            let currentPageId='page-1';
-            const pageTabsList=document.getElementById('page-tabs-list');
-            const addPageBtn=document.getElementById('add-page-btn');
-            if(role!=='teacher') addPageBtn.style.display='none';
-
-            function renderPageTabs(){
-                pageTabsList.innerHTML='';
-                pages.forEach(p=>{
-                    const tab=document.createElement('div');
-                    tab.className='page-tab'+(p.id===currentPageId?' active':'');
-                    tab.dataset.pageId=p.id;
-                    tab.innerHTML=`<span class="page-tab-name">${p.name}</span>`+
-                        (role==='teacher' && pages.length>1 ? `<i class="fas fa-times page-tab-close"></i>` : '');
-                    tab.addEventListener('click',(e)=>{
-                        if(e.target.closest('.page-tab-close')) return;
-                        switchToPage(p.id,false);
-                    });
-                    if(role==='teacher'){
-                        tab.addEventListener('dblclick',()=>{
-                            const newName=prompt('Rename page:',p.name);
-                            if(newName && newName.trim()){
-                                p.name=newName.trim().slice(0,24);
-                                renderPageTabs();
-                                sendMessage({type:'pages-structure',pages:pages.map(x=>({id:x.id,name:x.name})),currentPageId});
-                            }
-                        });
-                        const closeBtn=tab.querySelector('.page-tab-close');
-                        if(closeBtn) closeBtn.addEventListener('click',(e)=>{ e.stopPropagation(); deletePage(p.id); });
+                if (type === 'grid') {
+                    const a = excalidrawAPI.getAppState();
+                    excalidrawAPI.updateScene({ appState: { gridSize: a.gridSize ? 0 : 20 } });
+                } else if (type === 'chem-benzene') {
+                    n.push(createEl('diamond', sx, sy, 100, 100, { strokeColor: "#a78bfa", strokeWidth: 2 }));
+                    n.push(createEl('text', sx + 20, sy + 40, 60, 20, { text: "C₆H₆", fontSize: 20, strokeColor: "#18181B" }));
+                } else if (type === 'bio-cell') {
+                    n.push(createEl('ellipse', sx, sy, 200, 150, { strokeColor: "#4ade80", backgroundColor: "rgba(16,185,129,0.15)", fillStyle: "solid" }));
+                    n.push(createEl('ellipse', sx + 70, sy + 50, 60, 50, { strokeColor: "#fb7185", backgroundColor: "rgba(239,68,68,0.2)", fillStyle: "solid" }));
+                    n.push(createEl('text', sx + 80, sy + 70, 40, 20, { text: "Nucleus", fontSize: 14, strokeColor: "#18181B" }));
+                } else if (type === 'physics-circuit') {
+                    n.push(createEl('rectangle', sx, sy + 40, 20, 40, { strokeColor: "#fbbf24" }));
+                    n.push(createEl('line', sx + 20, sy + 60, 100, 0, { strokeColor: "#18181B", points: [[0,0],[100,0]] }));
+                    n.push(createEl('rectangle', sx + 120, sy + 40, 40, 40, { strokeColor: "#38bdf8" }));
+                    n.push(createEl('line', sx + 160, sy + 60, 100, 0, { strokeColor: "#18181B", points: [[0,0],[100,0]] }));
+                    n.push(createEl('line', sx + 260, sy + 60, 0, -100, { strokeColor: "#18181B", points: [[0,0],[0,-100]] }));
+                    n.push(createEl('line', sx + 260, sy - 40, -260, 0, { strokeColor: "#18181B", points: [[0,0],[-260,0]] }));
+                } else if (type === 'history-timeline') {
+                    n.push(createEl('line', sx, sy + 50, 400, 0, { strokeColor: "#a78bfa", strokeWidth: 3, points: [[0,0],[400,0]] }));
+                    for (let i = 0; i < 3; i++) {
+                        n.push(createEl('ellipse', sx + (i * 150), sy + 40, 20, 20, { strokeColor: "#f472b6", backgroundColor: "#f472b6", fillStyle: "solid" }));
+                        n.push(createEl('text', sx + (i * 150) - 20, sy + 80, 60, 20, { text: `Event ${i + 1}`, fontSize: 16, strokeColor: "#18181B" }));
                     }
-                    pageTabsList.appendChild(tab);
-                });
+                } else if (type === 'code-block') {
+                    n.push(createEl('rectangle', sx, sy, 300, 150, { strokeColor: "#1e1b4b", backgroundColor: "#1e1b4b", fillStyle: "solid", roundness: { type: 3 } }));
+                    n.push(createEl('text', sx + 10, sy + 10, 280, 130, { text: "def hello():\n  print('Hello World')", fontSize: 14, fontFamily: 3, strokeColor: "#4ade80" }));
+                }
+                if (n.length > 0) {
+                    excalidrawAPI.updateScene({ elements: [...elements, ...n] });
+                    // Force sync so students see it immediately
+                    setTimeout(forceSyncScene, 50);
+                }
+                toolkitModal.style.display = 'none';
             }
 
-            function saveCurrentPageSnapshot(){
-                if(!excalidrawAPI) return;
-                const page=pages.find(p=>p.id===currentPageId);
-                if(page){
-                    page.elements=excalidrawAPI.getSceneElements();
-                    page.bg=excalidrawAPI.getAppState().viewBackgroundColor;
-                }
-            }
+            // Math Equation
+            const mathModal = document.getElementById('math-modal');
+            const mathInput = document.getElementById('math-input');
+            const mathPreview = document.getElementById('math-preview');
 
-            function switchToPage(pageId,remote){
-                if(pageId===currentPageId && !remote) return;
-                if(!remote) saveCurrentPageSnapshot();
-                currentPageId=pageId;
-                const page=pages.find(p=>p.id===pageId);
-                if(page && excalidrawAPI){
-                    isRemoteUpdate=true;
-                    excalidrawAPI.updateScene({elements:page.elements||[],appState:{viewBackgroundColor:page.bg||'#F7F7F9'}});
-                }
-                renderPageTabs();
-                if(!remote && role==='teacher'){
-                    sendMessage({type:'page-switch',pageId,elements:page?page.elements:[],bg:page?page.bg:'#F7F7F9'});
-                }
-            }
-
-            function addNewPage(){
-                saveCurrentPageSnapshot();
-                const newId='page-'+Date.now();
-                const newPage={id:newId,name:`Page ${pages.length+1}`,elements:[],bg:'#F7F7F9'};
-                pages.push(newPage);
-                currentPageId=newId;
-                if(excalidrawAPI){
-                    isRemoteUpdate=true;
-                    excalidrawAPI.updateScene({elements:[],appState:{viewBackgroundColor:'#F7F7F9'}});
-                }
-                renderPageTabs();
-                sendMessage({type:'pages-structure',pages:pages.map(x=>({id:x.id,name:x.name})),currentPageId});
-                sendMessage({type:'page-switch',pageId:newId,elements:[],bg:'#F7F7F9'});
-            }
-
-            function deletePage(pageId){
-                if(pages.length<=1) return;
-                const idx=pages.findIndex(p=>p.id===pageId);
-                if(idx===-1) return;
-                const wasActive=pageId===currentPageId;
-                pages.splice(idx,1);
-                if(wasActive){
-                    const nextPage=pages[Math.max(0,idx-1)];
-                    currentPageId=nextPage.id;
-                    if(excalidrawAPI){
-                        isRemoteUpdate=true;
-                        excalidrawAPI.updateScene({elements:nextPage.elements||[],appState:{viewBackgroundColor:nextPage.bg||'#F7F7F9'}});
-                    }
-                }
-                renderPageTabs();
-                sendMessage({type:'pages-structure',pages:pages.map(x=>({id:x.id,name:x.name})),currentPageId});
-                if(wasActive){
-                    const p=pages.find(x=>x.id===currentPageId);
-                    sendMessage({type:'page-switch',pageId:currentPageId,elements:p.elements||[],bg:p.bg||'#F7F7F9'});
-                }
-            }
-
-            addPageBtn.addEventListener('click',addNewPage);
-            document.getElementById('page-tabs-bar').style.display='flex';
-            renderPageTabs();
-
-            const graphModal=document.getElementById('graph-modal');
-            const graphCanvas=document.getElementById('graph-canvas');
-            const graphCtx=graphCanvas.getContext('2d');
-            const graphReadout=document.getElementById('graph-readout');
-            const graphError=document.getElementById('graph-error');
-            let graphMode='function';
-
-            document.getElementById('btn-graph').addEventListener('click',()=>{
+            document.getElementById('btn-math').addEventListener('click', () => {
                 deselectTools();
-                graphModal.style.display='flex';
+                mathModal.style.display = 'flex';
+                mathInput.value = '';
+                mathPreview.innerHTML = '';
+            });
+            document.getElementById('cancel-math-btn').addEventListener('click', () => {
+                mathModal.style.display = 'none';
+            });
+            mathInput.addEventListener('input', () => {
+                try {
+                    katex.render(mathInput.value, mathPreview, { throwOnError: false, displayMode: true });
+                } catch(e) {
+                    mathPreview.textContent = 'Invalid LaTeX';
+                }
+            });
+            document.getElementById('insert-math-btn').addEventListener('click', () => {
+                if (mathInput.value && excalidrawAPI) {
+                    const e = excalidrawAPI.getSceneElements();
+                    // Insert math as text with dark color for contrast
+                    e.push(createEl('text', 150, 150, 200, 50, {
+                        text: mathInput.value,
+                        fontSize: 28,
+                        strokeColor: "#18181B"
+                    }));
+                    excalidrawAPI.updateScene({ elements: e });
+                    // Force sync to students
+                    setTimeout(forceSyncScene, 50);
+                }
+                mathModal.style.display = 'none';
+            });
+
+            // Graphing Tool
+            const graphModal = document.getElementById('graph-modal');
+            const graphCanvas = document.getElementById('graph-canvas');
+            const graphCtx = graphCanvas.getContext('2d');
+            const graphReadout = document.getElementById('graph-readout');
+            const graphError = document.getElementById('graph-error');
+            let graphMode = 'function';
+
+            document.getElementById('btn-graph').addEventListener('click', () => {
+                deselectTools();
+                graphModal.style.display = 'flex';
                 requestAnimationFrame(drawGraph);
             });
-            document.getElementById('cancel-graph-btn').addEventListener('click',()=>{graphModal.style.display='none';});
+            document.getElementById('cancel-graph-btn').addEventListener('click', () => {
+                graphModal.style.display = 'none';
+            });
 
-            document.querySelectorAll('.graph-tab').forEach(tab=>{
-                tab.addEventListener('click',()=>{
-                    document.querySelectorAll('.graph-tab').forEach(t=>t.classList.remove('active'));
-                    document.querySelectorAll('.graph-fields').forEach(f=>f.classList.remove('active'));
+            document.querySelectorAll('.graph-tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    document.querySelectorAll('.graph-tab').forEach(t => t.classList.remove('active'));
+                    document.querySelectorAll('.graph-fields').forEach(f => f.classList.remove('active'));
                     tab.classList.add('active');
-                    graphMode=tab.dataset.mode;
+                    graphMode = tab.dataset.mode;
                     document.getElementById(`fields-${graphMode}`).classList.add('active');
                     drawGraph();
                 });
             });
 
-            document.querySelectorAll('#graph-modal input').forEach(inp=>{
-                inp.addEventListener('input',drawGraph);
+            document.querySelectorAll('#graph-modal input').forEach(inp => {
+                inp.addEventListener('input', drawGraph);
             });
 
-            function safeEvalExpr(expr, xVal){
+            function safeEvalExpr(expr, xVal) {
                 let e = expr.toLowerCase()
-                    .replace(/\^/g,'**')
-                    .replace(/pi/g,'Math.PI')
-                    .replace(/\bsin\(/g,'Math.sin(')
-                    .replace(/\bcos\(/g,'Math.cos(')
-                    .replace(/\btan\(/g,'Math.tan(')
-                    .replace(/\bsqrt\(/g,'Math.sqrt(')
-                    .replace(/\blog\(/g,'Math.log10(')
-                    .replace(/\bln\(/g,'Math.log(')
-                    .replace(/\bexp\(/g,'Math.exp(')
-                    .replace(/\babs\(/g,'Math.abs(')
-                    .replace(/\bx\b/g,'('+xVal+')');
-                if(!/^[0-9+\-*/().,\sA-Za-z]*$/.test(e)) throw new Error('Invalid characters');
-                return Function('"use strict"; return ('+e+')')();
+                    .replace(/\^/g, '**')
+                    .replace(/pi/g, 'Math.PI')
+                    .replace(/\bsin\(/g, 'Math.sin(')
+                    .replace(/\bcos\(/g, 'Math.cos(')
+                    .replace(/\btan\(/g, 'Math.tan(')
+                    .replace(/\bsqrt\(/g, 'Math.sqrt(')
+                    .replace(/\blog\(/g, 'Math.log10(')
+                    .replace(/\bln\(/g, 'Math.log(')
+                    .replace(/\bexp\(/g, 'Math.exp(')
+                    .replace(/\babs\(/g, 'Math.abs(')
+                    .replace(/\bx\b/g, '(' + xVal + ')');
+                if (!/^[0-9+\-*/().,\sA-Za-z]*$/.test(e)) throw new Error('Invalid characters');
+                return Function('"use strict"; return (' + e + ')')();
             }
 
-            function drawGraph(){
-                const wrap=graphCanvas.parentElement;
-                const w=wrap.clientWidth||580, h=260;
-                const dpr=window.devicePixelRatio||1;
-                graphCanvas.width=w*dpr; graphCanvas.height=h*dpr;
-                graphCanvas.style.width=w+'px'; graphCanvas.style.height=h+'px';
-                graphCtx.setTransform(dpr,0,0,dpr,0,0);
-                graphCtx.clearRect(0,0,w,h);
-                graphError.textContent=''; graphReadout.textContent='';
+            function drawGraph() {
+                const wrap = graphCanvas.parentElement;
+                const w = wrap.clientWidth || 580, h = 260;
+                const dpr = window.devicePixelRatio || 1;
+                graphCanvas.width = w * dpr;
+                graphCanvas.height = h * dpr;
+                graphCanvas.style.width = w + 'px';
+                graphCanvas.style.height = h + 'px';
+                graphCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+                graphCtx.clearRect(0, 0, w, h);
+                graphError.textContent = '';
+                graphReadout.textContent = '';
 
-                let points=[]; let xMin=-10,xMax=10,yMin=-2,yMax=2;
-                try{
-                    if(graphMode==='function'){
-                        xMin=parseFloat(document.getElementById('fn-xmin').value)||-10;
-                        xMax=parseFloat(document.getElementById('fn-xmax').value)||10;
-                        const expr=document.getElementById('fn-expr').value;
-                        const steps=200;
-                        for(let i=0;i<=steps;i++){
-                            const x=xMin+(xMax-xMin)*i/steps;
-                            const y=safeEvalExpr(expr,x);
-                            if(!isFinite(y)||isNaN(y)) continue;
-                            points.push({x,y});
-                            if(y<yMin) yMin=y; if(y>yMax) yMax=y;
+                let points = [];
+                let xMin = -10, xMax = 10, yMin = -2, yMax = 2;
+                try {
+                    if (graphMode === 'function') {
+                        xMin = parseFloat(document.getElementById('fn-xmin').value) || -10;
+                        xMax = parseFloat(document.getElementById('fn-xmax').value) || 10;
+                        const expr = document.getElementById('fn-expr').value;
+                        const steps = 200;
+                        for (let i = 0; i <= steps; i++) {
+                            const x = xMin + (xMax - xMin) * i / steps;
+                            const y = safeEvalExpr(expr, x);
+                            if (!isFinite(y) || isNaN(y)) continue;
+                            points.push({ x, y });
+                            if (y < yMin) yMin = y;
+                            if (y > yMax) yMax = y;
                         }
-                        graphReadout.textContent=`y = ${expr}, x ∈ [${xMin}, ${xMax}]`;
-                    } else if(graphMode==='projectile'){
-                        const u=parseFloat(document.getElementById('pr-u').value)||20;
-                        const ang=parseFloat(document.getElementById('pr-angle').value)||45;
-                        const g=parseFloat(document.getElementById('pr-g').value)||9.8;
-                        const rad=ang*Math.PI/180;
-                        const T=2*u*Math.sin(rad)/g;
-                        const steps=150;
-                        for(let i=0;i<=steps;i++){
-                            const t=T*i/steps;
-                            const x=u*Math.cos(rad)*t;
-                            const y=u*Math.sin(rad)*t-0.5*g*t*t;
-                            points.push({x,y});
-                            if(x>xMax) xMax=x; if(y>yMax) yMax=y; if(y<yMin) yMin=y;
+                        graphReadout.textContent = `y = ${expr}, x ∈ [${xMin}, ${xMax}]`;
+                    } else if (graphMode === 'projectile') {
+                        const u = parseFloat(document.getElementById('pr-u').value) || 20;
+                        const ang = parseFloat(document.getElementById('pr-angle').value) || 45;
+                        const g = parseFloat(document.getElementById('pr-g').value) || 9.8;
+                        const rad = ang * Math.PI / 180;
+                        const T = 2 * u * Math.sin(rad) / g;
+                        const steps = 150;
+                        for (let i = 0; i <= steps; i++) {
+                            const t = T * i / steps;
+                            const x = u * Math.cos(rad) * t;
+                            const y = u * Math.sin(rad) * t - 0.5 * g * t * t;
+                            points.push({ x, y });
+                            if (x > xMax) xMax = x;
+                            if (y > yMax) yMax = y;
+                            if (y < yMin) yMin = y;
                         }
-                        xMin=0; yMin=0;
-                        graphReadout.textContent=`Range: ${(u*u*Math.sin(2*rad)/g).toFixed(1)}m, H: ${(u*u*Math.sin(rad)*Math.sin(rad)/(2*g)).toFixed(1)}m`;
-                    } else if(graphMode==='shm'){
-                        const A=parseFloat(document.getElementById('shm-a').value)||1;
-                        const w2=parseFloat(document.getElementById('shm-w').value)||2;
-                        const phi=parseFloat(document.getElementById('shm-phi').value)||0;
-                        xMin=0; xMax=2*Math.PI/w2*2;
-                        const steps=200;
-                        for(let i=0;i<=steps;i++){
-                            const x=xMin+(xMax-xMin)*i/steps;
-                            const y=A*Math.cos(w2*x+phi);
-                            points.push({x,y});
+                        xMin = 0; yMin = 0;
+                        graphReadout.textContent = `Range: ${(u * u * Math.sin(2 * rad) / g).toFixed(1)}m, H: ${(u * u * Math.sin(rad) * Math.sin(rad) / (2 * g)).toFixed(1)}m`;
+                    } else if (graphMode === 'shm') {
+                        const A = parseFloat(document.getElementById('shm-a').value) || 1;
+                        const w2 = parseFloat(document.getElementById('shm-w').value) || 2;
+                        const phi = parseFloat(document.getElementById('shm-phi').value) || 0;
+                        xMin = 0;
+                        xMax = 2 * Math.PI / w2 * 2;
+                        const steps = 200;
+                        for (let i = 0; i <= steps; i++) {
+                            const x = xMin + (xMax - xMin) * i / steps;
+                            const y = A * Math.cos(w2 * x + phi);
+                            points.push({ x, y });
                         }
-                        yMin=-Math.abs(A)-0.2; yMax=Math.abs(A)+0.2;
-                        graphReadout.textContent=`A=${A}, ω=${w2} rad/s, T=${(2*Math.PI/w2).toFixed(2)}s`;
+                        yMin = -Math.abs(A) - 0.2;
+                        yMax = Math.abs(A) + 0.2;
+                        graphReadout.textContent = `A=${A}, ω=${w2} rad/s, T=${(2 * Math.PI / w2).toFixed(2)}s`;
                     }
-                } catch(err){ graphError.textContent='Error: '+err.message; return; }
-
-                if(!points.length){ graphError.textContent='No points to plot.'; return; }
-                const pad=36;
-                const sx=(x)=>pad+(x-xMin)/(xMax-xMin)*(w-2*pad);
-                const sy=(y)=>h-pad-(y-yMin)/(yMax-yMin)*(h-2*pad);
-
-                graphCtx.strokeStyle='rgba(255,255,255,0.07)'; graphCtx.lineWidth=1;
-                for(let i=0;i<=5;i++){
-                    const gx=pad+(w-2*pad)*i/5; const gy=pad+(h-2*pad)*i/5;
-                    graphCtx.beginPath(); graphCtx.moveTo(gx,pad); graphCtx.lineTo(gx,h-pad); graphCtx.stroke();
-                    graphCtx.beginPath(); graphCtx.moveTo(pad,gy); graphCtx.lineTo(w-pad,gy); graphCtx.stroke();
-                }
-                graphCtx.strokeStyle='rgba(255,255,255,0.2)';
-                const x0=sx(0), y0=sy(0);
-                if(x0>=pad&&x0<=w-pad){ graphCtx.beginPath(); graphCtx.moveTo(x0,pad); graphCtx.lineTo(x0,h-pad); graphCtx.stroke(); }
-                if(y0>=pad&&y0<=h-pad){ graphCtx.beginPath(); graphCtx.moveTo(pad,y0); graphCtx.lineTo(w-pad,y0); graphCtx.stroke(); }
-
-                graphCtx.fillStyle='rgba(148,163,184,0.8)'; graphCtx.font='10px JetBrains Mono, monospace'; graphCtx.textAlign='center';
-                for(let i=0;i<=5;i++){
-                    const xv=xMin+(xMax-xMin)*i/5;
-                    const yv=yMin+(yMax-yMin)*i/5;
-                    graphCtx.fillText(xv.toFixed(1), pad+(w-2*pad)*i/5, h-pad+14);
-                    graphCtx.textAlign='right';
-                    graphCtx.fillText(yv.toFixed(1), pad-4, h-pad-(h-2*pad)*i/5+4);
-                    graphCtx.textAlign='center';
+                } catch (err) {
+                    graphError.textContent = 'Error: ' + err.message;
+                    return;
                 }
 
+                if (!points.length) {
+                    graphError.textContent = 'No points to plot.';
+                    return;
+                }
+                const pad = 36;
+                const sx = (x) => pad + (x - xMin) / (xMax - xMin) * (w - 2 * pad);
+                const sy = (y) => h - pad - (y - yMin) / (yMax - yMin) * (h - 2 * pad);
+
+                // Grid
+                graphCtx.strokeStyle = 'rgba(255,255,255,0.07)';
+                graphCtx.lineWidth = 1;
+                for (let i = 0; i <= 5; i++) {
+                    const gx = pad + (w - 2 * pad) * i / 5;
+                    const gy = pad + (h - 2 * pad) * i / 5;
+                    graphCtx.beginPath();
+                    graphCtx.moveTo(gx, pad);
+                    graphCtx.lineTo(gx, h - pad);
+                    graphCtx.stroke();
+                    graphCtx.beginPath();
+                    graphCtx.moveTo(pad, gy);
+                    graphCtx.lineTo(w - pad, gy);
+                    graphCtx.stroke();
+                }
+                // Axes
+                graphCtx.strokeStyle = 'rgba(255,255,255,0.3)';
+                const x0 = sx(0), y0 = sy(0);
+                if (x0 >= pad && x0 <= w - pad) {
+                    graphCtx.beginPath();
+                    graphCtx.moveTo(x0, pad);
+                    graphCtx.lineTo(x0, h - pad);
+                    graphCtx.stroke();
+                }
+                if (y0 >= pad && y0 <= h - pad) {
+                    graphCtx.beginPath();
+                    graphCtx.moveTo(pad, y0);
+                    graphCtx.lineTo(w - pad, y0);
+                    graphCtx.stroke();
+                }
+
+                // Labels
+                graphCtx.fillStyle = 'rgba(255,255,255,0.6)';
+                graphCtx.font = '10px JetBrains Mono, monospace';
+                graphCtx.textAlign = 'center';
+                for (let i = 0; i <= 5; i++) {
+                    const xv = xMin + (xMax - xMin) * i / 5;
+                    const yv = yMin + (yMax - yMin) * i / 5;
+                    graphCtx.fillText(xv.toFixed(1), pad + (w - 2 * pad) * i / 5, h - pad + 14);
+                    graphCtx.textAlign = 'right';
+                    graphCtx.fillText(yv.toFixed(1), pad - 4, h - pad - (h - 2 * pad) * i / 5 + 4);
+                    graphCtx.textAlign = 'center';
+                }
+
+                // Curve
                 graphCtx.beginPath();
-                graphCtx.strokeStyle='#7c6af7'; graphCtx.lineWidth=2.5;
-                graphCtx.shadowColor='rgba(124,106,247,0.5)'; graphCtx.shadowBlur=6;
-                let first=true;
-                points.forEach(pt=>{
-                    const px=sx(pt.x), py=sy(pt.y);
-                    if(py<-50||py>h+50){ first=true; return; }
-                    if(first){ graphCtx.moveTo(px,py); first=false; } else { graphCtx.lineTo(px,py); }
+                graphCtx.strokeStyle = '#7c6af7';
+                graphCtx.lineWidth = 2.5;
+                graphCtx.shadowColor = 'rgba(124,106,247,0.8)';
+                graphCtx.shadowBlur = 8;
+                let first = true;
+                points.forEach(pt => {
+                    const px = sx(pt.x), py = sy(pt.y);
+                    if (py < -50 || py > h + 50) { first = true; return; }
+                    if (first) { graphCtx.moveTo(px, py); first = false; }
+                    else { graphCtx.lineTo(px, py); }
                 });
                 graphCtx.stroke();
-                graphCtx.shadowBlur=0;
+                graphCtx.shadowBlur = 0;
             }
 
-            document.getElementById('insert-graph-btn').addEventListener('click',()=>{
-                if(!excalidrawAPI||!graphCanvas) return;
+            document.getElementById('insert-graph-btn').addEventListener('click', () => {
+                if (!excalidrawAPI || !graphCanvas) return;
                 drawGraph();
-                const url=graphCanvas.toDataURL('image/png');
-                const els=excalidrawAPI.getSceneElements();
-                els.push(createEl('image',100,100,480,240,{type:'image',fileId:null,status:'saved',scale:[1,1]}));
-                excalidrawAPI.updateScene({elements:els});
-                graphModal.style.display='none';
+                
+                // Get canvas dimensions for proper sizing
+                const imgW = 560;
+                const imgH = 280;
+                
+                // Create a WHITE background frame for proper contrast on any board color
+                const framePadding = 16;
+                const frameX = 100;
+                const frameY = 100;
+                const frameW = imgW + framePadding * 2;
+                const frameH = imgH + framePadding * 2;
+                
+                const elements = excalidrawAPI.getSceneElements();
+                
+                // Add white background rectangle with border for contrast
+                elements.push(createEl('rectangle', frameX, frameY, frameW, frameH, {
+                    backgroundColor: "#FFFFFF",
+                    strokeColor: "#d4d4d8",
+                    strokeWidth: 1,
+                    fillStyle: "solid",
+                    roughness: 0,
+                    roundness: { type: 3 },
+                    opacity: 100
+                }));
+                
+                // Add subtle shadow rectangle behind (slightly offset)
+                elements.push(createEl('rectangle', frameX + 4, frameY + 4, frameW, frameH, {
+                    backgroundColor: "rgba(0,0,0,0.08)",
+                    strokeColor: "transparent",
+                    fillStyle: "solid",
+                    roughness: 0,
+                    roundness: { type: 3 },
+                    opacity: 100,
+                    // We can't easily add shadows in Excalidraw, so we use a subtle dark rect behind
+                }));
+                
+                // Move white frame to top (re-add it after shadow)
+                const shadowIdx = elements.length - 1;
+                const whiteIdx = elements.length - 2;
+                const temp = elements[shadowIdx];
+                elements[shadowIdx] = elements[whiteIdx];
+                elements[whiteIdx] = temp;
+                
+                // Add the graph image on top
+                elements.push(createEl('image', frameX + framePadding, frameY + framePadding, imgW, imgH, {
+                    type: 'image',
+                    fileId: null,
+                    status: 'saved',
+                    scale: [1, 1]
+                }));
+                
+                excalidrawAPI.updateScene({ elements });
+                
+                // Force sync to students immediately
+                setTimeout(forceSyncScene, 100);
+                
+                graphModal.style.display = 'none';
             });
 
-            let isLocked=false;
-            lockBtn.addEventListener('click',()=>{
-                if(role!=='teacher') return;
-                isLocked=!isLocked;
-                lockBtn.classList.toggle('unlocked',!isLocked);
-                lockBtnText.textContent=isLocked?'Locked':'Unlocked';
-                lockBtn.querySelector('i').className=isLocked?'fas fa-lock':'fas fa-lock-open';
-                lockedBanner.style.display=isLocked?'flex':'none';
-                sendMessage({type:'board-lock',locked:isLocked});
+            // Spotlight
+            const spotlightOverlay = document.getElementById('spotlight-overlay');
+            const spotlightHandle = document.getElementById('spotlight-handle');
+            let isSpotlightActive = false, lastSpotlightSend = 0;
+
+            document.getElementById('btn-spotlight').addEventListener('click', () => {
+                deselectTools();
+                isSpotlightActive = !isSpotlightActive;
+                document.getElementById('btn-spotlight').classList.toggle('active', isSpotlightActive);
+                
+                if (role === 'teacher') {
+                    sendMessage({ type: 'spotlight-update', active: isSpotlightActive });
+                    if (isSpotlightActive) {
+                        document.addEventListener('mousemove', handleTeacherMouse);
+                        document.addEventListener('touchmove', handleTeacherTouch, { passive: true });
+                        spotlightOverlay.style.display = 'block';
+                    } else {
+                        document.removeEventListener('mousemove', handleTeacherMouse);
+                        document.removeEventListener('touchmove', handleTeacherTouch);
+                        spotlightOverlay.style.display = 'none';
+                    }
+                }
             });
 
-            let currentTheme='light';
-            document.getElementById('btn-theme').addEventListener('click',()=>{
-                currentTheme=currentTheme==='light'?'dark':'light';
-                if(excalidrawAPI) excalidrawAPI.updateScene({appState:{theme:currentTheme}});
+            function handleTeacherMouse(e) {
+                const now = Date.now();
+                if (now - lastSpotlightSend > 33) {
+                    lastSpotlightSend = now;
+                    sendMessage({ type: 'spotlight-update', active: true, x: e.clientX, y: e.clientY });
+                }
+            }
+            function handleTeacherTouch(e) {
+                const now = Date.now();
+                if (now - lastSpotlightSend > 33 && e.touches[0]) {
+                    lastSpotlightSend = now;
+                    sendMessage({ type: 'spotlight-update', active: true, x: e.touches[0].clientX, y: e.touches[0].clientY });
+                }
+            }
+
+            // Lock
+            let isLocked = false;
+            lockBtn.addEventListener('click', () => {
+                isLocked = !isLocked;
+                lockBtn.classList.toggle('active', isLocked);
+                lockBtn.querySelector('i').className = isLocked ? 'fas fa-lock' : 'fas fa-lock-open';
+                lockedBanner.style.display = 'none'; // teacher doesn't see banner
+                sendMessage({ type: 'set-lock', locked: isLocked });
             });
 
-            const addStudentModal=document.getElementById('add-student-modal');
-            const emailInput=document.getElementById('email-input');
-            const emailSuggestions=document.getElementById('email-suggestions');
-            const emailList=document.getElementById('email-list');
-            let emailTags=[],savedEmails=JSON.parse(localStorage.getItem('primeboard_saved_emails')||'[]');
+            // Undo/Redo
+            document.getElementById('btn-undo').addEventListener('click', () => {
+                if (excalidrawAPI) excalidrawAPI.undo();
+            });
+            document.getElementById('btn-redo').addEventListener('click', () => {
+                if (excalidrawAPI) excalidrawAPI.redo();
+            });
 
-            addStudentBtn.addEventListener('click',()=>{addStudentModal.style.display='flex';});
-            document.getElementById('cancel-add-btn').addEventListener('click',()=>{
-                addStudentModal.style.display='none';emailTags=[];updateEmailList();
-                emailInput.value='';emailSuggestions.style.display='none';
+            // Pages
+            let pages = [{ id: 'page-1', name: 'Page 1', elements: [], bg: '#FFFFFF' }];
+            let currentPageId = 'page-1';
+            const pageTabsList = document.getElementById('page-tabs-list');
+            const addPageBtn = document.getElementById('add-page-btn');
+            if (role !== 'teacher') addPageBtn.style.display = 'none';
+
+            function renderPageTabs() {
+                pageTabsList.innerHTML = '';
+                pages.forEach(p => {
+                    const tab = document.createElement('div');
+                    tab.className = 'page-tab' + (p.id === currentPageId ? ' active' : '');
+                    tab.dataset.pageId = p.id;
+                    tab.innerHTML = `<span>${p.name}</span>` +
+                        (role === 'teacher' && pages.length > 1 ? `<i class="fas fa-times page-tab-close"></i>` : '');
+                    tab.addEventListener('click', (e) => {
+                        if (e.target.closest('.page-tab-close')) return;
+                        switchToPage(p.id, false);
+                    });
+                    if (role === 'teacher') {
+                        tab.addEventListener('dblclick', () => {
+                            const nn = prompt('Rename page:', p.name);
+                            if (nn && nn.trim()) {
+                                p.name = nn.trim().slice(0, 24);
+                                renderPageTabs();
+                                sendMessage({ type: 'pages-structure', pages: pages.map(x => ({ id: x.id, name: x.name })), currentPageId });
+                            }
+                        });
+                        const closeBtn = tab.querySelector('.page-tab-close');
+                        if (closeBtn) closeBtn.addEventListener('click', (e) => {
+                            e.stopPropagation();
+                            deletePage(p.id);
+                        });
+                    }
+                    pageTabsList.appendChild(tab);
+                });
+            }
+
+            function saveCurrentPageSnapshot() {
+                if (!excalidrawAPI) return;
+                const page = pages.find(p => p.id === currentPageId);
+                if (page) {
+                    page.elements = excalidrawAPI.getSceneElements();
+                    page.bg = excalidrawAPI.getAppState().viewBackgroundColor;
+                }
+            }
+
+            function switchToPage(pageId, remote) {
+                if (pageId === currentPageId && !remote) return;
+                if (!remote) saveCurrentPageSnapshot();
+                currentPageId = pageId;
+                const page = pages.find(p => p.id === pageId);
+                if (page && excalidrawAPI) {
+                    isRemoteUpdate = true;
+                    excalidrawAPI.updateScene({
+                        elements: page.elements || [],
+                        appState: { viewBackgroundColor: page.bg || '#FFFFFF' }
+                    });
+                    // Force sync to students
+                    setTimeout(forceSyncScene, 50);
+                }
+                renderPageTabs();
+                if (!remote && role === 'teacher') {
+                    sendMessage({
+                        type: 'page-switch',
+                        pageId,
+                        elements: page ? page.elements : [],
+                        bg: page ? page.bg : '#FFFFFF'
+                    });
+                }
+            }
+
+            function addNewPage() {
+                saveCurrentPageSnapshot();
+                const id = 'page-' + Date.now();
+                const pg = { id, name: `Page ${pages.length + 1}`, elements: [], bg: '#FFFFFF' };
+                pages.push(pg);
+                currentPageId = id;
+                if (excalidrawAPI) {
+                    isRemoteUpdate = true;
+                    excalidrawAPI.updateScene({
+                        elements: [],
+                        appState: { viewBackgroundColor: '#FFFFFF' }
+                    });
+                }
+                renderPageTabs();
+                sendMessage({ type: 'pages-structure', pages: pages.map(x => ({ id: x.id, name: x.name })), currentPageId });
+                sendMessage({ type: 'page-switch', pageId: id, elements: [], bg: '#FFFFFF' });
+            }
+
+            function deletePage(pageId) {
+                if (pages.length <= 1) return;
+                const idx = pages.findIndex(p => p.id === pageId);
+                if (idx === -1) return;
+                const wasActive = pageId === currentPageId;
+                pages.splice(idx, 1);
+                if (wasActive) {
+                    const next = pages[Math.max(0, idx - 1)];
+                    currentPageId = next.id;
+                    if (excalidrawAPI) {
+                        isRemoteUpdate = true;
+                        excalidrawAPI.updateScene({
+                            elements: next.elements || [],
+                            appState: { viewBackgroundColor: next.bg || '#FFFFFF' }
+                        });
+                    }
+                }
+                renderPageTabs();
+                sendMessage({ type: 'pages-structure', pages: pages.map(x => ({ id: x.id, name: x.name })), currentPageId });
+                if (wasActive) {
+                    const p = pages.find(x => x.id === currentPageId);
+                    sendMessage({
+                        type: 'page-switch',
+                        pageId: currentPageId,
+                        elements: p ? p.elements : [],
+                        bg: p ? p.bg : '#FFFFFF'
+                    });
+                }
+            }
+
+            addPageBtn.addEventListener('click', addNewPage);
+            document.getElementById('page-tabs-bar').style.display = 'flex';
+            renderPageTabs();
+
+            // Recording
+            const recordBtn = document.getElementById('record-btn');
+            const recIndicator = document.getElementById('rec-indicator');
+            const recTimerEl = document.getElementById('rec-timer');
+            let mediaRecorder = null, recordedChunks = [], recordStream = null, recStart = 0, recInterval = null;
+
+            recordBtn.addEventListener('click', toggleRecording);
+
+            async function toggleRecording() {
+                if (mediaRecorder && mediaRecorder.state === 'recording') {
+                    stopRecording();
+                    return;
+                }
+                if (!navigator.mediaDevices || !navigator.mediaDevices.getDisplayMedia) {
+                    alert('Screen recording not supported. Try Chrome on desktop.');
+                    return;
+                }
+                try {
+                    recordStream = await navigator.mediaDevices.getDisplayMedia({
+                        video: { cursor: 'always' },
+                        audio: true
+                    });
+                } catch {
+                    alert('Recording cancelled or permission denied.');
+                    return;
+                }
+                recordedChunks = [];
+                let mimeType = 'video/webm;codecs=vp9,opus';
+                if (!MediaRecorder.isTypeSupported(mimeType)) mimeType = 'video/webm';
+                try {
+                    mediaRecorder = new MediaRecorder(recordStream, { mimeType });
+                } catch {
+                    mediaRecorder = new MediaRecorder(recordStream);
+                }
+                mediaRecorder.ondataavailable = (e) => {
+                    if (e.data && e.data.size > 0) recordedChunks.push(e.data);
+                };
+                mediaRecorder.onstop = () => {
+                    const blob = new Blob(recordedChunks, { type: 'video/webm' });
+                    const url = URL.createObjectURL(blob);
+                    const stamp = new Date().toISOString().replace(/[:.]/g, '-');
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `PrimeBoard-${room}-${stamp}.webm`;
+                    document.body.appendChild(a);
+                    a.click();
+                    a.remove();
+                    setTimeout(() => URL.revokeObjectURL(url), 4000);
+                    if (recordStream) {
+                        recordStream.getTracks().forEach(t => t.stop());
+                        recordStream = null;
+                    }
+                };
+                recordStream.getVideoTracks()[0].addEventListener('ended', () => {
+                    if (mediaRecorder && mediaRecorder.state === 'recording') stopRecording();
+                });
+                mediaRecorder.start(1000);
+                recStart = Date.now();
+                recordBtn.classList.add('recording');
+                recordBtn.querySelector('i').className = 'fas fa-stop';
+                recIndicator.style.display = 'flex';
+                recInterval = setInterval(updateRecTimer, 1000);
+                updateRecTimer();
+                sendMessage({ type: 'recording-status', active: true });
+            }
+
+            function stopRecording() {
+                if (mediaRecorder && mediaRecorder.state !== 'inactive') mediaRecorder.stop();
+                clearInterval(recInterval);
+                recordBtn.classList.remove('recording');
+                recordBtn.querySelector('i').className = 'fas fa-video';
+                recIndicator.style.display = 'none';
+                sendMessage({ type: 'recording-status', active: false });
+            }
+
+            function updateRecTimer() {
+                const s = Math.floor((Date.now() - recStart) / 1000);
+                recTimerEl.textContent = `${Math.floor(s / 60).toString().padStart(2, '0')}:${(s % 60).toString().padStart(2, '0')}`;
+            }
+
+            // Add Student
+            const addStudentModal = document.getElementById('add-student-modal');
+            const emailInput = document.getElementById('email-input');
+            const emailList = document.getElementById('email-list');
+            let emailTags = [];
+
+            addStudentBtn.addEventListener('click', () => {
+                addStudentModal.style.display = 'flex';
             });
-            emailInput.addEventListener('keypress',(e)=>{if(e.key==='Enter'||e.key===','){e.preventDefault();parseAndAddEmails();}});
-            emailInput.addEventListener('input',(e)=>{
-                const q=e.target.value.trim().toLowerCase();
-                if(!q||savedEmails.length===0){emailSuggestions.style.display='none';return;}
-                const m=savedEmails.filter(em=>em.toLowerCase().includes(q)&&!emailTags.includes(em));
-                if(m.length===0){emailSuggestions.style.display='none';return;}
-                emailSuggestions.innerHTML=m.map(em=>`<div class="suggestion-item" onclick="selectSuggestion('${em}')">${em}</div>`).join('');
-                emailSuggestions.style.display='block';
+            document.getElementById('cancel-add-btn').addEventListener('click', () => {
+                addStudentModal.style.display = 'none';
+                emailTags = [];
+                updateEmailList();
+                emailInput.value = '';
             });
-            window.selectSuggestion=function(em){
-                if(!emailTags.includes(em)){emailTags.push(em);updateEmailList();}
-                emailInput.value='';emailSuggestions.style.display='none';
+            emailInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter' || e.key === ',') {
+                    e.preventDefault();
+                    parseAndAddEmails();
+                }
+            });
+            function parseAndAddEmails() {
+                const emails = emailInput.value.split(/[,\s]+/).filter(e => e.trim());
+                emails.forEach(em => {
+                    const c = em.trim().toLowerCase();
+                    if (c.includes('@') && !emailTags.includes(c)) emailTags.push(c);
+                });
+                updateEmailList();
+                emailInput.value = '';
+            }
+            function updateEmailList() {
+                if (emailTags.length === 0) {
+                    emailList.innerHTML = '<span style="color:var(--text-muted);font-size:.75rem;font-weight:600;">No emails added yet</span>';
+                } else {
+                    emailList.innerHTML = emailTags.map((em, i) =>
+                        `<span class="email-tag">${em} <i class="fas fa-times" onclick="window.removeEmail(${i})"></i></span>`
+                    ).join('');
+                }
+            }
+            window.removeEmail = (i) => {
+                emailTags.splice(i, 1);
+                updateEmailList();
             };
-            function parseAndAddEmails(){
-                const emails=emailInput.value.split(/[,\s]+/).filter(e=>e.trim());
-                emails.forEach(em=>{const c=em.trim().toLowerCase();if(c.includes('@')&&!emailTags.includes(c))emailTags.push(c);});
-                updateEmailList();emailInput.value='';emailSuggestions.style.display='none';
-            }
-            function updateEmailList(){
-                if(emailTags.length===0)emailList.innerHTML='<span style="color:var(--text-muted);font-size:.75rem;font-weight:600;">No emails added yet</span>';
-                else emailList.innerHTML=emailTags.map(em=>`<span class="email-tag">${em} <i class="fas fa-times" onclick="removeEmail('${em}')"></i></span>`).join('');
-            }
-            window.removeEmail=function(em){emailTags=emailTags.filter(e=>e!==em);updateEmailList();};
             updateEmailList();
 
-            document.getElementById('send-invites-btn').addEventListener('click',()=>{
+            document.getElementById('send-invites-btn').addEventListener('click', () => {
                 parseAndAddEmails();
-                if(emailTags.length===0){alert('Please add at least one email address');return;}
-                emailTags.forEach(em=>{if(!savedEmails.includes(em))savedEmails.push(em);});
-                if(savedEmails.length>20)savedEmails=savedEmails.slice(-20);
-                localStorage.setItem('primeboard_saved_emails',JSON.stringify(savedEmails));
-                sendMessage({type:'email-invites',room,emails:emailTags,inviteUrl,teacherName:name});
+                if (emailTags.length === 0) {
+                    alert('Please add at least one email address');
+                    return;
+                }
+                sendMessage({
+                    type: 'email-invites',
+                    room,
+                    emails: emailTags,
+                    inviteUrl,
+                    teacherName: name
+                });
                 alert('Invite request sent to server!');
-                addStudentModal.style.display='none';emailTags=[];updateEmailList();emailInput.value='';
+                addStudentModal.style.display = 'none';
+                emailTags = [];
+                updateEmailList();
+                emailInput.value = '';
             });
 
+            // Resize handler
             let resizeTimer;
             window.addEventListener('resize', () => {
                 clearTimeout(resizeTimer);
-                resizeTimer = setTimeout(() => { closeAllPopups(); }, 200);
+                resizeTimer = setTimeout(() => {
+                    closeAllPopups();
+                    if (graphModal.style.display === 'flex') drawGraph();
+                }, 200);
             });
 
-            function App(){
-                const onChange=useCallback((elements,appState)=>{
-                    if(!isRemoteUpdate){
-                        const now=Date.now();
-                        if(now-lastSendTime>=50){
-                            lastSendTime=now;
-                            sendMessage({type:'scene-update',elements,appState:{viewBackgroundColor:appState.viewBackgroundColor}});
+            // Excalidraw Render
+            function App() {
+                const onChange = useCallback((elements, appState) => {
+                    if (isRemoteUpdate) {
+                        isRemoteUpdate = false;
+                        return;
+                    }
+                    const now = Date.now();
+                    if (now - lastSendTime >= 50) {
+                        lastSendTime = now;
+                        sendMessage({
+                            type: 'scene-update',
+                            elements,
+                            appState: { viewBackgroundColor: appState.viewBackgroundColor }
+                        });
+                    }
+                }, []);
+                return React.createElement(Excalidraw, {
+                    excalidrawAPI: (api) => { excalidrawAPI = api; },
+                    onChange,
+                    theme: 'light',
+                    name: `PrimeBoard - ${room}`,
+                    UIOptions: {
+                        canvasActions: {
+                            loadScene: false,
+                            saveToActiveFile: false,
+                            export: { saveFileToDisk: false }
+                        }
+                    },
+                    initialData: {
+                        appState: {
+                            viewModeEnabled: role === 'student' && isLocked,
+                            viewBackgroundColor: '#FFFFFF'
                         }
                     }
-                    isRemoteUpdate=false;
-                },[]);
-                return React.createElement(Excalidraw,{
-                    excalidrawAPI:(api)=>{excalidrawAPI=api;},
-                    onChange,theme:'light',name:`PrimeBoard - ${room}`,
-                    UIOptions:{canvasActions:{loadScene:false,saveToActiveFile:false,export:{saveFileToDisk:false}}},
-                    initialData:{appState:{viewModeEnabled:role==='student'&&isLocked}}
                 });
             }
             ReactDOM.createRoot(document.getElementById('root')).render(React.createElement(App));
 
-            let socket=null;
-            function connect(){
-                statusDot.className='connecting';
-                socket=new WebSocket(window.PRIMEBOARD_RELAY_URL);
-                socket.addEventListener('open',()=>{statusDot.className='connected';sendMessage({type:'join',room,role,name});});
-                socket.addEventListener('message',(event)=>{
-                    const data=JSON.parse(event.data);
-                    if(data.type==='state'||data.type==='lock-changed'){
-                        isLocked=data.locked;
-                        if(role==='student'){
-                            lockedBanner.style.display=isLocked?'flex':'none';
-                            if(excalidrawAPI) excalidrawAPI.updateScene({appState:{viewModeEnabled:isLocked}});
+            // WebSocket
+            let socket = null;
+            function connect() {
+                onlineDot.className = 'sb-online-dot connecting';
+                socket = new WebSocket(window.PRIMEBOARD_RELAY_URL);
+                socket.addEventListener('open', () => {
+                    onlineDot.className = 'sb-online-dot';
+                    sendMessage({ type: 'join', room, role, name });
+                });
+                socket.addEventListener('message', (event) => {
+                    const data = JSON.parse(event.data);
+                    if (data.type === 'state' || data.type === 'lock-changed') {
+                        isLocked = data.locked;
+                        if (role === 'student') {
+                            lockedBanner.style.display = isLocked ? 'flex' : 'none';
+                            if (excalidrawAPI) {
+                                excalidrawAPI.updateScene({ appState: { viewModeEnabled: isLocked } });
+                            }
                         }
                     }
-                    if(data.type==='scene-update'&&excalidrawAPI){
-                        isRemoteUpdate=true;
-                        excalidrawAPI.updateScene({elements:data.elements});
+                    if (data.type === 'scene-update' && excalidrawAPI) {
+                        isRemoteUpdate = true;
+                        excalidrawAPI.updateScene({ elements: data.elements });
+                        if (data.appState && data.appState.viewBackgroundColor) {
+                            excalidrawAPI.updateScene({
+                                appState: { viewBackgroundColor: data.appState.viewBackgroundColor }
+                            });
+                        }
                     }
-                    if(data.type==='roster'&&data.users)studentCount.textContent=data.users.length;
-                    if(data.type==='timer-update'){
-                        timeLeft=data.timeLeft;updateTimerDisplay();
-                        if(data.action==='start'&&!isTimerRunning)startTimerLocal();
-                        if(data.action==='pause')pauseTimerLocal();
-                        if(data.action==='reset'){pauseTimerLocal();timeLeft=data.timeLeft;updateTimerDisplay();}
+                    if (data.type === 'roster' && data.users) {
+                        onlineCount.textContent = data.users.length;
                     }
-                    if(data.type==='spotlight-update'){
-                        if(data.active){
-                            spotlightOverlay.style.display='block';
-                            if(role!=='teacher') spotlightHandle.style.display='flex';
-                            spotlightOverlay.style.setProperty('--sx',`${data.x}px`);
-                            spotlightOverlay.style.setProperty('--sy',`${data.y}px`);
+                    if (data.type === 'timer-update') {
+                        timeLeft = data.timeLeft;
+                        updateTimerDisplay();
+                        if (data.action === 'start' && !isTimerRunning) startTimerLocal();
+                        if (data.action === 'pause') pauseTimerLocal();
+                        if (data.action === 'reset') {
+                            pauseTimerLocal();
+                            timeLeft = data.timeLeft;
+                            updateTimerDisplay();
+                        }
+                    }
+                    if (data.type === 'spotlight-update') {
+                        if (data.active) {
+                            spotlightOverlay.style.display = 'block';
+                            if (role !== 'teacher') spotlightHandle.style.display = 'flex';
+                            spotlightOverlay.style.setProperty('--sx', `${data.x}px`);
+                            spotlightOverlay.style.setProperty('--sy', `${data.y}px`);
                         } else {
-                            spotlightOverlay.style.display='none';
-                            spotlightHandle.style.display='none';
+                            spotlightOverlay.style.display = 'none';
+                            spotlightHandle.style.display = 'none';
                         }
+                    }
+                    if (data.type === 'pages-structure' && role === 'student') {
+                        data.pages.forEach(p => {
+                            if (!pages.find(x => x.id === p.id)) {
+                                pages.push({ id: p.id, name: p.name, elements: [], bg: '#FFFFFF' });
+                            } else {
+                                const pg = pages.find(x => x.id === p.id);
+                                if (pg) pg.name = p.name;
+                            }
+                        });
+                        pages = pages.filter(p => data.pages.find(x => x.id === p.id));
+                        renderPageTabs();
+                    }
+                    if (data.type === 'page-switch' && role === 'student') {
+                        const page = pages.find(p => p.id === data.pageId);
+                        if (page) {
+                            page.elements = data.elements || [];
+                            page.bg = data.bg || '#FFFFFF';
+                        } else {
+                            pages.push({
+                                id: data.pageId,
+                                name: data.pageId,
+                                elements: data.elements || [],
+                                bg: data.bg || '#FFFFFF'
+                            });
+                        }
+                        switchToPage(data.pageId, true);
+                    }
+                    if (data.type === 'recording-status') {
+                        // Students see recording indicator (could add a banner here)
                     }
                 });
-                socket.addEventListener('close',()=>{statusDot.className='connecting';setTimeout(connect,2000);});
-                socket.addEventListener('error',()=>{statusDot.className='error';});
+                socket.addEventListener('close', () => {
+                    onlineDot.className = 'sb-online-dot connecting';
+                    setTimeout(connect, 2000);
+                });
+                socket.addEventListener('error', () => {
+                    onlineDot.className = 'sb-online-dot error';
+                });
             }
-            function sendMessage(payload){if(socket&&socket.readyState===WebSocket.OPEN)socket.send(JSON.stringify(payload));}
+            function sendMessage(payload) {
+                if (socket && socket.readyState === WebSocket.OPEN) {
+                    socket.send(JSON.stringify(payload));
+                }
+            }
             connect();
         }
     </script>
