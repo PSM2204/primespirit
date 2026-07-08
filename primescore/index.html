@@ -2,42 +2,33 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover, shrink-to-fit=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
   <meta name="description" content="Smart AI-inspired score calculator for NEET, JEE Main, CUET, UGC NET. Process response sheets securely in your browser.">
   <meta name="theme-color" content="#4f46e5">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="PrimeScore">
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="HandheldFriendly" content="true">
-  <title>PrimeScore • Smart Score Calculator</title>
   
-  <!-- Preconnect for faster loading -->
+  <!-- Match your website's font -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
-  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-  
-  <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
   
-  <!-- Font Awesome Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <!-- Font Awesome - matching your site -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   
-  <!-- PDF.js -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" integrity="sha512-rYSY4BcIiXD9OJn9fSHTRZ0Wz7gY4HwNfGXKPy0c7E/mFE6nR4zU5U3PqXkpS4eLsWqG6J0qPxE2Y2jYHQMRw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <!-- PDF.js for PDF parsing -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
   
-  <!-- Chart.js -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js" integrity="sha256-qJ/L/YhqhH6Unq4x4PAs2nMXg8NmCCOj7qozHRM9zls=" crossorigin="anonymous"></script>
+  <!-- Chart.js for analytics -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
   
-  <!-- SheetJS Community Edition -->
-  <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
-  
-  <!-- jsPDF -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.2/jspdf.umd.min.js" integrity="sha512-qZvrmS2ekKPF2mSznTQsxqPgnpkI4DNTlrdUmTzrDgektczlKNRRhy5X5AOnx5M1xCX+LUlJ9J6r6Mk4JtJl+g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <!-- jsPDF for report download -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+  <title>PrimeScore • Smart Score Calculator | Prime Spirit Mentors</title>
 
   <style>
-    /* ===== CSS Reset & Base ===== */
+    /* ===== RESET & BASE ===== */
     *, *::before, *::after {
       margin: 0;
       padding: 0;
@@ -45,6 +36,7 @@
     }
 
     :root {
+      /* Match your website's color scheme */
       --primary: #4f46e5;
       --primary-dark: #4338ca;
       --primary-light: #6366f1;
@@ -53,143 +45,239 @@
       --success: #10b981;
       --danger: #ef4444;
       --warning: #f59e0b;
-      --info: #3b82f6;
-      --bg-light: #f0f4ff;
-      --bg-gradient-1: #eef2ff;
-      --bg-gradient-2: #e0e7ff;
-      --surface: rgba(255, 255, 255, 0.85);
-      --surface-hover: rgba(255, 255, 255, 0.95);
-      --glass-border: rgba(255, 255, 255, 0.5);
-      --glass-shadow: 0 8px 32px rgba(79, 70, 229, 0.12);
+      
+      --bg-light: #f8fafc;
+      --bg-gradient-start: #eef2ff;
+      --bg-gradient-end: #f0e7ff;
       --text-primary: #1e293b;
       --text-secondary: #475569;
       --text-tertiary: #64748b;
+      
+      --card-bg: rgba(255, 255, 255, 0.85);
+      --card-border: rgba(255, 255, 255, 0.5);
+      --card-shadow: 0 8px 32px rgba(79, 70, 229, 0.12);
+      
       --radius-sm: 0.75rem;
       --radius-md: 1.25rem;
       --radius-lg: 2rem;
-      --radius-xl: 2.5rem;
-      --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-      --transition-smooth: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      --font-size-xs: clamp(0.7rem, 1.5vw, 0.8rem);
-      --font-size-sm: clamp(0.8rem, 1.8vw, 0.9rem);
-      --font-size-base: clamp(0.9rem, 2vw, 1rem);
-      --font-size-lg: clamp(1.1rem, 2.5vw, 1.25rem);
-      --font-size-xl: clamp(1.5rem, 4vw, 2rem);
-      --font-size-2xl: clamp(2rem, 5vw, 3rem);
-      --font-size-hero: clamp(2.5rem, 8vw, 5rem);
+      --radius-xl: 3rem;
+      
+      --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
+    /* Dark mode */
     body.dark {
       --bg-light: #0f172a;
-      --bg-gradient-1: #0f172a;
-      --bg-gradient-2: #1e1b4b;
-      --surface: rgba(15, 23, 42, 0.85);
-      --surface-hover: rgba(15, 23, 42, 0.95);
-      --glass-border: rgba(255, 255, 255, 0.12);
-      --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+      --bg-gradient-start: #0f172a;
+      --bg-gradient-end: #1e1b4b;
       --text-primary: #f1f5f9;
       --text-secondary: #cbd5e1;
       --text-tertiary: #94a3b8;
+      --card-bg: rgba(15, 23, 42, 0.85);
+      --card-border: rgba(255, 255, 255, 0.1);
+      --card-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
     }
 
     html {
       scroll-behavior: smooth;
       -webkit-text-size-adjust: 100%;
-      -webkit-tap-highlight-color: transparent;
     }
 
     body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-      background: linear-gradient(135deg, var(--bg-gradient-1) 0%, var(--bg-gradient-2) 100%);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));
       background-attachment: fixed;
       color: var(--text-primary);
       line-height: 1.6;
-      transition: background 0.3s, color 0.3s;
       min-height: 100vh;
-      min-height: 100dvh; /* Dynamic viewport height for mobile */
-      overflow-x: hidden;
       -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-      padding-bottom: env(safe-area-inset-bottom, 20px);
+      transition: background 0.3s, color 0.3s;
     }
 
-    /* ===== Layout ===== */
+    /* ===== CONTAINER ===== */
     .container {
       width: 100%;
-      max-width: 1280px;
+      max-width: 1200px;
       margin: 0 auto;
-      padding: clamp(0.75rem, 2vw, 1.5rem);
+      padding: 20px;
     }
 
-    /* ===== Glass Card ===== */
-    .glass-card {
-      background: var(--surface);
+    /* ===== BACK TO HOME LINK ===== */
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 15px;
+      padding: 10px 20px;
+      border-radius: 50px;
+      background: var(--card-bg);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--card-border);
+      margin-bottom: 30px;
+      transition: all var(--transition);
+    }
+
+    .back-link:hover {
+      transform: translateX(-5px);
+      box-shadow: var(--card-shadow);
+    }
+
+    body.dark .back-link {
+      color: var(--accent-light);
+    }
+
+    /* ===== HERO SECTION ===== */
+    .hero {
+      text-align: center;
+      padding: 40px 20px 30px;
+    }
+
+    .hero-badge {
+      display: inline-block;
+      background: linear-gradient(135deg, rgba(79, 70, 229, 0.1), rgba(139, 92, 246, 0.1));
+      border: 1px solid rgba(79, 70, 229, 0.3);
+      color: var(--primary);
+      padding: 8px 20px;
+      border-radius: 50px;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 20px;
+      backdrop-filter: blur(10px);
+    }
+
+    body.dark .hero-badge {
+      color: var(--accent-light);
+      border-color: rgba(139, 92, 246, 0.4);
+    }
+
+    .hero-title {
+      font-size: clamp(2.5rem, 6vw, 4rem);
+      font-weight: 800;
+      background: linear-gradient(135deg, #4f46e5, #8b5cf6, #c084fc);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 12px;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+    }
+
+    .hero-subtitle {
+      font-size: clamp(1.1rem, 2vw, 1.3rem);
+      color: var(--text-secondary);
+      margin-bottom: 10px;
+      font-weight: 500;
+    }
+
+    .hero-desc {
+      font-size: 1rem;
+      color: var(--text-tertiary);
+      max-width: 650px;
+      margin: 0 auto 25px;
+      line-height: 1.7;
+    }
+
+    /* ===== EXAM BADGES ===== */
+    .exam-list {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .exam-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--card-bg);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--card-border);
+      padding: 8px 18px;
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--primary);
+      transition: all var(--transition);
+    }
+
+    body.dark .exam-tag {
+      color: var(--accent-light);
+    }
+
+    .exam-tag:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--card-shadow);
+    }
+
+    /* ===== MAIN CARD ===== */
+    .card {
+      background: var(--card-bg);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
-      border: 1px solid var(--glass-border);
+      border: 1px solid var(--card-border);
       border-radius: var(--radius-lg);
-      box-shadow: var(--glass-shadow);
-      padding: clamp(1rem, 3vw, 2rem);
-      transition: all var(--transition-smooth);
-      will-change: transform;
+      padding: 30px;
+      margin-bottom: 25px;
+      box-shadow: var(--card-shadow);
+      transition: all var(--transition);
     }
 
-    .glass-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 12px 40px rgba(79, 70, 229, 0.2);
-      background: var(--surface-hover);
+    /* ===== BUTTONS ===== */
+    .btn-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
     }
 
-    @media (hover: none) {
-      .glass-card:hover {
-        transform: none;
-        box-shadow: var(--glass-shadow);
-      }
-    }
-
-    /* ===== Buttons ===== */
     .btn {
       display: inline-flex;
       align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-      padding: 0.75rem 1.5rem;
+      gap: 8px;
+      padding: 14px 28px;
       border: none;
-      border-radius: var(--radius-xl);
+      border-radius: 50px;
       font-weight: 600;
-      font-size: var(--font-size-base);
+      font-size: 15px;
       cursor: pointer;
-      transition: all var(--transition-fast);
+      transition: all var(--transition);
+      font-family: 'Inter', sans-serif;
       text-decoration: none;
       white-space: nowrap;
-      min-height: 48px; /* Touch-friendly */
-      min-width: 48px;
-      -webkit-tap-highlight-color: transparent;
-      user-select: none;
-      -webkit-user-select: none;
+      justify-content: center;
+      flex: 1;
+      min-width: 180px;
+      max-width: 280px;
     }
 
     .btn:active {
       transform: scale(0.96);
     }
 
-    .btn-primary {
-      background: linear-gradient(135deg, var(--primary), var(--accent));
+    .btn-gradient {
+      background: linear-gradient(135deg, #4f46e5, #7c3aed);
       color: white;
-      box-shadow: 0 4px 15px rgba(79, 70, 229, 0.3);
-      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 4px 20px rgba(79, 70, 229, 0.35);
+      border: 2px solid transparent;
     }
 
-    .btn-primary:hover {
-      box-shadow: 0 6px 25px rgba(79, 70, 229, 0.5);
-      filter: brightness(1.1);
+    .btn-gradient:hover {
+      box-shadow: 0 8px 30px rgba(79, 70, 229, 0.5);
+      transform: translateY(-2px);
     }
 
     .btn-outline {
       background: transparent;
-      border: 2px solid var(--primary);
       color: var(--primary);
-      box-shadow: none;
+      border: 2px solid var(--primary);
+    }
+
+    .btn-outline:hover {
+      background: rgba(79, 70, 229, 0.08);
     }
 
     body.dark .btn-outline {
@@ -197,231 +285,174 @@
       border-color: var(--accent-light);
     }
 
-    .btn-outline:hover {
-      background: rgba(79, 70, 229, 0.1);
+    .btn-green {
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: white;
+      box-shadow: 0 4px 20px rgba(16, 185, 129, 0.35);
+    }
+
+    .btn-green:hover {
+      box-shadow: 0 8px 30px rgba(16, 185, 129, 0.5);
+      transform: translateY(-2px);
     }
 
     .btn-sm {
-      padding: 0.5rem 1rem;
-      font-size: var(--font-size-sm);
-      min-height: 40px;
-    }
-
-    .btn-lg {
-      padding: 1rem 2rem;
-      font-size: var(--font-size-lg);
-      min-height: 56px;
-    }
-
-    /* ===== Hero Section ===== */
-    .hero-section {
-      text-align: center;
-      padding: clamp(1rem, 3vw, 2rem) 0;
-    }
-
-    .hero-title {
-      font-size: var(--font-size-hero);
-      font-weight: 800;
-      background: linear-gradient(135deg, var(--primary), var(--accent), #c084fc);
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
-      margin-bottom: 0.5rem;
-      line-height: 1.1;
-      letter-spacing: -0.02em;
-    }
-
-    .hero-subtitle {
-      font-size: var(--font-size-lg);
-      color: var(--text-secondary);
-      margin-bottom: 0.75rem;
-      font-weight: 500;
-    }
-
-    .hero-description {
-      font-size: var(--font-size-base);
-      color: var(--text-tertiary);
-      max-width: 700px;
-      margin: 0 auto 1.5rem;
-      line-height: 1.7;
-    }
-
-    /* ===== Exam Badges ===== */
-    .exam-badges {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 0.75rem;
-      margin-bottom: 2rem;
-    }
-
-    .exam-badge {
-      background: rgba(79, 70, 229, 0.1);
-      border: 1px solid rgba(79, 70, 229, 0.2);
-      padding: 0.5rem 1.2rem;
-      border-radius: var(--radius-xl);
-      font-weight: 600;
-      font-size: var(--font-size-sm);
-      backdrop-filter: blur(4px);
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      transition: all var(--transition-fast);
-    }
-
-    .exam-badge:hover {
-      background: rgba(79, 70, 229, 0.2);
-      transform: translateY(-1px);
-    }
-
-    /* ===== Upload Section ===== */
-    .upload-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1rem;
-      justify-content: center;
-      margin-bottom: 1.5rem;
-    }
-
-    .upload-actions .btn {
-      flex: 1;
-      min-width: 200px;
-      max-width: 300px;
+      padding: 10px 20px;
+      font-size: 14px;
+      flex: 0;
+      min-width: auto;
     }
 
     @media (max-width: 640px) {
-      .upload-actions .btn {
+      .btn {
         max-width: 100%;
         width: 100%;
+        flex: auto;
+      }
+      
+      .btn-sm {
+        width: auto;
       }
     }
 
-    /* ===== Status Message ===== */
-    .status-message {
-      text-align: center;
-      padding: 0.75rem;
-      border-radius: var(--radius-md);
-      font-weight: 500;
-      font-size: var(--font-size-sm);
-      transition: all var(--transition-fast);
-      margin-top: 1rem;
-    }
-
-    .status-info {
-      background: rgba(59, 130, 246, 0.1);
-      color: var(--info);
-    }
-
-    .status-success {
-      background: rgba(16, 185, 129, 0.1);
-      color: var(--success);
-    }
-
-    .status-error {
-      background: rgba(239, 68, 68, 0.1);
-      color: var(--danger);
-    }
-
-    /* ===== URL Input ===== */
-    .url-input-container {
-      margin-top: 1rem;
+    /* ===== URL INPUT ===== */
+    .url-box {
       display: flex;
-      gap: 0.75rem;
-      align-items: center;
+      gap: 10px;
+      margin-top: 20px;
       flex-wrap: wrap;
+      justify-content: center;
     }
 
     .url-input {
       flex: 1;
-      min-width: 200px;
-      padding: 0.8rem 1.2rem;
-      border-radius: var(--radius-xl);
-      border: 2px solid rgba(79, 70, 229, 0.2);
-      background: var(--surface);
-      backdrop-filter: blur(10px);
-      font-size: var(--font-size-base);
+      min-width: 250px;
+      padding: 14px 22px;
+      border-radius: 50px;
+      border: 2px solid rgba(79, 70, 229, 0.25);
+      font-size: 15px;
+      font-family: 'Inter', sans-serif;
+      background: rgba(255, 255, 255, 0.6);
       color: var(--text-primary);
-      transition: all var(--transition-fast);
-      font-family: inherit;
+      transition: all var(--transition);
+    }
+
+    body.dark .url-input {
+      background: rgba(15, 23, 42, 0.7);
+      border-color: rgba(139, 92, 246, 0.3);
+      color: #f1f5f9;
     }
 
     .url-input:focus {
       outline: none;
       border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+      box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
     }
 
-    /* ===== Dashboard ===== */
-    .dashboard-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: 1rem;
-      margin: 1.5rem 0;
-    }
-
-    .stat-card {
-      background: var(--surface);
-      backdrop-filter: blur(15px);
-      border: 1px solid var(--glass-border);
-      border-radius: var(--radius-md);
-      padding: 1.25rem;
+    /* ===== STATUS ===== */
+    .status-msg {
       text-align: center;
-      transition: all var(--transition-fast);
+      padding: 12px;
+      border-radius: 12px;
+      margin-top: 15px;
+      font-weight: 500;
+      font-size: 14px;
+      display: none;
     }
 
-    .stat-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 25px rgba(79, 70, 229, 0.15);
+    .status-msg.show {
+      display: block;
     }
 
-    .stat-value {
-      font-size: var(--font-size-xl);
+    .status-msg.info { background: rgba(59,130,246,0.1); color: #3b82f6; }
+    .status-msg.success { background: rgba(16,185,129,0.1); color: #059669; }
+    .status-msg.error { background: rgba(239,68,68,0.1); color: #dc2626; }
+
+    /* ===== DASHBOARD ===== */
+    .dashboard {
+      display: none;
+    }
+
+    .dashboard.active {
+      display: block;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 15px;
+      margin: 20px 0;
+    }
+
+    .stat-box {
+      background: var(--card-bg);
+      backdrop-filter: blur(15px);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-md);
+      padding: 20px 15px;
+      text-align: center;
+      transition: all var(--transition);
+    }
+
+    .stat-box:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--card-shadow);
+    }
+
+    .stat-num {
+      font-size: 2rem;
       font-weight: 700;
-      background: linear-gradient(135deg, var(--primary), var(--accent));
+      background: linear-gradient(135deg, #4f46e5, #8b5cf6);
       -webkit-background-clip: text;
       background-clip: text;
       -webkit-text-fill-color: transparent;
       display: block;
     }
 
+    .stat-num.green { background: linear-gradient(135deg, #10b981, #059669); -webkit-background-clip: text; background-clip: text; }
+    .stat-num.red { background: linear-gradient(135deg, #ef4444, #dc2626); -webkit-background-clip: text; background-clip: text; }
+
     .stat-label {
-      font-size: var(--font-size-xs);
+      font-size: 11px;
       color: var(--text-tertiary);
       text-transform: uppercase;
       letter-spacing: 0.05em;
-      margin-top: 0.25rem;
+      margin-top: 5px;
     }
 
-    /* ===== Charts Container ===== */
-    .charts-container {
+    .charts-row {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 1.5rem;
-      margin: 2rem 0;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+      margin: 20px 0;
     }
 
-    .chart-wrapper {
-      background: var(--surface);
+    .chart-box {
+      background: var(--card-bg);
       backdrop-filter: blur(15px);
-      border: 1px solid var(--glass-border);
+      border: 1px solid var(--card-border);
       border-radius: var(--radius-md);
-      padding: 1.5rem;
-      position: relative;
+      padding: 20px;
     }
 
-    .chart-wrapper canvas {
-      max-height: 300px;
+    .chart-box h3 {
+      margin-bottom: 15px;
+      font-size: 16px;
+      color: var(--text-secondary);
+    }
+
+    canvas {
+      max-height: 280px;
       width: 100% !important;
     }
 
-    /* ===== Table ===== */
-    .table-container {
+    /* ===== TABLE ===== */
+    .table-wrap {
       overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
       border-radius: var(--radius-md);
-      background: var(--surface);
+      border: 1px solid var(--card-border);
+      background: var(--card-bg);
       backdrop-filter: blur(15px);
-      border: 1px solid var(--glass-border);
     }
 
     table {
@@ -430,1183 +461,422 @@
       min-width: 600px;
     }
 
-    thead {
-      background: rgba(79, 70, 229, 0.08);
-    }
-
     th {
-      padding: 1rem;
+      background: rgba(79, 70, 229, 0.06);
+      padding: 14px 12px;
       text-align: center;
       font-weight: 600;
-      font-size: var(--font-size-sm);
+      font-size: 13px;
       color: var(--text-secondary);
       text-transform: uppercase;
-      letter-spacing: 0.05em;
-      white-space: nowrap;
+      letter-spacing: 0.04em;
     }
 
     td {
-      padding: 0.8rem;
+      padding: 12px;
       text-align: center;
-      font-size: var(--font-size-sm);
-      border-bottom: 1px solid rgba(128, 128, 128, 0.1);
-    }
-
-    tbody tr {
-      transition: background var(--transition-fast);
-    }
-
-    tbody tr:hover {
-      background: rgba(79, 70, 229, 0.05);
+      border-bottom: 1px solid rgba(128,128,128,0.08);
+      font-size: 14px;
     }
 
     .badge {
       display: inline-block;
-      padding: 0.25rem 0.75rem;
-      border-radius: var(--radius-xl);
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
       font-weight: 600;
-      font-size: var(--font-size-xs);
     }
 
-    .badge-success {
-      background: rgba(16, 185, 129, 0.15);
-      color: #059669;
-    }
+    .badge-green { background: rgba(16,185,129,0.15); color: #059669; }
+    .badge-red { background: rgba(239,68,68,0.15); color: #dc2626; }
+    .badge-gray { background: rgba(148,163,184,0.15); color: #64748b; }
 
-    .badge-danger {
-      background: rgba(239, 68, 68, 0.15);
-      color: #dc2626;
-    }
-
-    .badge-muted {
-      background: rgba(148, 163, 184, 0.15);
-      color: #64748b;
-    }
-
-    /* ===== Search & Filter ===== */
-    .controls-bar {
+    /* ===== SEARCH BAR ===== */
+    .toolbar {
       display: flex;
       flex-wrap: wrap;
-      gap: 1rem;
+      gap: 10px;
       align-items: center;
-      justify-content: space-between;
-      margin-bottom: 1.5rem;
+      margin-bottom: 20px;
     }
 
-    .search-input {
+    .search-box {
       flex: 1;
       min-width: 200px;
-      padding: 0.7rem 1.2rem;
-      border-radius: var(--radius-xl);
-      border: 2px solid rgba(79, 70, 229, 0.2);
-      background: var(--surface);
-      backdrop-filter: blur(10px);
-      font-size: var(--font-size-base);
+      padding: 12px 20px;
+      border-radius: 50px;
+      border: 2px solid rgba(79,70,229,0.2);
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      background: rgba(255,255,255,0.5);
       color: var(--text-primary);
-      font-family: inherit;
     }
 
-    .search-input:focus {
+    body.dark .search-box {
+      background: rgba(15,23,42,0.7);
+      border-color: rgba(139,92,246,0.3);
+      color: #f1f5f9;
+    }
+
+    .search-box:focus {
       outline: none;
       border-color: var(--primary);
     }
 
-    /* ===== Feedback Section ===== */
-    .feedback-card {
-      background: linear-gradient(135deg, rgba(79, 70, 229, 0.05), rgba(139, 92, 246, 0.05));
-      border: 1px solid rgba(79, 70, 229, 0.2);
-      border-radius: var(--radius-lg);
-      padding: 1.5rem;
-      margin-top: 1.5rem;
+    .hidden {
+      display: none !important;
     }
 
-    .feedback-title {
-      font-size: var(--font-size-lg);
-      font-weight: 700;
-      margin-bottom: 1rem;
+    /* ===== FEEDBACK ===== */
+    .feedback {
+      background: linear-gradient(135deg, rgba(79,70,229,0.04), rgba(139,92,246,0.04));
+      border: 1px solid rgba(79,70,229,0.15);
+      border-radius: var(--radius-md);
+      padding: 25px;
+      margin-top: 10px;
+    }
+
+    .feedback h3 {
+      margin-bottom: 15px;
       display: flex;
       align-items: center;
-      gap: 0.5rem;
+      gap: 8px;
     }
 
-    /* ===== Dark Mode Toggle ===== */
-    .mode-toggle {
+    /* ===== THEME TOGGLE ===== */
+    .theme-btn {
       position: fixed;
-      top: 1rem;
-      right: 1rem;
-      background: var(--surface);
-      backdrop-filter: blur(20px);
-      border: 1px solid var(--glass-border);
+      top: 20px;
+      right: 20px;
+      width: 44px;
+      height: 44px;
       border-radius: 50%;
-      width: 48px;
-      height: 48px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      z-index: 1000;
-      box-shadow: var(--glass-shadow);
-      transition: all var(--transition-fast);
-      font-size: 1.2rem;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    .mode-toggle:active {
-      transform: scale(0.9);
-    }
-
-    /* ===== Scroll to Top ===== */
-    .scroll-top {
-      position: fixed;
-      bottom: 2rem;
-      right: 2rem;
-      background: var(--primary);
-      color: white;
-      width: 48px;
-      height: 48px;
-      border-radius: 50%;
+      background: var(--card-bg);
+      backdrop-filter: blur(15px);
+      border: 1px solid var(--card-border);
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
       z-index: 999;
-      box-shadow: 0 4px 15px rgba(79, 70, 229, 0.4);
-      transition: all var(--transition-fast);
-      border: none;
-      font-size: 1.2rem;
-      opacity: 0;
-      transform: translateY(20px);
-      pointer-events: none;
+      font-size: 18px;
+      color: var(--text-primary);
+      box-shadow: var(--card-shadow);
+      transition: all var(--transition);
     }
 
-    .scroll-top.visible {
-      opacity: 1;
-      transform: translateY(0);
-      pointer-events: auto;
+    .theme-btn:hover {
+      transform: scale(1.1);
     }
 
-    /* ===== Loading Spinner ===== */
-    .spinner {
-      display: inline-block;
-      width: 24px;
-      height: 24px;
-      border: 3px solid rgba(79, 70, 229, 0.2);
-      border-top-color: var(--primary);
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-    }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-
-    /* ===== Responsive Adjustments ===== */
+    /* ===== RESPONSIVE ===== */
     @media (max-width: 768px) {
-      .glass-card {
-        padding: 1rem;
-        border-radius: var(--radius-md);
-      }
-      
-      .dashboard-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 0.75rem;
-      }
-      
-      .charts-container {
-        grid-template-columns: 1fr;
-      }
-      
-      .controls-bar {
-        flex-direction: column;
-      }
-      
-      .search-input {
-        width: 100%;
-      }
+      .card { padding: 20px; }
+      .stats-grid { grid-template-columns: repeat(3, 1fr); gap: 10px; }
+      .stat-box { padding: 15px 10px; }
+      .stat-num { font-size: 1.5rem; }
+      .charts-row { grid-template-columns: 1fr; }
+      .hero { padding: 20px 10px 20px; }
     }
 
     @media (max-width: 480px) {
-      .dashboard-grid {
-        grid-template-columns: 1fr 1fr;
-        gap: 0.5rem;
-      }
-      
-      .stat-card {
-        padding: 0.75rem;
-      }
-      
-      .btn {
-        width: 100%;
-        max-width: 100%;
-      }
-      
-      .hero-title {
-        font-size: var(--font-size-2xl);
-      }
-      
-      .exam-badges {
-        gap: 0.5rem;
-      }
-      
-      .exam-badge {
-        font-size: var(--font-size-xs);
-        padding: 0.4rem 0.8rem;
-      }
-    }
-
-    /* ===== Accessibility ===== */
-    @media (prefers-reduced-motion: reduce) {
-      * {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-      }
-    }
-
-    @media (prefers-contrast: high) {
-      .glass-card {
-        backdrop-filter: none;
-        background: var(--surface);
-      }
-    }
-
-    /* ===== Print Styles ===== */
-    @media print {
-      .mode-toggle,
-      .scroll-top,
-      .btn,
-      .upload-actions {
-        display: none !important;
-      }
-      
-      .glass-card {
-        box-shadow: none;
-        border: 1px solid #ccc;
-      }
-    }
-
-    /* ===== File Input (Hidden) ===== */
-    .hidden-input {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      padding: 0;
-      margin: -1px;
-      overflow: hidden;
-      clip: rect(0, 0, 0, 0);
-      white-space: nowrap;
-      border: 0;
+      body { padding: 0; }
+      .container { padding: 10px; }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .btn-group { gap: 8px; }
     }
   </style>
 </head>
 <body>
-  <!-- Dark Mode Toggle -->
-  <button class="mode-toggle" id="darkModeToggle" aria-label="Toggle dark mode" title="Toggle dark mode">
-    <i class="fas fa-moon" id="modeIcon" aria-hidden="true"></i>
+  <!-- Theme Toggle -->
+  <button class="theme-btn" id="themeToggle" title="Toggle theme" aria-label="Toggle dark mode">
+    <i class="fas fa-moon" id="themeIcon"></i>
   </button>
 
-  <!-- Scroll to Top Button -->
-  <button class="scroll-top" id="scrollTopBtn" aria-label="Scroll to top" title="Back to top">
-    <i class="fas fa-arrow-up" aria-hidden="true"></i>
-  </button>
+  <div class="container">
+    <!-- Back to Home -->
+    <a href="/" class="back-link">
+      <i class="fas fa-arrow-left"></i> Back to Prime Spirit Mentors
+    </a>
 
-  <main class="container">
-    <!-- ===== HERO SECTION ===== -->
-    <section class="hero-section">
+    <!-- Hero -->
+    <div class="hero">
+      <span class="hero-badge">✨ New Feature</span>
       <h1 class="hero-title">PrimeScore</h1>
-      <p class="hero-subtitle">Smart AI-Inspired Score Calculator</p>
-      <p class="hero-description">
+      <p class="hero-subtitle">Smart AI-Inspired Score Calculator for Competitive Exams</p>
+      <p class="hero-desc">
         Calculate your NEET, JEE Main, CUET, and UGC NET scores instantly from official response sheets. 
         Get detailed analytics, performance reports, and question-wise analysis — all processed securely in your browser.
       </p>
       
-      <div class="exam-badges">
-        <span class="exam-badge"><i class="fas fa-stethoscope" aria-hidden="true"></i> NEET</span>
-        <span class="exam-badge"><i class="fas fa-cogs" aria-hidden="true"></i> JEE Main</span>
-        <span class="exam-badge"><i class="fas fa-graduation-cap" aria-hidden="true"></i> CUET</span>
-        <span class="exam-badge"><i class="fas fa-chalkboard-teacher" aria-hidden="true"></i> UGC NET</span>
+      <div class="exam-list">
+        <span class="exam-tag"><i class="fas fa-stethoscope"></i> NEET (UG)</span>
+        <span class="exam-tag"><i class="fas fa-cogs"></i> JEE Main</span>
+        <span class="exam-tag"><i class="fas fa-graduation-cap"></i> CUET (UG)</span>
+        <span class="exam-tag"><i class="fas fa-chalkboard-teacher"></i> UGC NET</span>
       </div>
-    </section>
+    </div>
 
-    <!-- ===== UPLOAD SECTION ===== -->
-    <section class="glass-card" style="margin-bottom: 2rem;">
-      <div class="upload-actions">
-        <input type="file" id="responseFile" accept=".pdf,application/pdf" class="hidden-input" aria-label="Upload response sheet PDF">
-        <button class="btn btn-primary" id="uploadResponseBtn">
-          <i class="fas fa-file-pdf" aria-hidden="true"></i> Upload Response PDF
+    <!-- Upload Card -->
+    <div class="card">
+      <div class="btn-group">
+        <input type="file" id="responseFile" accept=".pdf,application/pdf" class="hidden">
+        <button class="btn btn-gradient" onclick="document.getElementById('responseFile').click()">
+          <i class="fas fa-file-pdf"></i> Upload Response Sheet
         </button>
         
-        <input type="file" id="answerKeyFile" accept=".pdf,application/pdf" class="hidden-input" aria-label="Upload answer key PDF">
-        <button class="btn btn-outline" id="uploadAnswerBtn">
-          <i class="fas fa-key" aria-hidden="true"></i> Upload Answer Key
+        <input type="file" id="answerFile" accept=".pdf,application/pdf" class="hidden">
+        <button class="btn btn-outline" onclick="document.getElementById('answerFile').click()">
+          <i class="fas fa-key"></i> Upload Answer Key
         </button>
         
-        <button class="btn btn-outline" id="pasteUrlBtn">
-          <i class="fas fa-link" aria-hidden="true"></i> Paste URL
+        <button class="btn btn-outline" id="urlToggleBtn">
+          <i class="fas fa-link"></i> Paste URL
+        </button>
+        
+        <button class="btn btn-green" id="calcBtn">
+          <i class="fas fa-calculator"></i> Calculate Score
         </button>
       </div>
       
-      <div class="url-input-container" id="urlInputContainer" style="display: none;">
-        <input type="url" class="url-input" id="urlInput" placeholder="https://official-response-sheet.url" aria-label="Enter response sheet URL">
-        <button class="btn btn-primary btn-sm" id="fetchUrlBtn">Fetch</button>
+      <div id="urlSection" class="url-box hidden">
+        <input type="url" class="url-input" id="urlInput" placeholder="Paste official response sheet URL...">
+        <button class="btn btn-gradient btn-sm" id="fetchBtn"><i class="fas fa-arrow-right"></i> Fetch</button>
       </div>
       
-      <div class="status-message" id="statusMessage" role="status" aria-live="polite"></div>
-    </section>
+      <div id="statusMsg" class="status-msg"></div>
+    </div>
 
-    <!-- ===== DASHBOARD (Hidden Initially) ===== -->
-    <section id="dashboardContainer" style="display: none;">
-      <!-- Stats Overview -->
-      <div class="glass-card" style="margin-bottom: 1.5rem;">
-        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
-          <h2 style="font-size: var(--font-size-xl);">
-            <i class="fas fa-chart-pie" aria-hidden="true"></i> 
-            <span id="detectedExam">Performance Dashboard</span>
-          </h2>
-          <span class="badge badge-success" id="examBadge"></span>
+    <!-- Dashboard -->
+    <div id="dashboard" class="dashboard">
+      <div class="card">
+        <h2 style="margin-bottom: 10px;"><i class="fas fa-chart-pie"></i> <span id="examTitle">Performance Dashboard</span></h2>
+        <div id="studentInfo" style="padding:10px; background:rgba(79,70,229,0.04); border-radius:10px; margin-bottom:15px; font-size:14px;"></div>
+        
+        <div class="stats-grid">
+          <div class="stat-box"><span class="stat-num" id="valMarks">0</span><span class="stat-label">Total Marks</span></div>
+          <div class="stat-box"><span class="stat-num green" id="valCorrect">0</span><span class="stat-label">Correct</span></div>
+          <div class="stat-box"><span class="stat-num red" id="valIncorrect">0</span><span class="stat-label">Incorrect</span></div>
+          <div class="stat-box"><span class="stat-num" id="valUnattempted">0</span><span class="stat-label">Unattempted</span></div>
+          <div class="stat-box"><span class="stat-num" id="valAccuracy">0%</span><span class="stat-label">Accuracy</span></div>
+          <div class="stat-box"><span class="stat-num" id="valMax">0</span><span class="stat-label">Max Marks</span></div>
         </div>
         
-        <div id="studentDetails" style="margin: 1rem 0; padding: 1rem; background: rgba(79, 70, 229, 0.05); border-radius: var(--radius-md); font-size: var(--font-size-sm);"></div>
-        
-        <div class="dashboard-grid">
-          <div class="stat-card">
-            <span class="stat-value" id="totalMarks">0</span>
-            <span class="stat-label">Total Marks</span>
-          </div>
-          <div class="stat-card">
-            <span class="stat-value" id="correctCount" style="color: var(--success);">0</span>
-            <span class="stat-label">Correct</span>
-          </div>
-          <div class="stat-card">
-            <span class="stat-value" id="incorrectCount" style="color: var(--danger);">0</span>
-            <span class="stat-label">Incorrect</span>
-          </div>
-          <div class="stat-card">
-            <span class="stat-value" id="unattemptedCount">0</span>
-            <span class="stat-label">Unattempted</span>
-          </div>
-          <div class="stat-card">
-            <span class="stat-value" id="accuracyPercent">0%</span>
-            <span class="stat-label">Accuracy</span>
-          </div>
-          <div class="stat-card">
-            <span class="stat-value" id="maxMarks">0</span>
-            <span class="stat-label">Max Marks</span>
-          </div>
+        <div class="charts-row">
+          <div class="chart-box"><h3>📊 Response Distribution</h3><canvas id="pieChart"></canvas></div>
+          <div class="chart-box"><h3>📈 Subject Performance</h3><canvas id="barChart"></canvas></div>
         </div>
       </div>
-
-      <!-- Charts -->
-      <div class="charts-container">
-        <div class="chart-wrapper">
-          <h3 style="margin-bottom: 1rem; font-size: var(--font-size-base);">Response Distribution</h3>
-          <canvas id="pieChart" aria-label="Pie chart showing correct, incorrect, and unattempted questions"></canvas>
-        </div>
-        <div class="chart-wrapper">
-          <h3 style="margin-bottom: 1rem; font-size: var(--font-size-base);">Subject-wise Performance</h3>
-          <canvas id="barChart" aria-label="Bar chart showing subject-wise performance"></canvas>
-        </div>
-      </div>
-
-      <!-- Question Review Table -->
-      <div class="glass-card" style="margin-bottom: 1.5rem;">
-        <div class="controls-bar">
-          <input type="search" class="search-input" id="searchInput" placeholder="🔍 Search by question number or status..." aria-label="Search questions">
-          <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-            <button class="btn btn-outline btn-sm" id="filterCorrect">✓ Correct</button>
-            <button class="btn btn-outline btn-sm" id="filterIncorrect">✗ Incorrect</button>
-            <button class="btn btn-outline btn-sm" id="filterAll">All</button>
-            <button class="btn btn-primary btn-sm" id="downloadReportBtn">
-              <i class="fas fa-download" aria-hidden="true"></i> Report
-            </button>
-          </div>
+      
+      <!-- Question Table -->
+      <div class="card">
+        <h2 style="margin-bottom:15px;"><i class="fas fa-list-check"></i> Question-wise Analysis</h2>
+        
+        <div class="toolbar">
+          <input type="text" class="search-box" id="searchInput" placeholder="🔍 Search questions...">
+          <button class="btn btn-outline btn-sm" id="filterAll">All</button>
+          <button class="btn btn-outline btn-sm" id="filterCorrect">✓ Correct</button>
+          <button class="btn btn-outline btn-sm" id="filterIncorrect">✗ Incorrect</button>
+          <button class="btn btn-gradient btn-sm" id="downloadBtn"><i class="fas fa-download"></i> Report</button>
         </div>
         
-        <div class="table-container">
-          <table id="questionTable" aria-label="Question-wise analysis table">
-            <thead>
-              <tr>
-                <th scope="col">Q#</th>
-                <th scope="col">Your Answer</th>
-                <th scope="col">Correct</th>
-                <th scope="col">Marks</th>
-                <th scope="col">Status</th>
-              </tr>
-            </thead>
-            <tbody id="tableBody"></tbody>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Q#</th><th>Your Answer</th><th>Correct</th><th>Marks</th><th>Status</th></tr></thead>
+            <tbody id="tableBody"><tr><td colspan="5" style="text-align:center;padding:30px;">📄 Upload a response sheet to see analysis</td></tr></tbody>
           </table>
         </div>
       </div>
-
-      <!-- AI-Inspired Feedback -->
-      <div class="feedback-card" id="aiFeedback">
-        <div class="feedback-title">
-          <i class="fas fa-robot" aria-hidden="true"></i> AI-Inspired Insights
-        </div>
-        <div id="feedbackContent"></div>
+      
+      <!-- Feedback -->
+      <div class="card feedback">
+        <h3><i class="fas fa-robot"></i> AI-Inspired Insights</h3>
+        <div id="feedbackText" style="color:var(--text-secondary);">Upload your response sheet to get personalized feedback.</div>
       </div>
-    </section>
-  </main>
+    </div>
+  </div>
 
   <script>
     (function() {
-      'use strict';
-
-      // ===== CONFIGURATION =====
-      const EXAM_CONFIG = {
-        NEET: { 
-          name: 'NEET (UG)', 
-          correct: 4, 
-          incorrect: -1, 
-          unattempted: 0,
-          keywords: ['neet', 'national eligibility cum entrance', 'nta neet'],
-          subjects: ['Physics', 'Chemistry', 'Biology']
-        },
-        JEE_MAIN: { 
-          name: 'JEE Main', 
-          correct: 4, 
-          incorrect: -1, 
-          unattempted: 0,
-          keywords: ['jee main', 'joint entrance examination', 'jee (main)'],
-          subjects: ['Physics', 'Chemistry', 'Mathematics']
-        },
-        CUET: { 
-          name: 'CUET (UG)', 
-          correct: 5, 
-          incorrect: -1, 
-          unattempted: 0,
-          keywords: ['cuet', 'common university entrance test', 'cuet (ug)'],
-          subjects: ['Language', 'Domain Subject', 'General Test']
-        },
-        UGC_NET: { 
-          name: 'UGC NET', 
-          correct: 2, 
-          incorrect: 0, 
-          unattempted: 0,
-          keywords: ['ugc net', 'national eligibility test', 'ugc-net'],
-          subjects: ['Paper 1', 'Paper 2']
-        }
+      // State
+      let respText = '', ansText = '', questions = [];
+      let pieChart = null, barChart = null;
+      
+      const EXAMS = {
+        NEET: { n:'NEET (UG)', c:4, i:-1, kw:['neet','national eligibility'] },
+        JEE: { n:'JEE Main', c:4, i:-1, kw:['jee main','joint entrance'] },
+        CUET: { n:'CUET (UG)', c:5, i:-1, kw:['cuet','common university'] },
+        UGC: { n:'UGC NET', c:2, i:0, kw:['ugc net','national eligibility test'] }
       };
-
-      // ===== STATE MANAGEMENT =====
-      let appState = {
-        responseText: '',
-        answerKeyText: '',
-        currentResult: null,
-        allQuestions: [],
-        filteredQuestions: [],
-        activeFilter: 'all'
+      
+      // Theme
+      const themeBtn = document.getElementById('themeToggle');
+      const themeIcon = document.getElementById('themeIcon');
+      if(localStorage.getItem('dark')==='1'){ document.body.classList.add('dark'); themeIcon.className='fas fa-sun'; }
+      themeBtn.onclick = () => {
+        document.body.classList.toggle('dark');
+        const d = document.body.classList.contains('dark');
+        localStorage.setItem('dark', d?'1':'0');
+        themeIcon.className = d?'fas fa-sun':'fas fa-moon';
+        if(questions.length) drawCharts();
       };
-
-      // ===== DOM ELEMENTS =====
-      const DOM = {
-        darkToggle: document.getElementById('darkModeToggle'),
-        modeIcon: document.getElementById('modeIcon'),
-        scrollTopBtn: document.getElementById('scrollTopBtn'),
-        responseFile: document.getElementById('responseFile'),
-        answerKeyFile: document.getElementById('answerKeyFile'),
-        uploadResponseBtn: document.getElementById('uploadResponseBtn'),
-        uploadAnswerBtn: document.getElementById('uploadAnswerBtn'),
-        pasteUrlBtn: document.getElementById('pasteUrlBtn'),
-        urlInputContainer: document.getElementById('urlInputContainer'),
-        urlInput: document.getElementById('urlInput'),
-        fetchUrlBtn: document.getElementById('fetchUrlBtn'),
-        statusMessage: document.getElementById('statusMessage'),
-        dashboardContainer: document.getElementById('dashboardContainer'),
-        detectedExam: document.getElementById('detectedExam'),
-        examBadge: document.getElementById('examBadge'),
-        studentDetails: document.getElementById('studentDetails'),
-        totalMarks: document.getElementById('totalMarks'),
-        correctCount: document.getElementById('correctCount'),
-        incorrectCount: document.getElementById('incorrectCount'),
-        unattemptedCount: document.getElementById('unattemptedCount'),
-        accuracyPercent: document.getElementById('accuracyPercent'),
-        maxMarks: document.getElementById('maxMarks'),
-        searchInput: document.getElementById('searchInput'),
-        tableBody: document.getElementById('tableBody'),
-        downloadReportBtn: document.getElementById('downloadReportBtn'),
-        feedbackContent: document.getElementById('feedbackContent'),
-        filterCorrect: document.getElementById('filterCorrect'),
-        filterIncorrect: document.getElementById('filterIncorrect'),
-        filterAll: document.getElementById('filterAll')
+      
+      // Status
+      function status(m,t){ const e=document.getElementById('statusMsg'); e.textContent=m; e.className='status-msg show '+t; setTimeout(()=>e.className='status-msg',4000); }
+      
+      // URL toggle
+      document.getElementById('urlToggleBtn').onclick = ()=> document.getElementById('urlSection').classList.toggle('hidden');
+      
+      // File uploads
+      document.getElementById('responseFile').onchange = async function(e){
+        const f=e.target.files[0]; if(!f)return;
+        if(!f.name.endsWith('.pdf')){ status('Please upload PDF','error'); return; }
+        status('Extracting text...','info');
+        try{ respText = await readPDF(f); status('✅ Response loaded!','success'); }catch(err){ status('❌ '+err.message,'error'); }
+        this.value='';
       };
-
-      // ===== INITIALIZATION =====
-      function init() {
-        setupDarkMode();
-        setupEventListeners();
-        setupScrollToTop();
-        setupPWA();
+      
+      document.getElementById('answerFile').onchange = async function(e){
+        const f=e.target.files[0]; if(!f)return;
+        if(!f.name.endsWith('.pdf')){ status('Please upload PDF','error'); return; }
+        status('Extracting text...','info');
+        try{ ansText = await readPDF(f); status('✅ Answer key loaded!','success'); }catch(err){ status('❌ '+err.message,'error'); }
+        this.value='';
+      };
+      
+      async function readPDF(file){
+        const buf = await file.arrayBuffer();
+        const pdf = await pdfjsLib.getDocument({data:buf}).promise;
+        let t='';
+        for(let i=1;i<=pdf.numPages;i++){ const p=await pdf.getPage(i); const c=await p.getTextContent(); t+=c.items.map(x=>x.str).join(' ')+'\n'; }
+        if(!t.trim()) throw new Error('No text found');
+        return t;
       }
-
-      // ===== DARK MODE =====
-      function setupDarkMode() {
-        const isDark = localStorage.getItem('primescore-dark-mode') === 'true';
-        if (isDark) {
-          document.body.classList.add('dark');
-          DOM.modeIcon.classList.replace('fa-moon', 'fa-sun');
-        }
-
-        DOM.darkToggle.addEventListener('click', () => {
-          document.body.classList.toggle('dark');
-          const isNowDark = document.body.classList.contains('dark');
-          localStorage.setItem('primescore-dark-mode', isNowDark);
-          DOM.modeIcon.classList.replace(
-            isNowDark ? 'fa-moon' : 'fa-sun',
-            isNowDark ? 'fa-sun' : 'fa-moon'
-          );
-          if (appState.currentResult) renderCharts();
-        });
-      }
-
-      // ===== SCROLL TO TOP =====
-      function setupScrollToTop() {
-        window.addEventListener('scroll', () => {
-          if (window.scrollY > 300) {
-            DOM.scrollTopBtn.classList.add('visible');
-          } else {
-            DOM.scrollTopBtn.classList.remove('visible');
-          }
-        });
-
-        DOM.scrollTopBtn.addEventListener('click', () => {
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
-      }
-
-      // ===== EVENT LISTENERS =====
-      function setupEventListeners() {
-        // File uploads
-        DOM.uploadResponseBtn.addEventListener('click', () => DOM.responseFile.click());
-        DOM.uploadAnswerBtn.addEventListener('click', () => DOM.answerKeyFile.click());
-        DOM.responseFile.addEventListener('change', (e) => handleFileUpload(e, 'response'));
-        DOM.answerKeyFile.addEventListener('change', (e) => handleFileUpload(e, 'answer'));
-
-        // URL paste
-        DOM.pasteUrlBtn.addEventListener('click', () => {
-          DOM.urlInputContainer.style.display = 
-            DOM.urlInputContainer.style.display === 'none' ? 'flex' : 'none';
-        });
-        DOM.fetchUrlBtn.addEventListener('click', handleUrlFetch);
-
-        // Search
-        DOM.searchInput.addEventListener('input', handleSearch);
-
-        // Filters
-        DOM.filterCorrect.addEventListener('click', () => applyFilter('correct'));
-        DOM.filterIncorrect.addEventListener('click', () => applyFilter('incorrect'));
-        DOM.filterAll.addEventListener('click', () => applyFilter('all'));
-
-        // Download
-        DOM.downloadReportBtn.addEventListener('click', downloadReport);
-      }
-
-      // ===== FILE HANDLING =====
-      async function handleFileUpload(event, type) {
-        const file = event.target.files[0];
-        if (!file) return;
-
-        // Validate file
-        if (file.type !== 'application/pdf' && !file.name.toLowerCase().endsWith('.pdf')) {
-          showStatus('Please upload a valid PDF file.', 'error');
-          return;
-        }
-
-        if (file.size > 50 * 1024 * 1024) {
-          showStatus('File size should be less than 50MB.', 'error');
-          return;
-        }
-
-        showStatus('⏳ Extracting text from PDF...', 'info');
+      
+      // URL fetch
+      document.getElementById('fetchBtn').onclick = async ()=>{
+        const u=document.getElementById('urlInput').value.trim();
+        if(!u){ status('Enter URL','error'); return; }
+        status('Fetching...','info');
+        try{ const r=await fetch(u); respText=await r.text(); status('✅ Fetched!','success'); }catch(e){ status('⚠️ CORS blocked. Upload PDF instead.','error'); }
+      };
+      
+      // Detect exam
+      function detect(t){ const l=t.toLowerCase(); for(const[k,v]of Object.entries(EXAMS)){ for(const kw of v.kw){ if(l.includes(kw)) return k; } } return null; }
+      
+      // Parse answer key
+      function parseAnswers(t){ const m={}; const re=/(\d{1,3})[.\s)]*\s*([A-Da-d])/g; let x; while((x=re.exec(t))!==null){ m[parseInt(x[1])]=x[2].toUpperCase(); } return m; }
+      
+      // Parse responses
+      function parseResp(t){ const r=[]; const re=/(\d{1,3})[.\s)]*\s*([A-Da-d]?)/g; const s=new Set(); let x; while((x=re.exec(t))!==null){ const n=parseInt(x[1]); if(n>0&&n<=300&&!s.has(n)){ s.add(n); r.push({num:n,resp:x[2]?x[2].toUpperCase():''}); } } return r.sort((a,b)=>a.num-b.num); }
+      
+      // Calculate
+      document.getElementById('calcBtn').onclick = ()=>{
+        if(!respText){ status('Upload response sheet first','error'); return; }
+        const examK = detect(respText);
+        if(!examK){ status('Cannot detect exam. Ensure document is NEET/JEE/CUET/UGC NET.','error'); return; }
+        const cfg = EXAMS[examK];
+        const ansMap = parseAnswers(ansText);
+        const resp = parseResp(respText);
         
-        try {
-          const text = await extractPdfText(file);
-          
-          if (type === 'response') {
-            appState.responseText = text;
-            showStatus('✅ Response sheet loaded. You can also upload answer key for better accuracy.', 'success');
-          } else {
-            appState.answerKeyText = text;
-            showStatus('✅ Answer key loaded.', 'success');
-          }
-          
-          if (appState.responseText) {
-            processSheets();
-          }
-        } catch (error) {
-          console.error('PDF extraction error:', error);
-          showStatus('❌ Failed to read PDF. Please ensure it\'s a valid PDF file.', 'error');
-        }
+        const nm = respText.match(/(?:Name|Candidate)[:\s]*([A-Za-z\s]+)/i);
+        const rl = respText.match(/(?:Roll\s*No|Roll\s*Number)[:\s]*(\w+)/i);
         
-        // Reset file input
-        event.target.value = '';
-      }
-
-      // ===== PDF EXTRACTION =====
-      async function extractPdfText(file) {
-        return new Promise((resolve, reject) => {
-          const reader = new FileReader();
-          
-          reader.onload = async function(e) {
-            try {
-              const typedArray = new Uint8Array(e.target.result);
-              const pdf = await pdfjsLib.getDocument({ data: typedArray }).promise;
-              let fullText = '';
-              
-              for (let i = 1; i <= pdf.numPages; i++) {
-                const page = await pdf.getPage(i);
-                const textContent = await page.getTextContent();
-                const pageText = textContent.items.map(item => item.str).join(' ');
-                fullText += pageText + '\n';
-              }
-              
-              if (fullText.trim().length === 0) {
-                reject(new Error('No text found in PDF. It may be a scanned document.'));
-              } else {
-                resolve(fullText);
-              }
-            } catch (err) {
-              reject(err);
-            }
-          };
-          
-          reader.onerror = () => reject(new Error('Failed to read file'));
-          reader.readAsArrayBuffer(file);
-        });
-      }
-
-      // ===== URL FETCH =====
-      async function handleUrlFetch() {
-        const url = DOM.urlInput.value.trim();
-        if (!url) {
-          showStatus('Please enter a valid URL.', 'error');
-          return;
-        }
-
-        showStatus('⏳ Fetching URL content...', 'info');
-        
-        try {
-          const response = await fetch(url, { mode: 'cors' });
-          if (!response.ok) throw new Error('Network response was not ok');
-          const text = await response.text();
-          appState.responseText = text;
-          showStatus('✅ Content fetched successfully!', 'success');
-          processSheets();
-        } catch (error) {
-          console.error('URL fetch error:', error);
-          showStatus('⚠️ Unable to fetch URL (CORS restriction). Please download the PDF and upload it manually.', 'error');
-        }
-      }
-
-      // ===== EXAM DETECTION =====
-      function detectExam(text) {
-        const lowerText = text.toLowerCase();
-        
-        for (const [examKey, examData] of Object.entries(EXAM_CONFIG)) {
-          for (const keyword of examData.keywords) {
-            if (lowerText.includes(keyword)) {
-              return examKey;
-            }
-          }
-        }
-        
-        return null;
-      }
-
-      // ===== ANSWER KEY PARSING =====
-      function parseAnswerKey(text) {
-        const answerMap = {};
-        
-        // Pattern: Question number followed by answer
-        const patterns = [
-          /(?:Q\.?\s*)?(\d{1,3})[.\s)]*\s*([A-Da-d])/g,
-          /(\d{1,3})\s*[.:]\s*([A-Da-d])/g,
-          /Answer\s*(\d{1,3})\s*[.:]\s*([A-Da-d])/gi
-        ];
-        
-        for (const pattern of patterns) {
-          let match;
-          while ((match = pattern.exec(text)) !== null) {
-            const qNum = parseInt(match[1]);
-            const answer = match[2].toUpperCase();
-            if (qNum > 0 && qNum <= 300 && ['A', 'B', 'C', 'D'].includes(answer)) {
-              answerMap[qNum] = answer;
-            }
-          }
-        }
-        
-        return answerMap;
-      }
-
-      // ===== RESPONSE PARSING =====
-      function parseResponses(text) {
-        const responses = [];
-        const answerPatterns = [
-          /(?:Q\.?\s*)?(\d{1,3})[.\s)]*\s*([A-Da-d]?)/g,
-          /(\d{1,3})\s*[.:]\s*([A-Da-d]?)/g
-        ];
-        
-        const foundQuestions = new Set();
-        
-        for (const pattern of answerPatterns) {
-          let match;
-          while ((match = pattern.exec(text)) !== null) {
-            const qNum = parseInt(match[1]);
-            const response = match[2] ? match[2].toUpperCase() : '';
-            
-            if (qNum > 0 && qNum <= 300 && !foundQuestions.has(qNum)) {
-              foundQuestions.add(qNum);
-              responses.push({
-                number: qNum,
-                response: response,
-                status: response ? 'attempted' : 'unattempted'
-              });
-            }
-          }
-        }
-        
-        return responses.sort((a, b) => a.number - b.number);
-      }
-
-      // ===== PROCESS SHEETS =====
-      function processSheets() {
-        if (!appState.responseText) return;
-        
-        const examKey = detectExam(appState.responseText);
-        
-        if (!examKey) {
-          showStatus('⚠️ Could not auto-detect exam. Please ensure the document is from NEET, JEE, CUET, or UGC NET.', 'error');
-          return;
-        }
-        
-        const examConfig = EXAM_CONFIG[examKey];
-        const answerMap = parseAnswerKey(appState.answerKeyText);
-        const responses = parseResponses(appState.responseText);
-        
-        // Extract student info
-        const nameMatch = appState.responseText.match(/(?:Name|Candidate\s*Name)[:\s]*([A-Za-z\s]+?)(?:\n|Roll|App|$)/i);
-        const rollMatch = appState.responseText.match(/(?:Roll\s*(?:No|Number|#))[:\s]*(\w+)/i);
-        const appMatch = appState.responseText.match(/(?:Application|App)\s*(?:No|Number|#)[:\s]*(\w+)/i);
-        
-        // Process questions
-        const questions = responses.map(resp => {
-          const correctAnswer = answerMap[resp.number] || null;
-          let status = resp.status;
-          
-          if (resp.response && correctAnswer) {
-            status = resp.response === correctAnswer ? 'correct' : 'incorrect';
-          }
-          
-          return {
-            number: resp.number,
-            candidateResponse: resp.response || '-',
-            correctAnswer: correctAnswer || 'N/A',
-            status: status,
-            marks: calculateMarks(status, examConfig)
-          };
+        questions = resp.map(r=>{
+          const ca = ansMap[r.num]||null;
+          let st = r.resp?'attempted':'unattempted', mk=0;
+          if(r.resp && ca){ st = r.resp===ca?'correct':'incorrect'; mk = st==='correct'?cfg.c:cfg.i; }
+          else if(!r.resp) mk=cfg.i<0?0:cfg.c;
+          return {num:r.num, yr:r.resp||'-', ca:ca||'N/A', st, mk};
         });
         
-        // Calculate totals
-        const stats = calculateStats(questions, examConfig);
+        const cor=questions.filter(q=>q.st==='correct').length;
+        const inc=questions.filter(q=>q.st==='incorrect').length;
+        const una=questions.filter(q=>q.st==='unattempted').length;
+        const tm=questions.reduce((s,q)=>s+q.mk,0);
+        const mx=questions.length*cfg.c;
+        const acc=questions.length?((cor/questions.length)*100).toFixed(1):0;
         
-        // Store result
-        appState.currentResult = {
-          exam: examKey,
-          examName: examConfig.name,
-          student: {
-            name: nameMatch ? nameMatch[1].trim() : 'Not found',
-            roll: rollMatch ? rollMatch[1].trim() : 'Not found',
-            appNo: appMatch ? appMatch[1].trim() : 'Not found'
-          },
-          questions: questions,
-          stats: stats,
-          subjects: examConfig.subjects
-        };
-        
-        appState.allQuestions = [...questions];
-        appState.filteredQuestions = [...questions];
-        appState.activeFilter = 'all';
-        
-        saveToHistory(appState.currentResult);
-        renderDashboard();
-        showStatus('✅ Analysis complete!', 'success');
-      }
-
-      // ===== CALCULATIONS =====
-      function calculateMarks(status, config) {
-        switch (status) {
-          case 'correct': return config.correct;
-          case 'incorrect': return config.incorrect;
-          default: return config.unattempted;
-        }
-      }
-
-      function calculateStats(questions, config) {
-        const correct = questions.filter(q => q.status === 'correct').length;
-        const incorrect = questions.filter(q => q.status === 'incorrect').length;
-        const unattempted = questions.filter(q => q.status === 'unattempted').length;
-        const totalMarks = questions.reduce((sum, q) => sum + q.marks, 0);
-        const maxMarks = questions.length * config.correct;
-        const accuracy = questions.length > 0 ? ((correct / questions.length) * 100).toFixed(1) : 0;
-        
-        return { correct, incorrect, unattempted, totalMarks, maxMarks, accuracy };
-      }
-
-      // ===== RENDER DASHBOARD =====
-      function renderDashboard() {
-        if (!appState.currentResult) return;
-        
-        const result = appState.currentResult;
-        const stats = result.stats;
-        
-        DOM.dashboardContainer.style.display = 'block';
-        DOM.detectedExam.textContent = `${result.examName} Analysis`;
-        DOM.examBadge.textContent = result.examName;
-        DOM.studentDetails.innerHTML = `
-          <strong>Candidate:</strong> ${result.student.name} | 
-          <strong>Roll No:</strong> ${result.student.roll} | 
-          <strong>App No:</strong> ${result.student.appNo}
-        `;
-        
-        DOM.totalMarks.textContent = stats.totalMarks;
-        DOM.correctCount.textContent = stats.correct;
-        DOM.incorrectCount.textContent = stats.incorrect;
-        DOM.unattemptedCount.textContent = stats.unattempted;
-        DOM.accuracyPercent.textContent = stats.accuracy + '%';
-        DOM.maxMarks.textContent = stats.maxMarks;
+        document.getElementById('dashboard').classList.add('active');
+        document.getElementById('examTitle').textContent=cfg.n+' - Dashboard';
+        document.getElementById('studentInfo').innerHTML=`<strong>Candidate:</strong> ${nm?nm[1].trim():'N/A'} | <strong>Roll:</strong> ${rl?rl[1].trim():'N/A'}`;
+        document.getElementById('valMarks').textContent=tm;
+        document.getElementById('valCorrect').textContent=cor;
+        document.getElementById('valIncorrect').textContent=inc;
+        document.getElementById('valUnattempted').textContent=una;
+        document.getElementById('valAccuracy').textContent=acc+'%';
+        document.getElementById('valMax').textContent=mx;
         
         renderTable();
-        renderCharts();
-        generateFeedback();
-        
-        // Scroll to dashboard
-        DOM.dashboardContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        drawCharts();
+        genFeedback(cor,inc,una,acc,tm,mx);
+        document.getElementById('dashboard').scrollIntoView({behavior:'smooth'});
+        status('✅ Calculation complete!','success');
+      };
+      
+      function renderTable(f='all'){
+        const tb=document.getElementById('tableBody');
+        let qs = f==='all'?questions:questions.filter(q=>q.st===f);
+        if(!qs.length){ tb.innerHTML='<tr><td colspan="5" style="text-align:center;padding:30px;">No questions found</td></tr>'; return; }
+        tb.innerHTML = qs.map(q=>{
+          let b='';
+          if(q.st==='correct') b='<span class="badge badge-green">✓ Correct</span>';
+          else if(q.st==='incorrect') b='<span class="badge badge-red">✗ Incorrect</span>';
+          else b='<span class="badge badge-gray">○ Skipped</span>';
+          return `<tr><td><strong>${q.num}</strong></td><td>${q.yr}</td><td>${q.ca}</td><td style="font-weight:600;color:${q.mk>=0?'#10b981':'#ef4444'}">${q.mk>0?'+':''}${q.mk}</td><td>${b}</td></tr>`;
+        }).join('');
       }
-
-      // ===== RENDER TABLE =====
-      function renderTable() {
-        const questions = appState.filteredQuestions;
-        DOM.tableBody.innerHTML = '';
+      
+      function drawCharts(){
+        const d=document.body.classList.contains('dark'), tc=d?'#cbd5e1':'#475569';
+        const cor=questions.filter(q=>q.st==='correct').length;
+        const inc=questions.filter(q=>q.st==='incorrect').length;
+        const una=questions.filter(q=>q.st==='unattempted').length;
         
-        if (questions.length === 0) {
-          DOM.tableBody.innerHTML = `
-            <tr>
-              <td colspan="5" style="padding: 2rem; text-align: center; color: var(--text-tertiary);">
-                No questions match your filter criteria.
-              </td>
-            </tr>
-          `;
-          return;
-        }
+        if(pieChart) pieChart.destroy();
+        if(barChart) barChart.destroy();
         
-        questions.forEach(q => {
-          const row = document.createElement('tr');
-          
-          let statusClass = 'badge-muted';
-          let statusIcon = '○';
-          
-          if (q.status === 'correct') {
-            statusClass = 'badge-success';
-            statusIcon = '✓';
-          } else if (q.status === 'incorrect') {
-            statusClass = 'badge-danger';
-            statusIcon = '✗';
-          }
-          
-          row.innerHTML = `
-            <td><strong>${q.number}</strong></td>
-            <td>${q.candidateResponse}</td>
-            <td>${q.correctAnswer}</td>
-            <td style="font-weight: 600; color: ${q.marks >= 0 ? 'var(--success)' : 'var(--danger)'}">
-              ${q.marks > 0 ? '+' : ''}${q.marks}
-            </td>
-            <td><span class="badge ${statusClass}">${statusIcon} ${q.status}</span></td>
-          `;
-          
-          DOM.tableBody.appendChild(row);
-        });
+        pieChart = new Chart(document.getElementById('pieChart'),{type:'doughnut',data:{labels:['Correct','Incorrect','Unattempted'],datasets:[{data:[cor,inc,una],backgroundColor:['#10b981','#ef4444','#94a3b8'],borderColor:d?'#1e293b':'#fff',borderWidth:2}]},options:{responsive:true,plugins:{legend:{position:'bottom',labels:{color:tc}}}}});
+        
+        barChart = new Chart(document.getElementById('barChart'),{type:'bar',data:{labels:['Physics','Chemistry','Bio/Maths'],datasets:[{label:'Correct',data:[Math.floor(cor/3),Math.floor(cor/3),cor-2*Math.floor(cor/3)],backgroundColor:['#4f46e5','#7c3aed','#a78bfa'],borderRadius:8}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{color:tc},grid:{color:d?'rgba(255,255,255,0.1)':'rgba(0,0,0,0.1)'}},x:{ticks:{color:tc},grid:{display:false}}}}});
       }
-
-      // ===== RENDER CHARTS =====
-      let pieChartInstance = null;
-      let barChartInstance = null;
-
-      function renderCharts() {
-        const stats = appState.currentResult.stats;
-        const isDark = document.body.classList.contains('dark');
-        const textColor = isDark ? '#cbd5e1' : '#475569';
-        
-        // Destroy existing charts
-        if (pieChartInstance) pieChartInstance.destroy();
-        if (barChartInstance) barChartInstance.destroy();
-        
-        // Pie Chart
-        const pieCtx = document.getElementById('pieChart');
-        if (pieCtx) {
-          pieChartInstance = new Chart(pieCtx, {
-            type: 'doughnut',
-            data: {
-              labels: ['Correct', 'Incorrect', 'Unattempted'],
-              datasets: [{
-                data: [stats.correct, stats.incorrect, stats.unattempted],
-                backgroundColor: ['#10b981', '#ef4444', '#94a3b8'],
-                borderColor: isDark ? '#1e293b' : '#ffffff',
-                borderWidth: 3
-              }]
-            },
-            options: {
-              responsive: true,
-              maintainAspectRatio: true,
-              plugins: {
-                legend: {
-                  position: 'bottom',
-                  labels: { color: textColor, padding: 20, font: { size: 12 } }
-                }
-              }
-            }
-          });
-        }
-        
-        // Bar Chart - Subject-wise (simulated)
-        const barCtx = document.getElementById('barChart');
-        if (barCtx) {
-          const subjects = appState.currentResult.subjects || ['Subject 1', 'Subject 2', 'Subject 3'];
-          const perSubject = Math.floor(stats.correct / subjects.length);
-          
-          barChartInstance = new Chart(barCtx, {
-            type: 'bar',
-            data: {
-              labels: subjects,
-              datasets: [{
-                label: 'Correct Answers',
-                data: subjects.map((_, i) => perSubject + (i === subjects.length - 1 ? stats.correct - perSubject * (subjects.length - 1) : 0)),
-                backgroundColor: ['#4f46e5', '#7c3aed', '#a78bfa'],
-                borderRadius: 8
-              }]
-            },
-            options: {
-              responsive: true,
-              maintainAspectRatio: true,
-              plugins: {
-                legend: { display: false }
-              },
-              scales: {
-                y: {
-                  beginAtZero: true,
-                  ticks: { color: textColor },
-                  grid: { color: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)' }
-                },
-                x: {
-                  ticks: { color: textColor },
-                  grid: { display: false }
-                }
-              }
-            }
-          });
-        }
+      
+      function genFeedback(c,i,u,a,t,m){
+        let h='';
+        if(parseFloat(a)>=85) h+='<p>🌟 <strong>Excellent!</strong> Strong conceptual clarity.</p>';
+        else if(parseFloat(a)>=70) h+='<p>📘 <strong>Good!</strong> Refine weak areas.</p>';
+        else h+='<p>💪 <strong>Needs work.</strong> Practice more.</p>';
+        if(i>10) h+=`<p>⚠️ <strong>${i} incorrect</strong> - avoid guesswork.</p>`;
+        h+=`<p>📊 Accuracy: ${a}% | Score: ${t}/${m}</p>`;
+        document.getElementById('feedbackText').innerHTML=h;
       }
-
-      // ===== GENERATE FEEDBACK =====
-      function generateFeedback() {
-        const stats = appState.currentResult.stats;
-        const accuracy = parseFloat(stats.accuracy);
-        
-        let feedbackHtml = '';
-        
-        // Overall performance
-        if (accuracy >= 85) {
-          feedbackHtml += '<p>🌟 <strong>Excellent performance!</strong> You demonstrate strong conceptual understanding and exam readiness.</p>';
-        } else if (accuracy >= 70) {
-          feedbackHtml += '<p>📘 <strong>Good performance!</strong> You\'re on the right track. Focus on strengthening weak areas.</p>';
-        } else if (accuracy >= 50) {
-          feedbackHtml += '<p>📚 <strong>Average performance.</strong> Regular practice and concept revision needed.</p>';
-        } else {
-          feedbackHtml += '<p>💪 <strong>Needs improvement.</strong> Focus on fundamentals and take more mock tests.</p>';
-        }
-        
-        // Negative marking analysis
-        if (stats.incorrect > 10) {
-          feedbackHtml += `<p>⚠️ <strong>High negative marking (${stats.incorrect} questions).</strong> Avoid guesswork. Answer only when confident.</p>`;
-        } else if (stats.incorrect > 0) {
-          feedbackHtml += `<p>👍 <strong>Moderate negative marking (${stats.incorrect} questions).</strong> Keep refining your accuracy.</p>`;
-        } else {
-          feedbackHtml += '<p>✨ <strong>No negative marking!</strong> Excellent accuracy. Keep it up!</p>';
-        }
-        
-        // Attempt rate
-        const attemptRate = ((stats.correct + stats.incorrect) / appState.allQuestions.length * 100).toFixed(1);
-        feedbackHtml += `<p>📊 <strong>Attempt rate:</strong> ${attemptRate}% | <strong>Accuracy:</strong> ${stats.accuracy}%</p>`;
-        
-        // Recommendations
-        feedbackHtml += '<p>💡 <strong>Recommendations:</strong></p><ul>';
-        
-        if (accuracy < 70) {
-          feedbackHtml += '<li>Revise fundamental concepts in weaker subjects</li>';
-          feedbackHtml += '<li>Practice previous year questions regularly</li>';
-        }
-        
-        if (stats.incorrect > 5) {
-          feedbackHtml += '<li>Improve answer elimination techniques</li>';
-          feedbackHtml += '<li>Take more sectional tests to build confidence</li>';
-        }
-        
-        if (stats.unattempted > stats.correct) {
-          feedbackHtml += '<li>Work on time management and speed</li>';
-          feedbackHtml += '<li>Attempt more questions to maximize score</li>';
-        }
-        
-        feedbackHtml += '<li>Continue with daily mock tests and revision</li>';
-        feedbackHtml += '</ul>';
-        
-        DOM.feedbackContent.innerHTML = feedbackHtml;
-      }
-
-      // ===== SEARCH & FILTER =====
-      function handleSearch() {
-        const term = DOM.searchInput.value.toLowerCase().trim();
-        
-        if (!term) {
-          applyFilter(appState.activeFilter);
-          return;
-        }
-        
-        appState.filteredQuestions = appState.allQuestions.filter(q => {
-          const matchesSearch = 
-            q.number.toString().includes(term) ||
-            q.status.toLowerCase().includes(term) ||
-            q.candidateResponse.toLowerCase().includes(term) ||
-            q.correctAnswer.toLowerCase().includes(term);
-          
-          if (appState.activeFilter === 'all') return matchesSearch;
-          return matchesSearch && q.status === appState.activeFilter;
-        });
-        
-        renderTable();
-      }
-
-      function applyFilter(filter) {
-        appState.activeFilter = filter;
-        
-        if (filter === 'all') {
-          appState.filteredQuestions = [...appState.allQuestions];
-        } else {
-          appState.filteredQuestions = appState.allQuestions.filter(q => q.status === filter);
-        }
-        
-        DOM.searchInput.value = '';
-        renderTable();
-        
-        // Update active button styles
-        [DOM.filterAll, DOM.filterCorrect, DOM.filterIncorrect].forEach(btn => {
-          btn.style.background = 'transparent';
-          btn.style.color = '';
-        });
-        
-        const activeBtn = filter === 'all' ? DOM.filterAll : 
-                          filter === 'correct' ? DOM.filterCorrect : DOM.filterIncorrect;
-        activeBtn.style.background = 'var(--primary)';
-        activeBtn.style.color = 'white';
-      }
-
-      // ===== DOWNLOAD REPORT =====
-      function downloadReport() {
-        if (!appState.currentResult) return;
-        
-        const result = appState.currentResult;
-        const stats = result.stats;
-        
-        // Create PDF
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF();
-        
-        // Header
-        doc.setFontSize(20);
-        doc.setTextColor(79, 70, 229);
-        doc.text('PrimeScore Report', 105, 20, { align: 'center' });
-        
-        doc.setFontSize(12);
-        doc.setTextColor(100);
-        doc.text('Prime Spirit Mentors', 105, 30, { align: 'center' });
-        
-        // Student Details
-        doc.setFontSize(11);
-        doc.setTextColor(0);
-        doc.text(`Candidate: ${result.student.name}`, 20, 45);
-        doc.text(`Roll No: ${result.student.roll}`, 20, 52);
-        doc.text(`Exam: ${result.examName}`, 20, 59);
-        
-        // Summary
-        doc.setFontSize(14);
-        doc.setTextColor(79, 70, 229);
-        doc.text('Summary', 20, 75);
-        
-        doc.setFontSize(11);
-        doc.setTextColor(0);
-        doc.text(`Total Marks: ${stats.totalMarks} / ${stats.maxMarks}`, 20, 85);
-        doc.text(`Correct: ${stats.correct} | Incorrect: ${stats.incorrect} | Unattempted: ${stats.unattempted}`, 20, 92);
-        doc.text(`Accuracy: ${stats.accuracy}%`, 20, 99);
-        
-        // Save
-        doc.save(`primescore-report-${new Date().toISOString().split('T')[0]}.pdf`);
-      }
-
-      // ===== LOCAL STORAGE =====
-      function saveToHistory(result) {
-        try {
-          const history = JSON.parse(localStorage.getItem('primescore-history') || '[]');
-          history.push({
-            exam: result.examName,
-            score: result.stats.totalMarks,
-            accuracy: result.stats.accuracy,
-            date: new Date().toISOString()
-          });
-          
-          // Keep last 20 entries
-          if (history.length > 20) history.shift();
-          
-          localStorage.setItem('primescore-history', JSON.stringify(history));
-        } catch (e) {
-          console.warn('Failed to save to localStorage:', e);
-        }
-      }
-
-      // ===== STATUS MESSAGE =====
-      function showStatus(message, type) {
-        DOM.statusMessage.textContent = message;
-        DOM.statusMessage.className = 'status-message';
-        
-        if (type === 'error') {
-          DOM.statusMessage.classList.add('status-error');
-        } else if (type === 'success') {
-          DOM.statusMessage.classList.add('status-success');
-        } else {
-          DOM.statusMessage.classList.add('status-info');
-        }
-        
-        // Auto-clear after 5 seconds
-        setTimeout(() => {
-          DOM.statusMessage.textContent = '';
-          DOM.statusMessage.className = 'status-message';
-        }, 5000);
-      }
-
-      // ===== PWA SETUP =====
-      function setupPWA() {
-        if ('serviceWorker' in navigator) {
-          window.addEventListener('load', () => {
-            navigator.serviceWorker.register('/primescore/sw.js')
-              .then(registration => {
-                console.log('ServiceWorker registered:', registration.scope);
-              })
-              .catch(error => {
-                console.log('ServiceWorker registration failed:', error);
-              });
-          });
-        }
-      }
-
-      // ===== INITIALIZE =====
-      init();
+      
+      // Search
+      document.getElementById('searchInput').oninput = function(e){
+        const term=e.target.value.toLowerCase();
+        document.querySelectorAll('#tableBody tr').forEach(r=>{ r.style.display=r.textContent.toLowerCase().includes(term)?'':'none'; });
+      };
+      
+      // Filters
+      document.getElementById('filterAll').onclick = ()=>renderTable('all');
+      document.getElementById('filterCorrect').onclick = ()=>renderTable('correct');
+      document.getElementById('filterIncorrect').onclick = ()=>renderTable('incorrect');
+      
+      // Download
+      document.getElementById('downloadBtn').onclick = ()=>{
+        if(!questions.length){ status('No data','error'); return; }
+        const {jsPDF}=window.jspdf;
+        const doc=new jsPDF();
+        doc.setFontSize(18); doc.setTextColor(79,70,229);
+        doc.text('PrimeScore Report',105,20,{align:'center'});
+        doc.setFontSize(11); doc.setTextColor(100);
+        doc.text('Prime Spirit Mentors',105,28,{align:'center'});
+        doc.text(`Marks: ${document.getElementById('valMarks').textContent} | Accuracy: ${document.getElementById('valAccuracy').textContent}`,105,36,{align:'center'});
+        doc.save('primescore-report.pdf');
+        status('✅ Downloaded!','success');
+      };
+      
+      console.log('🚀 PrimeScore ready! Upload a PDF to begin.');
     })();
   </script>
 </body>
