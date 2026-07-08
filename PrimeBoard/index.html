@@ -761,6 +761,44 @@
             justify-content: center;
         }
 
+        /* Library Grid */
+        .library-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-top: 16px;
+        }
+        .library-item {
+            aspect-ratio: 1;
+            background: var(--bg-hover);
+            border: 2px solid var(--border-light);
+            border-radius: var(--radius-md);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            padding: 16px;
+        }
+        .library-item:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-md);
+            border-color: var(--accent);
+            background: var(--bg-surface);
+        }
+        .library-item i {
+            font-size: 32px;
+            color: var(--accent);
+        }
+        .library-item span {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-primary);
+            text-align: center;
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             #header { padding: 0 16px; height: 80px; }
@@ -868,7 +906,7 @@
         </div>
         <div class="header-spacer"></div>
         <button class="header-btn" id="btn-invite"><i class="fas fa-user-plus"></i> <span>Invite</span></button>
-        <button class="header-btn library-btn" id="btn-library"><i class="fas fa-book"></i> <span>Library</span></button>
+        <button class="header-btn" id="btn-library"><i class="fas fa-book"></i> <span>Library</span></button>
         <button class="header-btn primary" id="btn-share"><i class="fas fa-share-alt"></i> <span>Share</span></button>
         <div class="header-icon" id="btn-settings"><i class="fas fa-cog"></i></div>
     </div>
@@ -1125,6 +1163,54 @@
             <button class="submit-btn" id="send-invites-btn" style="margin-top:16px;">
                 <i class="fas fa-paper-plane"></i> Send Invites
             </button>
+        </div>
+    </div>
+
+    <!-- Library Modal -->
+    <div class="modal-overlay" id="library-modal">
+        <div class="modal" style="max-width:700px;">
+            <div class="modal-header">
+                <span>Library - Templates & Shapes</span>
+                <div class="modal-close" id="close-library"><i class="fas fa-times"></i></div>
+            </div>
+            <div class="library-grid">
+                <div class="library-item" data-template="rectangle">
+                    <i class="fas fa-square"></i>
+                    <span>Rectangle</span>
+                </div>
+                <div class="library-item" data-template="circle">
+                    <i class="fas fa-circle"></i>
+                    <span>Circle</span>
+                </div>
+                <div class="library-item" data-template="triangle">
+                    <i class="fas fa-play" style="transform:rotate(-90deg);"></i>
+                    <span>Triangle</span>
+                </div>
+                <div class="library-item" data-template="arrow">
+                    <i class="fas fa-arrow-right"></i>
+                    <span>Arrow</span>
+                </div>
+                <div class="library-item" data-template="star">
+                    <i class="fas fa-star"></i>
+                    <span>Star</span>
+                </div>
+                <div class="library-item" data-template="heart">
+                    <i class="fas fa-heart"></i>
+                    <span>Heart</span>
+                </div>
+                <div class="library-item" data-template="lightbulb">
+                    <i class="fas fa-lightbulb"></i>
+                    <span>Idea</span>
+                </div>
+                <div class="library-item" data-template="check">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Check</span>
+                </div>
+                <div class="library-item" data-template="cross">
+                    <i class="fas fa-times-circle"></i>
+                    <span>Cross</span>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -1929,6 +2015,102 @@
                 studentEmails.splice(index, 1);
                 updateEmailList();
             };
+
+            // Library Modal
+            document.getElementById('btn-library').addEventListener('click', () => {
+                document.getElementById('library-modal').classList.add('active');
+            });
+            
+            document.getElementById('close-library').addEventListener('click', () => {
+                document.getElementById('library-modal').classList.remove('active');
+            });
+            
+            document.querySelectorAll('.library-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    insertLibraryItem(item.dataset.template);
+                    document.getElementById('library-modal').classList.remove('active');
+                });
+            });
+            
+            function insertLibraryItem(template) {
+                if (!excalidrawAPI) return;
+                const elements = excalidrawAPI.getSceneElements();
+                const sx = 200, sy = 200;
+                let newElement = null;
+                
+                switch(template) {
+                    case 'rectangle':
+                        newElement = createEl('rectangle', sx, sy, 150, 100, { strokeColor: currentStrokeColor, strokeWidth: currentStrokeWidth });
+                        break;
+                    case 'circle':
+                        newElement = createEl('ellipse', sx, sy, 120, 120, { strokeColor: currentStrokeColor, strokeWidth: currentStrokeWidth });
+                        break;
+                    case 'triangle':
+                        newElement = createEl('line', sx, sy, 120, 100, { 
+                            strokeColor: currentStrokeColor, 
+                            strokeWidth: currentStrokeWidth,
+                            points: [[0, 100], [60, 0], [120, 100], [0, 100]]
+                        });
+                        break;
+                    case 'arrow':
+                        newElement = createEl('arrow', sx, sy, 150, 0, { strokeColor: currentStrokeColor, strokeWidth: currentStrokeWidth });
+                        break;
+                    case 'star':
+                        // Create a star using multiple lines
+                        for (let i = 0; i < 5; i++) {
+                            const angle = (i * 4 * Math.PI) / 5;
+                            const x1 = sx + 60 + 50 * Math.cos(angle);
+                            const y1 = sy + 60 + 50 * Math.sin(angle);
+                            const angle2 = ((i + 0.5) * 4 * Math.PI) / 5;
+                            const x2 = sx + 60 + 25 * Math.cos(angle2);
+                            const y2 = sy + 60 + 25 * Math.sin(angle2);
+                            elements.push(createEl('line', x1, y1, x2 - x1, y2 - y1, { 
+                                strokeColor: currentStrokeColor, 
+                                strokeWidth: currentStrokeWidth 
+                            }));
+                        }
+                        excalidrawAPI.updateScene({ elements });
+                        return;
+                    case 'heart':
+                        newElement = createEl('line', sx, sy, 120, 100, {
+                            strokeColor: '#EC4899',
+                            strokeWidth: currentStrokeWidth,
+                            points: [[0, 40], [30, 10], [60, 40], [90, 10], [120, 40], [60, 100], [0, 40]]
+                        });
+                        break;
+                    case 'lightbulb':
+                        newElement = createEl('ellipse', sx + 30, sy, 60, 70, { strokeColor: '#F59E0B', strokeWidth: currentStrokeWidth });
+                        elements.push(createEl('line', sx + 50, sy + 70, 20, 30, { strokeColor: '#F59E0B', strokeWidth: currentStrokeWidth }));
+                        elements.push(createEl('line', sx + 60, sy + 70, 0, 30, { strokeColor: '#F59E0B', strokeWidth: currentStrokeWidth }));
+                        elements.push(createEl('line', sx + 70, sy + 70, -20, 30, { strokeColor: '#F59E0B', strokeWidth: currentStrokeWidth }));
+                        break;
+                    case 'check':
+                        newElement = createEl('line', sx, sy + 50, 60, -30, { 
+                            strokeColor: '#10B981', 
+                            strokeWidth: currentStrokeWidth,
+                            points: [[0, 50], [40, 90], [100, 10]]
+                        });
+                        break;
+                    case 'cross':
+                        newElement = createEl('line', sx, sy, 100, 100, { 
+                            strokeColor: '#EF4444', 
+                            strokeWidth: currentStrokeWidth,
+                            points: [[0, 0], [100, 100]]
+                        });
+                        elements.push(createEl('line', sx + 100, sy, -100, 100, { 
+                            strokeColor: '#EF4444', 
+                            strokeWidth: currentStrokeWidth,
+                            points: [[0, 0], [-100, 100]]
+                        }));
+                        break;
+                }
+                
+                if (newElement) {
+                    elements.push(newElement);
+                    excalidrawAPI.updateScene({ elements });
+                    sendMessage({ type: 'scene-update', elements, appState: { viewBackgroundColor: excalidrawAPI.getAppState().viewBackgroundColor } });
+                }
+            }
 
             // Share button
             document.getElementById('btn-share').addEventListener('click', () => {
