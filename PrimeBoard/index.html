@@ -79,7 +79,6 @@
         }
         .excalidraw { touch-action: none; }
 
-        /* ── LEFT SIDEBAR (Main Navigation - Miro Style) ── */
         #sidebar {
             position: fixed;
             left: 0;
@@ -153,8 +152,8 @@
             background: var(--accent-success);
             box-shadow: 0 0 4px var(--accent-success);
         }
-        .sb-online-dot.connecting { background: var(--accent-warning); box-shadow: 0 0 4px var(--accent-warning); animation: pulse-dot 1.5s infinite; }
-        .sb-online-dot.error { background: var(--accent-danger); box-shadow: 0 0 4px var(--accent-danger); }
+        .sb-online-dot.connecting { background: var(--accent-warning); animation: pulse-dot 1.5s infinite; }
+        .sb-online-dot.error { background: var(--accent-danger); }
         @keyframes pulse-dot { 0%,100%{opacity:1} 50%{opacity:0.4} }
 
         .sidebar-btn {
@@ -251,7 +250,6 @@
 
         .sb-spacer { flex: 1; }
 
-        /* ── RIGHT PANELS ───────────────────────────────── */
         #right-panels {
             position: fixed;
             right: 16px;
@@ -274,9 +272,7 @@
             display: none;
             flex-direction: column;
             align-items: center;
-            animation: slideInRight 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
-        @keyframes slideInRight { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
         
         #timer-display {
             font-size: 2.2rem;
@@ -285,11 +281,10 @@
             font-family: 'JetBrains Mono', monospace;
             letter-spacing: 2px;
             margin-bottom: 10px;
-            text-shadow: 0 0 20px rgba(79, 70, 229, 0.4);
         }
-        #timer-display.warning { color: var(--accent-warning); text-shadow: 0 0 20px rgba(245, 158, 11, 0.4); }
-        #timer-display.danger { color: var(--accent-danger); text-shadow: 0 0 20px rgba(239, 68, 68, 0.4); animation: pulse-timer 1s infinite; }
-        @keyframes pulse-timer { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.7; transform: scale(0.97); } }
+        #timer-display.warning { color: var(--accent-warning); }
+        #timer-display.danger { color: var(--accent-danger); animation: pulse-timer 1s infinite; }
+        @keyframes pulse-timer { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
         
         .timer-controls { display: flex; gap: 6px; width: 100%; margin-bottom: 10px; }
         .timer-btn {
@@ -302,10 +297,8 @@
             font-weight: 700;
             font-size: 0.65rem;
             cursor: pointer;
-            transition: var(--transition-bounce);
             font-family: 'Nunito', sans-serif;
         }
-        .timer-btn:hover { transform: scale(1.05); }
         .timer-btn.start { background: var(--accent-success); color: #ffffff; }
         .timer-btn.pause { background: var(--accent-warning); color: #ffffff; }
         .timer-btn.reset { background: var(--accent-danger); color: #fff; }
@@ -325,7 +318,6 @@
         .timer-inputs input:focus { outline: none; border-color: var(--accent-primary); }
         .timer-inputs span { color: var(--text-muted); font-weight: 800; font-family: 'JetBrains Mono', monospace; }
 
-        /* ── PAGE TABS BAR ──────────────────────────────── */
         #page-tabs-bar {
             position: fixed;
             top: 10px;
@@ -357,7 +349,6 @@
             font-size: 0.68rem;
             font-weight: 700;
             cursor: pointer;
-            transition: var(--transition-bounce);
             white-space: nowrap;
             flex-shrink: 0;
         }
@@ -383,9 +374,8 @@
             justify-content: center;
             font-size: 0.7rem;
         }
-        #add-page-btn:hover { color: var(--accent-success); border-color: var(--accent-success); background: rgba(16, 185, 129, 0.08); }
+        #add-page-btn:hover { color: var(--accent-success); border-color: var(--accent-success); }
 
-        /* ── MINIMALIST POPUPS ─────────────────────────── */
         .minimal-popup {
             display: none;
             position: fixed;
@@ -395,12 +385,10 @@
             border-radius: var(--radius-lg);
             backdrop-filter: blur(24px) saturate(1.1);
             box-shadow: var(--shadow-heavy);
-            animation: popIn 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
             max-width: calc(100vw - 32px);
             max-height: calc(100vh - 100px);
             overflow: hidden;
         }
-        @keyframes popIn { from { opacity: 0; transform: scale(0.92) translateY(8px); } to { opacity: 1; transform: scale(1) translateY(0); } }
         
         .popup-header {
             display: flex;
@@ -434,7 +422,6 @@
         .popup-close-btn:hover { color: var(--accent-danger); background: rgba(239, 68, 68, 0.1); }
         .popup-content { padding: 14px; overflow-y: auto; max-height: calc(100vh - 200px); }
 
-        /* ── PEN SELECTOR POPUP ────────────────────────── */
         #pen-popup {
             width: 320px;
             left: calc(var(--sidebar-width) + 12px);
@@ -465,13 +452,11 @@
             border: 1px solid var(--glass-border);
             border-radius: var(--radius-md);
             cursor: pointer;
-            transition: var(--transition-bounce);
             position: relative;
         }
         .pen-item:hover {
             background: rgba(79, 70, 229, 0.12);
             border-color: rgba(79, 70, 229, 0.3);
-            transform: translateY(-2px);
         }
         .pen-item.selected {
             background: linear-gradient(135deg, rgba(79,70,229,0.2), rgba(129,140,248,0.15));
@@ -488,12 +473,11 @@
         }
         .pen-preview svg { width: 100%; height: 100%; }
         .pen-info { display: flex; flex-direction: column; min-width: 0; flex: 1; }
-        .pen-name { color: var(--text-primary); font-size: 0.78rem; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .pen-desc { color: var(--text-muted); font-size: 0.6rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .pen-name { color: var(--text-primary); font-size: 0.78rem; font-weight: 700; }
+        .pen-desc { color: var(--text-muted); font-size: 0.6rem; font-weight: 600; }
         .pen-check { position: absolute; top: 4px; right: 4px; color: var(--accent-primary); font-size: 0.7rem; opacity: 0; }
         .pen-item.selected .pen-check { opacity: 1; }
 
-        /* ── BACKGROUND COLOR POPUP ────────────────────── */
         #bg-color-popup {
             width: 240px;
             left: calc(var(--sidebar-width) + 12px);
@@ -512,14 +496,12 @@
             border-radius: var(--radius-sm);
             cursor: pointer;
             border: 2px solid rgba(15, 15, 20, 0.1);
-            transition: var(--transition-bounce);
             position: relative;
         }
         .color-swatch:hover { transform: scale(1.1); border-color: rgba(15, 15, 20, 0.25); }
         .color-swatch.selected {
             border-color: var(--accent-primary) !important;
             box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
-            transform: scale(1.06);
         }
         .color-swatch.selected::after {
             content: '✓';
@@ -552,7 +534,6 @@
             padding: 2px;
         }
 
-        /* ── FOG OF WAR ─────────────────────────────────── */
         #spotlight-overlay {
             position: fixed;
             inset: 0;
@@ -583,7 +564,6 @@
         }
         #spotlight-handle:active { cursor: grabbing; }
 
-        /* ── SETUP SCREEN ──────────────────────────────── */
         #setup-screen {
             position: fixed;
             inset: 0;
@@ -603,9 +583,7 @@
             text-align: center;
             backdrop-filter: blur(24px) saturate(1.1);
             box-shadow: var(--shadow-card);
-            animation: floatUp 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
-        @keyframes floatUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
         
         #setup-card h1 {
             color: var(--text-primary);
@@ -660,7 +638,6 @@
             font-weight: 700;
             font-size: 0.8rem;
             cursor: pointer;
-            transition: var(--transition-bounce);
         }
         .role-toggle button.active {
             border-color: var(--accent-primary);
@@ -683,7 +660,6 @@
         }
         #setup-error { color: var(--accent-danger); font-size: 0.75rem; margin-top: 12px; min-height: 1.2em; font-weight: 700; }
 
-        /* ── MODALS ─────────────────────────────────────── */
         #add-student-modal, #toolkit-modal, #math-modal, #graph-modal {
             position: fixed;
             inset: 0;
@@ -704,7 +680,6 @@
             padding: 28px 24px;
             backdrop-filter: blur(24px) saturate(1.1);
             box-shadow: var(--shadow-heavy);
-            animation: popIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
             max-height: 90vh;
             overflow-y: auto;
         }
@@ -787,7 +762,6 @@
             font-weight: 800;
             font-size: 0.85rem;
             cursor: pointer;
-            transition: var(--transition-bounce);
             font-family: 'Nunito', sans-serif;
         }
         #send-invites-btn, #insert-math-btn, #insert-graph-btn {
@@ -813,7 +787,6 @@
             padding: 16px 12px;
             text-align: center;
             cursor: pointer;
-            transition: var(--transition-bounce);
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -822,13 +795,11 @@
         .toolkit-item:hover {
             background: rgba(79, 70, 229, 0.1);
             border-color: var(--accent-primary);
-            transform: translateY(-3px);
         }
         .toolkit-item i { font-size: 1.4rem; color: var(--accent-primary); }
         .toolkit-item span { color: var(--text-primary); font-size: 0.8rem; font-weight: 700; }
         .toolkit-item .sub-text { color: var(--text-muted); font-size: 0.6rem; font-weight: 600; }
 
-        /* ── GRAPHING TOOL ──────────────────────────────── */
         .graph-tabs { display: flex; gap: 6px; margin-bottom: 14px; flex-wrap: wrap; }
         .graph-tab {
             padding: 7px 13px;
@@ -907,7 +878,6 @@
         }
         #locked-banner i { color: var(--accent-danger); }
 
-        /* ── RESPONSIVE ─────────────────────────────────── */
         @media(max-width: 768px) {
             :root { --sidebar-width: 48px; }
             .sidebar-btn { width: 34px; height: 34px; font-size: 0.85rem; }
@@ -930,7 +900,6 @@
 </head>
 <body>
 
-    <!-- SETUP SCREEN -->
     <div id="setup-screen">
         <div id="setup-card">
             <h1>Prime<span>Board</span></h1>
@@ -949,7 +918,6 @@
         </div>
     </div>
 
-    <!-- LEFT SIDEBAR (All Navigation) -->
     <div id="sidebar" style="display:none;">
         <div class="sb-brand" title="PrimeBoard"><i class="fas fa-atom"></i></div>
         
@@ -990,13 +958,11 @@
         <a class="sidebar-btn" id="btn-exit" href="../index.html" title="Exit"><i class="fas fa-arrow-right-from-bracket"></i></a>
     </div>
 
-    <!-- PAGE TABS BAR -->
     <div id="page-tabs-bar">
         <div id="page-tabs-list"></div>
         <button id="add-page-btn" title="Add Page"><i class="fas fa-plus"></i></button>
     </div>
 
-    <!-- RIGHT PANELS -->
     <div id="right-panels">
         <div id="timer-widget">
             <div id="timer-display">05:00</div>
@@ -1013,14 +979,10 @@
         </div>
     </div>
 
-    <!-- SPOTLIGHT -->
     <div id="spotlight-overlay"></div>
     <div id="spotlight-handle"><i class="fas fa-crosshairs"></i></div>
-
-    <!-- LOCKED BANNER -->
     <div id="locked-banner"><i class="fas fa-lock"></i> Drawing locked — pan & zoom only</div>
 
-    <!-- PEN SELECTOR POPUP -->
     <div id="pen-popup" class="minimal-popup">
         <div class="popup-header">
             <div class="popup-header-left">
@@ -1045,7 +1007,6 @@
         </div>
     </div>
 
-    <!-- BACKGROUND COLOR POPUP -->
     <div id="bg-color-popup" class="minimal-popup">
         <div class="popup-header">
             <div class="popup-header-left">
@@ -1063,7 +1024,6 @@
         </div>
     </div>
 
-    <!-- TOOLKIT MODAL -->
     <div id="toolkit-modal">
         <div id="toolkit-card">
             <h3><i class="fas fa-graduation-cap"></i> Smart Educational Toolkit</h3>
@@ -1080,7 +1040,6 @@
         </div>
     </div>
 
-    <!-- MATH MODAL -->
     <div id="math-modal">
         <div id="math-card">
             <h3><i class="fas fa-square-root-alt"></i> Insert LaTeX Math Equation</h3>
@@ -1094,7 +1053,6 @@
         </div>
     </div>
 
-    <!-- GRAPH MODAL -->
     <div id="graph-modal">
         <div id="graph-card">
             <h3><i class="fas fa-chart-line"></i> Live Graphing Tool</h3>
@@ -1136,7 +1094,6 @@
         </div>
     </div>
 
-    <!-- ADD STUDENT MODAL -->
     <div id="add-student-modal">
         <div id="add-student-card">
             <h3><i class="fas fa-user-plus"></i> Add Students by Email</h3>
@@ -1154,7 +1111,7 @@
     <div id="root"></div>
 
     <script type="module">
-        import React, { useCallback } from "react";
+        import React from "react";
         import ReactDOM from "react-dom/client";
         import * as ExcalidrawLib from "https://esm.sh/@excalidraw/excalidraw@0.18.0/dist/dev/index.js?external=react,react-dom";
         const { Excalidraw } = ExcalidrawLib;
@@ -1347,7 +1304,6 @@
             let lastSendTime = 0;
             let currentPenId = 'ballpoint';
 
-            // Force a full sync to all students
             function forceSyncScene() {
                 if (!excalidrawAPI) return;
                 const elements = excalidrawAPI.getSceneElements();
@@ -1363,13 +1319,7 @@
                 if (!excalidrawAPI) return;
                 try {
                     excalidrawAPI.setActiveTool({ type: "selection" });
-                } catch(e) {
-                    try {
-                        excalidrawAPI.updateScene({
-                            appState: { activeTool: { type: "selection", locked: false } }
-                        });
-                    } catch(e2) {}
-                }
+                } catch(e) {}
             }
 
             function renderPenGrids() {
@@ -1417,7 +1367,6 @@
             makeDraggable(document.getElementById('pen-popup'));
             makeDraggable(document.getElementById('bg-color-popup'));
 
-            // Pen button
             document.getElementById('btn-pen').addEventListener('click', (e) => {
                 e.stopPropagation();
                 deselectTools();
@@ -1425,7 +1374,6 @@
             });
             document.getElementById('btn-pen').dataset.popup = 'pen-popup';
 
-            // Background button
             document.getElementById('btn-bg-color').addEventListener('click', (e) => {
                 e.stopPropagation();
                 deselectTools();
@@ -1433,7 +1381,6 @@
             });
             document.getElementById('btn-bg-color').dataset.popup = 'bg-color-popup';
 
-            // Background colors
             const COLORS = [
                 { hex: '#FFFFFF', name: 'White' },
                 { hex: '#F7F7F9', name: 'Soft Gray' },
@@ -1470,14 +1417,12 @@
                     s.classList.remove('selected');
                     if (s.dataset.color === color) s.classList.add('selected');
                 });
-                // Sync background change to students immediately
                 setTimeout(forceSyncScene, 50);
             }
 
             customBgPicker.addEventListener('input', (e) => applyBackgroundColor(e.target.value));
             customBgPicker.addEventListener('click', (e) => e.stopPropagation());
 
-            // Timer
             const timerWidget = document.getElementById('timer-widget');
             const timerDisplay = document.getElementById('timer-display');
             const timerStartBtn = document.getElementById('timer-start');
@@ -1541,7 +1486,6 @@
             }
             updateTimerDisplay();
 
-            // Toolkit
             const toolkitModal = document.getElementById('toolkit-modal');
             document.getElementById('btn-toolkit').addEventListener('click', () => {
                 deselectTools();
@@ -1592,13 +1536,11 @@
                 }
                 if (n.length > 0) {
                     excalidrawAPI.updateScene({ elements: [...elements, ...n] });
-                    // Force sync so students see it immediately
                     setTimeout(forceSyncScene, 50);
                 }
                 toolkitModal.style.display = 'none';
             }
 
-            // Math Equation
             const mathModal = document.getElementById('math-modal');
             const mathInput = document.getElementById('math-input');
             const mathPreview = document.getElementById('math-preview');
@@ -1622,20 +1564,17 @@
             document.getElementById('insert-math-btn').addEventListener('click', () => {
                 if (mathInput.value && excalidrawAPI) {
                     const e = excalidrawAPI.getSceneElements();
-                    // Insert math as text with dark color for contrast
                     e.push(createEl('text', 150, 150, 200, 50, {
                         text: mathInput.value,
                         fontSize: 28,
                         strokeColor: "#18181B"
                     }));
                     excalidrawAPI.updateScene({ elements: e });
-                    // Force sync to students
                     setTimeout(forceSyncScene, 50);
                 }
                 mathModal.style.display = 'none';
             });
 
-            // Graphing Tool
             const graphModal = document.getElementById('graph-modal');
             const graphCanvas = document.getElementById('graph-canvas');
             const graphCtx = graphCanvas.getContext('2d');
@@ -1761,7 +1700,6 @@
                 const sx = (x) => pad + (x - xMin) / (xMax - xMin) * (w - 2 * pad);
                 const sy = (y) => h - pad - (y - yMin) / (yMax - yMin) * (h - 2 * pad);
 
-                // Grid
                 graphCtx.strokeStyle = 'rgba(255,255,255,0.07)';
                 graphCtx.lineWidth = 1;
                 for (let i = 0; i <= 5; i++) {
@@ -1776,7 +1714,6 @@
                     graphCtx.lineTo(w - pad, gy);
                     graphCtx.stroke();
                 }
-                // Axes
                 graphCtx.strokeStyle = 'rgba(255,255,255,0.3)';
                 const x0 = sx(0), y0 = sy(0);
                 if (x0 >= pad && x0 <= w - pad) {
@@ -1792,7 +1729,6 @@
                     graphCtx.stroke();
                 }
 
-                // Labels
                 graphCtx.fillStyle = 'rgba(255,255,255,0.6)';
                 graphCtx.font = '10px JetBrains Mono, monospace';
                 graphCtx.textAlign = 'center';
@@ -1805,7 +1741,6 @@
                     graphCtx.textAlign = 'center';
                 }
 
-                // Curve
                 graphCtx.beginPath();
                 graphCtx.strokeStyle = '#7c6af7';
                 graphCtx.lineWidth = 2.5;
@@ -1826,11 +1761,8 @@
                 if (!excalidrawAPI || !graphCanvas) return;
                 drawGraph();
                 
-                // Get canvas dimensions for proper sizing
                 const imgW = 560;
                 const imgH = 280;
-                
-                // Create a WHITE background frame for proper contrast on any board color
                 const framePadding = 16;
                 const frameX = 100;
                 const frameY = 100;
@@ -1839,7 +1771,6 @@
                 
                 const elements = excalidrawAPI.getSceneElements();
                 
-                // Add white background rectangle with border for contrast
                 elements.push(createEl('rectangle', frameX, frameY, frameW, frameH, {
                     backgroundColor: "#FFFFFF",
                     strokeColor: "#d4d4d8",
@@ -1850,25 +1781,6 @@
                     opacity: 100
                 }));
                 
-                // Add subtle shadow rectangle behind (slightly offset)
-                elements.push(createEl('rectangle', frameX + 4, frameY + 4, frameW, frameH, {
-                    backgroundColor: "rgba(0,0,0,0.08)",
-                    strokeColor: "transparent",
-                    fillStyle: "solid",
-                    roughness: 0,
-                    roundness: { type: 3 },
-                    opacity: 100,
-                    // We can't easily add shadows in Excalidraw, so we use a subtle dark rect behind
-                }));
-                
-                // Move white frame to top (re-add it after shadow)
-                const shadowIdx = elements.length - 1;
-                const whiteIdx = elements.length - 2;
-                const temp = elements[shadowIdx];
-                elements[shadowIdx] = elements[whiteIdx];
-                elements[whiteIdx] = temp;
-                
-                // Add the graph image on top
                 elements.push(createEl('image', frameX + framePadding, frameY + framePadding, imgW, imgH, {
                     type: 'image',
                     fileId: null,
@@ -1877,14 +1789,10 @@
                 }));
                 
                 excalidrawAPI.updateScene({ elements });
-                
-                // Force sync to students immediately
                 setTimeout(forceSyncScene, 100);
-                
                 graphModal.style.display = 'none';
             });
 
-            // Spotlight
             const spotlightOverlay = document.getElementById('spotlight-overlay');
             const spotlightHandle = document.getElementById('spotlight-handle');
             let isSpotlightActive = false, lastSpotlightSend = 0;
@@ -1923,17 +1831,15 @@
                 }
             }
 
-            // Lock
             let isLocked = false;
             lockBtn.addEventListener('click', () => {
                 isLocked = !isLocked;
                 lockBtn.classList.toggle('active', isLocked);
                 lockBtn.querySelector('i').className = isLocked ? 'fas fa-lock' : 'fas fa-lock-open';
-                lockedBanner.style.display = 'none'; // teacher doesn't see banner
+                lockedBanner.style.display = 'none';
                 sendMessage({ type: 'set-lock', locked: isLocked });
             });
 
-            // Undo/Redo
             document.getElementById('btn-undo').addEventListener('click', () => {
                 if (excalidrawAPI) excalidrawAPI.undo();
             });
@@ -1941,7 +1847,6 @@
                 if (excalidrawAPI) excalidrawAPI.redo();
             });
 
-            // Pages
             let pages = [{ id: 'page-1', name: 'Page 1', elements: [], bg: '#FFFFFF' }];
             let currentPageId = 'page-1';
             const pageTabsList = document.getElementById('page-tabs-list');
@@ -1999,7 +1904,6 @@
                         elements: page.elements || [],
                         appState: { viewBackgroundColor: page.bg || '#FFFFFF' }
                     });
-                    // Force sync to students
                     setTimeout(forceSyncScene, 50);
                 }
                 renderPageTabs();
@@ -2065,7 +1969,6 @@
             document.getElementById('page-tabs-bar').style.display = 'flex';
             renderPageTabs();
 
-            // Recording
             const recordBtn = document.getElementById('record-btn');
             const recIndicator = document.getElementById('rec-indicator');
             const recTimerEl = document.getElementById('rec-timer');
@@ -2145,7 +2048,6 @@
                 recTimerEl.textContent = `${Math.floor(s / 60).toString().padStart(2, '0')}:${(s % 60).toString().padStart(2, '0')}`;
             }
 
-            // Add Student
             const addStudentModal = document.getElementById('add-student-modal');
             const emailInput = document.getElementById('email-input');
             const emailList = document.getElementById('email-list');
@@ -2210,7 +2112,6 @@
                 emailInput.value = '';
             });
 
-            // Resize handler
             let resizeTimer;
             window.addEventListener('resize', () => {
                 clearTimeout(resizeTimer);
@@ -2220,9 +2121,14 @@
                 }, 200);
             });
 
-            // Excalidraw Render
-            function App() {
-                const onChange = useCallback((elements, appState) => {
+            const root = ReactDOM.createRoot(document.getElementById('root'));
+            root.render(React.createElement(Excalidraw, {
+                theme: 'light',
+                initialData: {
+                    appState: { viewBackgroundColor: '#FFFFFF', gridSize: 0, theme: 'light' },
+                    elements: [],
+                },
+                onChange: (elements, appState) => {
                     if (isRemoteUpdate) {
                         isRemoteUpdate = false;
                         return;
@@ -2236,30 +2142,12 @@
                             appState: { viewBackgroundColor: appState.viewBackgroundColor }
                         });
                     }
-                }, []);
-                return React.createElement(Excalidraw, {
-                    excalidrawAPI: (api) => { excalidrawAPI = api; },
-                    onChange,
-                    theme: 'light',
-                    name: `PrimeBoard - ${room}`,
-                    UIOptions: {
-                        canvasActions: {
-                            loadScene: false,
-                            saveToActiveFile: false,
-                            export: { saveFileToDisk: false }
-                        }
-                    },
-                    initialData: {
-                        appState: {
-                            viewModeEnabled: role === 'student' && isLocked,
-                            viewBackgroundColor: '#FFFFFF'
-                        }
-                    }
-                });
-            }
-            ReactDOM.createRoot(document.getElementById('root')).render(React.createElement(App));
+                },
+                excalidrawAPI: (api) => {
+                    excalidrawAPI = api;
+                },
+            }));
 
-            // WebSocket
             let socket = null;
             function connect() {
                 onlineDot.className = 'sb-online-dot connecting';
@@ -2339,9 +2227,6 @@
                             });
                         }
                         switchToPage(data.pageId, true);
-                    }
-                    if (data.type === 'recording-status') {
-                        // Students see recording indicator (could add a banner here)
                     }
                 });
                 socket.addEventListener('close', () => {
