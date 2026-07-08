@@ -58,6 +58,17 @@
         .excalidraw { touch-action: none; }
         .excalidraw .App-toolbar { display: none !important; }
 
+        /* Hide native Excalidraw main menu (hamburger) button */
+        .excalidraw button[aria-label="Main menu"],
+        .excalidraw [data-testid="main-menu-trigger"],
+        .excalidraw .main-menu-trigger { display: none !important; }
+
+        /* Hide native Excalidraw bottom-left zoom/undo-redo control panel */
+        .excalidraw .layer-ui__wrapper__footer-left,
+        .excalidraw .layer-ui__wrapper__footer-left-inner,
+        .excalidraw .undo-redo-buttons,
+        .excalidraw .zoom-actions { display: none !important; }
+
         /* Header - Gen Z Style */
         #header {
             position: fixed;
@@ -897,10 +908,6 @@
             <i class="fas fa-lightbulb"></i>
             <span class="tooltip">Spotlight</span>
         </button>
-        <button class="tool-btn" id="btn-timer-tool" title="Timer">
-            <i class="fas fa-stopwatch"></i>
-            <span class="tooltip">Timer</span>
-        </button>
         <button class="tool-btn" id="btn-record" title="Record">
             <i class="fas fa-video"></i>
             <span class="tooltip">Record</span>
@@ -1255,6 +1262,47 @@
             initColorGrid();
             setupPenControls();
             renderPageTabs();
+
+            // Hide native Excalidraw hamburger menu + bottom-left zoom/undo-redo panel.
+            // These are rendered internally by Excalidraw and get re-created on every
+            // scene update, so CSS alone can lose the race — a MutationObserver keeps
+            // them hidden permanently regardless of internal re-renders.
+            function hideNativeExcalidrawChrome() {
+                const rootEl = document.getElementById('root');
+                if (!rootEl) return;
+
+                // Main menu (hamburger) trigger button
+                const menuBtn = rootEl.querySelector(
+                    '[data-testid="main-menu-trigger"], button[aria-label="Main menu"]'
+                );
+                if (menuBtn) {
+                    const wrapper = menuBtn.closest('.dropdown-menu') || menuBtn;
+                    wrapper.style.display = 'none';
+                }
+
+                // Bottom-left zoom % / zoom in-out / undo-redo cluster
+                const zoomBtn = rootEl.querySelector(
+                    '[data-testid="zoom-in-button"], [data-testid="zoom-out-button"], [data-testid="reset-zoom-button"]'
+                );
+                if (zoomBtn) {
+                    const footerLeft =
+                        zoomBtn.closest('.layer-ui__wrapper__footer-left') ||
+                        zoomBtn.closest('.zoom-actions')?.parentElement ||
+                        zoomBtn.closest('.zoom-actions');
+                    if (footerLeft) footerLeft.style.display = 'none';
+                }
+                const undoBtn = rootEl.querySelector(
+                    '[data-testid="undo-button"], [data-testid="redo-button"]'
+                );
+                if (undoBtn) {
+                    const undoWrap = undoBtn.closest('.undo-redo-buttons') || undoBtn.parentElement;
+                    if (undoWrap) undoWrap.style.display = 'none';
+                }
+            }
+
+            const chromeObserver = new MutationObserver(() => hideNativeExcalidrawChrome());
+            chromeObserver.observe(document.getElementById('root'), { childList: true, subtree: true });
+            hideNativeExcalidrawChrome();
             
             // Setup Excalidraw
             const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -1275,6 +1323,7 @@
                 excalidrawAPI: (api) => { 
                     excalidrawAPI = api;
                     updateToolUI('selection');
+                    hideNativeExcalidrawChrome();
                 }
             }));
 
@@ -1358,7 +1407,7 @@
 
             // Tool selection
             document.querySelectorAll('.tool-btn').forEach(btn => {
-                if (btn.id !== 'btn-spotlight' && btn.id !== 'btn-timer-tool' && btn.id !== 'btn-record' && btn.id !== 'btn-bg') {
+                if (btn.id !== 'btn-spotlight' && btn.id !== 'btn-record' && btn.id !== 'btn-bg') {
                     btn.addEventListener('click', () => {
                         const tool = btn.id.replace('btn-', '');
                         selectTool(tool);
