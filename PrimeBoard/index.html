@@ -53,12 +53,10 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', system-ui, sans-serif; -webkit-tap-highlight-color: transparent; }
         html, body { height: 100%; overflow: hidden; }
         body { background: var(--bg-canvas); }
-        #root { position: absolute; top: 140px; left: 80px; right: 20px; bottom: 20px; }
+        #root { position: absolute; top: 120px; left: 80px; right: 20px; bottom: 20px; }
 
         .excalidraw { touch-action: none; }
-        .excalidraw .Island.App-toolbar-content > div:last-child,
-        .excalidraw .panelColumn,
-        .excalidraw [class*="properties"] { display: none !important; }
+        .excalidraw .App-toolbar { display: none !important; }
 
         /* Header - Gen Z Style */
         #header {
@@ -79,14 +77,25 @@
         }
         #brand {
             display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        #brand-name {
+            display: flex;
             align-items: center;
             gap: 10px;
             font-weight: 800;
-            font-size: 18px;
+            font-size: 20px;
             background: var(--accent-gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+        }
+        #brand-subtitle {
+            font-size: 11px;
+            color: var(--text-secondary);
+            font-weight: 500;
+            margin-left: 28px;
         }
         #board-title {
             display: flex;
@@ -227,12 +236,12 @@
             margin: 8px 0;
         }
 
-        /* Page Tabs Bar */
+        /* Page Tabs Bar - Centered */
         #page-tabs-bar {
             position: fixed;
             top: 70px;
-            left: 100px;
-            right: 20px;
+            left: 50%;
+            transform: translateX(-50%);
             height: 50px;
             background: var(--bg-glass);
             backdrop-filter: blur(20px);
@@ -244,6 +253,7 @@
             z-index: 999;
             overflow-x: auto;
             box-shadow: var(--shadow-md);
+            min-width: 300px;
         }
         #page-tabs-bar::-webkit-scrollbar { display: none; }
         
@@ -561,7 +571,7 @@
             box-shadow: var(--shadow-lg);
             z-index: 1000;
             display: none;
-            min-width: 340px;
+            min-width: 360px;
             border: 1px solid var(--border-light);
         }
         #pen-popup.active { display: block; }
@@ -710,7 +720,7 @@
         }
         #spotlight-overlay.active { display: block; }
 
-        /* Zoom Controls */
+        /* Zoom Controls - Bottom Right Only */
         #zoom-controls {
             position: fixed;
             bottom: 30px;
@@ -753,29 +763,35 @@
 
         /* Responsive */
         @media (max-width: 768px) {
-            #header { padding: 0 16px; height: 60px; }
-            #brand { font-size: 16px; }
+            #header { padding: 0 16px; height: 80px; }
+            #brand-name { font-size: 16px; }
+            #brand-subtitle { margin-left: 26px; font-size: 10px; }
             #board-title { display: none; }
             #header-timer { padding: 6px 14px; font-size: 13px; }
             .header-btn span { display: none; }
             
             #left-toolbar { 
                 left: 10px; 
-                top: 70px; 
+                top: 90px; 
                 width: 60px; 
                 padding: 12px 6px;
             }
             .tool-btn { width: 44px; height: 44px; font-size: 18px; }
             .tool-btn .tooltip { display: none; }
             
-            #page-tabs-bar { left: 80px; height: 44px; padding: 0 12px; }
+            #page-tabs-bar { 
+                left: 50%; 
+                transform: translateX(-50%);
+                min-width: 250px;
+                padding: 0 12px; 
+            }
             .page-tab { padding: 6px 12px; font-size: 12px; }
             
-            #root { top: 120px; left: 75px; }
+            #root { top: 130px; left: 75px; }
             
             #right-panel { 
                 right: 10px; 
-                top: 130px; 
+                top: 150px; 
                 width: calc(100% - 20px);
                 max-width: 340px;
             }
@@ -797,9 +813,9 @@
         @media (max-width: 480px) {
             #setup-card { padding: 32px 24px; }
             #header { padding: 0 12px; }
+            #brand-subtitle { display: none; }
             #left-toolbar { display: none; }
             #root { left: 0; }
-            #page-tabs-bar { left: 0; }
         }
     </style>
 </head>
@@ -834,7 +850,10 @@
 
     <!-- Header -->
     <div id="header" style="display:none;">
-        <div id="brand"><i class="fas fa-atom"></i> PrimeBoard</div>
+        <div id="brand">
+            <div id="brand-name"><i class="fas fa-atom"></i> PrimeBoard</div>
+            <div id="brand-subtitle">by Prime Spirit Mentors</div>
+        </div>
         <div id="board-title">
             <span id="room-code">-</span>
             <i class="fas fa-chevron-down" style="font-size: 10px;"></i>
@@ -853,7 +872,7 @@
         <div class="header-icon" id="btn-settings"><i class="fas fa-cog"></i></div>
     </div>
 
-    <!-- Page Tabs Bar -->
+    <!-- Page Tabs Bar - Centered -->
     <div id="page-tabs-bar" style="display:none;">
         <div id="page-tabs-list"></div>
         <button id="add-page-btn" title="Add Page"><i class="fas fa-plus"></i></button>
@@ -912,14 +931,6 @@
         <button class="tool-btn" id="btn-bg" title="Background">
             <i class="fas fa-fill-drip"></i>
             <span class="tooltip">Background</span>
-        </button>
-        <button class="tool-btn" id="btn-undo" title="Undo">
-            <i class="fas fa-undo"></i>
-            <span class="tooltip">Undo</span>
-        </button>
-        <button class="tool-btn" id="btn-redo" title="Redo">
-            <i class="fas fa-redo"></i>
-            <span class="tooltip">Redo</span>
         </button>
     </div>
 
@@ -995,7 +1006,7 @@
         </div>
     </div>
 
-    <!-- Zoom Controls -->
+    <!-- Zoom Controls - Bottom Right Only -->
     <div id="zoom-controls">
         <button class="zoom-btn" id="zoom-out"><i class="fas fa-minus"></i></button>
         <div id="zoom-level">100%</div>
@@ -1127,6 +1138,7 @@
         let pages = [{ id: 'page-1', name: 'Page 1', elements: [], bg: '#F3E8FF' }];
         let currentPageId = 'page-1';
         let currentZoom = 1;
+        let eraserMode = 'full'; // 'full' or 'precision'
 
         // DOM Elements
         const setupScreen = document.getElementById('setup-screen');
@@ -1327,7 +1339,22 @@
                     } else if (tool === 'pen') {
                         excalidrawAPI.setActiveTool({ type: 'freedraw' });
                     } else if (tool === 'eraser') {
-                        excalidrawAPI.setActiveTool({ type: 'eraser' });
+                        // Toggle between full and precision eraser
+                        if (eraserMode === 'full') {
+                            eraserMode = 'precision';
+                            excalidrawAPI.setActiveTool({ type: 'eraser' });
+                            // Set smaller eraser size for precision
+                            excalidrawAPI.updateScene({
+                                appState: { currentItemStrokeWidth: 10 }
+                            });
+                        } else {
+                            eraserMode = 'full';
+                            excalidrawAPI.setActiveTool({ type: 'eraser' });
+                            // Set larger eraser size for full
+                            excalidrawAPI.updateScene({
+                                appState: { currentItemStrokeWidth: 30 }
+                            });
+                        }
                     } else if (tool === 'shape') {
                         excalidrawAPI.setActiveTool({ type: 'rectangle' });
                     } else if (tool === 'text') {
@@ -1822,10 +1849,6 @@
                     alert('Recording cancelled');
                 }
             });
-
-            // Undo/Redo
-            document.getElementById('btn-undo').addEventListener('click', () => { if (excalidrawAPI) excalidrawAPI.undo(); });
-            document.getElementById('btn-redo').addEventListener('click', () => { if (excalidrawAPI) excalidrawAPI.redo(); });
 
             // Invite button
             document.getElementById('btn-invite').addEventListener('click', () => {
