@@ -12,7 +12,11 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
     
     <script>
-        window.PRIMEBOARD_RELAY_URL = "wss://primeboard-relay.onrender.com";
+        // Cloudflare Workers relay (replaces the old Render-hosted relay).
+        // Deploy the primeboard-relay-cf project with `npx wrangler deploy`,
+        // then replace YOUR-SUBDOMAIN below with whatever Wrangler prints —
+        // see the project's README.md for the full walkthrough.
+        window.PRIMEBOARD_RELAY_BASE_URL = "wss://primeboard-relay.YOUR-SUBDOMAIN.workers.dev";
         window.EXCALIDRAW_ASSET_PATH = "https://esm.sh/@excalidraw/excalidraw@0.18.0/dist/prod/";
     </script>
     <script type="importmap">
@@ -63,8 +67,11 @@
         .excalidraw [data-testid="main-menu-trigger"],
         .excalidraw .main-menu-trigger { display: none !important; }
 
-        /* Hide native Excalidraw undo/redo buttons only (zoom control stays visible) */
-        .excalidraw .undo-redo-buttons { display: none !important; }
+        /* Undo/Redo and zoom controls stay visible (native Excalidraw), just shrunk */
+        .excalidraw .undo-redo-buttons {
+            transform: scale(0.72);
+            transform-origin: bottom left;
+        }
 
         /* Shrink (but keep visible & working) the native Excalidraw zoom control */
         .excalidraw .zoom-actions {
@@ -1190,6 +1197,7 @@
         let currentPageId = 'page-1';
         let currentZoom = 1;
         let eraserMode = 'full';
+        let lastRosterCount = 1;
 
         // DOM Elements
         const setupScreen = document.getElementById('setup-screen');
@@ -1271,13 +1279,12 @@
             setupPenControls();
             renderPageTabs();
 
-            // Hide native Excalidraw hamburger menu + undo/redo buttons only.
-            // The native zoom control (-, %, +, fit-to-view) is left alone —
-            // it stays visible and working, just shrunk via CSS above.
-            // These elements are rendered internally by Excalidraw and get
-            // re-created on every scene update, so CSS alone can lose the race —
-            // a MutationObserver keeps them hidden permanently regardless of
-            // internal re-renders.
+            // Hide native Excalidraw hamburger menu only. Undo/Redo and the
+            // zoom control are left alone — they stay visible and working,
+            // just shrunk via CSS above. The menu button is rendered
+            // internally by Excalidraw and gets re-created on every scene
+            // update, so CSS alone can lose the race — a MutationObserver
+            // keeps it hidden permanently regardless of internal re-renders.
             function hideNativeExcalidrawChrome() {
                 const rootEl = document.getElementById('root');
                 if (!rootEl) return;
@@ -1289,15 +1296,6 @@
                 if (menuBtn) {
                     const wrapper = menuBtn.closest('.dropdown-menu') || menuBtn;
                     wrapper.style.display = 'none';
-                }
-
-                // Undo / Redo buttons
-                const undoBtn = rootEl.querySelector(
-                    '[data-testid="undo-button"], [data-testid="redo-button"]'
-                );
-                if (undoBtn) {
-                    const undoWrap = undoBtn.closest('.undo-redo-buttons') || undoBtn.parentElement;
-                    if (undoWrap) undoWrap.style.display = 'none';
                 }
             }
 
@@ -1328,10 +1326,14 @@
                 }
             }));
 
-            // WebSocket connection
+            // WebSocket connection — the Cloudflare relay routes by room
+            // code in the URL path (one Durable Object per room), so the
+            // room-specific 'join' message below is now just extra roster
+            // info rather than the thing that determines routing.
             function connect() {
                 statusDot.className = 'status-dot connecting';
-                socket = new WebSocket(window.PRIMEBOARD_RELAY_URL);
+                const wsUrl = `${window.PRIMEBOARD_RELAY_BASE_URL}/room/${encodeURIComponent(room)}`;
+                socket = new WebSocket(wsUrl);
                 
                 socket.addEventListener('open', () => {
                     statusDot.className = 'status-dot';
@@ -1351,6 +1353,28 @@
                     
                     if (data.type === 'roster' && data.users) {
                         userCount.textContent = `${data.users.length} online`;
+
+                        // A student who joins mid-class only receives future
+                        // scene-updates — they'd otherwise see a blank board
+                        // until the teacher's next stroke. When the roster
+                        // grows, the teacher re-broadcasts the current page's
+                        // full state so new joiners are caught up immediately.
+                        if (role === 'teacher' && data.users.length > lastRosterCount && excalidrawAPI) {
+                            const liveElements = excalidrawAPI.getSceneElements();
+                            const liveBg = excalidrawAPI.getAppState().viewBackgroundColor;
+                            sendMessage({
+                                type: 'pages-structure',
+                                pages: pages.map(x => ({ id: x.id, name: x.name })),
+                                currentPageId
+                            });
+                            sendMessage({
+                                type: 'page-switch',
+                                pageId: currentPageId,
+                                elements: liveElements,
+                                bg: liveBg
+                            });
+                        }
+                        lastRosterCount = data.users.length;
                     }
                     
                     if (data.type === 'timer-update') {
@@ -1999,8 +2023,14 @@
                 updateEmailList();
             };
 
+            // Library now opens Excalidraw's own default library sidebar
+            // (drag-and-drop shape libraries, same feature as excalidraw.com)
+            // instead of the custom shapes modal — the button stays in the
+            // top bar, which is where Excalidraw normally surfaces it too.
             document.getElementById('btn-library').addEventListener('click', () => {
-                document.getElementById('library-modal').classList.add('active');
+                if (excalidrawAPI) {
+                    excalidrawAPI.toggleSidebar({ name: 'library' });
+                }
             });
             
             document.getElementById('close-library').addEventListener('click', () => {
