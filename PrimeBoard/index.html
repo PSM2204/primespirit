@@ -1161,7 +1161,7 @@
         import React from "react";
         import ReactDOM from "react-dom/client";
         import * as ExcalidrawLib from "https://esm.sh/@excalidraw/excalidraw@0.18.0/dist/dev/index.js?external=react,react-dom";
-        const { Excalidraw } = ExcalidrawLib;
+        const { Excalidraw, convertToExcalidrawElements } = ExcalidrawLib;
 
         // Global state
         let excalidrawAPI = null;
@@ -1239,14 +1239,19 @@
         });
 
         function createEl(type, x, y, width, height, extra = {}) {
+            // NOTE: this returns a lightweight "skeleton" — not a full Excalidraw
+            // element. Skeletons must be passed through convertToExcalidrawElements()
+            // (see insertElements() below) before being added to the scene, since
+            // Excalidraw requires internal bookkeeping fields (id, seed, version,
+            // fractional-index, etc.) that hand-rolled objects don't have. Elements
+            // missing those fields get silently dropped by updateScene instead of
+            // rendering, which is why toolkit/graph/library inserts previously
+            // appeared to do nothing.
             return {
                 type, x, y, width, height, angle: 0,
                 strokeColor: currentStrokeColor, backgroundColor: "transparent",
                 fillStyle: "hachure", strokeWidth: currentStrokeWidth, roughness: 1, opacity: 100,
-                groupIds: [], roundness: (type === "rectangle" || type === "ellipse") ? { type: 3 } : null,
-                seed: Math.floor(Math.random() * 2e9), version: 1,
-                versionNonce: Math.floor(Math.random() * 2e9), isDeleted: false,
-                boundElements: null, updated: Date.now(), link: null, locked: false, ...extra
+                ...extra
             };
         }
 
@@ -1400,6 +1405,21 @@
             
             window.sendMessage = sendMessage;
             connect();
+
+            // Converts lightweight element "skeletons" (built with createEl) into
+            // fully valid Excalidraw elements via the library's own conversion
+            // utility, then merges them into the scene. This is the piece that was
+            // missing before — hand-built objects were being pushed straight into
+            // updateScene() without the internal fields Excalidraw needs to render
+            // and persist them, so they never actually appeared on the canvas.
+            function insertElements(skeletons) {
+                if (!excalidrawAPI || !skeletons || !skeletons.length) return [];
+                const newEls = convertToExcalidrawElements(skeletons);
+                const elements = [...excalidrawAPI.getSceneElements(), ...newEls];
+                excalidrawAPI.updateScene({ elements });
+                sendMessage({ type: 'scene-update', elements, appState: { viewBackgroundColor: excalidrawAPI.getAppState().viewBackgroundColor } });
+                return newEls;
+            }
 
             // Tool selection
             document.querySelectorAll('.tool-btn').forEach(btn => {
@@ -1655,7 +1675,6 @@
 
             function applyToolkit(type) {
                 if (!excalidrawAPI) return;
-                const elements = excalidrawAPI.getSceneElements();
                 let n = [];
                 const sx = 100, sy = 100;
                 
@@ -1679,7 +1698,7 @@
                     n.push(createEl('text', sx + 10, sy + 10, 280, 130, { text: "def hello():\n  print('Hello')", fontSize: 14, fontFamily: 3, strokeColor: "#10B981" }));
                 }
                 
-                if (n.length > 0) excalidrawAPI.updateScene({ elements: [...elements, ...n] });
+                insertElements(n);
             }
 
             document.getElementById('btn-math').addEventListener('click', () => {
@@ -1703,10 +1722,9 @@
             document.getElementById('insert-math').addEventListener('click', () => {
                 const value = document.getElementById('math-input').value;
                 if (value && excalidrawAPI) {
-                    const e = excalidrawAPI.getSceneElements();
-                    e.push(createEl('text', 150, 150, 200, 50, { text: value, fontSize: 24, strokeColor: "#111827" }));
-                    excalidrawAPI.updateScene({ elements: e });
-                    sendMessage({ type: 'scene-update', elements: e, appState: { viewBackgroundColor: excalidrawAPI.getAppState().viewBackgroundColor } });
+                    insertElements([
+                        createEl('text', 150, 150, 200, 50, { text: value, fontSize: 24, strokeColor: "#111827" })
+                    ]);
                 }
                 document.getElementById('math-modal').classList.remove('active');
             });
@@ -1838,24 +1856,34 @@
                 ctx.shadowBlur = 0;
             }
 
-            document.getElementById('insert-graph').addEventListener('click', () => {
+            document.getElementById('insert-graph').addEventListener('click', async () => {
                 if (!excalidrawAPI) return;
                 drawGraph();
                 const canvas = document.getElementById('graph-canvas');
                 const imgW = 500, imgH = 280;
-                const elements = excalidrawAPI.getSceneElements();
-                
-                elements.push(createEl('rectangle', 100, 100, imgW + 32, imgH + 32, {
-                    backgroundColor: "#FFFFFF", strokeColor: "#E5E7EB", strokeWidth: 2,
-                    fillStyle: "solid", roughness: 0, roundness: { type: 3 }
-                }));
-                
-                elements.push(createEl('image', 116, 116, imgW, imgH, {
-                    type: 'image', fileId: null, status: 'saved', scale: [1, 1]
-                }));
-                
-                excalidrawAPI.updateScene({ elements });
-                sendMessage({ type: 'scene-update', elements, appState: { viewBackgroundColor: excalidrawAPI.getAppState().viewBackgroundColor } });
+
+                // The old version created an 'image' element with fileId: null —
+                // there was no actual picture behind it, so nothing ever showed up.
+                // Excalidraw images need their pixel data registered separately via
+                // addFiles(), then the element just references that file's id.
+                const dataURL = canvas.toDataURL('image/png');
+                const fileId = 'graph-' + Date.now();
+                await excalidrawAPI.addFiles([{
+                    id: fileId,
+                    dataURL,
+                    mimeType: 'image/png',
+                    created: Date.now(),
+                    lastRetrieved: Date.now()
+                }]);
+
+                insertElements([
+                    createEl('rectangle', 100, 100, imgW + 32, imgH + 32, {
+                        backgroundColor: "#FFFFFF", strokeColor: "#E5E7EB", strokeWidth: 2,
+                        fillStyle: "solid", roughness: 0, roundness: { type: 3 }
+                    }),
+                    createEl('image', 116, 116, imgW, imgH, { fileId })
+                ]);
+
                 document.getElementById('graph-modal').classList.remove('active');
             });
 
@@ -1988,26 +2016,25 @@
             
             function insertLibraryItem(template) {
                 if (!excalidrawAPI) return;
-                const elements = excalidrawAPI.getSceneElements();
                 const sx = 200, sy = 200;
-                let newElement = null;
+                let n = [];
                 
                 switch(template) {
                     case 'rectangle':
-                        newElement = createEl('rectangle', sx, sy, 150, 100, { strokeColor: currentStrokeColor, strokeWidth: currentStrokeWidth });
+                        n.push(createEl('rectangle', sx, sy, 150, 100, { strokeColor: currentStrokeColor, strokeWidth: currentStrokeWidth }));
                         break;
                     case 'circle':
-                        newElement = createEl('ellipse', sx, sy, 120, 120, { strokeColor: currentStrokeColor, strokeWidth: currentStrokeWidth });
+                        n.push(createEl('ellipse', sx, sy, 120, 120, { strokeColor: currentStrokeColor, strokeWidth: currentStrokeWidth }));
                         break;
                     case 'triangle':
-                        newElement = createEl('line', sx, sy, 120, 100, { 
+                        n.push(createEl('line', sx, sy, 120, 100, { 
                             strokeColor: currentStrokeColor, 
                             strokeWidth: currentStrokeWidth,
                             points: [[0, 100], [60, 0], [120, 100], [0, 100]]
-                        });
+                        }));
                         break;
                     case 'arrow':
-                        newElement = createEl('arrow', sx, sy, 150, 0, { strokeColor: currentStrokeColor, strokeWidth: currentStrokeWidth });
+                        n.push(createEl('arrow', sx, sy, 150, 0, { strokeColor: currentStrokeColor, strokeWidth: currentStrokeWidth }));
                         break;
                     case 'star':
                         for (let i = 0; i < 5; i++) {
@@ -2017,40 +2044,40 @@
                             const angle2 = ((i + 0.5) * 4 * Math.PI) / 5;
                             const x2 = sx + 60 + 25 * Math.cos(angle2);
                             const y2 = sy + 60 + 25 * Math.sin(angle2);
-                            elements.push(createEl('line', x1, y1, x2 - x1, y2 - y1, { 
+                            n.push(createEl('line', x1, y1, x2 - x1, y2 - y1, { 
                                 strokeColor: currentStrokeColor, 
-                                strokeWidth: currentStrokeWidth 
+                                strokeWidth: currentStrokeWidth,
+                                points: [[0, 0], [x2 - x1, y2 - y1]]
                             }));
                         }
-                        excalidrawAPI.updateScene({ elements });
-                        return;
+                        break;
                     case 'heart':
-                        newElement = createEl('line', sx, sy, 120, 100, {
+                        n.push(createEl('line', sx, sy, 120, 100, {
                             strokeColor: '#EC4899',
                             strokeWidth: currentStrokeWidth,
                             points: [[0, 40], [30, 10], [60, 40], [90, 10], [120, 40], [60, 100], [0, 40]]
-                        });
+                        }));
                         break;
                     case 'lightbulb':
-                        newElement = createEl('ellipse', sx + 30, sy, 60, 70, { strokeColor: '#F59E0B', strokeWidth: currentStrokeWidth });
-                        elements.push(createEl('line', sx + 50, sy + 70, 20, 30, { strokeColor: '#F59E0B', strokeWidth: currentStrokeWidth }));
-                        elements.push(createEl('line', sx + 60, sy + 70, 0, 30, { strokeColor: '#F59E0B', strokeWidth: currentStrokeWidth }));
-                        elements.push(createEl('line', sx + 70, sy + 70, -20, 30, { strokeColor: '#F59E0B', strokeWidth: currentStrokeWidth }));
+                        n.push(createEl('ellipse', sx + 30, sy, 60, 70, { strokeColor: '#F59E0B', strokeWidth: currentStrokeWidth }));
+                        n.push(createEl('line', sx + 50, sy + 70, 20, 30, { strokeColor: '#F59E0B', strokeWidth: currentStrokeWidth, points: [[0,0],[20,30]] }));
+                        n.push(createEl('line', sx + 60, sy + 70, 0, 30, { strokeColor: '#F59E0B', strokeWidth: currentStrokeWidth, points: [[0,0],[0,30]] }));
+                        n.push(createEl('line', sx + 70, sy + 70, -20, 30, { strokeColor: '#F59E0B', strokeWidth: currentStrokeWidth, points: [[0,0],[-20,30]] }));
                         break;
                     case 'check':
-                        newElement = createEl('line', sx, sy + 50, 60, -30, { 
+                        n.push(createEl('line', sx, sy + 50, 60, -30, { 
                             strokeColor: '#10B981', 
                             strokeWidth: currentStrokeWidth,
-                            points: [[0, 50], [40, 90], [100, 10]]
-                        });
+                            points: [[0, 0], [40, 40], [100, -40]]
+                        }));
                         break;
                     case 'cross':
-                        newElement = createEl('line', sx, sy, 100, 100, { 
+                        n.push(createEl('line', sx, sy, 100, 100, { 
                             strokeColor: '#EF4444', 
                             strokeWidth: currentStrokeWidth,
                             points: [[0, 0], [100, 100]]
-                        });
-                        elements.push(createEl('line', sx + 100, sy, -100, 100, { 
+                        }));
+                        n.push(createEl('line', sx + 100, sy, -100, 100, { 
                             strokeColor: '#EF4444', 
                             strokeWidth: currentStrokeWidth,
                             points: [[0, 0], [-100, 100]]
@@ -2058,11 +2085,7 @@
                         break;
                 }
                 
-                if (newElement) {
-                    elements.push(newElement);
-                    excalidrawAPI.updateScene({ elements });
-                    sendMessage({ type: 'scene-update', elements, appState: { viewBackgroundColor: excalidrawAPI.getAppState().viewBackgroundColor } });
-                }
+                insertElements(n);
             }
 
             document.getElementById('btn-share').addEventListener('click', () => {
