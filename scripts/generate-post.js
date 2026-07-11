@@ -1,12 +1,11 @@
 // scripts/generate-post.js
-// Picks the next unused topic, asks Gemini to write a post,
-// creates blog/<slug>.html from the template, and updates blog/posts.json.
-// Run by GitHub Actions with GEMINI_API_KEY as a secret.
+// Tries Gemini first, falls back to Groq if Gemini fails (e.g. rate limit).
+// Picks the next unused topic, writes a post, creates blog/<slug>.html,
+// and updates blog/posts.json.
 
 import fs from "fs";
 import path from "path";
 
-const API_KEY = process.env.GEMINI_API_KEY;
 const BLOG_DIR = path.join(process.cwd(), "blog");
 const TOPICS_PATH = path.join(BLOG_DIR, "topics.json");
 const POSTS_PATH = path.join(BLOG_DIR, "posts.json");
@@ -19,8 +18,8 @@ function slugify(title) {
     .replace(/(^-|-$)/g, "");
 }
 
-async function callGemini(topic) {
-  const prompt = `Write a 500-700 word blog post for an online coaching institute called
+function buildPrompt(topic) {
+  return `Write a 500-700 word blog post for an online coaching institute called
 "Prime Spirit Mentors" (micro-batches of 5-10 students, Class 6-12 boards CBSE/ICSE,
 NEET, JEE, CUET, IAT, NEST). Topic: "${topic}".
 Rules:
@@ -29,31 +28,70 @@ Rules:
 - Be specific and concrete, avoid generic filler.
 - Do not invent statistics, quotes, or named people/schools.
 - Output clean HTML (paragraphs in <p>, headings in <h2>/<h3>, no <html>/<body> tags, no markdown).`;
+}
+
+async function tryGemini(topic) {
+  const key = process.env.GEMINI_API_KEY;
+  if (!key) throw new Error("No GEMINI_API_KEY set, skipping Gemini");
 
   const res = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`,
+    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${key}`,
     {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        contents: [{ parts: [{ text: prompt }] }],
-      }),
+      body: JSON.stringify({ contents: [{ parts: [{ text: buildPrompt(topic) }] }] }),
     }
   );
-
-  if (!res.ok) {
-    throw new Error(`Gemini API error: ${res.status} ${await res.text()}`);
-  }
-
+  if (!res.ok) throw new Error(`Gemini error ${res.status}: ${await res.text()}`);
   const data = await res.json();
   const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
-  if (!text) throw new Error("No content returned from Gemini");
+  if (!text) throw new Error("Gemini returned no content");
   return text.trim();
 }
 
-async function main() {
-  if (!API_KEY) throw new Error("Missing GEMINI_API_KEY env var");
+async function tryGroq(topic) {
+  const key = process.env.GROQ_API_KEY;
+  if (!key) throw new Error("No GROQ_API_KEY set, skipping Groq");
 
+  const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${key}`,
+    },
+    body: JSON.stringify({
+      model: "llama-3.3-70b-versatile",
+      messages: [{ role: "user", content: buildPrompt(topic) }],
+    }),
+  });
+  if (!res.ok) throw new Error(`Groq error ${res.status}: ${await res.text()}`);
+  const data = await res.json();
+  const text = data.choices?.[0]?.message?.content;
+  if (!text) throw new Error("Groq returned no content");
+  return text.trim();
+}
+
+async function generateContent(topic) {
+  const providers = [
+    { name: "Gemini", fn: tryGemini },
+    { name: "Groq", fn: tryGroq },
+  ];
+
+  for (const provider of providers) {
+    try {
+      console.log(`Trying ${provider.name}...`);
+      const content = await provider.fn(topic);
+      console.log(`Success with ${provider.name}`);
+      return content;
+    } catch (err) {
+      console.log(`${provider.name} failed: ${err.message}`);
+    }
+  }
+
+  throw new Error("All providers failed. No content generated.");
+}
+
+async function main() {
   const topics = JSON.parse(fs.readFileSync(TOPICS_PATH, "utf-8"));
   const posts = JSON.parse(fs.readFileSync(POSTS_PATH, "utf-8"));
   const usedTitles = new Set(posts.map((p) => p.title));
@@ -65,7 +103,7 @@ async function main() {
   }
 
   console.log(`Generating post for topic: ${nextTopic.title}`);
-  const content = await callGemini(nextTopic.title);
+  const content = await generateContent(nextTopic.title);
 
   const slug = slugify(nextTopic.title);
   const date = new Date().toISOString().split("T")[0];
@@ -97,4 +135,5 @@ main().catch((err) => {
   console.error(err);
   process.exit(1);
 });
+
 
