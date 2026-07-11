@@ -1269,3 +1269,201 @@ body.blog-page {
 }
 
 
+/* ===========================================================
+   DESIGN REFRESH — GenZ/Gen Alpha polish pass
+   Append this AFTER everything else in style.css so it wins.
+   =========================================================== */
+
+/* ---- FIX: Header overflow / logo getting cut off ---- */
+/* Trigger hamburger much earlier so nav never crowds the logo */
+@media screen and (max-width: 1180px) {
+    .menu-toggle { display: block !important; }
+    header nav {
+        position: fixed !important;
+        top: 0;
+        right: -100%;
+        width: min(320px, 85vw);
+        height: 100vh;
+        background: rgba(6, 8, 12, 0.98) !important;
+        backdrop-filter: blur(24px);
+        -webkit-backdrop-filter: blur(24px);
+        border-left: 1px solid var(--glass-border);
+        transition: right 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        padding: 100px 24px 40px;
+        box-shadow: -10px 0 40px rgba(0,0,0,0.6);
+        z-index: 1000;
+        overflow-y: auto;
+    }
+    header nav.active { right: 0; }
+    header nav ul { flex-direction: column; align-items: stretch; gap: 10px; width: 100%; }
+    header nav ul li { width: 100%; }
+    header nav ul a, header nav ul .primeboard-btn, header nav ul .auth-trigger-btn {
+        width: 100%;
+        justify-content: flex-start !important;
+        font-size: 1rem !important;
+        padding: 14px 18px !important;
+    }
+}
+
+@media screen and (min-width: 1181px) {
+    .menu-toggle { display: none !important; }
+}
+
+/* Logo never gets squeezed */
+.logo {
+    flex-shrink: 0 !important;
+    min-width: max-content !important;
+}
+
+.logo-nav {
+    gap: 16px;
+}
+
+/* ---- Sticker-style badges (rotated, punchy, tactile) ---- */
+.hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transform: rotate(-1.5deg);
+    box-shadow: 0 6px 0 rgba(0, 223, 137, 0.15), 0 8px 24px rgba(0, 223, 137, 0.2);
+    animation: badgeFloat 3.5s ease-in-out infinite;
+}
+
+@keyframes badgeFloat {
+    0%, 100% { transform: rotate(-1.5deg) translateY(0); }
+    50% { transform: rotate(-1.5deg) translateY(-4px); }
+}
+
+.card-badge {
+    transform: rotate(-3deg);
+    box-shadow: 0 4px 0 rgba(0,0,0,0.25);
+    font-family: inherit;
+}
+
+/* ---- Buttons: bolder, tactile, "press-down" feel ---- */
+.btn, .btn-course-enroll, .primeboard-btn, .quiz-btn, .filter-btn {
+    position: relative;
+    font-weight: 800 !important;
+}
+
+.btn-primary, .primetestq-launch-btn {
+    box-shadow: 0 6px 0 #0058c4, 0 10px 30px rgba(0, 112, 243, 0.4) !important;
+}
+
+.btn-primary:active, .primetestq-launch-btn:active {
+    transform: translateY(3px) !important;
+    box-shadow: 0 2px 0 #0058c4, 0 4px 12px rgba(0, 112, 243, 0.3) !important;
+}
+
+.btn-secondary {
+    box-shadow: 0 6px 0 rgba(255,255,255,0.08) !important;
+}
+
+.btn-secondary:active {
+    transform: translateY(3px) !important;
+    box-shadow: 0 2px 0 rgba(255,255,255,0.08) !important;
+}
+
+.btn-course-enroll:hover {
+    letter-spacing: 0.3px;
+}
+
+/* ---- Hero: subtle animated gradient blobs for depth ---- */
+.hero-section {
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-section::before, .hero-section::after {
+    content: '';
+    position: absolute;
+    width: 400px;
+    height: 400px;
+    border-radius: 50%;
+    filter: blur(90px);
+    opacity: 0.25;
+    z-index: 0;
+    animation: blobDrift 12s ease-in-out infinite alternate;
+}
+
+.hero-section::before {
+    background: var(--primary-neon);
+    top: -100px;
+    left: -100px;
+}
+
+.hero-section::after {
+    background: var(--accent-glow);
+    bottom: -120px;
+    right: -100px;
+    animation-delay: -6s;
+}
+
+@keyframes blobDrift {
+    0% { transform: translate(0, 0) scale(1); }
+    100% { transform: translate(40px, 30px) scale(1.15); }
+}
+
+.hero-content { position: relative; z-index: 1; }
+
+/* ---- Course cards: playful hover tilt ---- */
+.course-card {
+    transform-origin: center bottom;
+}
+
+.course-card:hover {
+    transform: translateY(-8px) rotate(-0.4deg) !important;
+}
+
+/* ---- Testimonial cards: quote mark flair ---- */
+.testimonial-card {
+    position: relative;
+}
+
+.testimonial-card::before {
+    content: '"';
+    position: absolute;
+    top: 8px;
+    right: 20px;
+    font-size: 4rem;
+    font-weight: 900;
+    color: var(--primary-neon);
+    opacity: 0.12;
+    line-height: 1;
+    font-family: Georgia, serif;
+}
+
+/* ---- Filter pills: more playful active state ---- */
+.filter-btn.active {
+    transform: scale(1.05);
+    box-shadow: 0 4px 16px rgba(0, 112, 243, 0.35);
+}
+
+/* ---- Section subtitle: tag/chip feel instead of plain caption ---- */
+.section-subtitle {
+    padding: 4px 12px;
+    border-radius: 20px;
+    background: rgba(0, 223, 137, 0.08);
+    border: 1px solid rgba(0, 223, 137, 0.2);
+}
+
+/* ---- Scrollbar (small detail, feels intentional) ---- */
+::-webkit-scrollbar { width: 10px; }
+::-webkit-scrollbar-track { background: var(--bg-black); }
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(var(--primary-neon), var(--accent-glow));
+    border-radius: 10px;
+}
+
+/* ---- Selection color (tiny brand touch) ---- */
+::selection {
+    background: var(--primary-neon);
+    color: #06080c;
+}
+
+/* ---- Responsive: keep hero badge/text tidy on small screens ---- */
+@media screen and (max-width: 480px) {
+    .hero-badge { font-size: 0.8rem; padding: 6px 14px; }
+    .testimonial-card::before { font-size: 3rem; }
+}
+
