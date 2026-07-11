@@ -58,22 +58,22 @@ async function main() {
   const posts = JSON.parse(fs.readFileSync(POSTS_PATH, "utf-8"));
   const usedTitles = new Set(posts.map((p) => p.title));
 
-  const nextTopic = topics.find((t) => !usedTitles.has(t));
+  const nextTopic = topics.find((t) => !usedTitles.has(t.title));
   if (!nextTopic) {
     console.log("No unused topics left in topics.json. Add more topics.");
     return;
   }
 
-  console.log(`Generating post for topic: ${nextTopic}`);
-  const content = await callGemini(nextTopic);
+  console.log(`Generating post for topic: ${nextTopic.title}`);
+  const content = await callGemini(nextTopic.title);
 
-  const slug = slugify(nextTopic);
+  const slug = slugify(nextTopic.title);
   const date = new Date().toISOString().split("T")[0];
-  const description = nextTopic;
+  const description = nextTopic.title;
 
   const template = fs.readFileSync(TEMPLATE_PATH, "utf-8");
   const html = template
-    .replaceAll("{{TITLE}}", nextTopic)
+    .replaceAll("{{TITLE}}", nextTopic.title)
     .replaceAll("{{DESCRIPTION}}", description)
     .replaceAll("{{DATE}}", date)
     .replaceAll("{{CONTENT}}", content);
@@ -81,9 +81,10 @@ async function main() {
   fs.writeFileSync(path.join(BLOG_DIR, `${slug}.html`), html);
 
   posts.unshift({
-    title: nextTopic,
+    title: nextTopic.title,
     slug,
     date,
+    category: nextTopic.category || "general",
     excerpt: description,
     url: `blog/${slug}.html`,
   });
