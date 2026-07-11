@@ -1,18 +1,19 @@
 [
-  "When should a student start JEE/NEET Foundation coaching?",
-  "Class 6-8 vs Class 9-10: what changes in foundation coaching",
-  "How foundation coaching in small batches helps weak-concept students",
-  "CBSE vs ICSE Class 9-10 Science: key differences parents should know",
-  "Signs your Class 8 child is ready for JEE/NEET foundation prep",
-  "Foundation coaching mistakes parents make (starting too early or too late)",
-  "How to prepare for NEET Biology in a small batch vs large classroom",
-  "IAT vs NEST: which exam should you choose",
-  "CUET preparation timeline for Class 12 students",
-  "Why micro-batch coaching (5-10 students) beats mass classrooms for concept clarity",
-  "How psychometric counseling helps students choose the right stream",
-  "Class 9-10 Math foundation: building blocks for JEE Mains later",
-  "Common Class 11 Physics mistakes students carry from weak Class 9-10 basics",
-  "How to balance CBSE board prep with NEET/JEE foundation coaching",
-  "Micro-batch vs 1-on-1 coaching: which is right for your child"
+  { "title": "When should a student start JEE/NEET Foundation coaching?", "category": "physics" },
+  { "title": "Class 6-8 vs Class 9-10: what changes in foundation coaching", "category": "maths" },
+  { "title": "How foundation coaching in small batches helps weak-concept students", "category": "maths" },
+  { "title": "CBSE vs ICSE Class 9-10 Science: key differences parents should know", "category": "physics" },
+  { "title": "Signs your Class 8 child is ready for JEE/NEET foundation prep", "category": "physics" },
+  { "title": "Foundation coaching mistakes parents make (starting too early or too late)", "category": "maths" },
+  { "title": "How to prepare for NEET Biology in a small batch vs large classroom", "category": "chemistry" },
+  { "title": "IAT vs NEST: which exam should you choose", "category": "physics" },
+  { "title": "CUET preparation timeline for Class 12 students", "category": "economics" },
+  { "title": "Why micro-batch coaching (5-10 students) beats mass classrooms for concept clarity", "category": "maths" },
+  { "title": "How psychometric counseling helps students choose the right stream", "category": "economics" },
+  { "title": "Class 9-10 Math foundation: building blocks for JEE Mains later", "category": "maths" },
+  { "title": "Common Class 11 Physics mistakes students carry from weak Class 9-10 basics", "category": "physics" },
+  { "title": "How to balance CBSE board prep with NEET/JEE foundation coaching", "category": "chemistry" },
+  { "title": "Micro-batch vs 1-on-1 coaching: which is right for your child", "category": "economics" }
 ]
+
 
