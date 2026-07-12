@@ -500,30 +500,18 @@ footer {
   .hero-buttons .btn { width: 100%; justify-content: center; }
   .auth-modal-card { padding: 28px 20px; }
 }
-/* ⚠️ WARNING: This is a PARTIAL merge — only header + blog styles.
-   It is MISSING hero, course-card, testimonial, footer, quiz, and other
-   section styles. Use ONLY as a stopgap. See note below for the real fix. */
-
-:root {
-  --primary-neon: #0070F3;
-  --accent-glow: #00df89;
-  --bg-black: #06080c;
-  --card-surface: #0d1420;
-  --text-pure: #f8fafc;
-  --text-dark: #94a3b8;
-  --glass-border: rgba(255, 255, 255, 0.08);
-  --border-radius: 16px;
-  --transition: all 0.3s ease;
+/* ===== ANCHOR SCROLL FIX =====
+   Nav links jump to section IDs (#hero, #courses, etc). Without this, the browser
+   scrolls each section's top edge flush with the viewport top — which is exactly
+   where the sticky 80px header sits. That hides the section's heading underneath
+   the header and leaves unrelated content visible instead, which is what reads as
+   "clicked one link, a different section showed up." scroll-margin-top reserves
+   that space so the real heading lands visible, below the header, every time. */
+html {
+    scroll-behavior: smooth;
 }
-
-body {
-  background-color: var(--bg-black);
-  color: var(--text-pure);
-}
-
-@keyframes beacon {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.4; }
+section[id] {
+    scroll-margin-top: 90px;
 }
 
 /* ===== GENZ AESTHETIC HEADER OVERHAUL ===== */
@@ -708,41 +696,11 @@ header nav ul a[href*="primeboard"]:hover, .primeboard-btn:hover {
     .menu-toggle { display: block; }
     .logo-nav { gap: 10px; padding: 0 15px; }
     .logo { font-size: 1.3rem; }
-    
-    header nav {
-        position: absolute;
-        top: 80px;
-        right: -100%;
-        width: 280px;
-        height: calc(100vh - 80px);
-        background: rgba(11, 21, 34, 0.98);
-        backdrop-filter: blur(24px);
-        -webkit-backdrop-filter: blur(24px);
-        border-left: 1px solid rgba(255, 255, 255, 0.08);
-        transition: right 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-        padding: 40px 24px;
-        box-shadow: -10px 0 30px rgba(0,0,0,0.5);
-    }
-    
-    header nav.active { right: 0; }
-    
-    header nav ul {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 12px;
-        width: 100%;
-    }
-    
-    header nav ul li { width: 100%; }
-    header nav ul a { 
-        font-size: 1rem; 
-        display: block; 
-        width: 100%; 
-        padding: 12px 16px;
-        border-radius: 12px;
-    }
-    .auth-trigger-btn { width: 100%; justify-content: center; padding: 12px !important; }
-    .primetestq-nav-trigger { width: 100%; text-align: center; display: block; padding: 12px !important; }
+
+    /* Mobile nav drawer position/layout rules removed from here — they were
+       duplicating and conflicting with the "DESIGN REFRESH" block further down
+       (max-width: 1180px), which covers this same range and is declared later,
+       so it already wins. Having both caused inconsistent drawer positioning. */
 
     .hero-section { padding: 100px 0 60px 0; }
     .hero-content h1 { font-size: 2.85rem; }
@@ -1297,7 +1255,7 @@ body.blog-page {
     header nav.active { right: 0; }
     header nav ul { flex-direction: column; align-items: stretch; gap: 10px; width: 100%; }
     header nav ul li { width: 100%; }
-    header nav ul a, header nav ul .primeboard-btn, header nav ul .auth-trigger-btn {
+    header nav ul a, header nav ul .primeboard-btn, header nav ul .auth-trigger-btn, header nav ul .primetestq-nav-trigger {
         width: 100%;
         justify-content: flex-start !important;
         font-size: 1rem !important;
@@ -1466,4 +1424,3 @@ body.blog-page {
     .hero-badge { font-size: 0.8rem; padding: 6px 14px; }
     .testimonial-card::before { font-size: 3rem; }
 }
-
