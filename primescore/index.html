@@ -10,6 +10,7 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
@@ -223,8 +224,9 @@
         <div class="card">
             <div class="notice">
                 <strong>How this works:</strong> upload/fetch a PDF and PrimeScore will auto-detect answers where it can,
-                then open a review box so you confirm everything before it's scored. PDF layouts vary a lot between
-                exams and years, so treat the auto-fill as a first draft, not a final answer.
+                then open a review box so you confirm everything before it's scored. If the PDF is a scanned image
+                (no selectable text), OCR runs automatically — this is slower, so give it a few extra seconds per page.
+                PDF layouts vary a lot between exams and years, so treat the auto-fill as a first draft, not a final answer.
             </div>
             <div class="btn-row">
                 <input type="file" id="responseFile" accept=".pdf,application/pdf" class="hidden">
@@ -366,7 +368,12 @@
         // string in the output array. This is what makes the parser below reliable enough to be
         // useful — regex over a single blob of text (the old approach) can't tell a question number
         // apart from a date, roll number, or page number.
-        async function extractPDFLines(source) {
+        //
+        // Some response sheets have no embedded text at all (scanned or screenshotted, then saved
+        // as PDF). In that case we fall back to OCR (Tesseract.js): each page is rendered to a
+        // canvas image and Tesseract reads text out of the pixels directly. This is slower and
+        // less accurate than real text extraction, so it's only used when the text layer is empty.
+        async function extractPDFLines(source, onProgress) {
             const data = source instanceof ArrayBuffer ? new Uint8Array(source) : source;
             const pdf = await pdfjsLib.getDocument({ data }).promise;
             let lines = [];
@@ -385,7 +392,46 @@
                     if (row) lines.push(row);
                 });
             }
-            if (!lines.length) throw new Error('Scanned PDF (no text layer) — this looks like an image, not text. Use Enter Manually instead.');
+            if (lines.length) return lines;
+
+            // No text layer found — fall back to OCR on rendered page images.
+            if (onProgress) onProgress('No text layer found — running OCR instead (this takes longer)...');
+            return await ocrPdfLines(pdf, onProgress);
+        }
+
+        async function ocrPdfLines(pdf, onProgress) {
+            if (typeof Tesseract === 'undefined') {
+                throw new Error('OCR library failed to load — check your internet connection and try again.');
+            }
+            let lines = [];
+            for (let i = 1; i <= pdf.numPages; i++) {
+                if (onProgress) onProgress('Running OCR on page ' + i + ' of ' + pdf.numPages + '...');
+
+                const page = await pdf.getPage(i);
+                // Higher scale = sharper text = better OCR accuracy, at the cost of speed.
+                const viewport = page.getViewport({ scale: 2.5 });
+                const canvas = document.createElement('canvas');
+                canvas.width = viewport.width;
+                canvas.height = viewport.height;
+                const ctx = canvas.getContext('2d');
+                await page.render({ canvasContext: ctx, viewport }).promise;
+
+                const result = await Tesseract.recognize(canvas, 'eng', {
+                    logger: info => {
+                        if (onProgress && info.status === 'recognizing text') {
+                            onProgress('OCR page ' + i + ' of ' + pdf.numPages + ' — ' + Math.round((info.progress || 0) * 100) + '%');
+                        }
+                    }
+                });
+
+                // Tesseract gives line-level results with y-position, already close to the
+                // row-reconstruction we do for real text PDFs above.
+                const pageLines = (result.data.lines || [])
+                    .map(l => l.text.replace(/\s+/g, ' ').trim())
+                    .filter(Boolean);
+                lines = lines.concat(pageLines);
+            }
+            if (!lines.length) throw new Error('OCR could not read any text from this PDF. Try a higher-quality scan, or use Enter Manually.');
             return lines;
         }
 
@@ -508,7 +554,7 @@
             status('⏳ Reading PDF and reconstructing rows...', 'info');
             try {
                 const buf = await readFileAsArrayBuffer(file);
-                const lines = await extractPDFLines(buf);
+                const lines = await extractPDFLines(buf, msg => status('⏳ ' + msg, 'info'));
                 const { responses, correct } = parseNTASheet(lines);
                 const exam = detectExam(lines);
                 if (!Object.keys(responses).length) {
@@ -531,7 +577,7 @@
             status('⏳ Reading answer key...', 'info');
             try {
                 const buf = await readFileAsArrayBuffer(file);
-                const lines = await extractPDFLines(buf);
+                const lines = await extractPDFLines(buf, msg => status('⏳ ' + msg, 'info'));
                 const { responses, correct } = parseNTASheet(lines);
                 // an official answer key PDF usually only has one option per question — treat
                 // whichever set is non-empty as the "correct" set
@@ -562,7 +608,7 @@
                 const resp = await fetch(PDF_PROXY_URL + (PDF_PROXY_URL.includes('?') ? '&' : '?') + 'url=' + encodeURIComponent(url));
                 if (!resp.ok) throw new Error('Proxy returned ' + resp.status);
                 const buf = await resp.arrayBuffer();
-                const lines = await extractPDFLines(buf);
+                const lines = await extractPDFLines(buf, msg => status('⏳ ' + msg, 'info'));
                 const { responses, correct } = parseNTASheet(lines);
                 const exam = detectExam(lines);
                 status('✅ Fetched and detected ' + Object.keys(responses).length + ' answers. Review before calculating.', 'success');
