@@ -243,7 +243,48 @@ window.addEventListener('DOMContentLoaded', () => {
     const menuToggle = document.getElementById('menu-toggle');
     const navMenu = document.getElementById('nav-menu');
     if (menuToggle && navMenu) {
-        menuToggle.addEventListener('click', () => navMenu.classList.toggle('active'));
+        // Backdrop element, created here so index.html doesn't need editing.
+        // Sits behind the slide-in drawer; tapping it closes the menu, and it also
+        // gives a clear visual cue that the drawer is open (instead of it silently
+        // floating over the page with no way to tell it's still active).
+        const navBackdrop = document.createElement('div');
+        navBackdrop.id = 'nav-backdrop';
+        navBackdrop.style.cssText = [
+            'position:fixed', 'inset:0', 'background:rgba(0,0,0,0.5)',
+            'z-index:999', 'opacity:0', 'pointer-events:none',
+            'transition:opacity 0.3s ease'
+        ].join(';');
+        document.body.appendChild(navBackdrop);
+
+        function closeMobileNav() {
+            navMenu.classList.remove('active');
+            navBackdrop.style.opacity = '0';
+            navBackdrop.style.pointerEvents = 'none';
+        }
+        function openMobileNav() {
+            navMenu.classList.add('active');
+            navBackdrop.style.opacity = '1';
+            navBackdrop.style.pointerEvents = 'auto';
+        }
+
+        menuToggle.addEventListener('click', () => {
+            navMenu.classList.contains('active') ? closeMobileNav() : openMobileNav();
+        });
+
+        // Close the moment any link inside the drawer is tapped — this is the
+        // main fix: previously the drawer stayed open after a link was tapped,
+        // so the next tap could land on a stale menu item instead of the page.
+        navMenu.querySelectorAll('a, button').forEach(el => {
+            el.addEventListener('click', closeMobileNav);
+        });
+
+        // Tapping the dimmed backdrop closes the menu too.
+        navBackdrop.addEventListener('click', closeMobileNav);
+
+        // Escape key closes it (useful on tablets/keyboards).
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Escape') closeMobileNav();
+        });
     }
 
     // 3. Premium Notes Download Lock Logic Setup
@@ -562,4 +603,3 @@ function resetAudit() {
         }
     });
 })();
-
