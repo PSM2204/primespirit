@@ -12,10 +12,6 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
     
     <script>
-        // Cloudflare Workers relay (replaces the old Render-hosted relay).
-        // Deploy the primeboard-relay-cf project with `npx wrangler deploy`,
-        // then replace YOUR-SUBDOMAIN below with whatever Wrangler prints —
-        // see the project's README.md for the full walkthrough.
         window.PRIMEBOARD_RELAY_BASE_URL = "wss://primeboard-relay.primespiritmentors.workers.dev";
         window.EXCALIDRAW_ASSET_PATH = "https://esm.sh/@excalidraw/excalidraw@0.18.0/dist/prod/";
     </script>
@@ -40,11 +36,6 @@
             --text-secondary: #4a5568;
             --accent: #8B5CF6;
             --accent-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            --accent-hover: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
-            --neon-purple: #a855f7;
-            --neon-blue: #3b82f6;
-            --neon-pink: #ec4899;
-            --neon-green: #10b981;
             --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
             --shadow-md: 0 4px 12px rgba(0,0,0,0.15);
             --shadow-lg: 0 10px 30px rgba(0,0,0,0.2);
@@ -62,24 +53,20 @@
         .excalidraw { touch-action: none; }
         .excalidraw .App-toolbar { display: none !important; }
 
-        /* Hide native Excalidraw main menu (hamburger) button */
         .excalidraw button[aria-label="Main menu"],
         .excalidraw [data-testid="main-menu-trigger"],
         .excalidraw .main-menu-trigger { display: none !important; }
 
-        /* Undo/Redo and zoom controls stay visible (native Excalidraw), just shrunk */
         .excalidraw .undo-redo-buttons {
             transform: scale(0.72);
             transform-origin: bottom left;
         }
 
-        /* Shrink (but keep visible & working) the native Excalidraw zoom control */
         .excalidraw .zoom-actions {
             transform: scale(0.72);
             transform-origin: bottom left;
         }
 
-        /* Header - Gen Z Style */
         #header {
             position: fixed;
             top: 0;
@@ -96,44 +83,12 @@
             z-index: 1000;
             box-shadow: var(--shadow-md);
         }
-        #brand {
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-        }
-        #brand-name {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-weight: 800;
-            font-size: 20px;
-            background: var(--accent-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        #brand-subtitle {
-            font-size: 11px;
-            color: var(--text-secondary);
-            font-weight: 500;
-            margin-left: 28px;
-        }
-        #board-title {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 16px;
-            background: var(--bg-hover);
-            border-radius: var(--radius-md);
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--text-primary);
-            transition: all 0.2s;
-        }
+        #brand { display: flex; flex-direction: column; gap: 2px; }
+        #brand-name { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 20px; background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        #brand-subtitle { font-size: 11px; color: var(--text-secondary); font-weight: 500; margin-left: 28px; }
+        #board-title { display: flex; align-items: center; gap: 8px; padding: 8px 16px; background: var(--bg-hover); border-radius: var(--radius-md); cursor: pointer; font-size: 14px; font-weight: 600; color: var(--text-primary); transition: all 0.2s; }
         #board-title:hover { transform: translateY(-1px); box-shadow: var(--shadow-sm); }
         
-        /* Timer in header */
         #header-timer {
             display: flex;
             align-items: center;
@@ -154,28 +109,10 @@
         @keyframes pulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); } 50% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); } }
         
         .header-spacer { flex: 1; }
-        .header-btn {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 10px 20px;
-            border: none;
-            border-radius: var(--radius-md);
-            background: var(--bg-surface);
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--text-primary);
-            transition: all 0.2s;
-            box-shadow: var(--shadow-sm);
-        }
+        .header-btn { display: flex; align-items: center; gap: 8px; padding: 10px 20px; border: none; border-radius: var(--radius-md); background: var(--bg-surface); cursor: pointer; font-size: 14px; font-weight: 600; color: var(--text-primary); transition: all 0.2s; box-shadow: var(--shadow-sm); }
         .header-btn:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
-        .header-btn.primary {
-            background: var(--accent-gradient);
-            color: white;
-        }
+        .header-btn.primary { background: var(--accent-gradient); color: white; }
 
-        /* Left Sidebar Toolbar */
         #left-toolbar {
             position: fixed;
             left: 20px;
@@ -210,40 +147,13 @@
             transition: all 0.3s;
             position: relative;
         }
-        .tool-btn:hover { 
-            background: var(--bg-hover); 
-            color: var(--accent);
-            transform: scale(1.1);
-        }
-        .tool-btn.active { 
-            background: var(--accent-gradient); 
-            color: white;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-        }
-        .tool-btn .tooltip {
-            position: absolute;
-            left: 60px;
-            background: var(--text-primary);
-            color: white;
-            padding: 6px 12px;
-            border-radius: var(--radius-sm);
-            font-size: 12px;
-            font-weight: 600;
-            opacity: 0;
-            pointer-events: none;
-            transition: all 0.2s;
-            white-space: nowrap;
-            z-index: 1000;
-        }
+        .tool-btn:hover { background: var(--bg-hover); color: var(--accent); transform: scale(1.1); }
+        .tool-btn.active { background: var(--accent-gradient); color: white; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4); }
+        .tool-btn .tooltip { position: absolute; left: 60px; background: var(--text-primary); color: white; padding: 6px 12px; border-radius: var(--radius-sm); font-size: 12px; font-weight: 600; opacity: 0; pointer-events: none; transition: all 0.2s; white-space: nowrap; z-index: 1000; }
         .tool-btn:hover .tooltip { opacity: 1; left: 65px; }
         
-        .tool-divider {
-            height: 1px;
-            background: var(--border-light);
-            margin: 8px 0;
-        }
+        .tool-divider { height: 1px; background: var(--border-light); margin: 8px 0; }
 
-        /* Page Tabs Bar - Centered */
         #page-tabs-bar {
             position: fixed;
             top: 70px;
@@ -264,71 +174,15 @@
         }
         #page-tabs-bar::-webkit-scrollbar { display: none; }
         
-        .page-tab {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 16px;
-            background: var(--bg-hover);
-            border: 2px solid transparent;
-            border-radius: var(--radius-md);
-            cursor: pointer;
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--text-secondary);
-            white-space: nowrap;
-            flex-shrink: 0;
-            transition: all 0.2s;
-        }
-        .page-tab:hover { 
-            background: var(--bg-surface);
-            transform: translateY(-2px);
-        }
-        .page-tab.active {
-            background: var(--accent-gradient);
-            color: white;
-            border-color: rgba(255,255,255,0.3);
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-        }
-        .page-tab-close {
-            width: 20px;
-            height: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 6px;
-            font-size: 12px;
-            opacity: 0.7;
-            transition: all 0.2s;
-        }
-        .page-tab-close:hover {
-            background: rgba(255,255,255,0.2);
-            opacity: 1;
-        }
+        .page-tab { display: flex; align-items: center; gap: 8px; padding: 8px 16px; background: var(--bg-hover); border: 2px solid transparent; border-radius: var(--radius-md); cursor: pointer; font-size: 13px; font-weight: 600; color: var(--text-secondary); white-space: nowrap; flex-shrink: 0; transition: all 0.2s; }
+        .page-tab:hover { background: var(--bg-surface); transform: translateY(-2px); }
+        .page-tab.active { background: var(--accent-gradient); color: white; border-color: rgba(255,255,255,0.3); box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4); }
+        .page-tab-close { width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; border-radius: 6px; font-size: 12px; opacity: 0.7; transition: all 0.2s; }
+        .page-tab-close:hover { background: rgba(255,255,255,0.2); opacity: 1; }
         
-        #add-page-btn {
-            width: 36px;
-            height: 36px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 2px dashed var(--border-light);
-            border-radius: var(--radius-md);
-            background: transparent;
-            color: var(--text-secondary);
-            cursor: pointer;
-            font-size: 18px;
-            flex-shrink: 0;
-            transition: all 0.2s;
-        }
-        #add-page-btn:hover {
-            border-color: var(--accent);
-            color: var(--accent);
-            background: var(--bg-hover);
-            transform: scale(1.1);
-        }
+        #add-page-btn { width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border: 2px dashed var(--border-light); border-radius: var(--radius-md); background: transparent; color: var(--text-secondary); cursor: pointer; font-size: 18px; flex-shrink: 0; transition: all 0.2s; }
+        #add-page-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--bg-hover); transform: scale(1.1); }
 
-        /* Right Panel */
         #right-panel {
             position: fixed;
             right: 20px;
@@ -345,427 +199,83 @@
             overflow-y: auto;
         }
         #right-panel.active { display: block; }
-        .panel-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 24px;
-            font-weight: 700;
-            font-size: 17px;
-            color: var(--text-primary);
-        }
-        .panel-close {
-            width: 36px;
-            height: 36px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: var(--radius-md);
-            cursor: pointer;
-            color: var(--text-secondary);
-            transition: all 0.2s;
-        }
+        .panel-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; font-weight: 700; font-size: 17px; color: var(--text-primary); }
+        .panel-close { width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: var(--radius-md); cursor: pointer; color: var(--text-secondary); transition: all 0.2s; }
         .panel-close:hover { background: var(--bg-hover); color: var(--accent); transform: rotate(90deg); }
         .panel-section { margin-bottom: 28px; }
-        .panel-label {
-            font-size: 12px;
-            font-weight: 700;
-            color: var(--text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            margin-bottom: 16px;
-        }
-        .color-grid {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 12px;
-        }
-        .color-swatch {
-            width: 100%;
-            aspect-ratio: 1;
-            border-radius: 50%;
-            cursor: pointer;
-            border: 3px solid transparent;
-            transition: all 0.3s;
-            box-shadow: var(--shadow-sm);
-        }
+        .panel-label { font-size: 12px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 16px; }
+        .color-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
+        .color-swatch { width: 100%; aspect-ratio: 1; border-radius: 50%; cursor: pointer; border: 3px solid transparent; transition: all 0.3s; box-shadow: var(--shadow-sm); }
         .color-swatch:hover { transform: scale(1.15); }
         .color-swatch.active { border-color: var(--text-primary); transform: scale(1.1); }
-        .grid-options {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-        }
-        .grid-option {
-            padding: 14px;
-            border: 2px solid var(--border-light);
-            border-radius: var(--radius-md);
-            text-align: center;
-            cursor: pointer;
-            font-size: 12px;
-            font-weight: 600;
-            transition: all 0.2s;
-            background: var(--bg-surface);
-        }
+        .grid-options { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+        .grid-option { padding: 14px; border: 2px solid var(--border-light); border-radius: var(--radius-md); text-align: center; cursor: pointer; font-size: 12px; font-weight: 600; transition: all 0.2s; background: var(--bg-surface); }
         .grid-option:hover { transform: translateY(-2px); box-shadow: var(--shadow-sm); }
-        .grid-option.active { 
-            border-color: var(--accent); 
-            background: var(--bg-hover);
-            color: var(--accent);
-        }
+        .grid-option.active { border-color: var(--accent); background: var(--bg-hover); color: var(--accent); }
 
-        /* Setup Screen */
-        #setup-screen {
-            position: fixed;
-            inset: 0;
-            background: var(--bg-canvas);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 2000;
-        }
-        #setup-card {
-            background: var(--bg-glass);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--border-light);
-            border-radius: var(--radius-xl);
-            padding: 48px;
-            width: 100%;
-            max-width: 460px;
-            box-shadow: var(--shadow-lg);
-        }
-        #setup-card h1 {
-            font-size: 28px;
-            font-weight: 800;
-            margin-bottom: 12px;
-            background: var(--accent-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        #setup-card .tagline {
-            color: var(--text-secondary);
-            font-size: 15px;
-            margin-bottom: 36px;
-            font-weight: 500;
-        }
+        #setup-screen { position: fixed; inset: 0; background: var(--bg-canvas); display: flex; align-items: center; justify-content: center; z-index: 2000; }
+        #setup-card { background: var(--bg-glass); backdrop-filter: blur(20px); border: 1px solid var(--border-light); border-radius: var(--radius-xl); padding: 48px; width: 100%; max-width: 460px; box-shadow: var(--shadow-lg); }
+        #setup-card h1 { font-size: 28px; font-weight: 800; margin-bottom: 12px; background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        #setup-card .tagline { color: var(--text-secondary); font-size: 15px; margin-bottom: 36px; font-weight: 500; }
         .form-group { margin-bottom: 24px; }
-        .form-label {
-            display: block;
-            font-size: 14px;
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: 10px;
-        }
-        .form-input {
-            width: 100%;
-            padding: 14px 18px;
-            border: 2px solid var(--border-light);
-            border-radius: var(--radius-md);
-            font-size: 15px;
-            outline: none;
-            transition: all 0.2s;
-            background: var(--bg-surface);
-        }
-        .form-input:focus { 
-            border-color: var(--accent); 
-            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
-            transform: translateY(-1px);
-        }
-        .role-toggle {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 28px;
-        }
-        .role-btn {
-            flex: 1;
-            padding: 14px;
-            border: 2px solid var(--border-light);
-            border-radius: var(--radius-md);
-            background: var(--bg-surface);
-            cursor: pointer;
-            font-weight: 700;
-            font-size: 15px;
-            transition: all 0.2s;
-        }
+        .form-label { display: block; font-size: 14px; font-weight: 700; color: var(--text-primary); margin-bottom: 10px; }
+        .form-input { width: 100%; padding: 14px 18px; border: 2px solid var(--border-light); border-radius: var(--radius-md); font-size: 15px; outline: none; transition: all 0.2s; background: var(--bg-surface); }
+        .form-input:focus { border-color: var(--accent); box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1); transform: translateY(-1px); }
+        .role-toggle { display: flex; gap: 12px; margin-bottom: 28px; }
+        .role-btn { flex: 1; padding: 14px; border: 2px solid var(--border-light); border-radius: var(--radius-md); background: var(--bg-surface); cursor: pointer; font-weight: 700; font-size: 15px; transition: all 0.2s; }
         .role-btn:hover { transform: translateY(-2px); }
-        .role-btn.active { 
-            border-color: var(--accent); 
-            background: var(--accent-gradient);
-            color: white;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-        }
-        .submit-btn {
-            width: 100%;
-            padding: 16px;
-            background: var(--accent-gradient);
-            color: white;
-            border: none;
-            border-radius: var(--radius-md);
-            font-weight: 700;
-            font-size: 16px;
-            cursor: pointer;
-            transition: all 0.3s;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-        }
-        .submit-btn:hover { 
-            transform: translateY(-2px) scale(1.02); 
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
-        }
-        #setup-error {
-            color: #ef4444;
-            font-size: 14px;
-            margin-top: 20px;
-            text-align: center;
-            font-weight: 600;
-        }
+        .role-btn.active { border-color: var(--accent); background: var(--accent-gradient); color: white; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4); }
+        .submit-btn { width: 100%; padding: 16px; background: var(--accent-gradient); color: white; border: none; border-radius: var(--radius-md); font-weight: 700; font-size: 16px; cursor: pointer; transition: all 0.3s; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4); }
+        .submit-btn:hover { transform: translateY(-2px) scale(1.02); box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5); }
+        #setup-error { color: #ef4444; font-size: 14px; margin-top: 20px; text-align: center; font-weight: 600; }
 
-        /* Modals */
-        .modal-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(5px);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 1500;
-        }
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(5px); display: none; align-items: center; justify-content: center; z-index: 1500; }
         .modal-overlay.active { display: flex; }
-        .modal {
-            background: var(--bg-glass);
-            backdrop-filter: blur(20px);
-            border-radius: var(--radius-xl);
-            padding: 28px;
-            width: 90%;
-            max-width: 540px;
-            max-height: 85vh;
-            overflow-y: auto;
-            box-shadow: var(--shadow-lg);
-            border: 1px solid var(--border-light);
-        }
-        .modal-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 24px;
-            font-weight: 700;
-            font-size: 20px;
-            color: var(--text-primary);
-        }
-        .modal-close {
-            width: 36px;
-            height: 36px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: var(--radius-md);
-            cursor: pointer;
-            color: var(--text-secondary);
-            transition: all 0.2s;
-        }
+        .modal { background: var(--bg-glass); backdrop-filter: blur(20px); border-radius: var(--radius-xl); padding: 28px; width: 90%; max-width: 540px; max-height: 85vh; overflow-y: auto; box-shadow: var(--shadow-lg); border: 1px solid var(--border-light); }
+        .modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; font-weight: 700; font-size: 20px; color: var(--text-primary); }
+        .modal-close { width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: var(--radius-md); cursor: pointer; color: var(--text-secondary); transition: all 0.2s; }
         .modal-close:hover { background: var(--bg-hover); color: var(--accent); transform: rotate(90deg); }
 
-        /* Pen Popup */
-        #pen-popup {
-            position: fixed;
-            left: 100px;
-            top: 140px;
-            background: var(--bg-glass);
-            backdrop-filter: blur(20px);
-            border-radius: var(--radius-lg);
-            padding: 20px;
-            box-shadow: var(--shadow-lg);
-            z-index: 1000;
-            display: none;
-            min-width: 360px;
-            border: 1px solid var(--border-light);
-        }
+        #pen-popup { position: fixed; left: 100px; top: 140px; background: var(--bg-glass); backdrop-filter: blur(20px); border-radius: var(--radius-lg); padding: 20px; box-shadow: var(--shadow-lg); z-index: 1000; display: none; min-width: 360px; border: 1px solid var(--border-light); }
         #pen-popup.active { display: block; }
         .pen-category { margin-bottom: 20px; }
-        .pen-category-label {
-            font-size: 12px;
-            font-weight: 700;
-            color: var(--text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            margin-bottom: 12px;
-        }
+        .pen-category-label { font-size: 12px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 12px; }
         .pen-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
-        .pen-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px;
-            border: 2px solid var(--border-light);
-            border-radius: var(--radius-md);
-            cursor: pointer;
-            transition: all 0.2s;
-            background: var(--bg-surface);
-        }
-        .pen-item:hover { 
-            transform: translateY(-2px); 
-            box-shadow: var(--shadow-sm);
-            border-color: var(--accent);
-        }
-        .pen-item.active { 
-            border-color: var(--accent); 
-            background: var(--bg-hover);
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
-        }
+        .pen-item { display: flex; align-items: center; gap: 12px; padding: 12px; border: 2px solid var(--border-light); border-radius: var(--radius-md); cursor: pointer; transition: all 0.2s; background: var(--bg-surface); }
+        .pen-item:hover { transform: translateY(-2px); box-shadow: var(--shadow-sm); border-color: var(--accent); }
+        .pen-item.active { border-color: var(--accent); background: var(--bg-hover); box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2); }
         .pen-preview { width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; }
         .pen-info { flex: 1; }
         .pen-name { font-weight: 700; font-size: 14px; color: var(--text-primary); }
         .pen-desc { font-size: 12px; color: var(--text-secondary); }
         
-        /* Pen controls */
-        .pen-controls {
-            margin-top: 20px;
-            padding-top: 20px;
-            border-top: 2px solid var(--border-light);
-        }
-        .control-row {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            margin-bottom: 16px;
-        }
-        .control-label {
-            font-size: 13px;
-            font-weight: 700;
-            color: var(--text-secondary);
-            min-width: 70px;
-        }
-        .thickness-slider {
-            flex: 1;
-            -webkit-appearance: none;
-            height: 8px;
-            border-radius: 4px;
-            background: var(--bg-hover);
-            outline: none;
-        }
-        .thickness-slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 22px;
-            height: 22px;
-            border-radius: 50%;
-            background: var(--accent-gradient);
-            cursor: pointer;
-            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.4);
-        }
-        .color-picker-wrapper {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-        .color-option {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            cursor: pointer;
-            border: 3px solid transparent;
-            transition: all 0.2s;
-            box-shadow: var(--shadow-sm);
-        }
+        .pen-controls { margin-top: 20px; padding-top: 20px; border-top: 2px solid var(--border-light); }
+        .control-row { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
+        .control-label { font-size: 13px; font-weight: 700; color: var(--text-secondary); min-width: 70px; }
+        .thickness-slider { flex: 1; -webkit-appearance: none; height: 8px; border-radius: 4px; background: var(--bg-hover); outline: none; }
+        .thickness-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 22px; height: 22px; border-radius: 50%; background: var(--accent-gradient); cursor: pointer; box-shadow: 0 2px 8px rgba(102, 126, 234, 0.4); }
+        .color-picker-wrapper { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+        .color-option { width: 36px; height: 36px; border-radius: 50%; cursor: pointer; border: 3px solid transparent; transition: all 0.2s; box-shadow: var(--shadow-sm); }
         .color-option:hover { transform: scale(1.15); }
         .color-option.active { border-color: var(--text-primary); transform: scale(1.1); }
-        #pen-color-input {
-            width: 44px;
-            height: 36px;
-            border: 2px solid var(--border-light);
-            border-radius: var(--radius-md);
-            cursor: pointer;
-            background: var(--bg-surface);
-        }
+        #pen-color-input { width: 44px; height: 36px; border: 2px solid var(--border-light); border-radius: var(--radius-md); cursor: pointer; background: var(--bg-surface); }
 
-        /* Status indicators */
-        .status-dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background: var(--neon-green);
-            display: inline-block;
-            box-shadow: 0 0 10px var(--neon-green);
-        }
-        .status-dot.connecting { background: var(--neon-pink); box-shadow: 0 0 10px var(--neon-pink); animation: pulse 1.5s infinite; }
+        .status-dot { width: 10px; height: 10px; border-radius: 50%; background: #10b981; display: inline-block; box-shadow: 0 0 10px #10b981; }
+        .status-dot.connecting { background: #ec4899; box-shadow: 0 0 10px #ec4899; animation: pulse 1.5s infinite; }
 
-        /* Recording indicator */
-        #recording-indicator {
-            position: fixed;
-            top: 140px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-            color: white;
-            padding: 10px 20px;
-            border-radius: 100px;
-            font-weight: 700;
-            font-size: 15px;
-            display: none;
-            align-items: center;
-            gap: 10px;
-            z-index: 999;
-            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);
-        }
+        #recording-indicator { position: fixed; top: 140px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); color: white; padding: 10px 20px; border-radius: 100px; font-weight: 700; font-size: 15px; display: none; align-items: center; gap: 10px; z-index: 999; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4); }
         #recording-indicator.active { display: flex; animation: pulse 2s infinite; }
-        .rec-dot {
-            width: 10px;
-            height: 10px;
-            background: white;
-            border-radius: 50%;
-        }
+        .rec-dot { width: 10px; height: 10px; background: white; border-radius: 50%; }
 
-        /* Spotlight */
-        #spotlight-overlay {
-            position: fixed;
-            inset: 0;
-            background: radial-gradient(circle 350px at var(--sx, 50%) var(--sy, 50%), transparent 0%, rgba(0, 0, 0, 0.85) 100%);
-            pointer-events: none;
-            display: none;
-            z-index: 998;
-        }
+        #spotlight-overlay { position: fixed; inset: 0; background: radial-gradient(circle 350px at var(--sx, 50%) var(--sy, 50%), transparent 0%, rgba(0, 0, 0, 0.85) 100%); pointer-events: none; display: none; z-index: 998; }
         #spotlight-overlay.active { display: block; }
 
-        /* Library Grid */
-        .library-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
-            margin-top: 16px;
-        }
-        .library-item {
-            aspect-ratio: 1;
-            background: var(--bg-hover);
-            border: 2px solid var(--border-light);
-            border-radius: var(--radius-md);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            cursor: pointer;
-            transition: all 0.2s;
-            padding: 16px;
-        }
-        .library-item:hover {
-            transform: translateY(-3px);
-            box-shadow: var(--shadow-md);
-            border-color: var(--accent);
-            background: var(--bg-surface);
-        }
-        .library-item i {
-            font-size: 32px;
-            color: var(--accent);
-        }
-        .library-item span {
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--text-primary);
-            text-align: center;
-        }
+        .library-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 16px; }
+        .library-item { aspect-ratio: 1; background: var(--bg-hover); border: 2px solid var(--border-light); border-radius: var(--radius-md); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; cursor: pointer; transition: all 0.2s; padding: 16px; }
+        .library-item:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); border-color: var(--accent); background: var(--bg-surface); }
+        .library-item i { font-size: 32px; color: var(--accent); }
+        .library-item span { font-size: 12px; font-weight: 600; color: var(--text-primary); text-align: center; }
 
-        /* Responsive */
         @media (max-width: 768px) {
             #header { padding: 0 16px; height: 80px; }
             #brand-name { font-size: 16px; }
@@ -773,40 +283,14 @@
             #board-title { display: none; }
             #header-timer { padding: 6px 14px; font-size: 13px; }
             .header-btn span { display: none; }
-            
-            #left-toolbar { 
-                left: 10px; 
-                top: 90px; 
-                width: 60px; 
-                padding: 12px 6px;
-            }
+            #left-toolbar { left: 10px; top: 90px; width: 60px; padding: 12px 6px; }
             .tool-btn { width: 44px; height: 44px; font-size: 18px; }
             .tool-btn .tooltip { display: none; }
-            
-            #page-tabs-bar { 
-                left: 50%; 
-                transform: translateX(-50%);
-                min-width: 250px;
-                padding: 0 12px; 
-            }
+            #page-tabs-bar { left: 50%; transform: translateX(-50%); min-width: 250px; padding: 0 12px; }
             .page-tab { padding: 6px 12px; font-size: 12px; }
-            
             #root { top: 130px; left: 75px; }
-            
-            #right-panel { 
-                right: 10px; 
-                top: 150px; 
-                width: calc(100% - 20px);
-                max-width: 340px;
-            }
-            
-            #pen-popup {
-                left: 10px;
-                right: 10px;
-                top: auto;
-                bottom: 100px;
-                min-width: auto;
-            }
+            #right-panel { right: 10px; top: 150px; width: calc(100% - 20px); max-width: 340px; }
+            #pen-popup { left: 10px; right: 10px; top: auto; bottom: 100px; min-width: auto; }
         }
 
         @media (max-width: 480px) {
@@ -820,357 +304,284 @@
 </head>
 <body>
 
-    <!-- Setup Screen -->
-    <div id="setup-screen">
-        <div id="setup-card">
-            <h1>PrimeBoard</h1>
-            <p class="tagline">PRIME SPIRIT MENTORS // LIVE CLASS WHITEBOARD</p>
-            
-            <label class="form-label">I am the...</label>
-            <div class="role-toggle">
-                <button class="role-btn active" data-role="teacher">Teacher</button>
-                <button class="role-btn" data-role="student">Student</button>
-            </div>
-            
-            <div class="form-group">
-                <label class="form-label">Your name</label>
-                <input type="text" id="name-input" class="form-input" placeholder="Enter your name" maxlength="40">
-            </div>
-            
-            <div class="form-group">
-                <label class="form-label">Class room code</label>
-                <input type="text" id="room-input" class="form-input" placeholder="e.g. CLASS10-PHYSICS" maxlength="30">
-            </div>
-            
-            <button class="submit-btn" id="enter-btn">Enter Board</button>
-            <div id="setup-error"></div>
-        </div>
-    </div>
-
-    <!-- Header -->
-    <div id="header" style="display:none;">
-        <div id="brand">
-            <div id="brand-name"><i class="fas fa-atom"></i> PrimeBoard</div>
-            <div id="brand-subtitle">by Prime Spirit Mentors</div>
-        </div>
-        <div id="board-title">
-            <span id="room-code">-</span>
-            <i class="fas fa-chevron-down" style="font-size: 10px;"></i>
-        </div>
-        <div id="header-timer" style="display:none;">
-            <i class="fas fa-stopwatch"></i>
-            <span id="header-timer-display">05:00</span>
-        </div>
-        <div style="display:flex;align-items:center;gap:8px;font-size:14px;color:var(--text-secondary);">
-            <span class="status-dot" id="status-dot"></span>
-            <span id="user-count">1 online</span>
-        </div>
-        <div class="header-spacer"></div>
-        <button class="header-btn" id="btn-invite"><i class="fas fa-user-plus"></i> <span>Invite</span></button>
-        <button class="header-btn" id="btn-library"><i class="fas fa-book"></i> <span>Library</span></button>
-        <button class="header-btn primary" id="btn-share"><i class="fas fa-share-alt"></i> <span>Share</span></button>
-    </div>
-
-    <!-- Page Tabs Bar - Centered -->
-    <div id="page-tabs-bar" style="display:none;">
-        <div id="page-tabs-list"></div>
-        <button id="add-page-btn" title="Add Page"><i class="fas fa-plus"></i></button>
-    </div>
-
-    <!-- Left Toolbar -->
-    <div id="left-toolbar" style="display:none;">
-        <button class="tool-btn" id="btn-select" title="Select">
-            <i class="fas fa-mouse-pointer"></i>
-            <span class="tooltip">Select</span>
-        </button>
-        <button class="tool-btn" id="btn-pen" title="Pen">
-            <i class="fas fa-pen-nib"></i>
-            <span class="tooltip">Pen</span>
-        </button>
-        <button class="tool-btn" id="btn-eraser" title="Eraser">
-            <i class="fas fa-eraser"></i>
-            <span class="tooltip">Eraser</span>
-        </button>
-        <div class="tool-divider"></div>
-        <button class="tool-btn" id="btn-shape" title="Shapes">
-            <i class="fas fa-shapes"></i>
-            <span class="tooltip">Shapes</span>
-        </button>
-        <button class="tool-btn" id="btn-text" title="Text">
-            <i class="fas fa-font"></i>
-            <span class="tooltip">Text</span>
-        </button>
-        <div class="tool-divider"></div>
-        <button class="tool-btn" id="btn-toolkit" title="Toolkit">
-            <i class="fas fa-graduation-cap"></i>
-            <span class="tooltip">Toolkit</span>
-        </button>
-        <button class="tool-btn" id="btn-graph" title="Graph">
-            <i class="fas fa-chart-line"></i>
-            <span class="tooltip">Graph</span>
-        </button>
-        <button class="tool-btn" id="btn-math" title="Math">
-            <i class="fas fa-square-root-alt"></i>
-            <span class="tooltip">Math</span>
-        </button>
-        <div class="tool-divider"></div>
-        <button class="tool-btn" id="btn-spotlight" title="Spotlight">
-            <i class="fas fa-lightbulb"></i>
-            <span class="tooltip">Spotlight</span>
-        </button>
-        <button class="tool-btn" id="btn-record" title="Record">
-            <i class="fas fa-video"></i>
-            <span class="tooltip">Record</span>
-        </button>
-        <div class="tool-divider"></div>
-        <button class="tool-btn" id="btn-bg" title="Background">
-            <i class="fas fa-fill-drip"></i>
-            <span class="tooltip">Background</span>
-        </button>
-    </div>
-
-    <!-- Recording Indicator -->
-    <div id="recording-indicator">
-        <span class="rec-dot"></span>
-        <span id="rec-timer">00:00</span>
-    </div>
-
-    <!-- Right Panel -->
-    <div id="right-panel">
-        <div class="panel-header">
-            <span>Format Background</span>
-            <div class="panel-close" id="panel-close"><i class="fas fa-times"></i></div>
+<div id="setup-screen">
+    <div id="setup-card">
+        <h1>PrimeBoard</h1>
+        <p class="tagline">PRIME SPIRIT MENTORS // LIVE CLASS WHITEBOARD</p>
+        
+        <label class="form-label">I am the...</label>
+        <div class="role-toggle">
+            <button class="role-btn active" data-role="teacher">Teacher</button>
+            <button class="role-btn" data-role="student">Student</button>
         </div>
         
-        <div class="panel-section">
-            <div class="panel-label">Color</div>
-            <div class="color-grid" id="color-grid"></div>
+        <div class="form-group">
+            <label class="form-label">Your name</label>
+            <input type="text" id="name-input" class="form-input" placeholder="Enter your name" maxlength="40">
         </div>
         
-        <div class="panel-section">
-            <div class="panel-label">Grid</div>
-            <div class="grid-options">
-                <div class="grid-option active" data-grid="none">Solid</div>
-                <div class="grid-option" data-grid="dot">Dot</div>
-                <div class="grid-option" data-grid="square">Square</div>
-                <div class="grid-option" data-grid="graph">Graph</div>
-                <div class="grid-option" data-grid="hybrid">Hybrid</div>
-                <div class="grid-option" data-grid="diamond">Diamond</div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Pen Popup -->
-    <div id="pen-popup">
-        <div class="panel-header">
-            <span>Drawing Tools</span>
-            <div class="panel-close" id="pen-close"><i class="fas fa-times"></i></div>
-        </div>
-        <div class="pen-category">
-            <div class="pen-category-label">Everyday Writing</div>
-            <div class="pen-grid" id="pen-grid-writing"></div>
-        </div>
-        <div class="pen-category">
-            <div class="pen-category-label">Artistic</div>
-            <div class="pen-grid" id="pen-grid-art"></div>
-        </div>
-        <div class="pen-category">
-            <div class="pen-category-label">Highlighters</div>
-            <div class="pen-grid" id="pen-grid-highlight"></div>
+        <div class="form-group">
+            <label class="form-label">Class room code</label>
+            <input type="text" id="room-input" class="form-input" placeholder="e.g. CLASS10-PHYSICS" maxlength="30">
         </div>
         
-        <div class="pen-controls">
-            <div class="control-row">
-                <span class="control-label">Thickness</span>
-                <input type="range" class="thickness-slider" id="pen-thickness" min="1" max="20" value="2">
-                <span id="thickness-value" style="font-size:13px;font-weight:700;min-width:35px;text-align:center;">2px</span>
-            </div>
-            <div class="control-row">
-                <span class="control-label">Color</span>
-                <div class="color-picker-wrapper">
-                    <div class="color-option active" style="background:#111827" data-color="#111827"></div>
-                    <div class="color-option" style="background:#EF4444" data-color="#EF4444"></div>
-                    <div class="color-option" style="background:#10B981" data-color="#10B981"></div>
-                    <div class="color-option" style="background:#3B82F6" data-color="#3B82F6"></div>
-                    <div class="color-option" style="background:#F59E0B" data-color="#F59E0B"></div>
-                    <div class="color-option" style="background:#8B5CF6" data-color="#8B5CF6"></div>
-                    <div class="color-option" style="background:#EC4899" data-color="#EC4899"></div>
-                    <input type="color" id="pen-color-input" value="#111827">
-                </div>
+        <button class="submit-btn" id="enter-btn">Enter Board</button>
+        <div id="setup-error"></div>
+    </div>
+</div>
+
+<div id="header" style="display:none;">
+    <div id="brand">
+        <div id="brand-name"><i class="fas fa-atom"></i> PrimeBoard</div>
+        <div id="brand-subtitle">by Prime Spirit Mentors</div>
+    </div>
+    <div id="board-title">
+        <span id="room-code">-</span>
+        <i class="fas fa-chevron-down" style="font-size: 10px;"></i>
+    </div>
+    <div id="header-timer" style="display:none;">
+        <i class="fas fa-stopwatch"></i>
+        <span id="header-timer-display">05:00</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;font-size:14px;color:var(--text-secondary);">
+        <span class="status-dot" id="status-dot"></span>
+        <span id="user-count">1 online</span>
+    </div>
+    <div class="header-spacer"></div>
+    <button class="header-btn" id="btn-invite"><i class="fas fa-user-plus"></i> <span>Invite</span></button>
+    <button class="header-btn" id="btn-library"><i class="fas fa-book"></i> <span>Library</span></button>
+    <button class="header-btn primary" id="btn-share"><i class="fas fa-share-alt"></i> <span>Share</span></button>
+</div>
+
+<div id="page-tabs-bar" style="display:none;">
+    <div id="page-tabs-list"></div>
+    <button id="add-page-btn" title="Add Page"><i class="fas fa-plus"></i></button>
+</div>
+
+<div id="left-toolbar" style="display:none;">
+    <button class="tool-btn" id="btn-select" title="Select">
+        <i class="fas fa-mouse-pointer"></i>
+        <span class="tooltip">Select</span>
+    </button>
+    <button class="tool-btn" id="btn-pen" title="Pen">
+        <i class="fas fa-pen-nib"></i>
+        <span class="tooltip">Pen</span>
+    </button>
+    <button class="tool-btn" id="btn-eraser" title="Eraser">
+        <i class="fas fa-eraser"></i>
+        <span class="tooltip">Eraser</span>
+    </button>
+    <div class="tool-divider"></div>
+    <button class="tool-btn" id="btn-shape" title="Shapes">
+        <i class="fas fa-shapes"></i>
+        <span class="tooltip">Shapes</span>
+    </button>
+    <button class="tool-btn" id="btn-text" title="Text">
+        <i class="fas fa-font"></i>
+        <span class="tooltip">Text</span>
+    </button>
+    <div class="tool-divider"></div>
+    <button class="tool-btn" id="btn-toolkit" title="Toolkit">
+        <i class="fas fa-graduation-cap"></i>
+        <span class="tooltip">Toolkit</span>
+    </button>
+    <button class="tool-btn" id="btn-graph" title="Graph">
+        <i class="fas fa-chart-line"></i>
+        <span class="tooltip">Graph</span>
+    </button>
+    <button class="tool-btn" id="btn-math" title="Math">
+        <i class="fas fa-square-root-alt"></i>
+        <span class="tooltip">Math</span>
+    </button>
+    <div class="tool-divider"></div>
+    <button class="tool-btn" id="btn-spotlight" title="Spotlight">
+        <i class="fas fa-lightbulb"></i>
+        <span class="tooltip">Spotlight</span>
+    </button>
+    <button class="tool-btn" id="btn-record" title="Record">
+        <i class="fas fa-video"></i>
+        <span class="tooltip">Record</span>
+    </button>
+    <div class="tool-divider"></div>
+    <button class="tool-btn" id="btn-bg" title="Background">
+        <i class="fas fa-fill-drip"></i>
+        <span class="tooltip">Background</span>
+    </button>
+</div>
+
+<div id="recording-indicator">
+    <span class="rec-dot"></span>
+    <span id="rec-timer">00:00</span>
+</div>
+
+<div id="right-panel">
+    <div class="panel-header">
+        <span>Format Background</span>
+        <div class="panel-close" id="panel-close"><i class="fas fa-times"></i></div>
+    </div>
+    <div class="panel-section">
+        <div class="panel-label">Color</div>
+        <div class="color-grid" id="color-grid"></div>
+    </div>
+    <div class="panel-section">
+        <div class="panel-label">Grid</div>
+        <div class="grid-options">
+            <div class="grid-option active" data-grid="none">Solid</div>
+            <div class="grid-option" data-grid="dot">Dot</div>
+            <div class="grid-option" data-grid="square">Square</div>
+            <div class="grid-option" data-grid="graph">Graph</div>
+            <div class="grid-option" data-grid="hybrid">Hybrid</div>
+            <div class="grid-option" data-grid="diamond">Diamond</div>
+        </div>
+    </div>
+</div>
+
+<div id="pen-popup">
+    <div class="panel-header">
+        <span>Drawing Tools</span>
+        <div class="panel-close" id="pen-close"><i class="fas fa-times"></i></div>
+    </div>
+    <div class="pen-category">
+        <div class="pen-category-label">Everyday Writing</div>
+        <div class="pen-grid" id="pen-grid-writing"></div>
+    </div>
+    <div class="pen-category">
+        <div class="pen-category-label">Artistic</div>
+        <div class="pen-grid" id="pen-grid-art"></div>
+    </div>
+    <div class="pen-category">
+        <div class="pen-category-label">Highlighters</div>
+        <div class="pen-grid" id="pen-grid-highlight"></div>
+    </div>
+    <div class="pen-controls">
+        <div class="control-row">
+            <span class="control-label">Thickness</span>
+            <input type="range" class="thickness-slider" id="pen-thickness" min="1" max="20" value="2">
+            <span id="thickness-value" style="font-size:13px;font-weight:700;min-width:35px;text-align:center;">2px</span>
+        </div>
+        <div class="control-row">
+            <span class="control-label">Color</span>
+            <div class="color-picker-wrapper">
+                <div class="color-option active" style="background:#111827" data-color="#111827"></div>
+                <div class="color-option" style="background:#EF4444" data-color="#EF4444"></div>
+                <div class="color-option" style="background:#10B981" data-color="#10B981"></div>
+                <div class="color-option" style="background:#3B82F6" data-color="#3B82F6"></div>
+                <div class="color-option" style="background:#F59E0B" data-color="#F59E0B"></div>
+                <div class="color-option" style="background:#8B5CF6" data-color="#8B5CF6"></div>
+                <div class="color-option" style="background:#EC4899" data-color="#EC4899"></div>
+                <input type="color" id="pen-color-input" value="#111827">
             </div>
         </div>
     </div>
+</div>
 
-    <!-- Spotlight Overlay -->
-    <div id="spotlight-overlay"></div>
+<div id="spotlight-overlay"></div>
 
-    <!-- Modals -->
-    <div class="modal-overlay" id="toolkit-modal">
-        <div class="modal">
-            <div class="modal-header">
-                <span>Educational Toolkit</span>
-                <div class="modal-close" id="close-toolkit"><i class="fas fa-times"></i></div>
-            </div>
-            <div class="grid-options" style="grid-template-columns: repeat(3, 1fr);">
-                <div class="grid-option" data-tool="grid"><i class="fas fa-border-all" style="font-size:28px;margin-bottom:8px;color:var(--accent);"></i><br>Math Grid</div>
-                <div class="grid-option" data-tool="chem"><i class="fas fa-atom" style="font-size:28px;margin-bottom:8px;color:var(--accent);"></i><br>Chemistry</div>
-                <div class="grid-option" data-tool="bio"><i class="fas fa-dna" style="font-size:28px;margin-bottom:8px;color:var(--accent);"></i><br>Biology</div>
-                <div class="grid-option" data-tool="physics"><i class="fas fa-bolt" style="font-size:28px;margin-bottom:8px;color:var(--accent);"></i><br>Physics</div>
-                <div class="grid-option" data-tool="history"><i class="fas fa-history" style="font-size:28px;margin-bottom:8px;color:var(--accent);"></i><br>Timeline</div>
-                <div class="grid-option" data-tool="code"><i class="fas fa-code" style="font-size:28px;margin-bottom:8px;color:var(--accent);"></i><br>Code Block</div>
-            </div>
+<div class="modal-overlay" id="toolkit-modal">
+    <div class="modal">
+        <div class="modal-header">
+            <span>Educational Toolkit</span>
+            <div class="modal-close" id="close-toolkit"><i class="fas fa-times"></i></div>
+        </div>
+        <div class="grid-options" style="grid-template-columns: repeat(3, 1fr);">
+            <div class="grid-option" data-tool="grid"><i class="fas fa-border-all" style="font-size:28px;margin-bottom:8px;color:var(--accent);"></i><br>Math Grid</div>
+            <div class="grid-option" data-tool="chem"><i class="fas fa-atom" style="font-size:28px;margin-bottom:8px;color:var(--accent);"></i><br>Chemistry</div>
+            <div class="grid-option" data-tool="bio"><i class="fas fa-dna" style="font-size:28px;margin-bottom:8px;color:var(--accent);"></i><br>Biology</div>
+            <div class="grid-option" data-tool="physics"><i class="fas fa-bolt" style="font-size:28px;margin-bottom:8px;color:var(--accent);"></i><br>Physics</div>
+            <div class="grid-option" data-tool="history"><i class="fas fa-history" style="font-size:28px;margin-bottom:8px;color:var(--accent);"></i><br>Timeline</div>
+            <div class="grid-option" data-tool="code"><i class="fas fa-code" style="font-size:28px;margin-bottom:8px;color:var(--accent);"></i><br>Code Block</div>
         </div>
     </div>
+</div>
 
-    <div class="modal-overlay" id="math-modal">
-        <div class="modal">
-            <div class="modal-header">
-                <span>Insert Math Equation</span>
-                <div class="modal-close" id="close-math"><i class="fas fa-times"></i></div>
-            </div>
-            <textarea id="math-input" class="form-input" style="min-height:100px;margin-bottom:16px;" placeholder="\frac{-b \pm \sqrt{b^2-4ac}}{2a}"></textarea>
-            <div id="math-preview" style="padding:20px;background:var(--bg-hover);border-radius:var(--radius-md);margin-bottom:20px;min-height:60px;"></div>
-            <button class="submit-btn" id="insert-math">Insert Equation</button>
+<div class="modal-overlay" id="math-modal">
+    <div class="modal">
+        <div class="modal-header">
+            <span>Insert Math Equation</span>
+            <div class="modal-close" id="close-math"><i class="fas fa-times"></i></div>
         </div>
+        <textarea id="math-input" class="form-input" style="min-height:100px;margin-bottom:16px;" placeholder="\frac{-b \pm \sqrt{b^2-4ac}}{2a}"></textarea>
+        <div id="math-preview" style="padding:20px;background:var(--bg-hover);border-radius:var(--radius-md);margin-bottom:20px;min-height:60px;"></div>
+        <button class="submit-btn" id="insert-math">Insert Equation</button>
     </div>
+</div>
 
-    <div class="modal-overlay" id="graph-modal">
-        <div class="modal" style="max-width:640px;">
-            <div class="modal-header">
-                <span>Graph Plotter</span>
-                <div class="modal-close" id="close-graph"><i class="fas fa-times"></i></div>
-            </div>
-            <div style="display:flex;gap:10px;margin-bottom:20px;">
-                <button class="role-btn active" data-graph="function">f(x) Function</button>
-                <button class="role-btn" data-graph="projectile">Projectile</button>
-                <button class="role-btn" data-graph="shm">SHM Wave</button>
-            </div>
-            <div id="graph-function">
-                <input type="text" id="fn-expr" class="form-input" placeholder="y = sin(x)" value="sin(x)" style="margin-bottom:12px;">
-                <div style="display:flex;gap:12px;">
-                    <input type="number" id="fn-min" class="form-input" placeholder="Min X" value="-10">
-                    <input type="number" id="fn-max" class="form-input" placeholder="Max X" value="10">
-                </div>
-            </div>
-            <div id="graph-canvas-wrap" style="margin:20px 0;background:#000;border-radius:var(--radius-md);overflow:hidden;box-shadow:var(--shadow-md);">
-                <canvas id="graph-canvas" style="width:100%;height:280px;"></canvas>
-            </div>
-            <div id="graph-error" style="color:#ef4444;font-size:14px;margin-bottom:12px;font-weight:600;"></div>
-            <button class="submit-btn" id="insert-graph">Insert Graph to Board</button>
+<div class="modal-overlay" id="graph-modal">
+    <div class="modal" style="max-width:640px;">
+        <div class="modal-header">
+            <span>Graph Plotter</span>
+            <div class="modal-close" id="close-graph"><i class="fas fa-times"></i></div>
         </div>
-    </div>
-
-    <!-- Timer Modal -->
-    <div class="modal-overlay" id="timer-modal">
-        <div class="modal" style="max-width:400px;">
-            <div class="modal-header">
-                <span>Timer Settings</span>
-                <div class="modal-close" id="close-timer"><i class="fas fa-times"></i></div>
-            </div>
-            <div style="display:flex;gap:12px;margin-bottom:20px;">
-                <div style="flex:1;">
-                    <label class="form-label">Minutes</label>
-                    <input type="number" id="timer-minutes" class="form-input" placeholder="0" min="0" max="99" value="5">
-                </div>
-                <div style="flex:1;">
-                    <label class="form-label">Seconds</label>
-                    <input type="number" id="timer-seconds" class="form-input" placeholder="0" min="0" max="59" value="0">
-                </div>
-            </div>
-            <div style="display:flex;gap:10px;">
-                <button class="submit-btn" id="timer-start-btn" style="flex:1;background:linear-gradient(135deg, #10b981 0%, #059669 100%);">
-                    <i class="fas fa-play"></i> Start
-                </button>
-                <button class="submit-btn" id="timer-pause-btn" style="flex:1;background:linear-gradient(135deg, #f59e0b 0%, #d97706 100%);">
-                    <i class="fas fa-pause"></i> Pause
-                </button>
-                <button class="submit-btn" id="timer-reset-btn" style="flex:1;background:linear-gradient(135deg, #ef4444 0%, #dc2626 100%);">
-                    <i class="fas fa-redo"></i> Reset
-                </button>
+        <div style="display:flex;gap:10px;margin-bottom:20px;">
+            <button class="role-btn active" data-graph="function">f(x) Function</button>
+            <button class="role-btn" data-graph="projectile">Projectile</button>
+            <button class="role-btn" data-graph="shm">SHM Wave</button>
+        </div>
+        <div id="graph-function">
+            <input type="text" id="fn-expr" class="form-input" placeholder="y = sin(x)" value="sin(x)" style="margin-bottom:12px;">
+            <div style="display:flex;gap:12px;">
+                <input type="number" id="fn-min" class="form-input" placeholder="Min X" value="-10">
+                <input type="number" id="fn-max" class="form-input" placeholder="Max X" value="10">
             </div>
         </div>
-    </div>
-
-    <!-- Invite Modal -->
-    <div class="modal-overlay" id="invite-modal">
-        <div class="modal">
-            <div class="modal-header">
-                <span>Invite Students</span>
-                <div class="modal-close" id="close-invite"><i class="fas fa-times"></i></div>
-            </div>
-            <div class="form-group">
-                <label class="form-label">Add Student Email Addresses</label>
-                <div style="display:flex;gap:8px;margin-bottom:12px;">
-                    <input type="email" id="student-email" class="form-input" placeholder="student@example.com" style="flex:1;">
-                    <button class="submit-btn" id="add-email-btn" style="width:auto;padding:14px 24px;">
-                        <i class="fas fa-plus"></i> Add
-                    </button>
-                </div>
-                <div id="email-list" style="display:flex;flex-wrap:wrap;gap:8px;min-height:40px;"></div>
-            </div>
-            <button class="submit-btn" id="send-invites-btn" style="margin-top:16px;">
-                <i class="fas fa-paper-plane"></i> Send Invites
-            </button>
+        <div id="graph-canvas-wrap" style="margin:20px 0;background:#000;border-radius:var(--radius-md);overflow:hidden;box-shadow:var(--shadow-md);">
+            <canvas id="graph-canvas" style="width:100%;height:280px;"></canvas>
         </div>
+        <div id="graph-error" style="color:#ef4444;font-size:14px;margin-bottom:12px;font-weight:600;"></div>
+        <button class="submit-btn" id="insert-graph">Insert Graph to Board</button>
     </div>
+</div>
 
-    <!-- Library Modal -->
-    <div class="modal-overlay" id="library-modal">
-        <div class="modal" style="max-width:700px;">
-            <div class="modal-header">
-                <span>Library - Templates & Shapes</span>
-                <div class="modal-close" id="close-library"><i class="fas fa-times"></i></div>
+<div class="modal-overlay" id="timer-modal">
+    <div class="modal" style="max-width:400px;">
+        <div class="modal-header">
+            <span>Timer Settings</span>
+            <div class="modal-close" id="close-timer"><i class="fas fa-times"></i></div>
+        </div>
+        <div style="display:flex;gap:12px;margin-bottom:20px;">
+            <div style="flex:1;">
+                <label class="form-label">Minutes</label>
+                <input type="number" id="timer-minutes" class="form-input" placeholder="0" min="0" max="99" value="5">
             </div>
-            <div class="library-grid">
-                <div class="library-item" data-template="rectangle">
-                    <i class="fas fa-square"></i>
-                    <span>Rectangle</span>
-                </div>
-                <div class="library-item" data-template="circle">
-                    <i class="fas fa-circle"></i>
-                    <span>Circle</span>
-                </div>
-                <div class="library-item" data-template="triangle">
-                    <i class="fas fa-play" style="transform:rotate(-90deg);"></i>
-                    <span>Triangle</span>
-                </div>
-                <div class="library-item" data-template="arrow">
-                    <i class="fas fa-arrow-right"></i>
-                    <span>Arrow</span>
-                </div>
-                <div class="library-item" data-template="star">
-                    <i class="fas fa-star"></i>
-                    <span>Star</span>
-                </div>
-                <div class="library-item" data-template="heart">
-                    <i class="fas fa-heart"></i>
-                    <span>Heart</span>
-                </div>
-                <div class="library-item" data-template="lightbulb">
-                    <i class="fas fa-lightbulb"></i>
-                    <span>Idea</span>
-                </div>
-                <div class="library-item" data-template="check">
-                    <i class="fas fa-check-circle"></i>
-                    <span>Check</span>
-                </div>
-                <div class="library-item" data-template="cross">
-                    <i class="fas fa-times-circle"></i>
-                    <span>Cross</span>
-                </div>
+            <div style="flex:1;">
+                <label class="form-label">Seconds</label>
+                <input type="number" id="timer-seconds" class="form-input" placeholder="0" min="0" max="59" value="0">
             </div>
         </div>
+        <div style="display:flex;gap:10px;">
+            <button class="submit-btn" id="timer-start-btn" style="flex:1;background:linear-gradient(135deg, #10b981 0%, #059669 100%);"><i class="fas fa-play"></i> Start</button>
+            <button class="submit-btn" id="timer-pause-btn" style="flex:1;background:linear-gradient(135deg, #f59e0b 0%, #d97706 100%);"><i class="fas fa-pause"></i> Pause</button>
+            <button class="submit-btn" id="timer-reset-btn" style="flex:1;background:linear-gradient(135deg, #ef4444 0%, #dc2626 100%);"><i class="fas fa-redo"></i> Reset</button>
+        </div>
     </div>
+</div>
 
-    <div id="root"></div>
+<div class="modal-overlay" id="invite-modal">
+    <div class="modal">
+        <div class="modal-header">
+            <span>Invite Students</span>
+            <div class="modal-close" id="close-invite"><i class="fas fa-times"></i></div>
+        </div>
+        <div class="form-group">
+            <label class="form-label">Add Student Email Addresses</label>
+            <div style="display:flex;gap:8px;margin-bottom:12px;">
+                <input type="email" id="student-email" class="form-input" placeholder="student@example.com" style="flex:1;">
+                <button class="submit-btn" id="add-email-btn" style="width:auto;padding:14px 24px;"><i class="fas fa-plus"></i> Add</button>
+            </div>
+            <div id="email-list" style="display:flex;flex-wrap:wrap;gap:8px;min-height:40px;"></div>
+        </div>
+        <button class="submit-btn" id="send-invites-btn" style="margin-top:16px;"><i class="fas fa-paper-plane"></i> Send Invites</button>
+    </div>
+</div>
 
-    <script type="module">
+<div id="root"></div>
+
+<script type="module">
         import React from "react";
         import ReactDOM from "react-dom/client";
         import * as ExcalidrawLib from "https://esm.sh/@excalidraw/excalidraw@0.18.0/dist/dev/index.js?external=react,react-dom";
         const { Excalidraw, convertToExcalidrawElements } = ExcalidrawLib;
 
-        // Global state
         let excalidrawAPI = null;
         let isRemoteUpdate = false;
         let lastSendTime = 0;
@@ -1179,7 +590,6 @@
         let currentStrokeWidth = 2;
         let currentStrokeColor = '#111827';
         let currentTool = 'selection';
-        let isLocked = false;
         let timerInterval = null;
         let timeLeft = 300;
         let isTimerRunning = false;
@@ -1192,14 +602,11 @@
         let graphMode = 'function';
         let isSpotlightActive = false;
         let lastSpotlightSend = 0;
-        let currentTheme = 'light';
         let pages = [{ id: 'page-1', name: 'Page 1', elements: [], bg: '#F3E8FF' }];
         let currentPageId = 'page-1';
-        let currentZoom = 1;
         let eraserMode = 'full';
         let lastRosterCount = 1;
 
-        // DOM Elements
         const setupScreen = document.getElementById('setup-screen');
         const enterBtn = document.getElementById('enter-btn');
         const nameInput = document.getElementById('name-input');
@@ -1207,7 +614,6 @@
         const setupError = document.getElementById('setup-error');
         let selectedRole = 'teacher';
 
-        // Role toggle
         document.querySelectorAll('.role-btn').forEach(btn => {
             if (btn.parentElement.classList.contains('role-toggle')) {
                 btn.addEventListener('click', () => {
@@ -1218,23 +624,16 @@
             }
         });
 
-        // Enter board
         enterBtn.addEventListener('click', () => {
             const name = nameInput.value.trim();
             let room = roomInput.value.trim().toUpperCase().replace(/\s+/g, '-');
             
-            if (!name) { 
-                setupError.textContent = 'Please enter your name'; 
-                return; 
-            }
+            if (!name) { setupError.textContent = 'Please enter your name'; return; }
             if (selectedRole === 'teacher' && !room) {
                 const words = ['MAPLE','RIVER','COMET','TIGER','ORBIT','PRISM','EAGLE','DELTA'];
                 room = `${words[Math.floor(Math.random()*words.length)]}-${Math.floor(100+Math.random()*900)}`;
             }
-            if (!room) { 
-                setupError.textContent = 'Please enter a room code'; 
-                return; 
-            }
+            if (!room) { setupError.textContent = 'Please enter a room code'; return; }
             
             setupError.textContent = '';
             setupScreen.style.display = 'none';
@@ -1247,19 +646,14 @@
         });
 
         function createEl(type, x, y, width, height, extra = {}) {
-            // NOTE: this returns a lightweight "skeleton" — not a full Excalidraw
-            // element. Skeletons must be passed through convertToExcalidrawElements()
-            // (see insertElements() below) before being added to the scene, since
-            // Excalidraw requires internal bookkeeping fields (id, seed, version,
-            // fractional-index, etc.) that hand-rolled objects don't have. Elements
-            // missing those fields get silently dropped by updateScene instead of
-            // rendering, which is why toolkit/graph/library inserts previously
-            // appeared to do nothing.
             return {
                 type, x, y, width, height, angle: 0,
                 strokeColor: currentStrokeColor, backgroundColor: "transparent",
                 fillStyle: "hachure", strokeWidth: currentStrokeWidth, roughness: 1, opacity: 100,
-                ...extra
+                groupIds: [], roundness: (type === "rectangle" || type === "ellipse") ? { type: 3 } : null,
+                seed: Math.floor(Math.random() * 2e9), version: 1,
+                versionNonce: Math.floor(Math.random() * 2e9), isDeleted: false,
+                boundElements: null, updated: Date.now(), link: null, locked: false, ...extra
             };
         }
 
@@ -1273,23 +667,15 @@
                 headerTimer.style.display = 'flex';
             }
 
-            // Initialize components
             renderPenGrids();
             initColorGrid();
             setupPenControls();
             renderPageTabs();
 
-            // Hide native Excalidraw hamburger menu only. Undo/Redo and the
-            // zoom control are left alone — they stay visible and working,
-            // just shrunk via CSS above. The menu button is rendered
-            // internally by Excalidraw and gets re-created on every scene
-            // update, so CSS alone can lose the race — a MutationObserver
-            // keeps it hidden permanently regardless of internal re-renders.
             function hideNativeExcalidrawChrome() {
                 const rootEl = document.getElementById('root');
                 if (!rootEl) return;
 
-                // Main menu (hamburger) trigger button
                 const menuBtn = rootEl.querySelector(
                     '[data-testid="main-menu-trigger"], button[aria-label="Main menu"]'
                 );
@@ -1303,7 +689,6 @@
             chromeObserver.observe(document.getElementById('root'), { childList: true, subtree: true });
             hideNativeExcalidrawChrome();
             
-            // Setup Excalidraw
             const root = ReactDOM.createRoot(document.getElementById('root'));
             root.render(React.createElement(Excalidraw, {
                 theme: 'light',
@@ -1326,10 +711,6 @@
                 }
             }));
 
-            // WebSocket connection — the Cloudflare relay routes by room
-            // code in the URL path (one Durable Object per room), so the
-            // room-specific 'join' message below is now just extra roster
-            // info rather than the thing that determines routing.
             function connect() {
                 statusDot.className = 'status-dot connecting';
                 const wsUrl = `${window.PRIMEBOARD_RELAY_BASE_URL}/room/${encodeURIComponent(room)}`;
@@ -1354,11 +735,6 @@
                     if (data.type === 'roster' && data.users) {
                         userCount.textContent = `${data.users.length} online`;
 
-                        // A student who joins mid-class only receives future
-                        // scene-updates — they'd otherwise see a blank board
-                        // until the teacher's next stroke. When the roster
-                        // grows, the teacher re-broadcasts the current page's
-                        // full state so new joiners are caught up immediately.
                         if (role === 'teacher' && data.users.length > lastRosterCount && excalidrawAPI) {
                             const liveElements = excalidrawAPI.getSceneElements();
                             const liveBg = excalidrawAPI.getAppState().viewBackgroundColor;
@@ -1375,14 +751,6 @@
                             });
                         }
                         lastRosterCount = data.users.length;
-                    }
-                    
-                    if (data.type === 'timer-update') {
-                        timeLeft = data.timeLeft;
-                        updateTimerDisplay();
-                        if (data.action === 'start' && !isTimerRunning) startTimerLocal();
-                        if (data.action === 'pause') pauseTimerLocal();
-                        if (data.action === 'reset') { pauseTimerLocal(); timeLeft = data.timeLeft; updateTimerDisplay(); }
                     }
                     
                     if (data.type === 'pages-structure' && role === 'student') {
@@ -1430,22 +798,6 @@
             window.sendMessage = sendMessage;
             connect();
 
-            // Converts lightweight element "skeletons" (built with createEl) into
-            // fully valid Excalidraw elements via the library's own conversion
-            // utility, then merges them into the scene. This is the piece that was
-            // missing before — hand-built objects were being pushed straight into
-            // updateScene() without the internal fields Excalidraw needs to render
-            // and persist them, so they never actually appeared on the canvas.
-            function insertElements(skeletons) {
-                if (!excalidrawAPI || !skeletons || !skeletons.length) return [];
-                const newEls = convertToExcalidrawElements(skeletons);
-                const elements = [...excalidrawAPI.getSceneElements(), ...newEls];
-                excalidrawAPI.updateScene({ elements });
-                sendMessage({ type: 'scene-update', elements, appState: { viewBackgroundColor: excalidrawAPI.getAppState().viewBackgroundColor } });
-                return newEls;
-            }
-
-            // Tool selection
             document.querySelectorAll('.tool-btn').forEach(btn => {
                 if (btn.id !== 'btn-spotlight' && btn.id !== 'btn-record' && btn.id !== 'btn-bg') {
                     btn.addEventListener('click', () => {
@@ -1493,7 +845,6 @@
                 if (btn) btn.classList.add('active');
             }
 
-            // Timer functionality
             function formatTime(s) {
                 return `${Math.floor(s/60).toString().padStart(2,'0')}:${(s%60).toString().padStart(2,'0')}`;
             }
@@ -1551,7 +902,6 @@
                 document.getElementById('timer-modal').classList.remove('active');
             });
 
-            // Page management
             function renderPageTabs() {
                 const pageTabsList = document.getElementById('page-tabs-list');
                 pageTabsList.innerHTML = '';
@@ -1697,8 +1047,17 @@
                 });
             });
 
+            function insertElements(skeletons) {
+                if (!excalidrawAPI) return;
+                const elements = excalidrawAPI.getSceneElements();
+                const newElements = convertToExcalidrawElements(skeletons, { types: new Set(skeletons.map(e => e.type)) });
+                excalidrawAPI.updateScene({ elements: [...elements, ...newElements] });
+                sendMessage({ type: 'scene-update', elements: [...elements, ...newElements], appState: { viewBackgroundColor: excalidrawAPI.getAppState().viewBackgroundColor } });
+            }
+
             function applyToolkit(type) {
                 if (!excalidrawAPI) return;
+                const elements = excalidrawAPI.getSceneElements();
                 let n = [];
                 const sx = 100, sy = 100;
                 
@@ -1722,7 +1081,7 @@
                     n.push(createEl('text', sx + 10, sy + 10, 280, 130, { text: "def hello():\n  print('Hello')", fontSize: 14, fontFamily: 3, strokeColor: "#10B981" }));
                 }
                 
-                insertElements(n);
+                if (n.length > 0) insertElements(n);
             }
 
             document.getElementById('btn-math').addEventListener('click', () => {
@@ -1746,9 +1105,7 @@
             document.getElementById('insert-math').addEventListener('click', () => {
                 const value = document.getElementById('math-input').value;
                 if (value && excalidrawAPI) {
-                    insertElements([
-                        createEl('text', 150, 150, 200, 50, { text: value, fontSize: 24, strokeColor: "#111827" })
-                    ]);
+                    insertElements([createEl('text', 150, 150, 200, 50, { text: value, fontSize: 24, strokeColor: "#111827" })]);
                 }
                 document.getElementById('math-modal').classList.remove('active');
             });
@@ -1880,34 +1237,20 @@
                 ctx.shadowBlur = 0;
             }
 
-            document.getElementById('insert-graph').addEventListener('click', async () => {
+            document.getElementById('insert-graph').addEventListener('click', () => {
                 if (!excalidrawAPI) return;
                 drawGraph();
                 const canvas = document.getElementById('graph-canvas');
                 const imgW = 500, imgH = 280;
-
-                // The old version created an 'image' element with fileId: null —
-                // there was no actual picture behind it, so nothing ever showed up.
-                // Excalidraw images need their pixel data registered separately via
-                // addFiles(), then the element just references that file's id.
-                const dataURL = canvas.toDataURL('image/png');
-                const fileId = 'graph-' + Date.now();
-                await excalidrawAPI.addFiles([{
-                    id: fileId,
-                    dataURL,
-                    mimeType: 'image/png',
-                    created: Date.now(),
-                    lastRetrieved: Date.now()
-                }]);
-
                 insertElements([
                     createEl('rectangle', 100, 100, imgW + 32, imgH + 32, {
                         backgroundColor: "#FFFFFF", strokeColor: "#E5E7EB", strokeWidth: 2,
                         fillStyle: "solid", roughness: 0, roundness: { type: 3 }
                     }),
-                    createEl('image', 116, 116, imgW, imgH, { fileId })
+                    createEl('image', 116, 116, imgW, imgH, {
+                        type: 'image', fileId: null, status: 'saved', scale: [1, 1]
+                    })
                 ]);
-
                 document.getElementById('graph-modal').classList.remove('active');
             });
 
@@ -2023,100 +1366,11 @@
                 updateEmailList();
             };
 
-            // Library now opens Excalidraw's own default library sidebar
-            // (drag-and-drop shape libraries, same feature as excalidraw.com)
-            // instead of the custom shapes modal — the button stays in the
-            // top bar, which is where Excalidraw normally surfaces it too.
             document.getElementById('btn-library').addEventListener('click', () => {
                 if (excalidrawAPI) {
                     excalidrawAPI.toggleSidebar({ name: 'library' });
                 }
             });
-            
-            document.getElementById('close-library').addEventListener('click', () => {
-                document.getElementById('library-modal').classList.remove('active');
-            });
-            
-            document.querySelectorAll('.library-item').forEach(item => {
-                item.addEventListener('click', () => {
-                    insertLibraryItem(item.dataset.template);
-                    document.getElementById('library-modal').classList.remove('active');
-                });
-            });
-            
-            function insertLibraryItem(template) {
-                if (!excalidrawAPI) return;
-                const sx = 200, sy = 200;
-                let n = [];
-                
-                switch(template) {
-                    case 'rectangle':
-                        n.push(createEl('rectangle', sx, sy, 150, 100, { strokeColor: currentStrokeColor, strokeWidth: currentStrokeWidth }));
-                        break;
-                    case 'circle':
-                        n.push(createEl('ellipse', sx, sy, 120, 120, { strokeColor: currentStrokeColor, strokeWidth: currentStrokeWidth }));
-                        break;
-                    case 'triangle':
-                        n.push(createEl('line', sx, sy, 120, 100, { 
-                            strokeColor: currentStrokeColor, 
-                            strokeWidth: currentStrokeWidth,
-                            points: [[0, 100], [60, 0], [120, 100], [0, 100]]
-                        }));
-                        break;
-                    case 'arrow':
-                        n.push(createEl('arrow', sx, sy, 150, 0, { strokeColor: currentStrokeColor, strokeWidth: currentStrokeWidth }));
-                        break;
-                    case 'star':
-                        for (let i = 0; i < 5; i++) {
-                            const angle = (i * 4 * Math.PI) / 5;
-                            const x1 = sx + 60 + 50 * Math.cos(angle);
-                            const y1 = sy + 60 + 50 * Math.sin(angle);
-                            const angle2 = ((i + 0.5) * 4 * Math.PI) / 5;
-                            const x2 = sx + 60 + 25 * Math.cos(angle2);
-                            const y2 = sy + 60 + 25 * Math.sin(angle2);
-                            n.push(createEl('line', x1, y1, x2 - x1, y2 - y1, { 
-                                strokeColor: currentStrokeColor, 
-                                strokeWidth: currentStrokeWidth,
-                                points: [[0, 0], [x2 - x1, y2 - y1]]
-                            }));
-                        }
-                        break;
-                    case 'heart':
-                        n.push(createEl('line', sx, sy, 120, 100, {
-                            strokeColor: '#EC4899',
-                            strokeWidth: currentStrokeWidth,
-                            points: [[0, 40], [30, 10], [60, 40], [90, 10], [120, 40], [60, 100], [0, 40]]
-                        }));
-                        break;
-                    case 'lightbulb':
-                        n.push(createEl('ellipse', sx + 30, sy, 60, 70, { strokeColor: '#F59E0B', strokeWidth: currentStrokeWidth }));
-                        n.push(createEl('line', sx + 50, sy + 70, 20, 30, { strokeColor: '#F59E0B', strokeWidth: currentStrokeWidth, points: [[0,0],[20,30]] }));
-                        n.push(createEl('line', sx + 60, sy + 70, 0, 30, { strokeColor: '#F59E0B', strokeWidth: currentStrokeWidth, points: [[0,0],[0,30]] }));
-                        n.push(createEl('line', sx + 70, sy + 70, -20, 30, { strokeColor: '#F59E0B', strokeWidth: currentStrokeWidth, points: [[0,0],[-20,30]] }));
-                        break;
-                    case 'check':
-                        n.push(createEl('line', sx, sy + 50, 60, -30, { 
-                            strokeColor: '#10B981', 
-                            strokeWidth: currentStrokeWidth,
-                            points: [[0, 0], [40, 40], [100, -40]]
-                        }));
-                        break;
-                    case 'cross':
-                        n.push(createEl('line', sx, sy, 100, 100, { 
-                            strokeColor: '#EF4444', 
-                            strokeWidth: currentStrokeWidth,
-                            points: [[0, 0], [100, 100]]
-                        }));
-                        n.push(createEl('line', sx + 100, sy, -100, 100, { 
-                            strokeColor: '#EF4444', 
-                            strokeWidth: currentStrokeWidth,
-                            points: [[0, 0], [-100, 100]]
-                        }));
-                        break;
-                }
-                
-                insertElements(n);
-            }
 
             document.getElementById('btn-share').addEventListener('click', () => {
                 const url = `${window.location.origin}${window.location.pathname}?room=${encodeURIComponent(roomInput.value)}`;
@@ -2183,7 +1437,7 @@
                 grid.innerHTML = '';
                 PEN_TYPES[category].forEach(pen => {
                     const item = document.createElement('div');
-                    item.className = 'pen-item' + (pen.id === currentPenId ? ' active' : '');
+                    item.className = 'pen-item' + (pen.id === 'ballpoint' ? ' active' : '');
                     item.innerHTML = `
                         <div class="pen-preview"><i class="fas fa-${pen.icon}" style="font-size:20px;color:var(--accent);"></i></div>
                         <div class="pen-info">
@@ -2198,9 +1452,8 @@
         }
 
         function selectPen(pen) {
-            currentPenId = pen.id;
-            if (excalidrawAPI) {
-                excalidrawAPI.updateScene({
+            if (window.excalidrawAPI) {
+                window.excalidrawAPI.updateScene({
                     appState: {
                         currentItemStrokeWidth: pen.strokeWidth,
                         currentItemRoughness: pen.roughness,
@@ -2208,7 +1461,7 @@
                         currentItemFillStyle: pen.fillStyle,
                     }
                 });
-                excalidrawAPI.setActiveTool({ type: 'freedraw' });
+                window.excalidrawAPI.setActiveTool({ type: 'freedraw' });
             }
             document.querySelectorAll('.pen-item').forEach(el => {
                 el.classList.toggle('active', el.querySelector('.pen-name').textContent === pen.name);
