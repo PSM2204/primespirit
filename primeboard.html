@@ -238,6 +238,9 @@
 
         #pen-popup { position: fixed; left: 100px; top: 140px; background: var(--bg-glass); backdrop-filter: blur(20px); border-radius: var(--radius-lg); padding: 20px; box-shadow: var(--shadow-lg); z-index: 1000; display: none; min-width: 360px; border: 1px solid var(--border-light); }
         #pen-popup.active { display: block; }
+
+        #eraser-popup { position: fixed; left: 100px; top: 140px; background: var(--bg-glass); backdrop-filter: blur(20px); border-radius: var(--radius-lg); padding: 20px; box-shadow: var(--shadow-lg); z-index: 1000; display: none; min-width: 280px; border: 1px solid var(--border-light); }
+        #eraser-popup.active { display: block; }
         .pen-category { margin-bottom: 20px; }
         .pen-category-label { font-size: 12px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 12px; }
         .pen-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
@@ -265,6 +268,136 @@
 
         #recording-indicator { position: fixed; top: 140px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); color: white; padding: 10px 20px; border-radius: 100px; font-weight: 700; font-size: 15px; display: none; align-items: center; gap: 10px; z-index: 999; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4); }
         #recording-indicator.active { display: flex; animation: pulse 2s infinite; }
+
+        /* --- Engagement layer: XP, streak, avatars, reactions, confetti --- */
+
+        #xp-badge {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            padding: 6px 14px;
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            border-radius: var(--radius-md);
+            color: white;
+            font-weight: 800;
+            font-size: 13px;
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);
+            cursor: default;
+            min-width: 90px;
+        }
+        #xp-bar-track { width: 100%; height: 5px; background: rgba(255,255,255,0.35); border-radius: 4px; overflow: hidden; }
+        #xp-bar-fill { height: 100%; width: 0%; background: white; border-radius: 4px; transition: width 0.4s ease; }
+
+        #streak-badge {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 8px 14px;
+            background: linear-gradient(135deg, #fb7185 0%, #ef4444 100%);
+            border-radius: 100px;
+            color: white;
+            font-weight: 800;
+            font-size: 14px;
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+        }
+
+        #avatar-stack { display: flex; align-items: center; }
+        .avatar-bubble {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 800;
+            color: white;
+            border: 2px solid white;
+            margin-left: -8px;
+            box-shadow: var(--shadow-sm);
+            cursor: default;
+        }
+        .avatar-bubble:first-child { margin-left: 0; }
+
+        #reactions-popup {
+            position: fixed;
+            left: 100px;
+            bottom: 30px;
+            background: var(--bg-glass);
+            backdrop-filter: blur(20px);
+            border-radius: var(--radius-lg);
+            padding: 14px;
+            box-shadow: var(--shadow-lg);
+            z-index: 1000;
+            display: none;
+            border: 1px solid var(--border-light);
+        }
+        #reactions-popup.active { display: block; }
+        .reactions-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+        .reaction-emoji-btn {
+            width: 44px;
+            height: 44px;
+            font-size: 22px;
+            border: none;
+            border-radius: var(--radius-md);
+            background: var(--bg-hover);
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+        .reaction-emoji-btn:hover { transform: scale(1.2); background: var(--bg-surface); }
+        .reaction-emoji-btn:active { transform: scale(0.9); }
+
+        #reaction-layer {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 1600;
+            overflow: hidden;
+        }
+        .floating-reaction {
+            position: absolute;
+            bottom: 40px;
+            font-size: 32px;
+            animation: floatUp 2.8s ease-out forwards;
+        }
+        @keyframes floatUp {
+            0% { transform: translateY(0) scale(0.5) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; transform: translateY(-40px) scale(1.1) rotate(-8deg); }
+            100% { transform: translateY(-70vh) scale(1) rotate(8deg); opacity: 0; }
+        }
+
+        #level-toast {
+            position: fixed;
+            top: 90px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-20px);
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            color: white;
+            padding: 14px 28px;
+            border-radius: 100px;
+            font-weight: 800;
+            font-size: 16px;
+            box-shadow: 0 8px 25px rgba(245, 158, 11, 0.5);
+            z-index: 2500;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        #level-toast.active { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+        #confetti-canvas {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 2400;
+        }
+
+        #btn-mute { padding: 10px 14px; }
+        #btn-hype {
+            background: linear-gradient(135deg, #f472b6 0%, #a855f7 100%);
+            color: white;
+            font-weight: 800;
+        }
         .rec-dot { width: 10px; height: 10px; background: white; border-radius: 50%; }
 
         #spotlight-overlay { position: fixed; inset: 0; background: radial-gradient(circle 350px at var(--sx, 50%) var(--sy, 50%), transparent 0%, rgba(0, 0, 0, 0.85) 100%); pointer-events: none; display: none; z-index: 998; }
@@ -343,15 +476,27 @@
         <i class="fas fa-stopwatch"></i>
         <span id="header-timer-display">05:00</span>
     </div>
-    <div style="display:flex;align-items:center;gap:8px;font-size:14px;color:var(--text-secondary);">
+    <div id="xp-badge" title="Your level — earn XP by drawing and participating">
+        <span id="xp-level">⭐ Lv 1</span>
+        <div id="xp-bar-track"><div id="xp-bar-fill"></div></div>
+    </div>
+    <div id="streak-badge" title="Consecutive days you've shown up">🔥 <span id="streak-count">1</span></div>
+    <div id="avatar-stack" title="Who's online"></div>
+    <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-secondary);">
         <span class="status-dot" id="status-dot"></span>
         <span id="user-count">1 online</span>
     </div>
     <div class="header-spacer"></div>
+    <button class="header-btn" id="btn-mute" title="Toggle sounds"><i class="fas fa-volume-up"></i></button>
+    <button class="header-btn" id="btn-hype" style="display:none;" title="Hype up the class"><span>🎉 Hype</span></button>
     <button class="header-btn" id="btn-invite"><i class="fas fa-user-plus"></i> <span>Invite</span></button>
     <button class="header-btn" id="btn-library"><i class="fas fa-book"></i> <span>Library</span></button>
     <button class="header-btn primary" id="btn-share"><i class="fas fa-share-alt"></i> <span>Share</span></button>
 </div>
+
+<div id="reaction-layer"></div>
+<div id="level-toast"></div>
+<canvas id="confetti-canvas"></canvas>
 
 <div id="page-tabs-bar" style="display:none;">
     <div id="page-tabs-list"></div>
@@ -407,6 +552,24 @@
         <i class="fas fa-fill-drip"></i>
         <span class="tooltip">Background</span>
     </button>
+    <div class="tool-divider"></div>
+    <button class="tool-btn" id="btn-reactions" title="Reactions">
+        <i class="fas fa-smile"></i>
+        <span class="tooltip">Reactions</span>
+    </button>
+</div>
+
+<div id="reactions-popup">
+    <div class="reactions-grid">
+        <button class="reaction-emoji-btn" data-emoji="🔥">🔥</button>
+        <button class="reaction-emoji-btn" data-emoji="❤️">❤️</button>
+        <button class="reaction-emoji-btn" data-emoji="😂">😂</button>
+        <button class="reaction-emoji-btn" data-emoji="👏">👏</button>
+        <button class="reaction-emoji-btn" data-emoji="💯">💯</button>
+        <button class="reaction-emoji-btn" data-emoji="🤯">🤯</button>
+        <button class="reaction-emoji-btn" data-emoji="🙌">🙌</button>
+        <button class="reaction-emoji-btn" data-emoji="😍">😍</button>
+    </div>
 </div>
 
 <div id="recording-indicator">
@@ -472,6 +635,18 @@
                 <input type="color" id="pen-color-input" value="#111827">
             </div>
         </div>
+    </div>
+</div>
+
+<div id="eraser-popup">
+    <div class="panel-header">
+        <span>Eraser Size</span>
+        <div class="panel-close" id="eraser-close"><i class="fas fa-times"></i></div>
+    </div>
+    <div class="control-row">
+        <span class="control-label">Size</span>
+        <input type="range" class="thickness-slider" id="eraser-thickness" min="5" max="60" value="20">
+        <span id="eraser-thickness-value" style="font-size:13px;font-weight:700;min-width:35px;text-align:center;">20px</span>
     </div>
 </div>
 
@@ -604,8 +779,18 @@
         let lastSpotlightSend = 0;
         let pages = [{ id: 'page-1', name: 'Page 1', elements: [], bg: '#F3E8FF' }];
         let currentPageId = 'page-1';
-        let eraserMode = 'full';
+        let eraserWidth = 20;
         let lastRosterCount = 1;
+
+        // --- Engagement layer state ---
+        let xp = 0;
+        let level = 1;
+        let isMuted = false;
+        let audioCtx = null;
+        const XP_PER_LEVEL = 50;
+        let currentUserName = '';
+        let currentUserRole = '';
+        let lastElementCount = 0;
 
         const setupScreen = document.getElementById('setup-screen');
         const enterBtn = document.getElementById('enter-btn');
@@ -658,6 +843,8 @@
         }
 
         function startBoard(name, role, room) {
+            currentUserName = name;
+            currentUserRole = role;
             const statusDot = document.getElementById('status-dot');
             const userCount = document.getElementById('user-count');
             const headerTimer = document.getElementById('header-timer');
@@ -665,12 +852,14 @@
             
             if (role === 'teacher') {
                 headerTimer.style.display = 'flex';
+                document.getElementById('btn-hype').style.display = 'flex';
             }
 
             renderPenGrids();
             initColorGrid();
             setupPenControls();
             renderPageTabs();
+            initEngagementLayer(name);
 
             function hideNativeExcalidrawChrome() {
                 const rootEl = document.getElementById('root');
@@ -703,6 +892,7 @@
                         lastSendTime = now;
                         sendMessage({ type: 'scene-update', elements, appState: { viewBackgroundColor: appState.viewBackgroundColor } });
                     }
+                    trackXpFromElementCount(elements.length);
                 },
                 excalidrawAPI: (api) => { 
                     excalidrawAPI = api;
@@ -734,6 +924,7 @@
                     
                     if (data.type === 'roster' && data.users) {
                         userCount.textContent = `${data.users.length} online`;
+                        renderAvatars(data.users);
 
                         if (role === 'teacher' && data.users.length > lastRosterCount && excalidrawAPI) {
                             const liveElements = excalidrawAPI.getSceneElements();
@@ -751,6 +942,16 @@
                             });
                         }
                         lastRosterCount = data.users.length;
+                    }
+
+                    if (data.type === 'reaction' && data.emoji) {
+                        spawnFloatingReaction(data.emoji);
+                        playTone(660, 0.08);
+                    }
+
+                    if (data.type === 'hype') {
+                        triggerConfetti();
+                        playTone(523, 0.15);
                     }
                     
                     if (data.type === 'pages-structure' && role === 'student') {
@@ -807,10 +1008,30 @@
                 }
             });
 
+            // Closes every custom popup (pen, eraser) and forces Excalidraw's
+            // own left-side properties panel shut. That native panel's
+            // visibility is driven entirely by appState.activeTool — DOM/CSS
+            // tricks can't reliably hide it, only setActiveTool() can. This
+            // is the fix for the panel "staying open" when switching tools.
+            function closeAllPopups() {
+                document.getElementById('pen-popup').classList.remove('active');
+                const eraserPopup = document.getElementById('eraser-popup');
+                if (eraserPopup) eraserPopup.classList.remove('active');
+                document.getElementById('right-panel').classList.remove('active');
+            }
+
             function selectTool(tool) {
                 currentTool = tool;
                 document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
                 document.getElementById(`btn-${tool}`).classList.add('active');
+
+                if (tool !== 'eraser') {
+                    const eraserPopup = document.getElementById('eraser-popup');
+                    if (eraserPopup) eraserPopup.classList.remove('active');
+                }
+                if (tool !== 'pen') {
+                    document.getElementById('pen-popup').classList.remove('active');
+                }
                 
                 if (excalidrawAPI) {
                     if (tool === 'selection') {
@@ -818,19 +1039,11 @@
                     } else if (tool === 'pen') {
                         excalidrawAPI.setActiveTool({ type: 'freedraw' });
                     } else if (tool === 'eraser') {
-                        if (eraserMode === 'full') {
-                            eraserMode = 'precision';
-                            excalidrawAPI.setActiveTool({ type: 'eraser' });
-                            excalidrawAPI.updateScene({
-                                appState: { currentItemStrokeWidth: 10 }
-                            });
-                        } else {
-                            eraserMode = 'full';
-                            excalidrawAPI.setActiveTool({ type: 'eraser' });
-                            excalidrawAPI.updateScene({
-                                appState: { currentItemStrokeWidth: 30 }
-                            });
-                        }
+                        excalidrawAPI.setActiveTool({ type: 'eraser' });
+                        excalidrawAPI.updateScene({
+                            appState: { currentItemStrokeWidth: eraserWidth }
+                        });
+                        document.getElementById('eraser-popup').classList.toggle('active');
                     } else if (tool === 'shape') {
                         excalidrawAPI.setActiveTool({ type: 'rectangle' });
                     } else if (tool === 'text') {
@@ -838,6 +1051,22 @@
                     }
                 }
             }
+
+            // Non-drawing tool buttons (toolkit/graph/math/spotlight/record/bg)
+            // open modals rather than a drawing tool, so without this they'd
+            // leave Excalidraw's freedraw/eraser properties panel stuck open
+            // behind the modal. Switching to 'selection' first closes it.
+            ['btn-toolkit', 'btn-graph', 'btn-math', 'btn-bg', 'btn-spotlight', 'btn-record'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.addEventListener('click', () => {
+                        if (excalidrawAPI) excalidrawAPI.setActiveTool({ type: 'selection' });
+                        document.getElementById('pen-popup').classList.remove('active');
+                        const eraserPopup = document.getElementById('eraser-popup');
+                        if (eraserPopup) eraserPopup.classList.remove('active');
+                    });
+                }
+            });
 
             function updateToolUI(tool) {
                 document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
@@ -1022,6 +1251,20 @@
             
             document.getElementById('pen-close').addEventListener('click', () => {
                 document.getElementById('pen-popup').classList.remove('active');
+            });
+
+            document.getElementById('eraser-close').addEventListener('click', () => {
+                document.getElementById('eraser-popup').classList.remove('active');
+            });
+
+            document.getElementById('eraser-thickness').addEventListener('input', (e) => {
+                eraserWidth = parseInt(e.target.value);
+                document.getElementById('eraser-thickness-value').textContent = eraserWidth + 'px';
+                if (excalidrawAPI) {
+                    excalidrawAPI.updateScene({
+                        appState: { currentItemStrokeWidth: eraserWidth }
+                    });
+                }
             });
 
             document.getElementById('btn-bg').addEventListener('click', () => {
@@ -1311,6 +1554,33 @@
                 }
             });
 
+            document.getElementById('btn-reactions').addEventListener('click', (e) => {
+                e.stopPropagation();
+                document.getElementById('reactions-popup').classList.toggle('active');
+            });
+
+            document.querySelectorAll('.reaction-emoji-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const emoji = btn.dataset.emoji;
+                    spawnFloatingReaction(emoji);
+                    playTone(660, 0.08);
+                    sendMessage({ type: 'reaction', emoji, name: currentUserName });
+                    document.getElementById('reactions-popup').classList.remove('active');
+                });
+            });
+
+            document.getElementById('btn-mute').addEventListener('click', () => {
+                isMuted = !isMuted;
+                const icon = document.querySelector('#btn-mute i');
+                icon.className = isMuted ? 'fas fa-volume-mute' : 'fas fa-volume-up';
+            });
+
+            document.getElementById('btn-hype').addEventListener('click', () => {
+                triggerConfetti();
+                playTone(523, 0.15);
+                sendMessage({ type: 'hype' });
+            });
+
             document.getElementById('btn-invite').addEventListener('click', () => {
                 document.getElementById('invite-modal').classList.add('active');
             });
@@ -1402,6 +1672,12 @@
             document.addEventListener('click', (e) => {
                 if (!e.target.closest('#pen-popup') && !e.target.closest('#btn-pen')) {
                     document.getElementById('pen-popup').classList.remove('active');
+                }
+                if (!e.target.closest('#eraser-popup') && !e.target.closest('#btn-eraser')) {
+                    document.getElementById('eraser-popup').classList.remove('active');
+                }
+                if (!e.target.closest('#reactions-popup') && !e.target.closest('#btn-reactions')) {
+                    document.getElementById('reactions-popup').classList.remove('active');
                 }
                 if (!e.target.closest('#right-panel') && !e.target.closest('#btn-bg')) {
                     document.getElementById('right-panel').classList.remove('active');
@@ -1526,6 +1802,180 @@
                 });
                 grid.appendChild(swatch);
             });
+        }
+
+        // ============================================================
+        // Engagement layer — XP/levels, streaks, avatars, reactions,
+        // confetti, sound. All designed around well-established retention
+        // mechanics: visible progress (XP bar), loss-averse daily streaks
+        // (Duolingo-style), social presence (avatars), and instant social
+        // feedback (live reactions + confetti) that reward participation
+        // the moment it happens rather than at the end of a session.
+        // ============================================================
+
+        function initEngagementLayer(name) {
+            const xpKey = `pb_xp_${name}`;
+            const streakKey = `pb_streak_${name}`;
+            const lastVisitKey = `pb_lastvisit_${name}`;
+
+            xp = parseInt(localStorage.getItem(xpKey) || '0', 10);
+            level = Math.floor(xp / XP_PER_LEVEL) + 1;
+            updateXpUI();
+
+            // Daily streak: increments once per new calendar day the person
+            // shows up, resets if they skip a day — the same loss-aversion
+            // mechanic that makes Duolingo streaks so effective.
+            const today = new Date().toDateString();
+            const lastVisit = localStorage.getItem(lastVisitKey);
+            let streak = parseInt(localStorage.getItem(streakKey) || '0', 10) || 1;
+            if (lastVisit && lastVisit !== today) {
+                const daysBetween = Math.round((new Date(today) - new Date(lastVisit)) / 86400000);
+                streak = daysBetween === 1 ? streak + 1 : 1;
+            } else if (!lastVisit) {
+                streak = 1;
+            }
+            localStorage.setItem(streakKey, String(streak));
+            localStorage.setItem(lastVisitKey, today);
+            document.getElementById('streak-count').textContent = streak;
+        }
+
+        function trackXpFromElementCount(count) {
+            if (count > lastElementCount) {
+                addXP((count - lastElementCount) * 2);
+            }
+            lastElementCount = count;
+        }
+
+        function addXP(amount) {
+            xp += amount;
+            const newLevel = Math.floor(xp / XP_PER_LEVEL) + 1;
+            const leveledUp = newLevel > level;
+            level = newLevel;
+            localStorage.setItem(`pb_xp_${currentUserName}`, String(xp));
+            updateXpUI();
+            if (leveledUp) {
+                showLevelToast(`🎉 Level Up! You're now Level ${level}`);
+                triggerConfetti();
+                playTone(784, 0.12);
+            }
+        }
+
+        function updateXpUI() {
+            const levelEl = document.getElementById('xp-level');
+            const fillEl = document.getElementById('xp-bar-fill');
+            if (!levelEl || !fillEl) return;
+            levelEl.textContent = `⭐ Lv ${level}`;
+            const progressInLevel = xp % XP_PER_LEVEL;
+            fillEl.style.width = `${(progressInLevel / XP_PER_LEVEL) * 100}%`;
+        }
+
+        function showLevelToast(text) {
+            const toast = document.getElementById('level-toast');
+            toast.textContent = text;
+            toast.classList.add('active');
+            setTimeout(() => toast.classList.remove('active'), 2600);
+        }
+
+        function playTone(freq, duration) {
+            if (isMuted) return;
+            try {
+                if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'sine';
+                osc.frequency.value = freq;
+                gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + duration);
+            } catch (e) {
+                // Audio not available (e.g. autoplay policy) — fail silently
+            }
+        }
+
+        function spawnFloatingReaction(emoji) {
+            const layer = document.getElementById('reaction-layer');
+            const el = document.createElement('div');
+            el.className = 'floating-reaction';
+            el.textContent = emoji;
+            el.style.left = `${10 + Math.random() * 80}vw`;
+            layer.appendChild(el);
+            setTimeout(() => el.remove(), 3000);
+        }
+
+        function avatarColorForName(name) {
+            const colors = ['#8B5CF6', '#EC4899', '#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#06B6D4', '#A855F7'];
+            let hash = 0;
+            for (let i = 0; i < name.length; i++) hash = name.charCodeAt(i) + ((hash << 5) - hash);
+            return colors[Math.abs(hash) % colors.length];
+        }
+
+        function renderAvatars(users) {
+            const stack = document.getElementById('avatar-stack');
+            if (!stack) return;
+            stack.innerHTML = '';
+            const shown = users.filter(u => u.name).slice(0, 5);
+            shown.forEach(u => {
+                const bubble = document.createElement('div');
+                bubble.className = 'avatar-bubble';
+                bubble.style.background = avatarColorForName(u.name);
+                bubble.textContent = u.name.trim().charAt(0).toUpperCase();
+                bubble.title = `${u.name} (${u.role})`;
+                stack.appendChild(bubble);
+            });
+            const extra = users.filter(u => u.name).length - shown.length;
+            if (extra > 0) {
+                const more = document.createElement('div');
+                more.className = 'avatar-bubble';
+                more.style.background = '#4a5568';
+                more.textContent = `+${extra}`;
+                stack.appendChild(more);
+            }
+        }
+
+        function triggerConfetti() {
+            const canvas = document.getElementById('confetti-canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            const colors = ['#a855f7', '#ec4899', '#3b82f6', '#10b981', '#f59e0b', '#ef4444'];
+            const pieces = Array.from({ length: 120 }, () => ({
+                x: Math.random() * canvas.width,
+                y: -20 - Math.random() * canvas.height * 0.3,
+                w: 6 + Math.random() * 6,
+                h: 6 + Math.random() * 10,
+                color: colors[Math.floor(Math.random() * colors.length)],
+                speed: 2 + Math.random() * 4,
+                drift: -2 + Math.random() * 4,
+                rotation: Math.random() * 360,
+                spin: -8 + Math.random() * 16
+            }));
+
+            let frame = 0;
+            const maxFrames = 140;
+            function animate() {
+                frame++;
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                pieces.forEach(p => {
+                    p.y += p.speed;
+                    p.x += p.drift;
+                    p.rotation += p.spin;
+                    ctx.save();
+                    ctx.translate(p.x, p.y);
+                    ctx.rotate((p.rotation * Math.PI) / 180);
+                    ctx.fillStyle = p.color;
+                    ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+                    ctx.restore();
+                });
+                if (frame < maxFrames) {
+                    requestAnimationFrame(animate);
+                } else {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                }
+            }
+            animate();
         }
     </script>
 </body>
