@@ -3,7 +3,7 @@ Every year, thousands of NEET aspirants start their preparation journey with det
 They don't disappear because they lack intelligence. They don't quit because NEET is hard. They drop out because nobody teaches them the real game.
 If you're a NEET dropper—or afraid of becoming one—this post is for you. Here's exactly why 90% don't make it, and the framework that changes that.
 The Real Dropout Statistics
-Before we dive in, let's look at the numbers:
+Before we dive in, let's look at the numbers;
 70-75% of NEET aspirants drop out before their second attempt
 Of those who attempt twice, 85% don't reach their target score
 The average time-to-success for NEET is 2.3 years, not 1 or 2
