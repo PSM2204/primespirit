@@ -241,6 +241,143 @@
 
         #eraser-popup { position: fixed; left: 100px; top: 140px; background: var(--bg-glass); backdrop-filter: blur(20px); border-radius: var(--radius-lg); padding: 20px; box-shadow: var(--shadow-lg); z-index: 1000; display: none; min-width: 280px; border: 1px solid var(--border-light); }
         #eraser-popup.active { display: block; }
+
+        /* Native Excalidraw shape-properties panel (Stroke/Background/Width/
+           Sloppiness/Edges) has no close button and can't be repositioned —
+           it sits fixed over the canvas and blocks drawing. We hide it and
+           replace it with our own draggable, closable #shape-style-popup. */
+        .excalidraw .panelColumn { display: none !important; }
+
+        #shape-style-popup {
+            position: fixed;
+            left: 100px;
+            top: 140px;
+            background: var(--bg-glass);
+            backdrop-filter: blur(20px);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            z-index: 1000;
+            display: none;
+            min-width: 280px;
+            max-height: 70vh;
+            overflow-y: auto;
+            border: 1px solid var(--border-light);
+        }
+        #shape-style-popup.active { display: block; }
+        .shape-style-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 16px;
+            cursor: move;
+            user-select: none;
+            border-bottom: 1px solid var(--border-light);
+            font-weight: 700;
+            font-size: 14px;
+            color: var(--text-primary);
+        }
+        .shape-style-header i.fa-grip-lines { color: var(--text-secondary); font-size: 12px; }
+        .shape-style-body { padding: 16px; }
+        .shape-style-section { margin-bottom: 18px; }
+        .shape-style-label {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 10px;
+        }
+        .shape-style-swatches { display: flex; gap: 8px; flex-wrap: wrap; }
+        .shape-style-swatch {
+            width: 30px;
+            height: 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.15s;
+        }
+        .shape-style-swatch:hover { transform: scale(1.1); }
+        .shape-style-swatch.active { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(139,92,246,0.3); }
+        .shape-style-option-row { display: flex; gap: 8px; }
+        .shape-style-option-btn {
+            flex: 1;
+            padding: 8px;
+            border: 2px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            background: var(--bg-surface);
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.15s;
+        }
+        .shape-style-option-btn.active { border-color: var(--accent); background: var(--bg-hover); }
+        .shape-style-close {
+            width: 26px;
+            height: 26px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            cursor: pointer;
+            color: var(--text-secondary);
+            transition: all 0.2s;
+        }
+        .shape-style-close:hover { background: var(--bg-hover); color: #ef4444; }
+
+        /* Hide native Excalidraw shape/text properties panel — it has no
+           close button and can't be repositioned, so it sits fixed over
+           the canvas and blocks drawing. Replaced below with our own
+           draggable, closable "Shape Style" panel. */
+        .excalidraw .panelColumn { display: none !important; }
+
+        #shape-style-popup {
+            position: fixed;
+            left: 100px;
+            top: 140px;
+            background: var(--bg-glass);
+            backdrop-filter: blur(20px);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            z-index: 1000;
+            display: none;
+            min-width: 260px;
+            border: 1px solid var(--border-light);
+            overflow: hidden;
+        }
+        #shape-style-popup.active { display: block; }
+        .shape-style-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 16px;
+            cursor: grab;
+            background: var(--bg-hover);
+            font-weight: 700;
+            font-size: 14px;
+            color: var(--text-primary);
+            user-select: none;
+        }
+        .shape-style-header:active { cursor: grabbing; }
+        .shape-style-header .panel-close { width: 28px; height: 28px; }
+        .shape-style-body { padding: 16px; }
+        .shape-style-body .panel-label { margin-bottom: 10px; }
+        .shape-style-body .panel-section { margin-bottom: 20px; }
+        .shape-style-body .panel-section:last-child { margin-bottom: 0; }
+        .swatch-row { display: flex; gap: 8px; flex-wrap: wrap; }
+        .swatch-row .color-option { width: 30px; height: 30px; }
+        .btn-row { display: flex; gap: 8px; }
+        .btn-row button {
+            flex: 1;
+            padding: 8px;
+            border: 2px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            background: var(--bg-surface);
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.15s;
+        }
+        .btn-row button:hover { transform: translateY(-1px); }
+        .btn-row button.active { border-color: var(--accent); background: var(--bg-hover); color: var(--accent); }
         .pen-category { margin-bottom: 20px; }
         .pen-category-label { font-size: 12px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 12px; }
         .pen-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
@@ -650,6 +787,66 @@
     </div>
 </div>
 
+<div id="shape-style-popup">
+    <div class="shape-style-header" id="shape-style-drag-handle">
+        <span><i class="fas fa-grip-lines"></i>&nbsp;&nbsp;Shape Style</span>
+        <div class="shape-style-close" id="shape-style-close"><i class="fas fa-times"></i></div>
+    </div>
+    <div class="shape-style-body">
+        <div class="shape-style-section">
+            <div class="shape-style-label">Stroke</div>
+            <div class="shape-style-swatches" id="shape-stroke-swatches">
+                <div class="shape-style-swatch active" style="background:#1e1e1e" data-color="#1e1e1e"></div>
+                <div class="shape-style-swatch" style="background:#e03131" data-color="#e03131"></div>
+                <div class="shape-style-swatch" style="background:#2f9e44" data-color="#2f9e44"></div>
+                <div class="shape-style-swatch" style="background:#1971c2" data-color="#1971c2"></div>
+                <div class="shape-style-swatch" style="background:#f08c00" data-color="#f08c00"></div>
+            </div>
+        </div>
+        <div class="shape-style-section">
+            <div class="shape-style-label">Background</div>
+            <div class="shape-style-swatches" id="shape-bg-swatches">
+                <div class="shape-style-swatch active" style="background:transparent;border:2px dashed #ccc;" data-color="transparent"></div>
+                <div class="shape-style-swatch" style="background:#ffc9c9" data-color="#ffc9c9"></div>
+                <div class="shape-style-swatch" style="background:#b2f2bb" data-color="#b2f2bb"></div>
+                <div class="shape-style-swatch" style="background:#a5d8ff" data-color="#a5d8ff"></div>
+                <div class="shape-style-swatch" style="background:#ffec99" data-color="#ffec99"></div>
+            </div>
+        </div>
+        <div class="shape-style-section">
+            <div class="shape-style-label">Stroke Width</div>
+            <div class="shape-style-option-row" id="shape-width-options">
+                <button class="shape-style-option-btn active" data-width="1">Thin</button>
+                <button class="shape-style-option-btn" data-width="2">Bold</button>
+                <button class="shape-style-option-btn" data-width="4">Extra</button>
+            </div>
+        </div>
+        <div class="shape-style-section">
+            <div class="shape-style-label">Fill Style</div>
+            <div class="shape-style-option-row" id="shape-fill-options">
+                <button class="shape-style-option-btn active" data-fill="hachure">Hachure</button>
+                <button class="shape-style-option-btn" data-fill="cross-hatch">Cross</button>
+                <button class="shape-style-option-btn" data-fill="solid">Solid</button>
+            </div>
+        </div>
+        <div class="shape-style-section">
+            <div class="shape-style-label">Sloppiness</div>
+            <div class="shape-style-option-row" id="shape-roughness-options">
+                <button class="shape-style-option-btn" data-roughness="0">Neat</button>
+                <button class="shape-style-option-btn active" data-roughness="1">Artist</button>
+                <button class="shape-style-option-btn" data-roughness="2">Wild</button>
+            </div>
+        </div>
+        <div class="shape-style-section" style="margin-bottom:0;">
+            <div class="shape-style-label">Edges</div>
+            <div class="shape-style-option-row" id="shape-edges-options">
+                <button class="shape-style-option-btn active" data-edge="sharp">Sharp</button>
+                <button class="shape-style-option-btn" data-edge="round">Round</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div id="spotlight-overlay"></div>
 
 <div class="modal-overlay" id="toolkit-modal">
@@ -872,6 +1069,26 @@
                     const wrapper = menuBtn.closest('.dropdown-menu') || menuBtn;
                     wrapper.style.display = 'none';
                 }
+
+                // Fallback for the native shape-properties panel (Stroke/
+                // Background/etc). The .panelColumn CSS rule above handles
+                // this in most Excalidraw builds, but class names can shift
+                // between versions — this finds it by its "Stroke" label
+                // text instead, which is far more stable, and hides its
+                // panel-sized ancestor. Our own #shape-style-popup replaces
+                // its functionality with a closable, draggable version.
+                rootEl.querySelectorAll('label, div, h4, h3').forEach(el => {
+                    if (el.children.length === 0 && el.textContent.trim() === 'Stroke') {
+                        let ancestor = el;
+                        for (let i = 0; i < 5 && ancestor.parentElement; i++) {
+                            ancestor = ancestor.parentElement;
+                            if (ancestor.offsetWidth > 150 && ancestor.offsetWidth < 400) {
+                                ancestor.style.display = 'none';
+                                break;
+                            }
+                        }
+                    }
+                });
             }
 
             const chromeObserver = new MutationObserver(() => hideNativeExcalidrawChrome());
@@ -1032,6 +1249,15 @@
                 if (tool !== 'pen') {
                     document.getElementById('pen-popup').classList.remove('active');
                 }
+                // Our custom draggable/closable style panel replaces
+                // Excalidraw's native one, which had no close button and
+                // couldn't be moved out of the way while drawing.
+                const shapeStylePopup = document.getElementById('shape-style-popup');
+                if (tool === 'shape' || tool === 'text') {
+                    shapeStylePopup.classList.add('active');
+                } else {
+                    shapeStylePopup.classList.remove('active');
+                }
                 
                 if (excalidrawAPI) {
                     if (tool === 'selection') {
@@ -1064,6 +1290,7 @@
                         document.getElementById('pen-popup').classList.remove('active');
                         const eraserPopup = document.getElementById('eraser-popup');
                         if (eraserPopup) eraserPopup.classList.remove('active');
+                        document.getElementById('shape-style-popup').classList.remove('active');
                     });
                 }
             });
@@ -1265,6 +1492,105 @@
                         appState: { currentItemStrokeWidth: eraserWidth }
                     });
                 }
+            });
+
+            // --- Custom shape-style panel: close button + drag-to-move ---
+            document.getElementById('shape-style-close').addEventListener('click', () => {
+                document.getElementById('shape-style-popup').classList.remove('active');
+                selectTool('selection');
+            });
+
+            (function makeShapeStylePanelDraggable() {
+                const panel = document.getElementById('shape-style-popup');
+                const handle = document.getElementById('shape-style-drag-handle');
+                let dragging = false;
+                let offsetX = 0, offsetY = 0;
+
+                function startDrag(clientX, clientY) {
+                    dragging = true;
+                    const rect = panel.getBoundingClientRect();
+                    offsetX = clientX - rect.left;
+                    offsetY = clientY - rect.top;
+                }
+                function moveDrag(clientX, clientY) {
+                    if (!dragging) return;
+                    const maxLeft = window.innerWidth - panel.offsetWidth - 10;
+                    const maxTop = window.innerHeight - 40;
+                    let newLeft = clientX - offsetX;
+                    let newTop = clientY - offsetY;
+                    newLeft = Math.max(10, Math.min(newLeft, maxLeft));
+                    newTop = Math.max(10, Math.min(newTop, maxTop));
+                    panel.style.left = newLeft + 'px';
+                    panel.style.top = newTop + 'px';
+                }
+                function endDrag() { dragging = false; }
+
+                handle.addEventListener('mousedown', (e) => { startDrag(e.clientX, e.clientY); e.preventDefault(); });
+                document.addEventListener('mousemove', (e) => moveDrag(e.clientX, e.clientY));
+                document.addEventListener('mouseup', endDrag);
+
+                handle.addEventListener('touchstart', (e) => {
+                    const t = e.touches[0];
+                    startDrag(t.clientX, t.clientY);
+                }, { passive: true });
+                document.addEventListener('touchmove', (e) => {
+                    if (!dragging) return;
+                    const t = e.touches[0];
+                    moveDrag(t.clientX, t.clientY);
+                }, { passive: true });
+                document.addEventListener('touchend', endDrag);
+            })();
+
+            document.querySelectorAll('#shape-stroke-swatches .shape-style-swatch').forEach(sw => {
+                sw.addEventListener('click', () => {
+                    document.querySelectorAll('#shape-stroke-swatches .shape-style-swatch').forEach(s => s.classList.remove('active'));
+                    sw.classList.add('active');
+                    if (excalidrawAPI) excalidrawAPI.updateScene({ appState: { currentItemStrokeColor: sw.dataset.color } });
+                });
+            });
+
+            document.querySelectorAll('#shape-bg-swatches .shape-style-swatch').forEach(sw => {
+                sw.addEventListener('click', () => {
+                    document.querySelectorAll('#shape-bg-swatches .shape-style-swatch').forEach(s => s.classList.remove('active'));
+                    sw.classList.add('active');
+                    if (excalidrawAPI) excalidrawAPI.updateScene({ appState: { currentItemBackgroundColor: sw.dataset.color } });
+                });
+            });
+
+            document.querySelectorAll('#shape-width-options .shape-style-option-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('#shape-width-options .shape-style-option-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    if (excalidrawAPI) excalidrawAPI.updateScene({ appState: { currentItemStrokeWidth: parseInt(btn.dataset.width) } });
+                });
+            });
+
+            document.querySelectorAll('#shape-fill-options .shape-style-option-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('#shape-fill-options .shape-style-option-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    if (excalidrawAPI) excalidrawAPI.updateScene({ appState: { currentItemFillStyle: btn.dataset.fill } });
+                });
+            });
+
+            document.querySelectorAll('#shape-roughness-options .shape-style-option-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('#shape-roughness-options .shape-style-option-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    if (excalidrawAPI) excalidrawAPI.updateScene({ appState: { currentItemRoughness: parseInt(btn.dataset.roughness) } });
+                });
+            });
+
+            document.querySelectorAll('#shape-edges-options .shape-style-option-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('#shape-edges-options .shape-style-option-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    if (excalidrawAPI) {
+                        excalidrawAPI.updateScene({
+                            appState: { currentItemRoundness: btn.dataset.edge === 'round' ? 'round' : 'sharp' }
+                        });
+                    }
+                });
             });
 
             document.getElementById('btn-bg').addEventListener('click', () => {
