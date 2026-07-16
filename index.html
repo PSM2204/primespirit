@@ -24,12 +24,12 @@
     <meta name="twitter:description" content="Elite micro-batch online coaching (5-10 students) for Class 6-12 Boards, NEET, JEE, CUET, IAT and NEST.">
     <meta name="twitter:image" content="https://primespirit.co.in/og-image.jpg">
 
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 512 512%22><circle cx=%22256%22 cy=%22256%22 r=%22240%22 fill=%22%23111522%22 stroke=%22%230070F3%22 stroke-width=%2212%22/><text x=%2250%25%22 y=%2255%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 font-family=%22sans-serif%22 font-weight=%22900%22 font-size=%22200%22 fill=%22%23f8fafc%22>PS</text><circle cx=%22390%22 cy=%22360%22 r=%2230%22 fill=%22%2300df89%22/></svg>">
+    <!-- UPDATED FAVICON: Option C orbit mark -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 512 512%22><circle cx=%22256%22 cy=%22256%22 r=%22240%22 fill=%22%23060810%22 stroke=%22%2300C6FF%22 stroke-width=%228%22/><ellipse cx=%22256%22 cy=%22256%22 rx=%22200%22 ry=%2286%22 fill=%22none%22 stroke=%22url(%23g)%22 stroke-width=%2214%22 transform=%22rotate(-30 256 256)%22/><defs><linearGradient id=%22g%22 x1=%220%25%22 y1=%220%25%22 x2=%22100%25%22 y2=%220%25%22><stop offset=%220%25%22 stop-color=%22%2300C6FF%22/><stop offset=%22100%25%22 stop-color=%22%230070F3%22/></linearGradient></defs><circle cx=%22256%22 cy=%22256%22 r=%22110%22 fill=%22%23060810%22 stroke=%22%2300C6FF%22 stroke-width=%2210%22/><text x=%2250%25%22 y=%2257%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 font-family=%22Arial Black, sans-serif%22 font-weight=%22900%22 font-size=%22130%22 fill=%22%2300C6FF%22>PS</text><circle cx=%22424%22 cy=%22160%22 r=%2226%22 fill=%22%2300C6FF%22/></svg>">
 
     <link rel="stylesheet" href="style.css?v=12.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <!-- UPDATED SCHEMA: Added Bengaluru, phone, email, founder object -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -71,7 +71,6 @@
     }
     </script>
 
-    <!-- FAQ SCHEMA -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -181,14 +180,9 @@
       }
       .primeboard-btn i { font-size: 16px; }
 
-      /* ── NAV SECTION SCROLL FIX ── */
-      /* Offset anchor scroll so fixed header doesn't cover sections */
       html { scroll-behavior: smooth; }
-      section[id], div[id] {
-        scroll-margin-top: 80px;
-      }
+      section[id], div[id] { scroll-margin-top: 80px; }
 
-      /* ── BLOG FILTER BUTTONS FIX ── */
       .blog-filters {
         display: flex;
         flex-wrap: wrap;
@@ -217,66 +211,71 @@
         color: #fff;
       }
 
-      /* ── FAQ SECTION STYLES ── */
-      .faq-section {
-        border-top: 1px solid var(--glass-border, rgba(255,255,255,0.08));
-      }
-      .faq-grid {
-        max-width: 800px;
-        margin: 0 auto;
-        display: flex;
-        flex-direction: column;
-        gap: 14px;
-      }
-      .faq-item {
-        background: rgba(255,255,255,0.03);
-        border: 1px solid rgba(255,255,255,0.08);
-        border-radius: 10px;
-        overflow: hidden;
-      }
-      .faq-question {
-        width: 100%;
-        text-align: left;
-        background: none;
-        border: none;
-        color: inherit;
-        padding: 18px 20px;
-        font-size: 1rem;
-        font-weight: 600;
-        cursor: pointer;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 12px;
-        transition: background 0.2s;
-      }
+      .faq-section { border-top: 1px solid var(--glass-border, rgba(255,255,255,0.08)); }
+      .faq-grid { max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; gap: 14px; }
+      .faq-item { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; overflow: hidden; }
+      .faq-question { width: 100%; text-align: left; background: none; border: none; color: inherit; padding: 18px 20px; font-size: 1rem; font-weight: 600; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 12px; transition: background 0.2s; }
       .faq-question:hover { background: rgba(255,255,255,0.04); }
-      .faq-question i {
-        flex-shrink: 0;
-        transition: transform 0.3s ease;
-        color: var(--primary-neon, #0070F3);
-      }
+      .faq-question i { flex-shrink: 0; transition: transform 0.3s ease; color: var(--primary-neon, #0070F3); }
       .faq-item.open .faq-question i { transform: rotate(180deg); }
-      .faq-answer {
-        max-height: 0;
-        overflow: hidden;
-        transition: max-height 0.35s ease, padding 0.3s ease;
-        padding: 0 20px;
-        font-size: 0.95rem;
-        color: var(--text-dark, #94a3b8);
-        line-height: 1.7;
-      }
-      .faq-item.open .faq-answer {
-        max-height: 300px;
-        padding: 0 20px 18px 20px;
-      }
+      .faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.35s ease, padding 0.3s ease; padding: 0 20px; font-size: 0.95rem; color: var(--text-dark, #94a3b8); line-height: 1.7; }
+      .faq-item.open .faq-answer { max-height: 300px; padding: 0 20px 18px 20px; }
 
-      /* Responsive safety net */
       @media (max-width: 480px) {
         .hero-content h1 { font-size: 2rem !important; line-height: 1.25 !important; }
         .hero-buttons { flex-direction: column; }
         .hero-buttons .btn { width: 100%; text-align: center; }
         .testimonial-grid, .course-grid { grid-template-columns: 1fr !important; }
+      }
+
+      /* ── OPTION C LOGO STYLES ── */
+      .logo {
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 10px !important;
+        text-decoration: none !important;
+      }
+      .logo-orbit-svg {
+        width: 42px;
+        height: 42px;
+        flex-shrink: 0;
+        filter: drop-shadow(0 0 8px rgba(0, 198, 255, 0.4));
+        transition: filter 0.3s ease, transform 0.3s ease;
+      }
+      .logo:hover .logo-orbit-svg {
+        filter: drop-shadow(0 0 16px rgba(0, 198, 255, 0.7));
+        transform: rotate(15deg);
+      }
+      .logo-text-wrap {
+        display: flex;
+        flex-direction: column;
+        line-height: 1;
+        gap: 2px;
+      }
+      .logo-name {
+        font-size: 1.15rem;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        background: linear-gradient(135deg, #00C6FF 0%, #0070F3 50%, #00df89 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        white-space: nowrap;
+      }
+      .logo-tagline {
+        font-size: 0.6rem;
+        font-weight: 600;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: rgba(0, 198, 255, 0.55);
+        white-space: nowrap;
+        -webkit-text-fill-color: rgba(0, 198, 255, 0.55);
+      }
+
+      @media (max-width: 480px) {
+        .logo-orbit-svg { width: 34px; height: 34px; }
+        .logo-name { font-size: 1rem; }
+        .logo-tagline { display: none; }
       }
     </style>
 </head>
@@ -284,7 +283,50 @@
 
     <header>
         <div class="container logo-nav">
-            <a href="#hero" class="logo">Prime Spirit<span class="pulse-dot">.</span></a>
+
+            <!-- ═══════════════════════════════════════
+                 OPTION C LOGO — Orbit mark + name
+            ═══════════════════════════════════════ -->
+            <a href="#hero" class="logo" aria-label="Prime Spirit Mentors — Home">
+
+                <!-- SVG Orbit Mark -->
+                <svg class="logo-orbit-svg" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  <defs>
+                    <linearGradient id="psGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" stop-color="#00C6FF"/>
+                      <stop offset="100%" stop-color="#0070F3"/>
+                    </linearGradient>
+                  </defs>
+                  <!-- Orbit ellipse ring -->
+                  <ellipse cx="24" cy="24" rx="22" ry="9.5"
+                    fill="none"
+                    stroke="url(#psGrad)"
+                    stroke-width="1.8"
+                    transform="rotate(-32 24 24)"/>
+                  <!-- Inner circle -->
+                  <circle cx="24" cy="24" r="13"
+                    fill="#060810"
+                    stroke="url(#psGrad)"
+                    stroke-width="1.5"/>
+                  <!-- PS monogram -->
+                  <text x="24" y="28.5"
+                    font-family="Arial Black, sans-serif"
+                    font-size="12"
+                    font-weight="900"
+                    fill="#00C6FF"
+                    text-anchor="middle">PS</text>
+                  <!-- Orbit dot -->
+                  <circle cx="43" cy="15" r="2.8" fill="#00C6FF"/>
+                </svg>
+
+                <!-- Text beside icon -->
+                <span class="logo-text-wrap">
+                  <span class="logo-name">Prime Spirit</span>
+                  <span class="logo-tagline">Mentors</span>
+                </span>
+
+            </a>
+
             <button class="menu-toggle" id="menu-toggle" aria-label="Toggle Navigation Panel">
                 <i class="fas fa-bars"></i>
             </button>
@@ -423,7 +465,6 @@
         </div>
     </section>
 
-    <!-- BLOG SECTION — filter buttons fully isolated from testimonials -->
     <section id="blog-hub" class="courses-section" style="border-top: 1px solid var(--glass-border); background-color: rgba(255,255,255,0.002);">
         <div class="container">
             <span class="section-subtitle">Academic Intelligence</span>
@@ -473,94 +514,44 @@
         </div>
     </section>
 
-    <!-- FAQ SECTION — NEW -->
     <section id="faq" class="faq-section courses-section">
         <div class="container">
             <span class="section-subtitle">Quick Answers</span>
             <h2>Frequently Asked Questions</h2>
             <hr class="title-line">
             <div class="faq-grid">
-
                 <div class="faq-item">
-                    <button class="faq-question" type="button" aria-expanded="false">
-                        Is Prime Spirit Mentors suitable for Bengaluru students?
-                        <i class="fas fa-chevron-down"></i>
-                    </button>
-                    <div class="faq-answer">
-                        Yes. Prime Spirit Mentors offers fully online coaching, making it ideal for students across Bengaluru and all of India. Students from Koramangala, HSR Layout, Whitefield, Jayanagar and other areas actively enrol with us.
-                    </div>
+                    <button class="faq-question" type="button" aria-expanded="false">Is Prime Spirit Mentors suitable for Bengaluru students?<i class="fas fa-chevron-down"></i></button>
+                    <div class="faq-answer">Yes. Prime Spirit Mentors offers fully online coaching, making it ideal for students across Bengaluru and all of India. Students from Koramangala, HSR Layout, Whitefield, Jayanagar and other areas actively enrol with us.</div>
                 </div>
-
                 <div class="faq-item">
-                    <button class="faq-question" type="button" aria-expanded="false">
-                        How is micro-batch coaching different from regular online coaching?
-                        <i class="fas fa-chevron-down"></i>
-                    </button>
-                    <div class="faq-answer">
-                        Unlike mass online platforms with 100+ students per class, Prime Spirit Mentors limits every batch to just 5–10 students. This means every doubt gets addressed in real time, every mistake gets tracked, and every student gets a personalized learning path.
-                    </div>
+                    <button class="faq-question" type="button" aria-expanded="false">How is micro-batch coaching different from regular online coaching?<i class="fas fa-chevron-down"></i></button>
+                    <div class="faq-answer">Unlike mass online platforms with 100+ students per class, Prime Spirit Mentors limits every batch to just 5–10 students. This means every doubt gets addressed in real time, every mistake gets tracked, and every student gets a personalized learning path.</div>
                 </div>
-
                 <div class="faq-item">
-                    <button class="faq-question" type="button" aria-expanded="false">
-                        Who is Abhinav Kashyap?
-                        <i class="fas fa-chevron-down"></i>
-                    </button>
-                    <div class="faq-answer">
-                        Abhinav Kashyap is a B.Tech graduate and ex-Vedantu educator with 10+ years of teaching experience. He founded Prime Spirit Mentors to offer elite personalized coaching that large platforms cannot provide.
-                    </div>
+                    <button class="faq-question" type="button" aria-expanded="false">Who is Abhinav Kashyap?<i class="fas fa-chevron-down"></i></button>
+                    <div class="faq-answer">Abhinav Kashyap is a B.Tech graduate and ex-Vedantu educator with 10+ years of teaching experience. He founded Prime Spirit Mentors to offer elite personalized coaching that large platforms cannot provide.</div>
                 </div>
-
                 <div class="faq-item">
-                    <button class="faq-question" type="button" aria-expanded="false">
-                        Which exams does Prime Spirit Mentors prepare students for?
-                        <i class="fas fa-chevron-down"></i>
-                    </button>
-                    <div class="faq-answer">
-                        We prepare students for NEET UG, JEE Mains, CUET, IAT (IISER), NEST (NISER), and Class 6–12 CBSE/ICSE Boards across Physics, Chemistry, Mathematics, Biology, and Economics.
-                    </div>
+                    <button class="faq-question" type="button" aria-expanded="false">Which exams does Prime Spirit Mentors prepare students for?<i class="fas fa-chevron-down"></i></button>
+                    <div class="faq-answer">We prepare students for NEET UG, JEE Mains, CUET, IAT (IISER), NEST (NISER), and Class 6–12 CBSE/ICSE Boards across Physics, Chemistry, Mathematics, Biology, and Economics.</div>
                 </div>
-
                 <div class="faq-item">
-                    <button class="faq-question" type="button" aria-expanded="false">
-                        What is psychometric mentorship?
-                        <i class="fas fa-chevron-down"></i>
-                    </button>
-                    <div class="faq-answer">
-                        Psychometric mentorship identifies a student's mental blocks, exam anxiety triggers, and learning patterns — then designs a custom strategy to overcome them. It is included in all Prime Spirit batches at no extra cost.
-                    </div>
+                    <button class="faq-question" type="button" aria-expanded="false">What is psychometric mentorship?<i class="fas fa-chevron-down"></i></button>
+                    <div class="faq-answer">Psychometric mentorship identifies a student's mental blocks, exam anxiety triggers, and learning patterns — then designs a custom strategy to overcome them. It is included in all Prime Spirit batches at no extra cost.</div>
                 </div>
-
                 <div class="faq-item">
-                    <button class="faq-question" type="button" aria-expanded="false">
-                        Is there a free demo class available?
-                        <i class="fas fa-chevron-down"></i>
-                    </button>
-                    <div class="faq-answer">
-                        Yes. You can book a free strategy evaluation session with Abhinav sir through the enquiry form on our website to experience our teaching approach before enrolling.
-                    </div>
+                    <button class="faq-question" type="button" aria-expanded="false">Is there a free demo class available?<i class="fas fa-chevron-down"></i></button>
+                    <div class="faq-answer">Yes. You can book a free strategy evaluation session with Abhinav sir through the enquiry form on our website to experience our teaching approach before enrolling.</div>
                 </div>
-
                 <div class="faq-item">
-                    <button class="faq-question" type="button" aria-expanded="false">
-                        How do I enrol in a batch?
-                        <i class="fas fa-chevron-down"></i>
-                    </button>
-                    <div class="faq-answer">
-                        Fill out the enquiry form on our website or WhatsApp us at +91 97006 27812. Abhinav sir personally evaluates every student before confirming admission to ensure the right batch fit.
-                    </div>
+                    <button class="faq-question" type="button" aria-expanded="false">How do I enrol in a batch?<i class="fas fa-chevron-down"></i></button>
+                    <div class="faq-answer">Fill out the enquiry form on our website or WhatsApp us at +91 97006 27812. Abhinav sir personally evaluates every student before confirming admission to ensure the right batch fit.</div>
                 </div>
-
                 <div class="faq-item">
-                    <button class="faq-question" type="button" aria-expanded="false">
-                        What is the fee structure?
-                        <i class="fas fa-chevron-down"></i>
-                    </button>
-                    <div class="faq-answer">
-                        We offer two batch formats — Elite Hyper-Personalized (max 5 students) and Advanced Personalized Cohort (max 10 students). Contact us directly via WhatsApp or the enquiry form for current fee details.
-                    </div>
+                    <button class="faq-question" type="button" aria-expanded="false">What is the fee structure?<i class="fas fa-chevron-down"></i></button>
+                    <div class="faq-answer">We offer two batch formats — Elite Hyper-Personalized (max 5 students) and Advanced Personalized Cohort (max 10 students). Contact us directly via WhatsApp or the enquiry form for current fee details.</div>
                 </div>
-
             </div>
         </div>
     </section>
@@ -571,60 +562,15 @@
             <h2>What Our Mentees Say</h2>
             <hr class="title-line">
             <div class="testimonial-grid">
-                <div class="testimonial-card">
-                    <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
-                    <p class="quote">"I was struggling massively with Electrostatics and Mechanics numericals under timed pressure. Abhinav sir's specialized deep-dives completely changed how I process complex derivations."</p>
-                    <h4>Sahitya Pandey</h4>
-                    <span>Class 12th Physics Student | DPS RK Puram</span>
-                </div>
-                <div class="testimonial-card">
-                    <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
-                    <p class="quote">"The early core foundation program for Science and Maths completely shifted my performance graphics. The logical steps are explained so simply that advanced concepts feel completely natural now."</p>
-                    <h4>Sulochana Parihar</h4>
-                    <span>Class 10th Math & Science Student | The Hyderabad Public School</span>
-                </div>
-                <div class="testimonial-card">
-                    <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
-                    <p class="quote">"The micro-batch format meant I could actually ask doubts mid-lecture instead of saving them for later. My Maths speed for JEE Mains has improved massively in just a few months."</p>
-                    <h4>Tatvam</h4>
-                    <span>JEE Mains Aspirant</span>
-                </div>
-                <div class="testimonial-card">
-                    <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
-                    <p class="quote">"Biology felt like rote memorization until Prime Spirit restructured how I approach NCERT line-by-line. The Zoology and Botany matrices genuinely saved my revision time."</p>
-                    <h4>Srinidhi</h4>
-                    <span>NEET Aspirant</span>
-                </div>
-                <div class="testimonial-card">
-                    <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
-                    <p class="quote">"What stood out was the error mapping after every test — instead of just a score, I got a clear breakdown of exactly which concepts in Physics needed rework before JEE Mains."</p>
-                    <h4>Shantanu</h4>
-                    <span>JEE Mains Aspirant</span>
-                </div>
-                <div class="testimonial-card">
-                    <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
-                    <p class="quote">"Organic Chemistry used to feel like a maze of reactions to memorize. The synthesis chain mapping approach here made the logic finally click for my NEET prep."</p>
-                    <h4>Dhairya</h4>
-                    <span>NEET Aspirant</span>
-                </div>
-                <div class="testimonial-card">
-                    <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
-                    <p class="quote">"The psychometric mindset audit was surprisingly accurate — it flagged exactly where my exam anxiety was coming from, and the counseling sessions since have made test days far less stressful."</p>
-                    <h4>Sanyukta</h4>
-                    <span>NEET Aspirant</span>
-                </div>
-                <div class="testimonial-card">
-                    <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
-                    <p class="quote">"Coming from a large classroom setup, the shift to a 5-student batch was night and day. Every numerical mistake gets caught and corrected the same session instead of piling up."</p>
-                    <h4>Piyush</h4>
-                    <span>JEE Mains Aspirant</span>
-                </div>
-                <div class="testimonial-card">
-                    <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
-                    <p class="quote">"I appreciated how the study plan adapted around my actual weak topics instead of following one fixed syllabus pace for everyone. My mock test consistency for JEE Mains has improved a lot."</p>
-                    <h4>Riddhima</h4>
-                    <span>JEE Mains Aspirant</span>
-                </div>
+                <div class="testimonial-card"><div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div><p class="quote">"I was struggling massively with Electrostatics and Mechanics numericals under timed pressure. Abhinav sir's specialized deep-dives completely changed how I process complex derivations."</p><h4>Sahitya Pandey</h4><span>Class 12th Physics Student | DPS RK Puram</span></div>
+                <div class="testimonial-card"><div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div><p class="quote">"The early core foundation program for Science and Maths completely shifted my performance graphics. The logical steps are explained so simply that advanced concepts feel completely natural now."</p><h4>Sulochana Parihar</h4><span>Class 10th Math & Science Student | The Hyderabad Public School</span></div>
+                <div class="testimonial-card"><div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div><p class="quote">"The micro-batch format meant I could actually ask doubts mid-lecture instead of saving them for later. My Maths speed for JEE Mains has improved massively in just a few months."</p><h4>Tatvam</h4><span>JEE Mains Aspirant</span></div>
+                <div class="testimonial-card"><div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div><p class="quote">"Biology felt like rote memorization until Prime Spirit restructured how I approach NCERT line-by-line. The Zoology and Botany matrices genuinely saved my revision time."</p><h4>Srinidhi</h4><span>NEET Aspirant</span></div>
+                <div class="testimonial-card"><div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div><p class="quote">"What stood out was the error mapping after every test — instead of just a score, I got a clear breakdown of exactly which concepts in Physics needed rework before JEE Mains."</p><h4>Shantanu</h4><span>JEE Mains Aspirant</span></div>
+                <div class="testimonial-card"><div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div><p class="quote">"Organic Chemistry used to feel like a maze of reactions to memorize. The synthesis chain mapping approach here made the logic finally click for my NEET prep."</p><h4>Dhairya</h4><span>NEET Aspirant</span></div>
+                <div class="testimonial-card"><div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div><p class="quote">"The psychometric mindset audit was surprisingly accurate — it flagged exactly where my exam anxiety was coming from, and the counseling sessions since have made test days far less stressful."</p><h4>Sanyukta</h4><span>NEET Aspirant</span></div>
+                <div class="testimonial-card"><div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div><p class="quote">"Coming from a large classroom setup, the shift to a 5-student batch was night and day. Every numerical mistake gets caught and corrected the same session instead of piling up."</p><h4>Piyush</h4><span>JEE Mains Aspirant</span></div>
+                <div class="testimonial-card"><div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div><p class="quote">"I appreciated how the study plan adapted around my actual weak topics instead of following one fixed syllabus pace for everyone. My mock test consistency for JEE Mains has improved a lot."</p><h4>Riddhima</h4><span>JEE Mains Aspirant</span></div>
             </div>
         </div>
     </section>
@@ -636,22 +582,10 @@
             <hr class="title-line">
             <div class="contact-wrapper">
                 <form id="contact-form" class="contact-form">
-                    <div class="form-group">
-                        <label for="student-name">Full Name *</label>
-                        <input type="text" id="student-name" placeholder="Enter student or parent name" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="student-email">Email Address *</label>
-                        <input type="email" id="student-email" placeholder="name@email.com" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="student-phone">Contact Phone Number *</label>
-                        <input type="tel" id="student-phone" placeholder="Enter 10-digit mobile number" pattern="[0-9]{10}" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="student-msg">Current Class, Target Exams & Desired Batch (5 or 10 Seater) *</label>
-                        <textarea id="student-msg" placeholder="Let us know your target exams and preferred micro-batch structure..." rows="5" required></textarea>
-                    </div>
+                    <div class="form-group"><label for="student-name">Full Name *</label><input type="text" id="student-name" placeholder="Enter student or parent name" required></div>
+                    <div class="form-group"><label for="student-email">Email Address *</label><input type="email" id="student-email" placeholder="name@email.com" required></div>
+                    <div class="form-group"><label for="student-phone">Contact Phone Number *</label><input type="tel" id="student-phone" placeholder="Enter 10-digit mobile number" pattern="[0-9]{10}" required></div>
+                    <div class="form-group"><label for="student-msg">Current Class, Target Exams & Desired Batch (5 or 10 Seater) *</label><textarea id="student-msg" placeholder="Let us know your target exams and preferred micro-batch structure..." rows="5" required></textarea></div>
                     <button type="submit" class="btn btn-primary">Book Consultation Slot</button>
                 </form>
             </div>
@@ -666,17 +600,9 @@
                 <h3>Welcome Back <span class="gradient-text">Mentee</span></h3>
                 <p class="auth-sub">Log in to your authenticated profile to download premium study materials.</p>
                 <form id="form-login">
-                    <div class="form-group">
-                        <label>Registered Email Address</label>
-                        <input type="email" placeholder="name@email.com" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Secure Account Password</label>
-                        <input type="password" placeholder="••••••••••••" required>
-                    </div>
-                    <div class="auth-options-row">
-                        <button type="button" class="text-link-btn" id="btn-goto-forgot">Forgot Password?</button>
-                    </div>
+                    <div class="form-group"><label>Registered Email Address</label><input type="email" placeholder="name@email.com" required></div>
+                    <div class="form-group"><label>Secure Account Password</label><input type="password" placeholder="••••••••••••" required></div>
+                    <div class="auth-options-row"><button type="button" class="text-link-btn" id="btn-goto-forgot">Forgot Password?</button></div>
                     <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 10px;">Authenticate Login</button>
                 </form>
                 <p class="auth-switch-prompt">New user? <button id="btn-goto-signup" class="text-link-btn" type="button">Create verified profile</button></p>
@@ -685,29 +611,16 @@
                 <h3>Create Your <span class="gradient-text">Student Profile</span></h3>
                 <p class="auth-sub">Register to securely save quiz statistics and download analytical document trackers.</p>
                 <form id="form-signup">
-                    <div class="form-group">
-                        <label>Full Legal Name</label>
-                        <input type="text" placeholder="Enter full name" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Email Address</label>
-                        <input type="email" id="signup-email" placeholder="name@email.com" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Contact Phone Number</label>
-                        <input type="tel" placeholder="Enter 10-digit mobile number" pattern="[0-9]{10}" required>
-                    </div>
+                    <div class="form-group"><label>Full Legal Name</label><input type="text" placeholder="Enter full name" required></div>
+                    <div class="form-group"><label>Email Address</label><input type="email" id="signup-email" placeholder="name@email.com" required></div>
+                    <div class="form-group"><label>Contact Phone Number</label><input type="tel" placeholder="Enter 10-digit mobile number" pattern="[0-9]{10}" required></div>
                     <div class="form-group">
                         <label>Account Password creation</label>
                         <input type="password" id="signup-pass" placeholder="Create strong password" required>
-                        <div class="pass-strength-meter">
-                            <div id="strength-bar" class="strength-bar-fill"></div>
-                        </div>
+                        <div class="pass-strength-meter"><div id="strength-bar" class="strength-bar-fill"></div></div>
                         <span id="strength-feedback-text" class="strength-label">Security check: Awaiting characters...</span>
                     </div>
-                    <div class="password-rules-box">
-                        🛡️ Password rules: Minimum 8 characters. Must contain at least one Uppercase Letter, one Number, and one Special Character (e.g., @, #, $).
-                    </div>
+                    <div class="password-rules-box">🛡️ Password rules: Minimum 8 characters. Must contain at least one Uppercase Letter, one Number, and one Special Character (e.g., @, #, $).</div>
                     <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 15px;">Finalize Registration</button>
                 </form>
                 <p class="auth-switch-prompt">Already have an account? <button id="btn-goto-login" class="text-link-btn" type="button">Log in here</button></p>
@@ -716,10 +629,7 @@
                 <h3>Reset <span class="gradient-text">Account Password</span></h3>
                 <p class="auth-sub">Enter your registered email address below. A recovery link will be sent to verify ownership.</p>
                 <form id="form-forgot">
-                    <div class="form-group">
-                        <label>Registered Email Address</label>
-                        <input type="email" id="reset-email-input" placeholder="name@email.com" required>
-                    </div>
+                    <div class="form-group"><label>Registered Email Address</label><input type="email" id="reset-email-input" placeholder="name@email.com" required></div>
                     <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 10px;">Send Verification Token</button>
                 </form>
                 <p class="auth-switch-prompt">Remembered your password? <button id="btn-goto-login-2" class="text-link-btn" type="button">Back to Login</button></p>
@@ -744,26 +654,24 @@
     (function(){if(!window.chatbase||window.chatbase("getState")!=="initialized"){window.chatbase=(...arguments)=>{if(!window.chatbase.q){window.chatbase.q=[]}window.chatbase.q.push(arguments)};window.chatbase=new Proxy(window.chatbase,{get(target,prop){if(prop==="q"){return target.q}return(...args)=>target(prop,...args)}})}const onLoad=function(){const script=document.createElement("script");script.src="https://www.chatbase.co/embed.min.js";script.id="vzrrGCxxjob-3ToUwOkJM";script.domain="www.chatbase.co";document.body.appendChild(script)};if(document.readyState==="complete"){onLoad()}else{window.addEventListener("load",onLoad)}})();
     </script>
 
-    <!-- BLOG FILTER FIX: use data-filter attribute, not old IDs -->
     <script>
     document.addEventListener('DOMContentLoaded', function () {
-
-      // ── MOBILE NAV TOGGLE ──
       const menuToggle = document.getElementById('menu-toggle');
       const navMenu = document.getElementById('nav-menu');
       if (menuToggle && navMenu) {
         menuToggle.addEventListener('click', function (e) {
           e.stopPropagation();
           navMenu.classList.toggle('open');
+          navMenu.classList.toggle('active');
         });
         document.addEventListener('click', function (e) {
           if (!navMenu.contains(e.target) && !menuToggle.contains(e.target)) {
             navMenu.classList.remove('open');
+            navMenu.classList.remove('active');
           }
         });
       }
 
-      // ── BLOG FILTER BUTTONS ──
       const filterBtns = document.querySelectorAll('.filter-btn');
       filterBtns.forEach(function (btn) {
         btn.addEventListener('click', function (e) {
@@ -783,7 +691,6 @@
         });
       });
 
-      // ── FAQ ACCORDION ──
       const faqItems = document.querySelectorAll('.faq-item');
       faqItems.forEach(function (item) {
         const btn = item.querySelector('.faq-question');
@@ -794,24 +701,21 @@
         });
       });
 
-      // ── SMOOTH SCROLL for nav anchor links ──
       document.querySelectorAll('a[href^="#"]').forEach(function (anchor) {
         anchor.addEventListener('click', function (e) {
           const target = document.querySelector(this.getAttribute('href'));
           if (target) {
             e.preventDefault();
             target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            if (navMenu) navMenu.classList.remove('open');
+            if (navMenu) { navMenu.classList.remove('open'); navMenu.classList.remove('active'); }
           }
         });
       });
-
     });
 
-    // Close nav helper
     function closeNav() {
       const navMenu = document.getElementById('nav-menu');
-      if (navMenu) navMenu.classList.remove('open');
+      if (navMenu) { navMenu.classList.remove('open'); navMenu.classList.remove('active'); }
     }
     </script>
 
