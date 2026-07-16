@@ -547,28 +547,79 @@
         .library-item span { font-size: 12px; font-weight: 600; color: var(--text-primary); text-align: center; }
 
         @media (max-width: 768px) {
-            #header { padding: 0 16px; height: 80px; }
-            #brand-name { font-size: 16px; }
-            #brand-subtitle { margin-left: 26px; font-size: 10px; }
+            #header { padding: 0 12px; height: 64px; gap: 8px; overflow-x: auto; overflow-y: hidden; -webkit-overflow-scrolling: touch; }
+            #header > * { flex-shrink: 0; }
+            #header::-webkit-scrollbar { display: none; }
+            #brand-name { font-size: 15px; }
+            #brand-subtitle { display: none; }
             #board-title { display: none; }
-            #header-timer { padding: 6px 14px; font-size: 13px; }
+            #header-timer { padding: 6px 12px; font-size: 12px; gap: 6px; }
+            .header-btn { padding: 8px 12px; font-size: 13px; }
             .header-btn span { display: none; }
-            #left-toolbar { left: 10px; top: 90px; width: 60px; padding: 12px 6px; }
-            .tool-btn { width: 44px; height: 44px; font-size: 18px; }
+            #xp-badge { padding: 4px 10px; min-width: 56px; font-size: 11px; }
+            #xp-bar-track { height: 3px; }
+            #streak-badge { padding: 6px 10px; font-size: 12px; }
+            #avatar-stack .avatar-bubble { width: 24px; height: 24px; font-size: 10px; }
+
+            #left-toolbar {
+                left: 10px;
+                right: 10px;
+                top: auto;
+                bottom: 12px;
+                width: auto;
+                height: 62px;
+                flex-direction: row;
+                align-items: center;
+                padding: 8px 10px;
+                border-radius: var(--radius-xl);
+                overflow-x: auto;
+                overflow-y: hidden;
+                -webkit-overflow-scrolling: touch;
+            }
+            #left-toolbar::-webkit-scrollbar { display: none; }
+            .tool-btn { width: 42px; height: 42px; font-size: 17px; flex-shrink: 0; }
             .tool-btn .tooltip { display: none; }
-            #page-tabs-bar { left: 50%; transform: translateX(-50%); min-width: 250px; padding: 0 12px; }
-            .page-tab { padding: 6px 12px; font-size: 12px; }
-            #root { top: 130px; left: 75px; }
-            #right-panel { right: 10px; top: 150px; width: calc(100% - 20px); max-width: 340px; }
-            #pen-popup { left: 10px; right: 10px; top: auto; bottom: 100px; min-width: auto; }
+            .tool-divider { width: 1px; height: 26px; margin: 0 4px; flex-shrink: 0; }
+
+            #page-tabs-bar { top: 68px; left: 50%; transform: translateX(-50%); min-width: 220px; max-width: calc(100vw - 20px); padding: 0 10px; height: 42px; }
+            .page-tab { padding: 6px 10px; font-size: 12px; }
+            #add-page-btn { width: 30px; height: 30px; }
+
+            #root { top: 118px; left: 10px; right: 10px; bottom: 86px; }
+
+            #right-panel { right: 10px; top: 76px; left: 10px; width: auto; max-width: none; max-height: calc(100vh - 170px); }
+            #pen-popup, #eraser-popup, #shape-style-popup, #reactions-popup {
+                left: 10px;
+                right: 10px;
+                top: auto;
+                bottom: 84px;
+                min-width: auto;
+                max-width: none;
+                max-height: 55vh;
+            }
+            #recording-indicator { top: 76px; }
         }
 
         @media (max-width: 480px) {
-            #setup-card { padding: 32px 24px; }
-            #header { padding: 0 12px; }
-            #brand-subtitle { display: none; }
-            #left-toolbar { display: none; }
-            #root { left: 0; }
+            #setup-card { padding: 28px 20px; }
+            #setup-card h1 { font-size: 24px; }
+            #header { padding: 0 10px; gap: 6px; }
+            #streak-badge span, #xp-badge #xp-level { font-size: 11px; }
+            #avatar-stack { display: none; }
+            .header-btn { padding: 7px 10px; }
+            #left-toolbar { bottom: 10px; height: 56px; padding: 6px 8px; }
+            .tool-btn { width: 38px; height: 38px; font-size: 16px; }
+            #root { top: 112px; left: 6px; right: 6px; bottom: 78px; }
+            .reactions-grid { grid-template-columns: repeat(4, 1fr); }
+            .reaction-emoji-btn { width: 38px; height: 38px; font-size: 18px; }
+        }
+
+        @media (max-width: 380px) {
+            #brand-name { font-size: 13px; }
+            #header-timer #header-timer-display { font-size: 11px; }
+            #xp-badge, #streak-badge { display: none; }
+            #user-count { display: none; }
+            .header-btn { padding: 6px 8px; }
         }
     </style>
 </head>
@@ -577,7 +628,7 @@
 <div id="setup-screen">
     <div id="setup-card">
         <h1>PrimeBoard</h1>
-        <p class="tagline">PRIME SPIRIT MENTORS // LIVE CLASS WHITEBOARD</p>
+        <p class="tagline">Powered by Prime Spirit Mentors</p>
         
         <label class="form-label">I am the...</label>
         <div class="role-toggle">
@@ -619,13 +670,13 @@
     </div>
     <div id="streak-badge" title="Consecutive days you've shown up">🔥 <span id="streak-count">1</span></div>
     <div id="avatar-stack" title="Who's online"></div>
-    <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-secondary);">
+    <div id="online-status-wrap" style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-secondary);">
         <span class="status-dot" id="status-dot"></span>
         <span id="user-count">1 online</span>
     </div>
     <div class="header-spacer"></div>
     <button class="header-btn" id="btn-mute" title="Toggle sounds"><i class="fas fa-volume-up"></i></button>
-    <button class="header-btn" id="btn-hype" style="display:none;" title="Hype up the class"><span>🎉 Hype</span></button>
+    <button class="header-btn" id="btn-hype" style="display:none;" title="Hype up the class">🎉 <span>Hype</span></button>
     <button class="header-btn" id="btn-invite"><i class="fas fa-user-plus"></i> <span>Invite</span></button>
     <button class="header-btn" id="btn-library"><i class="fas fa-book"></i> <span>Library</span></button>
     <button class="header-btn primary" id="btn-share"><i class="fas fa-share-alt"></i> <span>Share</span></button>
