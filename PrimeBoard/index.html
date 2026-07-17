@@ -236,7 +236,7 @@
         .modal-close { width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: var(--radius-md); cursor: pointer; color: var(--text-secondary); transition: all 0.2s; }
         .modal-close:hover { background: var(--bg-hover); color: var(--accent); transform: rotate(90deg); }
 
-        #pen-popup { position: fixed; left: 100px; top: 140px; background: var(--bg-glass); backdrop-filter: blur(20px); border-radius: var(--radius-lg); padding: 20px; box-shadow: var(--shadow-lg); z-index: 1000; display: none; min-width: 360px; border: 1px solid var(--border-light); }
+        #pen-popup { position: fixed; left: 100px; top: 140px; background: var(--bg-glass); backdrop-filter: blur(20px); border-radius: var(--radius-lg); padding: 20px; box-shadow: var(--shadow-lg); z-index: 1000; display: none; min-width: 360px; max-height: 80vh; overflow-y: auto; border: 1px solid var(--border-light); }
         #pen-popup.active { display: block; }
 
         #eraser-popup { position: fixed; left: 100px; top: 140px; background: var(--bg-glass); backdrop-filter: blur(20px); border-radius: var(--radius-lg); padding: 20px; box-shadow: var(--shadow-lg); z-index: 1000; display: none; min-width: 280px; border: 1px solid var(--border-light); }
@@ -323,61 +323,6 @@
         }
         .shape-style-close:hover { background: var(--bg-hover); color: #ef4444; }
 
-        /* Hide native Excalidraw shape/text properties panel — it has no
-           close button and can't be repositioned, so it sits fixed over
-           the canvas and blocks drawing. Replaced below with our own
-           draggable, closable "Shape Style" panel. */
-        .excalidraw .panelColumn { display: none !important; }
-
-        #shape-style-popup {
-            position: fixed;
-            left: 100px;
-            top: 140px;
-            background: var(--bg-glass);
-            backdrop-filter: blur(20px);
-            border-radius: var(--radius-lg);
-            box-shadow: var(--shadow-lg);
-            z-index: 1000;
-            display: none;
-            min-width: 260px;
-            border: 1px solid var(--border-light);
-            overflow: hidden;
-        }
-        #shape-style-popup.active { display: block; }
-        .shape-style-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 14px 16px;
-            cursor: grab;
-            background: var(--bg-hover);
-            font-weight: 700;
-            font-size: 14px;
-            color: var(--text-primary);
-            user-select: none;
-        }
-        .shape-style-header:active { cursor: grabbing; }
-        .shape-style-header .panel-close { width: 28px; height: 28px; }
-        .shape-style-body { padding: 16px; }
-        .shape-style-body .panel-label { margin-bottom: 10px; }
-        .shape-style-body .panel-section { margin-bottom: 20px; }
-        .shape-style-body .panel-section:last-child { margin-bottom: 0; }
-        .swatch-row { display: flex; gap: 8px; flex-wrap: wrap; }
-        .swatch-row .color-option { width: 30px; height: 30px; }
-        .btn-row { display: flex; gap: 8px; }
-        .btn-row button {
-            flex: 1;
-            padding: 8px;
-            border: 2px solid var(--border-light);
-            border-radius: var(--radius-sm);
-            background: var(--bg-surface);
-            cursor: pointer;
-            font-size: 12px;
-            font-weight: 600;
-            transition: all 0.15s;
-        }
-        .btn-row button:hover { transform: translateY(-1px); }
-        .btn-row button.active { border-color: var(--accent); background: var(--bg-hover); color: var(--accent); }
         .pen-category { margin-bottom: 20px; }
         .pen-category-label { font-size: 12px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 12px; }
         .pen-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
@@ -596,6 +541,7 @@
                 min-width: auto;
                 max-width: none;
                 max-height: 55vh;
+                overflow-y: auto;
             }
             #recording-indicator { top: 76px; }
         }
