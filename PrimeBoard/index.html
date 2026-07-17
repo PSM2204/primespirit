@@ -973,9 +973,11 @@
     let resizeHandle = null;
 
     function getPos(evt) {
+        // CHANGED: Pointer Events always carry clientX/clientY directly
+        // (mouse, touch, and pen alike), so the old touches[0] branch
+        // used only for the legacy touch listeners is no longer needed.
         const rect = canvas.getBoundingClientRect();
-        const t = evt.touches ? evt.touches[0] : evt;
-        return { x: t.clientX - rect.left, y: t.clientY - rect.top };
+        return { x: evt.clientX - rect.left, y: evt.clientY - rect.top };
     }
 
     function hitTest(x, y) {
@@ -988,9 +990,16 @@
     }
 
     function pointerDown(evt) {
+        // CHANGED (root cause #1): only the primary button starts a stroke.
+        // Pointer Events report button 0 for left-click, touch, and pen —
+        // this single check is what "left mouse button only" requires.
+        // Without it, any button (including a stray event with no button
+        // info) could flip isDrawing true.
+        if (evt.button !== undefined && evt.button !== 0) return;
+
         evt.preventDefault();
         const pos = getPos(evt);
-        isPointerDown = true;
+        isPointerDown = true; // isDrawing = true, and ONLY from here (pointerdown)
 
         if (currentTool === 'pen') {
             activeStroke = makeElement('stroke', {
@@ -1030,6 +1039,11 @@
     }
 
     function pointerMove(evt) {
+        // CHANGED (root cause #2): every move event is ignored unless a
+        // pointerdown already set isDrawing true. This is the actual gate
+        // that stops "drawing without the button held" — it only works
+        // correctly once isPointerDown is reliably reset on release/leave
+        // (see pointerUp and the new pointerleave/pointercancel handler below).
         if (!isPointerDown) return;
         const pos = getPos(evt);
 
@@ -1116,12 +1130,36 @@
         isPointerDown = false;
     }
 
-    canvas.addEventListener('mousedown', pointerDown);
-    canvas.addEventListener('mousemove', pointerMove);
-    window.addEventListener('mouseup', pointerUp);
-    canvas.addEventListener('touchstart', pointerDown, { passive: false });
-    canvas.addEventListener('touchmove', pointerMove, { passive: false });
-    window.addEventListener('touchend', pointerUp);
+    // CHANGED (root cause fix, unified): switched from separate mouse +
+    // touch listeners to Pointer Events. Two things were missing before
+    // that directly caused the reported bug:
+    //   1. There was no pointerleave/pointercancel handler at all, so if
+    //      the pointer left the canvas (or a touch gesture was cancelled
+    //      by the browser) while isPointerDown was true, nothing ever
+    //      set it back to false — the very next pointermove anywhere on
+    //      the canvas would keep drawing with no button held, and it
+    //      would never stop until a tool switch or page refresh reset
+    //      the JS state.
+    //   2. Mouse and touch were handled by two separate code paths that
+    //      could each set isPointerDown independently; unifying to
+    //      Pointer Events means there is exactly one flag, set and
+    //      cleared by exactly one set of handlers, for mouse, touch,
+    //      and stylus alike.
+    // pointerup is bound on window (not just canvas) so a release outside
+    // the canvas still ends the stroke, exactly as before.
+    canvas.addEventListener('pointerdown', pointerDown);
+    canvas.addEventListener('pointermove', pointerMove);
+    window.addEventListener('pointerup', pointerUp);
+    canvas.addEventListener('pointerleave', handlePointerLeaveOrCancel);
+    canvas.addEventListener('pointercancel', handlePointerLeaveOrCancel);
+
+    function handlePointerLeaveOrCancel() {
+        // NEW: this is the fix for "keeps drawing after cursor leaves
+        // canvas" / "can't stop until refresh". If a stroke, shape-drag,
+        // or selection-drag was in progress, end it exactly like a
+        // normal pointerup so isDrawing resets and no stray state survives.
+        if (isPointerDown) pointerUp();
+    }
 
     window.addEventListener('keydown', (e) => {
         if ((e.key === 'Delete' || e.key === 'Backspace') && selectedId && currentTool === 'selection' && document.activeElement.tagName !== 'TEXTAREA' && document.activeElement.tagName !== 'INPUT') {
@@ -1320,6 +1358,20 @@
         });
 
         function selectTool(tool) {
+            // CHANGED (root cause #3): switching tools mid-stroke used to
+            // leave isPointerDown/activeStroke/shapeStart set from the
+            // previous tool. If that happened, selecting Pen again would
+            // make the very next pointermove draw immediately — matching
+            // the "starts drawing without pressing the button" symptom.
+            // Resetting here guarantees every tool starts from a clean,
+            // not-drawing state.
+            isPointerDown = false;
+            activeStroke = null;
+            shapeStart = null;
+            previewShape = null;
+            dragOffset = null;
+            resizeHandle = null;
+
             currentTool = tool;
             selectedId = null;
             document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
