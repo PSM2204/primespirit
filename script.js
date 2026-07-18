@@ -1,7 +1,14 @@
 /**
- * 🛡️ PRIME SPIRIT MENTORS PRODUCTION ENGINE v9.0
+ * 🛡️ PRIME SPIRIT MENTORS PRODUCTION ENGINE v9.1
  * Fully Integrated Independent Portal Actions Layer with Web3Forms Access Routing
  * + Full 10-Question Psychometric Mindset Audit (Student & Parent tracks)
+ *
+ * CHANGELOG v9.1:
+ * - Fixed: Blog filter buttons now match data-filter attribute (were looking for non-existent IDs)
+ * - Fixed: Hamburger handler lives ONLY here — removed duplicate from index.html inline script
+ * - Added: FAQ accordion handler (was only in index.html inline script before)
+ * - Added: Smooth scroll anchor handler (was only in index.html inline script before)
+ * - Fixed: nav backdrop closes on any nav link/button tap (covers all mobile close cases)
  */
 
 // ==========================================================================
@@ -37,7 +44,7 @@ const blogDatabase = [
 // Global Authorization Flags & Active Token Configuration Paths
 let isUserRegisteredAndLoggedIn = false;
 let currentOpenNotesContext = '';
-const WEB3FORMS_ACCESS_KEY = 'c5cc0f11-b241-4a89-8a11-1642cb5aa3a2'; 
+const WEB3FORMS_ACCESS_KEY = 'c5cc0f11-b241-4a89-8a11-1642cb5aa3a2';
 
 // ==========================================================================
 // PSYCHOMETRIC MINDSET AUDIT — QUESTION BANKS (10 per track)
@@ -236,17 +243,15 @@ let quizState = { role: null, index: 0, totalScore: 0 };
 // INTERACTIVE PORTAL ACTIONS ENGINE
 // ==========================================================================
 window.addEventListener('DOMContentLoaded', () => {
+
     // 1. Render Blogs dynamically on page setup load
     renderBlogPostsEngine();
 
-    // 2. Mobile Nav Responsive Toggle Menu Drawer Control
+    // 2. Mobile Nav — single source of truth (no duplicate in index.html)
     const menuToggle = document.getElementById('menu-toggle');
     const navMenu = document.getElementById('nav-menu');
     if (menuToggle && navMenu) {
-        // Backdrop element, created here so index.html doesn't need editing.
-        // Sits behind the slide-in drawer; tapping it closes the menu, and it also
-        // gives a clear visual cue that the drawer is open (instead of it silently
-        // floating over the page with no way to tell it's still active).
+        // Backdrop: sits behind the slide-in drawer so tapping outside closes it.
         const navBackdrop = document.createElement('div');
         navBackdrop.id = 'nav-backdrop';
         navBackdrop.style.cssText = [
@@ -271,31 +276,32 @@ window.addEventListener('DOMContentLoaded', () => {
             navMenu.classList.contains('active') ? closeMobileNav() : openMobileNav();
         });
 
-        // Close the moment any link inside the drawer is tapped — this is the
-        // main fix: previously the drawer stayed open after a link was tapped,
-        // so the next tap could land on a stale menu item instead of the page.
+        // Close when any nav link or button is tapped
         navMenu.querySelectorAll('a, button').forEach(el => {
             el.addEventListener('click', closeMobileNav);
         });
 
-        // Tapping the dimmed backdrop closes the menu too.
+        // Tapping the dimmed backdrop closes the menu
         navBackdrop.addEventListener('click', closeMobileNav);
 
-        // Escape key closes it (useful on tablets/keyboards).
+        // Escape key closes it (useful on tablets/keyboards)
         document.addEventListener('keydown', e => {
             if (e.key === 'Escape') closeMobileNav();
         });
     }
 
-    // 3. Premium Notes Download Lock Logic Setup
+    // 3. Premium Notes Download Lock Logic — bound by ID (safe, no index drift)
     for (let i = 1; i <= 6; i++) {
         const btn = document.getElementById(`btn-notes-${i}`);
         if (btn) {
             btn.addEventListener('click', () => {
                 const titles = [
-                    "Class 9/10 Foundation Notes", "Class 11/12 Physics Notes", 
-                    "Class 11/12 Economics Notes", "NEET UG Master Notes", 
-                    "JEE Mains Premium Notes", "CUET/IAT/NEST Advanced Notes"
+                    "Class 9/10 Foundation Notes",
+                    "Class 11/12 Physics Notes",
+                    "Class 11/12 Economics Notes",
+                    "NEET UG Master Notes",
+                    "JEE Mains Premium Notes",
+                    "CUET/IAT/NEST Advanced Notes"
                 ];
                 currentOpenNotesContext = titles[i - 1];
                 handleNotesDownloadSequence();
@@ -303,23 +309,48 @@ window.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // 4. Blog Subject Filters Toolbar
-    const filters = ['all', 'physics', 'chemistry', 'maths', 'economics'];
-    filters.forEach(cat => {
-        const fBtn = document.getElementById(`filter-${cat}`);
-        if (fBtn) {
-            fBtn.addEventListener('click', (e) => {
-                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-                e.target.classList.add('active');
-                document.querySelectorAll('.blog-post-card').forEach(card => {
-                    if (cat === 'all' || card.dataset.category === cat) card.classList.remove('hidden');
-                    else card.classList.add('hidden');
-                });
+    // 4. Blog Subject Filters — matched by data-filter attribute (buttons have no IDs)
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            const cat = btn.getAttribute('data-filter');
+            document.querySelectorAll('#blog-posts-container .course-card').forEach(card => {
+                if (cat === 'all' || card.getAttribute('data-category') === cat) {
+                    card.style.display = '';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+    });
+
+    // 5. FAQ Accordion
+    document.querySelectorAll('.faq-item').forEach(item => {
+        const btn = item.querySelector('.faq-question');
+        if (btn) {
+            btn.addEventListener('click', () => {
+                const isOpen = item.classList.contains('open');
+                // Close all first
+                document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+                // Then open the clicked one (unless it was already open)
+                if (!isOpen) item.classList.add('open');
             });
         }
     });
 
-    // 5. Modal Flow View Switch Links
+    // 6. Smooth scroll for all anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                e.preventDefault();
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        });
+    });
+
+    // 7. Modal Flow View Switch Links
     setupClick('btn-close-modal', closeAuthModal);
     setupClick('btn-goto-forgot', () => switchAuthView('forgot'));
     setupClick('btn-goto-signup', () => switchAuthView('signup'));
@@ -329,15 +360,15 @@ window.addEventListener('DOMContentLoaded', () => {
     setupClick('btn-role-parent', () => launchAudit('parent'));
     setupClick('restart-btn', resetAudit);
 
-    // 6. High-Capacity Form Submission Routers
+    // 8. High-Capacity Form Submission Routers
     setupForm('form-login', (e) => handleAuthProcess(e, 'login'));
     setupForm('form-signup', (e) => handleAuthProcess(e, 'signup'));
     setupForm('form-forgot', (e) => handleAuthProcess(e, 'forgot'));
-    
+
     // Email Gateway Router for the Live Consultation Strategy booking form
     setupForm('contact-form', (e) => {
         e.preventDefault();
-        
+
         const cName = document.getElementById('student-name').value;
         const cEmail = document.getElementById('student-email').value;
         const cPhone = document.getElementById('student-phone').value;
@@ -368,31 +399,48 @@ window.addEventListener('DOMContentLoaded', () => {
                 alert('❌ Error processing request. Check script access key settings.');
             }
         })
-        .catch(error => {
+        .catch(() => {
             alert('🌪️ Transmission failed. Please verify network links.');
         });
     });
 
-    // 7. Live Alphanumeric Password Tracking HUD
+    // 9. Live Alphanumeric Password Tracking HUD
     const passInput = document.getElementById('signup-pass');
     if (passInput) passInput.addEventListener('keyup', (e) => trackPassMetrics(e.target.value));
 });
 
-// Window Global Scopes configuration adjustments
-window.openAuthModal = function(viewType) {
+// ==========================================================================
+// WINDOW GLOBAL SCOPE — Auth modal open/close (called from HTML onclick)
+// ==========================================================================
+window.openAuthModal = function (viewType) {
     document.getElementById('auth-modal').classList.remove('hidden');
     switchAuthView(viewType);
 };
 
-window.closeAuthModal = function() {
+window.closeAuthModal = function () {
     document.getElementById('auth-modal').classList.add('hidden');
 };
 
-function setupClick(id, handler) { const el = document.getElementById(id); if (el) el.addEventListener('click', handler); }
-function setupForm(id, handler) { const el = document.getElementById(id); if (el) el.addEventListener('submit', handler); }
+// Alias so inline onclick="closeAuthModal()" still works if referenced anywhere
+window.closeAuthModal = window.closeAuthModal;
+
+// ==========================================================================
+// UTILITY HELPERS
+// ==========================================================================
+function setupClick(id, handler) {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('click', handler);
+}
+
+function setupForm(id, handler) {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('submit', handler);
+}
 
 function switchAuthView(view) {
-    ['login', 'signup', 'forgot'].forEach(v => document.getElementById(`auth-view-${v}`).classList.add('hidden'));
+    ['login', 'signup', 'forgot'].forEach(v => {
+        document.getElementById(`auth-view-${v}`).classList.add('hidden');
+    });
     document.getElementById(`auth-view-${view}`).classList.remove('hidden');
 }
 
@@ -409,23 +457,37 @@ function trackPassMetrics(val) {
     const bar = document.getElementById('strength-bar');
     const txt = document.getElementById('strength-feedback-text');
     if (!bar || !txt) return;
-    if (val.length === 0) { bar.style.width = '0%'; txt.innerText = "Awaiting parameters..."; return; }
-    
+    if (val.length === 0) {
+        bar.style.width = '0%';
+        txt.innerText = "Awaiting parameters...";
+        return;
+    }
+
     let pts = 0;
     if (val.length >= 8) pts++;
     if (/[A-Z]/.test(val)) pts++;
     if (/[0-9]/.test(val)) pts++;
     if (/[@#$!%*?&]/.test(val)) pts++;
 
-    if (pts <= 1) { bar.style.width = '25%'; bar.style.backgroundColor = '#ef4444'; txt.innerText = "❌ Unsafe entry profile."; }
-    else if (pts < 4) { bar.style.width = '60%'; bar.style.backgroundColor = '#f59e0b'; txt.innerText = "⚠️ Missing characters rules."; }
-    else { bar.style.width = '100%'; bar.style.backgroundColor = '#00df89'; txt.innerText = "🛡️ Alphanumeric Shield Active."; }
+    if (pts <= 1) {
+        bar.style.width = '25%';
+        bar.style.backgroundColor = '#ef4444';
+        txt.innerText = "❌ Unsafe entry profile.";
+    } else if (pts < 4) {
+        bar.style.width = '60%';
+        bar.style.backgroundColor = '#f59e0b';
+        txt.innerText = "⚠️ Missing characters rules.";
+    } else {
+        bar.style.width = '100%';
+        bar.style.backgroundColor = '#00df89';
+        txt.innerText = "🛡️ Alphanumeric Shield Active.";
+    }
 }
 
 // HIGH-CAPACITY SIGNUP ROUTER: Ships payload straight to primespirit.edu@gmail.com
 function handleAuthProcess(e, mode) {
     e.preventDefault();
-    
+
     if (mode === 'signup') {
         const nameInput = e.target.querySelector('input[placeholder*="full name"]').value;
         const emailInput = document.getElementById('signup-email').value;
@@ -438,7 +500,6 @@ function handleAuthProcess(e, mode) {
             return;
         }
 
-        // Bundle data payload
         const registrationPayload = {
             access_key: WEB3FORMS_ACCESS_KEY,
             subject: `⚡ New Student Profile Registration Request - ${nameInput}`,
@@ -450,7 +511,6 @@ function handleAuthProcess(e, mode) {
             timestamp_logged: new Date().toLocaleString()
         };
 
-        // Send submission out to Web3Forms secure endpoints array
         fetch('https://api.web3forms.com/submit', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
@@ -467,7 +527,7 @@ function handleAuthProcess(e, mode) {
                 alert("❌ Token validation error. Please recheck script.js configuration settings.");
             }
         })
-        .catch(error => {
+        .catch(() => {
             alert("🌪️ Network request dropped. Please check connection logs.");
         });
 
@@ -475,6 +535,7 @@ function handleAuthProcess(e, mode) {
         isUserRegisteredAndLoggedIn = true;
         alert("🚀 Authentication matching complete across server logs. Access ports are open.");
         window.closeAuthModal();
+
     } else if (mode === 'forgot') {
         alert("📧 Recovery request processed successfully. Check your verification inbox tracks inside 5 minutes.");
         window.closeAuthModal();
@@ -592,12 +653,14 @@ function resetAudit() {
 // ==========================================================================
 // ANTI-INSPECT SECURITY CONTROLLER LAYER (Isolated Perimeter Shield)
 // ==========================================================================
-(function() {
+(function () {
     document.addEventListener('contextmenu', (e) => e.preventDefault());
     document.addEventListener('keydown', (e) => {
-        if (e.key === 'F12' || 
+        if (
+            e.key === 'F12' ||
             ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.key === 'J' || e.key === 'j')) ||
-            ((e.ctrlKey || e.metaKey) && (e.key === 'U' || e.key === 'u' || e.key === 'S' || e.key === 's'))) {
+            ((e.ctrlKey || e.metaKey) && (e.key === 'U' || e.key === 'u' || e.key === 'S' || e.key === 's'))
+        ) {
             e.preventDefault();
             return false;
         }
