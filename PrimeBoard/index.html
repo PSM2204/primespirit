@@ -647,6 +647,54 @@
 
     let eraserWidth = 20;
 
+    // BUG FIX: image elements (Math/Graph inserts) used to carry only a
+    // live `imgObj` (an actual <img> DOM object). DOM objects have no own
+    // enumerable properties, so JSON.stringify(imgObj) silently produces
+    // "{}" — meaning every remote client received a fake, empty image
+    // object instead of the real picture. Because drawElement only
+    // checked `el.imgObj` for truthiness (and {} is truthy), it then
+    // called ctx.drawImage({}, ...), which throws a TypeError. That
+    // throw happened inside redraw()'s per-element loop with no
+    // try/catch, so it silently aborted the ENTIRE draw pass for every
+    // element after it — meaning one synced math equation or graph
+    // could freeze remote whiteboards on every subsequent draw action.
+    // Fix: elements now also carry a plain `src` data-URL string (fully
+    // serializable), and this cache lazily loads/re-uses a real Image
+    // object from that src on any client that doesn't already have one.
+    const imageCache = new Map(); // src -> HTMLImageElement
+
+    function getReadyImage(el) {
+        // Fast path: this client created the element locally and already
+        // holds a fully-loaded Image object (not sent over the wire).
+        if (el.imgObj instanceof HTMLImageElement && el.imgObj.complete && el.imgObj.naturalWidth > 0) {
+            return el.imgObj;
+        }
+        if (!el.src) return null;
+        const cached = imageCache.get(el.src);
+        if (cached && cached.complete && cached.naturalWidth > 0) {
+            el.imgObj = cached; // memoize on the element for future fast-path draws
+            return cached;
+        }
+        if (!imageCache.has(el.src)) {
+            const img = new Image();
+            imageCache.set(el.src, img);
+            img.onload = () => redraw(); // pop the image in once it finishes loading
+            img.onerror = () => imageCache.delete(el.src);
+            img.src = el.src;
+        }
+        return null;
+    }
+
+    // BUG FIX: strip the non-serializable `imgObj` before sending scene
+    // updates. `src` (a plain string) is what actually survives the wire;
+    // keeping `imgObj` in the payload just bloats every message with a
+    // near-empty object that JSON.stringify can't meaningfully encode.
+    function stripRuntimeOnlyFields(el) {
+        if (el.type !== 'image' || !el.imgObj) return el;
+        const { imgObj, ...rest } = el;
+        return rest;
+    }
+
     let nextLocalSeq = 1;
     function newId() { return clientId + '-' + (nextLocalSeq++); }
 
@@ -707,7 +755,7 @@
         sendMessage({
             type: 'scene-update',
             pageId: currentPageId,
-            elements: currentElements(),
+            elements: currentElements().map(stripRuntimeOnlyFields),
             bg: currentPage().bg,
             grid: currentPage().grid
         });
@@ -733,10 +781,28 @@
             if (el.type === 'stroke') {
                 hit = el.points.some(pt => Math.hypot(pt.x - px, pt.y - py) <= r + (el.width || 2) / 2);
             } else if (el.type === 'rect' || el.type === 'ellipse' || el.type === 'image') {
-                hit = px >= el.x - r && px <= el.x + el.w + r && py >= el.y - r && py <= el.y + el.h + r
-                    && (px <= el.x + r || px >= el.x + el.w - r || py <= el.y + r || py >= el.y + el.h - r || el.type !== 'rect');
-                if (el.type !== 'rect') {
-                    hit = px >= el.x - r && px <= el.x + el.w + r && py >= el.y - r && py <= el.y + el.h + r;
+                // BUG FIX: the old logic combined a "near-edge-only" test
+                // for rects with a "full bounding box" test that then
+                // OVERWROTE it for every non-rect type, including ellipses
+                // and filled rectangles. Net effect: a solid/filled
+                // rectangle could only be erased by clicking near its
+                // outline — clicking in the middle of a filled shape did
+                // nothing, which looks exactly like "the eraser doesn't
+                // work" to a user. Filled shapes and images are now fully
+                // erasable from anywhere inside; hollow (unfilled) shapes
+                // still only erase near their outline so a big empty
+                // rectangle doesn't wipe out everything behind it.
+                const inBounds = px >= el.x - r && px <= el.x + el.w + r && py >= el.y - r && py <= el.y + el.h + r;
+                if (!inBounds) {
+                    hit = false;
+                } else if (el.type === 'image' || (el.bgColor && el.bgColor !== 'transparent')) {
+                    hit = true;
+                } else {
+                    const nearLeft = Math.abs(px - el.x) <= r;
+                    const nearRight = Math.abs(px - (el.x + el.w)) <= r;
+                    const nearTop = Math.abs(py - el.y) <= r;
+                    const nearBottom = Math.abs(py - (el.y + el.h)) <= r;
+                    hit = nearLeft || nearRight || nearTop || nearBottom;
                 }
             } else if (el.type === 'line') {
                 hit = distToSegment(px, py, el.x1, el.y1, el.x2, el.y2) <= r + (el.strokeWidth || 2) / 2;
@@ -894,8 +960,12 @@
             (el.text || '').split('\n').forEach((line, i) => {
                 ctx.fillText(line, el.x, el.y + i * (el.fontSize || 20) * 1.25);
             });
-        } else if (el.type === 'image' && el.imgObj) {
-            ctx.drawImage(el.imgObj, el.x, el.y, el.w, el.h);
+        } else if (el.type === 'image') {
+            // BUG FIX: was `el.imgObj &&` (truthy check) which passed for a
+            // remote element whose imgObj deserialized to a plain {}. Now
+            // we only ever hand drawImage a real, loaded HTMLImageElement.
+            const ready = getReadyImage(el);
+            if (ready) ctx.drawImage(ready, el.x, el.y, el.w, el.h);
         }
         ctx.restore();
 
@@ -957,7 +1027,14 @@
         ctx.fillStyle = currentPage().bg || '#F3E8FF';
         ctx.fillRect(0, 0, rect.width, rect.height);
         drawGridOverlay();
-        currentElements().sort((a, b) => (a.updated || 0) - (b.updated || 0)).forEach(drawElement);
+        // BUG FIX (defense in depth): a single malformed/unexpected element
+        // used to be able to throw inside this loop and silently abort
+        // drawing of every element after it in z-order (this is exactly
+        // what the old unguarded image branch did). Now one bad element
+        // just gets skipped instead of breaking the whole board.
+        currentElements().sort((a, b) => (a.updated || 0) - (b.updated || 0)).forEach(el => {
+            try { drawElement(el); } catch (err) { console.warn('PrimeBoard: skipped an element that failed to render', el && el.id, err); }
+        });
         if (isSpotlightActive) {} // spotlight is a DOM overlay, handled separately
     }
 
@@ -1624,7 +1701,12 @@
                 insertElement('line', { x1: sx, y1: sy + 50, x2: sx + 400, y2: sy + 50, strokeColor: '#8B5CF6', strokeWidth: 3 });
             } else if (type === 'code') {
                 insertElement('rect', { x: sx, y: sy, w: 300, h: 150, strokeColor: '#1E1B4B', bgColor: '#1E1B4B', strokeWidth: 2, fillStyle: 'solid', edge: 'round' });
-                insertElement('text', { x: sx + 10, y: sy + 30, text: "def hello():\\n  print('Hello')", fontSize: 14, color: '#10B981' });
+                // BUG FIX: was "\\n" (a literal backslash + "n" character,
+                // since \\ escapes to one backslash in a JS string) which
+                // is NOT a real line break, so drawElement's `.split('\n')`
+                // never split it — the stamp rendered as one line with a
+                // visible "\n" in the middle instead of two lines of code.
+                insertElement('text', { x: sx + 10, y: sy + 30, text: "def hello():\n  print('Hello')", fontSize: 14, color: '#10B981' });
             }
         }
 
@@ -1669,7 +1751,17 @@
             if (!value) { document.getElementById('math-modal').classList.remove('active'); return; }
             rasterizeKatexToImage(value, (img, w, h) => {
                 if (img) {
-                    const el = makeElement('image', { x: 150, y: 150, w, h, imgObj: img });
+                    // BUG FIX: img.src at this point is a blob: URL, which
+                    // only exists in this tab and can never be sent to
+                    // other clients. Rasterize the already-decoded image
+                    // onto an offscreen canvas and use THAT as a permanent
+                    // base64 data URL — the actual serializable payload
+                    // remote clients need to render the equation.
+                    const off = document.createElement('canvas');
+                    off.width = w; off.height = h;
+                    off.getContext('2d').drawImage(img, 0, 0, w, h);
+                    const dataUrl = off.toDataURL('image/png');
+                    const el = makeElement('image', { x: 150, y: 150, w, h, imgObj: img, src: dataUrl });
                     addElement(el);
                 } else {
                     insertElement('text', { x: 150, y: 170, text: value, fontSize: 22, color: '#111827' });
@@ -1769,7 +1861,11 @@
             const dataUrl = gcanvas.toDataURL('image/png');
             const img = new Image();
             img.onload = () => {
-                const el = makeElement('image', { x: 116, y: 116, w: 500, h: 280, imgObj: img });
+                // BUG FIX: dataUrl was computed but never attached to the
+                // element — only the transient `imgObj` was stored, which
+                // (like the math insert) can't survive JSON sync. `src` is
+                // the field remote clients actually load from.
+                const el = makeElement('image', { x: 116, y: 116, w: 500, h: 280, imgObj: img, src: dataUrl });
                 addElement(el);
             };
             img.src = dataUrl;
