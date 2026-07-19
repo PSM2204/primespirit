@@ -1,1071 +1,909 @@
-/*==========================================================
-  PRIME SPIRIT MENTORS — APPLICATION v16.0
-  Modular architecture | Analytics | Blog System | Quiz
-  FIXES: 6 missing $ in DOM queries corrected
-==========================================================*/
 (function () {
   'use strict';
 
-  /* ── 1. CONFIG ── */
-  const CONFIG = {
-    blogPostsPerPage: 6,
-    quizQuestions: 10,
-    scrollTrackThresholds: [25, 50, 75, 100],
-    debounceMs: 100,
-  };
+  // ========================================
+  // INJECT QUIZ-SPECIFIC STYLES
+  // ========================================
+  var quizCSS = document.createElement('style');
+  quizCSS.textContent = [
+    '.quiz-btn-selected{border-color:var(--accent)!important;background:rgba(0,198,255,.12)!important;box-shadow:0 0 24px rgba(0,198,255,.18);transform:scale(1.02)}',
+    '.quiz-profile-header{text-align:center;margin-bottom:28px}',
+    '.quiz-profile-badge{font-size:3.5rem;display:block;margin-bottom:8px;line-height:1.2}',
+    '.quiz-profile-name{font-family:var(--font-head);font-size:1.6rem;font-weight:800;color:var(--accent);display:block}',
+    '.quiz-profile-tagline{color:var(--text-sec);font-size:.95rem;margin-top:6px;font-style:italic}',
+    '.quiz-metrics-grid{display:flex;flex-direction:column;gap:16px;margin-bottom:28px}',
+    '.quiz-metric-row{display:flex;align-items:center;gap:12px}',
+    '.quiz-metric-label{flex:0 0 140px;font-family:var(--font-mono);font-size:.75rem;color:var(--text-sec);text-transform:uppercase;letter-spacing:.06em}',
+    '.quiz-metric-bar{flex:1;height:10px;background:rgba(255,255,255,.06);border-radius:6px;overflow:hidden}',
+    '.quiz-metric-fill{height:100%;border-radius:6px;transition:width 1.2s cubic-bezier(.22,1,.36,1);width:0}',
+    '.quiz-metric-value{flex:0 0 42px;text-align:right;font-family:var(--font-mono);font-size:.85rem;font-weight:600;color:var(--text)}',
+    '.quiz-insight-box{background:var(--surface);border:1px solid var(--border-mid);border-radius:14px;padding:22px;margin-bottom:18px;opacity:0;transform:translateY(16px);transition:opacity .5s ease,transform .5s ease}',
+    '.quiz-insight-box.visible{opacity:1;transform:translateY(0)}',
+    '.quiz-insight-label{font-family:var(--font-mono);font-size:.68rem;text-transform:uppercase;letter-spacing:.12em;color:var(--accent);margin-bottom:6px}',
+    '.quiz-insight-title{font-family:var(--font-head);font-size:1.1rem;font-weight:700;margin-bottom:8px;color:var(--text)}',
+    '.quiz-insight-text{color:var(--text-sec);font-size:.9rem;line-height:1.7}',
+    '.quiz-track-rec{background:linear-gradient(135deg,rgba(0,198,255,.08),rgba(0,112,243,.08));border:1px solid rgba(0,198,255,.18);border-radius:14px;padding:24px;margin-top:22px;text-align:center;opacity:0;transform:translateY(16px);transition:opacity .5s ease,transform .5s ease}',
+    '.quiz-track-rec.visible{opacity:1;transform:translateY(0)}',
+    '.quiz-track-rec h4{font-family:var(--font-head);color:var(--accent);font-size:1.15rem;margin-bottom:8px}',
+    '.quiz-track-rec p{color:var(--text-sec);font-size:.9rem;line-height:1.7}',
+    '@media(max-width:600px){.quiz-metric-label{flex:0 0 100px;font-size:.65rem}.quiz-metric-value{font-size:.78rem}}'
+  ].join('\n');
+  document.head.appendChild(quizCSS);
 
-  /* ── 2. BLOG DATA ── */
-  const BLOG_POSTS = [
-    {
-      id: 'electrostatics-01',
-      slug: 'mastering-electrostatics-coulombs-law-gauss-theorem',
-      title: 'Mastering Electrostatics: From Coulomb\'s Law to Gauss\'s Theorem',
-      excerpt: 'A systematic breakdown of electrostatics for NEET and JEE aspirants — covering Coulomb\'s Law, electric field lines, Gauss\'s theorem applications, and common problem-solving traps.',
-      content: `<h2 id="coulombs-law">Coulomb\'s Law: The Foundation</h2>
-<p>Every electrostatics problem begins with Coulomb\'s Law. The force between two point charges is directly proportional to the product of their charges and inversely proportional to the square of the distance between them. Written mathematically: <strong>F = kq₁q₂/r²</strong>. But understanding the formula is only the start — what matters is recognizing when superposition applies and how to decompose forces into components.</p>
-<p>A common mistake students make in competitive exams is forgetting that Coulomb\'s Law applies to point charges. When you\'re given a continuous charge distribution, you need integration — and the limits matter. For NEET, focus on conceptual MCQ applications. For JEE, be prepared for multi-step numerical problems involving symmetric charge configurations.</p>
-<h2 id="gauss-theorem">Gauss\'s Theorem: Elegant Problem-Solving</h2>
-<p>Gauss\'s theorem relates the electric flux through a closed surface to the charge enclosed: <strong>∮E·dA = q_enc/ε₀</strong>. Its real power lies in exploiting symmetry. Spherical, cylindrical, and planar symmetries each yield clean results — but only if you choose the correct Gaussian surface.</p>
-<p>For JEE Mains, expect problems that test whether you can identify the symmetry and pick the right surface. For NEET, the questions tend to be more conceptual — understanding that flux depends only on enclosed charge, not on the shape of the surface outside. Practice with at least 20 varied problems from each symmetry type before your exam.</p>
-<h2 id="common-traps">Common Exam Traps</h2>
-<p>First: electric field inside a conductor is zero, but that does not mean there are no charges — charges redistribute to the surface. Second: the direction of the electric field is always from positive to negative, but for a system of charges, use vector addition. Third: in Gauss\'s theorem problems, charges outside the Gaussian surface contribute zero net flux — this is tested in nearly every JEE cycle.</p>`,
-      category: 'physics',
-      examLabels: ['NEET', 'JEE'],
-      difficulty: 'intermediate',
-      series: 'Electrostatics Mastery',
-      seriesIndex: 1,
-      seriesTotal: 3,
-      featured: true,
-      trending: true,
-      author: 'Abhinav Kashyap',
-      date: '2025-11-15',
-      readTime: 8,
-      tags: ['electrostatics', 'coulombs-law', 'gauss-theorem', 'class-12-physics']
-    },
-    {
-      id: 'organic-chem-01',
-      slug: 'organic-chemistry-named-reactions-neet-guide',
-      title: 'Organic Chemistry Named Reactions: The Complete NEET Guide',
-      excerpt: 'Stop memorizing blindly. Learn the logic behind every named reaction NEET tests — from Aldol Condensation to Cannizzaro — using synthesis chain mapping.',
-      content: `<h2 id="why-named-reactions">Why Named Reactions Matter in NEET</h2>
-<p>Organic chemistry named reactions appear in almost every NEET paper. But the mistake most students make is treating them as isolated facts to memorize. Every named reaction follows a mechanistic logic — once you understand the mechanism, you can predict products even for reactions you haven\'t seen before.</p>
-<p>Start by grouping reactions by type: substitution, elimination, addition, and rearrangement. Within each group, identify the common pattern. For instance, both <strong>Aldol Condensation</strong> and <strong>Cannizzaro Reaction</strong> involve carbonyl compounds, but Aldol requires an alpha-hydrogen while Cannizzaro occurs in its absence. This single distinction is tested repeatedly.</p>
-<h2 id="chain-mapping">Synthesis Chain Mapping</h2>
-<p>At Prime Spirit Mentors, we use a technique called synthesis chain mapping. Instead of memorizing individual reactions, you build a visual map connecting reactants to products through intermediate steps. This is especially effective for multi-step synthesis problems common in NEET.</p>
-<p>Draw your starting compound on the left. For each possible reaction, branch out to the product. Label each arrow with the reagent and condition. Over time, you\'ll see convergence points — molecules that can be reached from multiple starting materials. These convergence points are your high-yield revision targets.</p>
-<h2 id="key-reactions">Must-Know Reactions for NEET 2026</h2>
-<p>Prioritize these: <strong>Markovnikov\'s addition</strong>, <strong>Saytzeff elimination</strong>, <strong>Hoffmann bromamide degradation</strong>, <strong>Gattermann-Koch reaction</strong>, and <strong>Reimer-Tiemann reaction</strong>. Each has appeared in NEET at least twice in the last five years. Practice writing mechanisms by hand — don\'t just read them from a textbook.</p>`,
-      category: 'chemistry',
-      examLabels: ['NEET'],
-      difficulty: 'advanced',
-      series: null,
-      seriesIndex: null,
-      seriesTotal: null,
-      featured: false,
-      trending: true,
-      author: 'Abhinav Kashyap',
-      date: '2025-10-28',
-      readTime: 9,
-      tags: ['organic-chemistry', 'named-reactions', 'neet', 'synthesis']
-    },
-    {
-      id: 'integration-01',
-      slug: 'integration-techniques-jee-aspirants',
-      title: 'Integration Techniques Every JEE Aspirant Must Know',
-      excerpt: 'From substitution to partial fractions, here\'s a systematic approach to integration that actually works under exam pressure.',
-      content: `<h2 id="substitution">Substitution: Your First Instinct</h2>
-<p>When you see an integral, your first move should be substitution. Look for a function and its derivative appearing together. The classic example: <strong>∫2x·e^(x²)dx</strong> — substitute u = x², and the integral simplifies to ∫e^u du. But JEE often hides the substitution inside more complex expressions.</p>
-<p>A useful trick: if the integrand contains √(a² - x²), try x = a·sinθ. For √(a² + x²), try x = a·tanθ. For √(x² - a²), try x = a·secθ. These trigonometric substitutions convert irrational expressions into rational trigonometric forms that are easier to integrate.</p>
-<h2 id="partial-fractions">Partial Fractions for Rational Functions</h2>
-<p>When you have a rational function P(x)/Q(x) where the degree of P is less than the degree of Q, decompose into partial fractions. The key step is factoring Q(x) completely. For JEE Mains, quadratic factors with no real roots require the form <strong>(Ax + B)/(x² + bx + c)</strong> rather than simple A/(x + α).</p>
-<p>Practice this: ∫(3x + 5)/((x + 1)(x + 2))dx. Decompose into A/(x+1) + B/(x+2), solve for A and B by substituting convenient values of x, then integrate term by term. Under time pressure, this method is faster than any other approach for rational integrands.</p>
-<h2 id="practice-strategy">Practice Strategy</h2>
-<p>Do not attempt to learn all techniques simultaneously. Week 1: master substitution. Week 2: master integration by parts (LIATE rule). Week 3: partial fractions. Week 4: mixed practice from previous JEE papers. By exam day, the pattern recognition will be automatic.</p>`,
-      category: 'maths',
-      examLabels: ['JEE'],
-      difficulty: 'intermediate',
-      series: 'Calculus for JEE',
-      seriesIndex: 2,
-      seriesTotal: 4,
-      featured: false,
-      trending: false,
-      author: 'Abhinav Kashyap',
-      date: '2025-12-01',
-      readTime: 7,
-      tags: ['integration', 'calculus', 'jee-mains', 'class-12-maths']
-    },
-    {
-      id: 'ncert-bio-01',
-      slug: 'how-to-read-ncert-biology-neet',
-      title: 'How to Read NCERT Biology for Maximum NEET Score',
-      excerpt: 'NCERT is the backbone of NEET Biology. But most students read it wrong. Here\'s the line-by-line strategy that top scorers use.',
-      content: `<h2 id="line-by-line">Why Line-by-Line Reading Matters</h2>
-<p>NEET Biology questions are increasingly drawn from specific NCERT sentences — sometimes from footnotes, diagrams, or summary tables that students skip. In the last three NEET exams, over 85% of Biology questions could be answered directly from NCERT content. This means your NCERT reading strategy is more important than any reference book.</p>
-<p>Read every chapter at least three times. First reading: get the big picture. Second reading: highlight key terms, definitions, and examples. Third reading: focus on tables, diagrams, and their labels. Pay special attention to lines that contain numerical data (chromosome counts, gestation periods, percentage values) — these are favourite question sources.</p>
-<h2 id="diagrams">Diagrams Are Non-Negotiable</h2>
-<p>NEET regularly asks questions based on diagram labels. The human heart, nephron structure, DNA replication fork, and floral diagrams are tested almost every year. Don\'t just look at diagrams — redraw them from memory and label every part. If you can reconstruct a diagram without looking at the book, you know the chapter.</p>
-<h2 id="revision-cycle">The 3-2-1 Revision Cycle</h2>
-<p>After completing each chapter, revise it after 3 days, then after 2 weeks, then after 1 month. This spaced repetition approach, combined with the line-by-line method, creates deep retention. At Prime Spirit, we build this cycle into every student\'s personalized study plan based on their psychometric profile and weak-area mapping.</p>`,
-      category: 'biology',
-      examLabels: ['NEET'],
-      difficulty: 'beginner',
-      series: 'NEET Biology Strategy',
-      seriesIndex: 1,
-      seriesTotal: 2,
-      featured: false,
-      trending: true,
-      author: 'Abhinav Kashyap',
-      date: '2025-09-20',
-      readTime: 6,
-      tags: ['ncert', 'biology', 'neet', 'study-strategy', 'revision']
-    },
-    {
-      id: 'econ-ied-01',
-      slug: 'indian-economic-development-cuet-guide',
-      title: 'Understanding Indian Economic Development: A CUET Perspective',
-      excerpt: 'A structured approach to Indian Economic Development for CUET aspirants — covering Five Year Plans, economic reforms, and policy analysis.',
-      content: `<h2 id="five-year-plans">Five Year Plans: Structure and Goals</h2>
-<p>Indian Economic Development is a high-scoring section in CUET if you approach it systematically. Start with the Five Year Plans — understand not just the dates and targets, but the economic philosophy behind each. The First Five Year Plan (1951-56) was based on the Harrod-Domar model and prioritized agriculture. The Second Plan shifted to heavy industry under the Mahalanobis model.</p>
-<p>For CUET, focus on the transition points: when did India shift from import substitution to liberalization? What triggered the 1991 reforms? Understanding the <strong>why</strong> behind policy changes helps you answer analytical MCQs that pure memorization cannot.</p>
-<h2 id="key-indicators">Key Economic Indicators</h2>
-<p>Know the current values and trends for: GDP growth rate, HDI ranking, poverty line methodology (Tendulkar vs Rangarajan), unemployment types (disguised, seasonal, structural), and sectoral contribution to GDP. CUET often presents data in tables or graphs and asks you to interpret — so practice reading economic data, not just memorizing it.</p>
-<h2 id="exam-strategy">Exam Strategy</h2>
-<p>Allocate 40% of your study time to Indian Economic Development and 60% to Microeconomics and Macroeconomics combined. For IED, focus on conceptual clarity over rote facts. For Micro and Macro, practice numerical problems — elasticity calculations, national income aggregates, and multiplier effects appear consistently in CUET papers.</p>`,
-      category: 'economics',
-      examLabels: ['CUET'],
-      difficulty: 'beginner',
-      series: null,
-      seriesIndex: null,
-      seriesTotal: null,
-      featured: false,
-      trending: false,
-      author: 'Abhinav Kashyap',
-      date: '2025-08-10',
-      readTime: 7,
-      tags: ['economics', 'indian-economic-development', 'cuet', 'five-year-plans']
-    },
-    {
-      id: 'thermo-01',
-      slug: 'thermodynamics-laws-explained',
-      title: 'Thermodynamics: Zeroth to Third Law in 20 Minutes',
-      excerpt: 'A rapid, concept-first revision of all four laws of thermodynamics for NEET and JEE — with exam-focused problem patterns and common mistakes.',
-      content: `<h2 id="zeroth-law">The Zeroth Law: Thermal Equilibrium</h2>
-<p>If system A is in thermal equilibrium with system C, and system B is also in thermal equilibrium with system C, then A and B are in thermal equilibrium with each other. This law establishes temperature as a measurable, transitive property. For NEET, this is usually a one-mark conceptual question — know the definition precisely.</p>
-<h2 id="first-law">The First Law: Energy Conservation</h2>
-<p><strong>ΔU = Q - W</strong>. The change in internal energy equals heat added to the system minus work done by the system. JEE problems often test sign conventions: is work done on the system or by the system? Is heat absorbed or released? Draw a diagram for every problem — it prevents sign errors.</p>
-<p>For adiabatic processes (Q = 0), the equation simplifies to ΔU = -W. For isothermal processes (ΔU = 0 for ideal gases), Q = W. Memorize these special cases — they appear in nearly every exam.</p>
-<h2 id="second-law">The Second Law: Entropy</h2>
-<p>Entropy of an isolated system never decreases: <strong>ΔS ≥ 0</strong>. This is the directionality law — it tells you which processes are spontaneous. For JEE, Carnot engine efficiency (η = 1 - T₂/T₁) is a high-frequency topic. For NEET, focus on the conceptual statement and its implications for reversible vs irreversible processes.</p>
-<h2 id="third-law">The Third Law</h2>
-<p>As temperature approaches absolute zero, entropy approaches a minimum (zero for a perfect crystal). This law is less frequently tested but when it appears, the question is usually: "Can absolute zero be reached?" The answer is no — and understanding why is the key concept.</p>`,
-      category: 'physics',
-      examLabels: ['NEET', 'JEE'],
-      difficulty: 'intermediate',
-      series: 'Electrostatics Mastery',
-      seriesIndex: 2,
-      seriesTotal: 3,
-      featured: false,
-      trending: false,
-      author: 'Abhinav Kashyap',
-      date: '2025-12-10',
-      readTime: 7,
-      tags: ['thermodynamics', 'physics', 'neet', 'jee', 'laws-of-thermodynamics']
+  // ========================================
+  // UTILITIES
+  // ========================================
+  var $ = function (sel, ctx) { return (ctx || document).querySelector(sel); };
+  var $$$$ = function (sel, ctx) { return Array.prototype.slice.call((ctx || document).querySelectorAll(sel)); };
+
+  function trackEvent(label) {
+    if (typeof gtag === 'function') {
+      gtag('event', 'click', { event_label: label });
     }
-  ];
-
-  /* ── 3. QUIZ DATA ── */
-  const QUIZ_QUESTIONS = {
-    student: [
-      { q: 'When facing a difficult numerical problem in an exam, what do you typically do?', opts: ['Skip it immediately', 'Try for a few seconds then skip', 'Attempt systematically with what I know', 'Panic and move on'] },
-      { q: 'How do you handle study sessions when you\'re not in the mood?', opts: ['I skip studying entirely', 'I study but very distracted', 'I switch to lighter revision', 'I push through with a plan'] },
-      { q: 'After a mock test, what\'s your first reaction?', opts: ['Check only the total score', 'Feel anxious about mistakes', 'Analyze wrong answers by topic', 'Compare with peers'] },
-      { q: 'How organized is your study material?', opts: ['Very scattered', 'Somewhat organized', 'Structured by subject and chapter', 'I rely on memory only'] },
-      { q: 'When a teacher explains something you don\'t understand, you:', opts: ['Stay quiet and move on', 'Google it later', 'Ask immediately for clarification', 'Note it down and ask after class'] },
-      { q: 'How many hours of focused study can you do in a day?', opts: ['Less than 2', '2-4 hours', '4-6 hours', 'More than 6'] },
-      { q: 'Do you have a fixed daily study routine?', opts: ['No routine at all', 'Loose routine, often broken', 'Fairly consistent routine', 'Strict, timed schedule'] },
-      { q: 'How do you handle exam anxiety?', opts: ['It severely affects my performance', 'It slows me down a bit', 'I manage with breathing techniques', 'I rarely feel anxious'] },
-      { q: 'When studying, how often do you take breaks?', opts: ['Rarely — I study until exhausted', 'When I feel tired', 'Every 45-60 minutes', 'I use a timer/Pomodoro'] },
-      { q: 'What best describes your current preparation level?', opts: ['Just starting', 'Covered some syllabus', 'Mostly through, need revision', 'Confident and doing mock tests'] }
-    ],
-    parent: [
-      { q: 'How involved are you in your child\'s daily study routine?', opts: ['Not involved at all', 'Occasionally check in', 'Regularly monitor progress', 'Actively plan study schedules'] },
-      { q: 'Does your child discuss academic difficulties with you?', opts: ['Never', 'Rarely', 'Sometimes', 'Openly and regularly'] },
-      { q: 'How does your child react to low test scores?', opts: ['Gives up easily', 'Gets frustrated but tries again', 'Analyzes mistakes constructively', 'Becomes overly anxious'] },
-      { q: 'Does your child have a distraction problem (phone, games, social media)?', opts: ['Severe — major concern', 'Moderate — needs guidance', 'Mild — mostly managed', 'Minimal — very disciplined'] },
-      { q: 'What type of coaching environment works best for your child?', opts: ['Large classroom', 'Online recorded lectures', 'Small group with personal attention', 'One-on-one tutoring'] },
-      { q: 'Has your child ever expressed wanting to quit preparation?', opts: ['Frequently', 'Occasionally during stress', 'Once or twice', 'Never'] },
-      { q: 'How well does your child manage time between school and competitive exam prep?', opts: ['Poorly — always behind', 'Struggles but manages', 'Reasonably well', 'Excellent time management'] },
-      { q: 'Is your child receiving any form of mental health or stress support?', opts: ['No, and it\'s needed', 'No, but seems fine', 'Informal support from family', 'Professional guidance'] },
-      { q: 'How does your child perform in timed test conditions vs practice?', opts: ['Much worse under pressure', 'Slightly worse', 'About the same', 'Performs better under pressure'] },
-      { q: 'What is your primary concern about your child\'s preparation?', opts: ['Academic performance', 'Mental well-being', 'Lack of direction/motivation', 'Finding the right coaching'] }
-    ]
-  };
-
-  const QUIZ_INSIGHTS = {
-    student: [
-      { range: [0, 15], label: 'Foundation Rebuild', emoji: '🛠️', desc: 'Your diagnostic suggests foundational gaps in study habits and exam strategy. A structured mentorship program with consistent tracking can transform your approach within 8 weeks.' },
-      { range: [16, 25], label: 'Strategic Pivot Needed', emoji: '🔄', desc: 'You have awareness but inconsistency. The micro-batch format with real-time error mapping can close the gap between knowing what to do and actually doing it.' },
-      { range: [26, 35], label: 'Optimization Phase', emoji: '📈', desc: 'Strong foundation with room for refinement. Psychometric counseling and targeted doubt-clearing can push you from good to exceptional.' },
-      { range: [36, 40], label: 'Peak Performance Track', emoji: '🏆', desc: 'Excellent self-awareness and discipline. The Elite micro-batch (5 students) with advanced test simulation and error analysis is your ideal track.' }
-    ],
-    parent: [
-      { range: [0, 15], label: 'Intervention Recommended', emoji: '⚠️', desc: 'Your child may benefit from structured mentorship with psychometric support. Early intervention with the right coaching environment can prevent burnout and build sustainable habits.' },
-      { range: [16, 25], label: 'Guided Development', emoji: '🌱', desc: 'Your child shows potential but needs consistent guidance. Micro-batch coaching with personal attention can provide the structure and motivation they need.' },
-      { range: [26, 35], label: 'Targeted Enhancement', emoji: '🎯', desc: 'Good awareness from your side. A personalized coaching plan focusing on specific weak areas and regular progress updates can accelerate improvement.' },
-      { range: [36, 40], label: 'Empowered Learner', emoji: '✨', desc: 'Your child demonstrates strong self-management. Prime Spirit\'s Elite track can provide the academic rigor and competitive edge needed for top percentiles.' }
-    ]
-  };
-
-  /* ── 4. UTILITY FUNCTIONS ── */
-  function $(sel, ctx) { return (ctx || document).querySelector(sel); }
-  function $$(sel, ctx) { return Array.from((ctx || document).querySelectorAll(sel)); }
-  function debounce(fn, ms) { let t; return function (...args) { clearTimeout(t); t = setTimeout(() => fn.apply(this, args), ms); }; }
-  function formatDate(d) { return new Date(d).toLocaleDateString('en-IN', { year: 'numeric', month: 'short', day: 'numeric' }); }
-
-  /* ── 5. ANALYTICS ── */
-  function trackEvent(name, params) {
-    if (typeof gtag === 'function') gtag('event', name, params || {});
-  }
-  function initTracking() {
-    document.addEventListener('click', function (e) {
-      var el = e.target.closest('[data-track]');
-      if (el) trackEvent(el.dataset.track, { event_category: 'cta', event_label: el.textContent.trim().substring(0, 60) });
-    });
-    var tracked = {};
-    window.addEventListener('scroll', debounce(function () {
-      var pct = Math.round((window.scrollY + window.innerHeight) / document.documentElement.scrollHeight * 100);
-      CONFIG.scrollTrackThresholds.forEach(function (t) { if (pct >= t && !tracked[t]) { tracked[t] = true; trackEvent('scroll_depth', { percent: t }); } });
-    }, 200));
   }
 
-  /* ── 6. NAVIGATION ── */
-  function initNav() {
-    var toggle = ('#menuToggle');           /* ← FIX #1: was ('#menuToggle') */
-    var nav = $('#mainNav');
-    if (!toggle || !nav) return;
-    toggle.addEventListener('click', function () {
-      var open = nav.classList.toggle('active');
-      toggle.setAttribute('aria-expanded', open);
-      toggle.querySelector('i').className = open ? 'fas fa-times' : 'fas fa-bars';
-    });
-    $$$$('a', nav).forEach(function (a) {
-      a.addEventListener('click', function () {
-        nav.classList.remove('active');
-        toggle.setAttribute('aria-expanded', 'false');
-        toggle.querySelector('i').className = 'fas fa-bars';
-      });
-    });
-    document.addEventListener('click', function (e) {
-      if (!nav.contains(e.target) && !toggle.contains(e.target) && nav.classList.contains('active')) {
-        nav.classList.remove('active');
-        toggle.setAttribute('aria-expanded', 'false');
-        toggle.querySelector('i').className = 'fas fa-bars';
-      }
-    });
+  // ========================================
+  // SCROLL PROGRESS BAR
+  // ========================================
+  var scrollProgress = $('#scrollProgress');
+  if (scrollProgress) {
+    window.addEventListener('scroll', function () {
+      var st = window.pageYOffset || document.documentElement.scrollTop;
+      var dh = document.documentElement.scrollHeight - window.innerHeight;
+      var pct = dh > 0 ? (st / dh) * 100 : 0;
+      scrollProgress.style.width = pct + '%';
+      scrollProgress.setAttribute('aria-valuenow', Math.round(pct));
+    }, { passive: true });
   }
 
-  /* ── 7. POONAM DROPDOWN ── */
-  function initPoonamDropdown() {
-    var trigger = $('#poonamNavTrigger');
-    var dd = $('#poonamDropdown');
-    var learn = $('#poonamLearnMore');
-    if (!trigger || !dd) return;
-    trigger.addEventListener('click', function (e) {
-      e.stopPropagation();
-      if (window.innerWidth <= 1180) {
-        var target = $('#poonam-foundation');
-        if (target) target.scrollIntoView({ behavior: 'smooth' });
-        return;
-      }
-      dd.classList.toggle('open');
-      trigger.classList.toggle('active');
-      trigger.setAttribute('aria-expanded', dd.classList.contains('open'));
-    });
-    document.addEventListener('click', function (e) {
-      if (!dd.contains(e.target) && !trigger.contains(e.target)) {
-        dd.classList.remove('open');
-        trigger.classList.remove('active');
-        trigger.setAttribute('aria-expanded', 'false');
-      }
-    });
-    if (learn) learn.addEventListener('click', function () {
-      dd.classList.remove('open');
-      trigger.classList.remove('active');
-    });
-    document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape' && dd.classList.contains('open')) {
-        dd.classList.remove('open');
-        trigger.classList.remove('active');
-        trigger.focus();
-      }
-    });
-  }
-
-  /* ── 8. SEARCH ── */
-  function initSearch() {
-    var toggle = $('#searchToggle');
-    var overlay = $('#searchOverlay');
-    var input = $('#searchInput');
-    var results = $('#searchResults');
-    var closeBtn = $('#searchClose');
-    if (!toggle || !overlay) return;
-
-    var searchIndex = [
-      { title: 'Elite Micro-Batch', section: 'Programs', href: '#courses', text: 'max 5 students personalized coaching neet jee iat' },
-      { title: 'Advanced Cohort', section: 'Programs', href: '#courses', text: 'max 10 students boards cuet coaching' },
-      { title: 'Poonam Foundation', section: 'Programs', href: '#poonam-foundation', text: 'affordable class 6 7 8 maths science 999 rupees' },
-      { title: 'NEET UG Notes', section: 'Notes Vault', href: '#notes-vault', text: 'neet biology physics chemistry notes download' },
-      { title: 'JEE Mains Notes', section: 'Notes Vault', href: '#notes-vault', text: 'jee maths physics chemistry notes download' },
-      { title: 'FAQ', section: 'Info', href: '#faq', text: 'frequently asked questions batch size fee structure refund' },
-      { title: 'Student Reviews', section: 'Info', href: '#testimonials', text: 'testimonials reviews ratings students parents' },
-      { title: 'Book Free Consultation', section: 'Contact', href: '#contact', text: 'enquiry form book demo consultation phone whatsapp' },
-      { title: 'PrimeScore Calculator', section: 'Tools', href: 'primescore/', text: 'score calculator rank predictor percentile' },
-      { title: 'PrimeTestQ Assessment', section: 'Tools', href: 'primetestq/index.html', text: 'free test assessment quiz practice questions' },
-      { title: 'NEET Coaching Bengaluru', section: 'City Pages', href: 'city/neet-bengaluru.html', text: 'neet coaching bengaluru bangalore karnataka medical' },
-      { title: 'JEE Coaching Bengaluru', section: 'City Pages', href: 'city/jee-bengaluru.html', text: 'jee coaching bengaluru bangalore karnataka engineering' },
-      { title: 'NEET Coaching Hyderabad', section: 'City Pages', href: 'city/neet-hyderabad.html', text: 'neet coaching hyderabad telangana medical' },
-      { title: 'CUET Coaching Hyderabad', section: 'City Pages', href: 'city/cuet-hyderabad.html', text: 'cuet coaching hyderabad telangana university entrance' },
-    ];
-
-    BLOG_POSTS.forEach(function (p) {
-      searchIndex.push({
-        title: p.title,
-        section: 'Blog',
-        href: '#blog-hub',
-        text: p.tags.join(' ') + ' ' + p.category + ' ' + p.examLabels.join(' ') + ' ' + p.excerpt.toLowerCase()
-      });
-    });
-
-    function doSearch(q) {
-      if (!q || q.length < 2) { results.innerHTML = ''; return; }
-      var lq = q.toLowerCase();
-      var matches = searchIndex.filter(function (item) {
-        return (item.title.toLowerCase().includes(lq) || item.text.includes(lq));
-      }).slice(0, 8);
-      if (!matches.length) {
-        results.innerHTML = '<div class="search-no-results">No results found for "' + q + '"</div>';
-        return;
-      }
-      results.innerHTML = matches.map(function (m) {
-        return '<a class="search-result-item" href="' + m.href + '"><span class="search-result-section">' + m.section + '</span><strong>' + m.title + '</strong></a>';
-      }).join('');
-    }
-
-    toggle.addEventListener('click', function () {
-      overlay.hidden = false;
-      input.focus();
-      trackEvent('search_open');
-    });
-    closeBtn.addEventListener('click', function () {
-      overlay.hidden = true;
-      input.value = '';
-      results.innerHTML = '';
-    });
-    input.addEventListener('input', debounce(function () { doSearch(input.value); }, CONFIG.debounceMs));
-    document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape' && !overlay.hidden) { overlay.hidden = true; }
-    });
-    overlay.addEventListener('click', function (e) {
-      if (e.target === overlay) { overlay.hidden = true; }
-    });
-    results.addEventListener('click', function (e) {
-      if (e.target.closest('.search-result-item')) {
-        overlay.hidden = true;
-        trackEvent('search_click', { query: input.value });
-      }
-    });
-  }
-
-  /* ── 9. SCROLL PROGRESS ── */
-  function initScrollProgress() {
-    var bar = $('#scrollProgress');
-    var btt = $('#backToTop');
-    if (!bar) return;
-    window.addEventListener('scroll', debounce(function () {
-      var pct = Math.round((window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100);
-      bar.style.width = pct + '%';
-      bar.setAttribute('aria-valuenow', pct);
-      if (btt) btt.hidden = window.scrollY < 400;
-    }, 50));
-    if (btt) btt.addEventListener('click', function () {
+  // ========================================
+  // BACK TO TOP
+  // ========================================
+  var backToTop = $('#backToTop');
+  if (backToTop) {
+    window.addEventListener('scroll', function () {
+      backToTop.hidden = (window.pageYOffset || document.documentElement.scrollTop) < 400;
+    }, { passive: true });
+    backToTop.addEventListener('click', function () {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     });
   }
 
-  /* ── 10. BLOG SYSTEM ── */
-  var blogState = {
-    filter: 'all',
-    page: 1,
-    search: '',
-    view: 'grid',
-    currentPost: null,
-    bookmarks: JSON.parse(localStorage.getItem('ps_bookmarks') || '[]'),
-    comments: JSON.parse(localStorage.getItem('ps_comments') || '{}')
-  };
-
-  function getFilteredPosts() {
-    var posts = BLOG_POSTS.slice();
-    if (blogState.filter !== 'all') {
-      posts = posts.filter(function (p) { return p.category === blogState.filter; });
-    }
-    if (blogState.search) {
-      var sq = blogState.search.toLowerCase();
-      posts = posts.filter(function (p) {
-        return p.title.toLowerCase().includes(sq) ||
-          p.excerpt.toLowerCase().includes(sq) ||
-          p.tags.some(function (t) { return t.includes(sq); });
-      });
-    }
-    return posts;
-  }
-
-  function renderBlogGrid() {
-    var container = $('#blogPostsContainer');
-    var pag = $('#blogPagination');
-    var featured = $('#featuredArticle');
-    var trending = $('#trendingArticles');
-    if (!container) return;
-
-    var posts = getFilteredPosts();
-    var perPage = CONFIG.blogPostsPerPage;
-    var paged = posts.slice((blogState.page - 1) * perPage, blogState.page * perPage);
-
-    // Featured
-    if (featured) {
-      var fp = blogState.filter === 'all' ? BLOG_POSTS.find(function (p) { return p.featured; }) : null;
-      if (fp && !blogState.search) {
-        featured.innerHTML = '<div class="featured-card" data-id="' + fp.id + '"><span class="featured-tag">Featured</span><div class="blog-card-meta">' + renderLabels(fp) + '</div><h3>' + fp.title + '</h3><p>' + fp.excerpt + '</p></div>';
-        featured.style.display = '';
-      } else {
-        featured.style.display = 'none';
+  // ========================================
+  // MOBILE MENU
+  // ========================================
+  var menuToggle = $('#menuToggle');
+  var mainNav = $('#mainNav');
+  if (menuToggle && mainNav) {
+    menuToggle.addEventListener('click', function () {
+      var expanded = this.getAttribute('aria-expanded') === 'true';
+      this.setAttribute('aria-expanded', String(!expanded));
+      mainNav.classList.toggle('nav-open');
+      var icon = this.querySelector('i');
+      if (icon) icon.className = expanded ? 'fas fa-bars' : 'fas fa-times';
+    });
+    mainNav.addEventListener('click', function (e) {
+      if (e.target.closest('a') && mainNav.classList.contains('nav-open')) {
+        mainNav.classList.remove('nav-open');
+        menuToggle.setAttribute('aria-expanded', 'false');
+        var icon = menuToggle.querySelector('i');
+        if (icon) icon.className = 'fas fa-bars';
       }
-    }
-
-    // Trending
-    if (trending && blogState.filter === 'all' && !blogState.search) {
-      var tp = BLOG_POSTS.filter(function (p) { return p.trending; }).slice(0, 4);
-      trending.innerHTML = '<h3><i class="fas fa-fire" style="color:#ff6b6b;margin-right:6px"></i> Trending</h3><div class="trending-list">' +
-        tp.map(function (p, i) {
-          return '<div class="trending-chip" data-id="' + p.id + '"><span class="trending-rank">#' + (i + 1) + '</span>' + p.title + '</div>';
-        }).join('') + '</div>';
-      trending.style.display = '';
-    } else if (trending) {
-      trending.style.display = 'none';
-    }
-
-    // Grid
-    container.innerHTML = paged.map(function (p) {
-      var isBkm = blogState.bookmarks.includes(p.id);
-      return '<div class="course-card blog-card animate-in" data-id="' + p.id + '">' +
-        '<div class="blog-card-meta">' + renderLabels(p) + '</div>' +
-        '<h3 class="blog-card-title">' + p.title + '</h3>' +
-        '<p>' + p.excerpt.substring(0, 120) + '...</p>' +
-        '<div style="display:flex;align-items:center;gap:12px;margin-top:auto">' +
-        '<span class="blog-card-date">' + formatDate(p.date) + '</span>' +
-        '<span class="blog-card-readtime">' + p.readTime + ' min</span>' +
-        '<button class="blog-card-bookmark ' + (isBkm ? 'bookmarked' : '') + '" data-bookmark="' + p.id + '" aria-label="Bookmark"><i class="' + (isBkm ? 'fas' : 'far') + ' fa-bookmark"></i></button>' +
-        '</div></div>';
-    }).join('');
-
-    // Pagination
-    if (pag) {
-      var totalPages = Math.ceil(posts.length / perPage);
-      if (totalPages <= 1) { pag.innerHTML = ''; return; }
-      var html = '<button class="page-btn" data-page="' + (blogState.page - 1) + '"' + (blogState.page <= 1 ? ' disabled' : '') + ' aria-label="Previous page">&laquo;</button>';
-      for (var i = 1; i <= totalPages; i++) {
-        html += '<button class="page-btn' + (i === blogState.page ? ' active' : '') + '" data-page="' + i + '">' + i + '</button>';
-      }
-      html += '<button class="page-btn" data-page="' + (blogState.page + 1) + '"' + (blogState.page >= totalPages ? ' disabled' : '') + ' aria-label="Next page">&raquo;</button>';
-      pag.innerHTML = html;
-    }
-
-    initAnimateIn();
+    });
   }
 
-  function renderLabels(p) {
-    var h = '<span class="blog-label blog-label-category">' + p.category + '</span>';
-    h += '<span class="blog-label blog-label-difficulty" data-diff="' + p.difficulty + '">' + p.difficulty + '</span>';
-    p.examLabels.forEach(function (e) { h += '<span class="blog-label blog-label-exam">' + e + '</span>'; });
-    return h;
-  }
+  // ========================================
+  // SEARCH OVERLAY
+  // ========================================
+  var searchToggle = $('#searchToggle');
+  var searchOverlay = $('#searchOverlay');
+  var searchClose = $('#searchClose');
+  var searchInput = $('#searchInput');
+  var searchResults = $('#searchResults');
 
-  function showPost(id) {
-    var post = BLOG_POSTS.find(function (p) { return p.id === id; });
-    if (!post) return;
-    blogState.currentPost = post;
-    blogState.view = 'detail';
-
-    var grid = $('#blogPostsContainer');
-    var detail = $('#blogPostDetail');
-    var featured = $('#featuredArticle');
-    var trending = $('#trendingArticles');
-    var pag = $('#blogPagination');
-    var filters = $('.blog-filters');
-    var searchWrap = $('.blog-search-wrap');
-
-    if (grid) grid.style.display = 'none';
-    if (featured) featured.style.display = 'none';
-    if (trending) trending.style.display = 'none';
-    if (pag) pag.style.display = 'none';
-    if (filters) filters.style.display = 'none';
-    if (searchWrap) searchWrap.style.display = 'none';
-    if (detail) detail.hidden = false;
-
-    // Header
-    var header = $('#postHeader');
-    if (header) {
-      var isBkm = blogState.bookmarks.includes(post.id);
-      header.innerHTML = '<div class="blog-card-meta">' + renderLabels(post) +
-        '<span class="blog-card-date">' + formatDate(post.date) + '</span>' +
-        '<span class="blog-card-readtime">' + post.readTime + ' min read</span></div>' +
-        '<h1>' + post.title + '</h1><p class="post-excerpt">' + post.excerpt + '</p>';
-    }
-
-    // Body
-    var body = $('#postBody');
-    if (body) body.innerHTML = post.content;
-
-    // TOC
-    generateTOC();
-
-    // Bookmark button
-    var bBtn = $('#bookmarkBtn');
-    if (bBtn) {
-      var bkm = blogState.bookmarks.includes(post.id);
-      bBtn.classList.toggle('bookmarked', bkm);
-      bBtn.querySelector('span').textContent = bkm ? 'Bookmarked' : 'Bookmark';
-      bBtn.querySelector('i').className = bkm ? 'fas fa-bookmark' : 'far fa-bookmark';
-    }
-
-    // Series nav
-    renderSeriesNav(post);
-
-    // Prev/Next
-    renderPrevNext(post);
-
-    // Related
-    renderRelated(post);
-
-    // Comments
-    renderComments(post.id);
-
-    // Reading progress
-    initReadingProgress();
-
-    trackEvent('blog_post_view', { post_id: post.id, post_title: post.title, post_category: post.category });
-    window.scrollTo({ top: detail.offsetTop - 80, behavior: 'smooth' });
-  }
-
-  function hidePost() {
-    blogState.view = 'grid';
-    blogState.currentPost = null;
-    var grid = $('#blogPostsContainer');
-    var detail = $('#blogPostDetail');
-    var filters = $('.blog-filters');
-    var searchWrap = $('.blog-search-wrap');
-    if (grid) grid.style.display = '';
-    if (detail) detail.hidden = true;
-    if (filters) filters.style.display = '';
-    if (searchWrap) searchWrap.style.display = '';
-    renderBlogGrid();
-  }
-
-  function generateTOC() {
-    var body = $('#postBody');
-    var tocList = $('#tocList');
-    var tocWrap = $('#postToc');
-    if (!body || !tocList) return;
-    var headings = $$('h2[id], h3[id]', body);
-    if (headings.length < 2) { if (tocWrap) tocWrap.style.display = 'none'; return; }
-    if (tocWrap) tocWrap.style.display = '';
-    tocList.innerHTML = headings.map(function (h) {
-      return '<li><a href="#' + h.id + '">' + h.textContent + '</a></li>';
-    }).join('');
-
-    var observer = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        var link = tocList.querySelector('a[href="#' + entry.target.id + '"]');
-        if (link) link.classList.toggle('active', entry.isIntersecting);
-      });
-    }, { rootMargin: '-80px 0px -70% 0px' });
-    headings.forEach(function (h) { observer.observe(h); });
-  }
-
-  function initReadingProgress() {
-    var bar = ('#readingProgressBar');      /* ← FIX #4: was ('#readingProgressBar') */
-    var detail = $('#blogPostDetail');
-    if (!bar || !detail) return;
-    var handler = debounce(function () {
-      var rect = detail.getBoundingClientRect();
-      var total = detail.offsetHeight - window.innerHeight;
-      var scrolled = -rect.top + 80;
-      var pct = Math.max(0, Math.min(100, Math.round((scrolled / total) * 100)));
-      bar.style.width = pct + '%';
-    }, 30);
-    window.addEventListener('scroll', handler);
-    blogState._progressHandler = handler;
-  }
-
-  function renderSeriesNav(post) {
-    var el = $('#postSeriesNav');
-    if (!el || !post.series) { if (el) el.style.display = 'none'; return; }
-    var seriesPosts = BLOG_POSTS.filter(function (p) { return p.series === post.series; })
-      .sort(function (a, b) { return a.seriesIndex - b.seriesIndex; });
-    if (seriesPosts.length < 2) { el.style.display = 'none'; return; }
-    el.style.display = '';
-    el.innerHTML = '<h4>Series: ' + post.series + '</h4><div class="series-list">' +
-      seriesPosts.map(function (p) {
-        if (p.id === post.id) return '<div class="series-item current">' + p.seriesIndex + '. ' + p.title + ' (current)</div>';
-        return '<div class="series-item"><a href="#" data-id="' + p.id + '">' + p.seriesIndex + '. ' + p.title + '</a></div>';
-      }).join('') + '</div>';
-  }
-
-  function renderPrevNext(post) {
-    var el = $('#postPrevNext');
-    if (!el) return;
-    var sorted = BLOG_POSTS.slice().sort(function (a, b) { return new Date(b.date) - new Date(a.date); });
-    var idx = sorted.findIndex(function (p) { return p.id === post.id; });
-    var prev = sorted[idx + 1];
-    var next = sorted[idx - 1];
-    el.innerHTML =
-      (prev ? '<a href="#" data-id="' + prev.id + '"><span class="post-nav-label">← Previous</span><span class="post-nav-title">' + prev.title + '</span></a>' : '<div></div>') +
-      (next ? '<a href="#" data-id="' + next.id + '" class="post-nav-next"><span class="post-nav-label">Next →</span><span class="post-nav-title">' + next.title + '</span></a>' : '<div></div>');
-  }
-
-  function renderRelated(post) {
-    var grid = $('#relatedGrid');
-    if (!grid) return;
-    var related = BLOG_POSTS.filter(function (p) {
-      return p.id !== post.id &&
-        (p.category === post.category ||
-          p.examLabels.some(function (e) { return post.examLabels.includes(e); }));
-    }).slice(0, 3);
-    grid.innerHTML = related.map(function (p) {
-      return '<div class="course-card blog-card" data-id="' + p.id + '" style="padding:20px">' +
-        '<div class="blog-card-meta">' + renderLabels(p) + '</div>' +
-        '<h3 style="font-size:0.95rem">' + p.title + '</h3>' +
-        '<span class="blog-card-date">' + formatDate(p.date) + '</span></div>';
-    }).join('');
-  }
-
-  function renderComments(postId) {
-    var container = $('#commentsContainer');
-    if (!container) return;
-    var comments = blogState.comments[postId] || [];
-    container.innerHTML = comments.length
-      ? comments.map(function (c) {
-        return '<div class="comment-item"><div class="comment-author">' + c.author +
-          '</div><div class="comment-text">' + c.text +
-          '</div><div class="comment-time">' + c.time + '</div></div>';
-      }).join('')
-      : '<p style="color:var(--text-muted);font-size:0.9rem">No comments yet. Be the first to share your thoughts.</p>';
-  }
-
-  function initBlog() {
-    var container = $('#blogPostsContainer');
-    var pag = $('#blogPagination');
-    var featured = $('#featuredArticle');
-    var trending = $('#trendingArticles');
-    if (!container) return;
-
-    // Filters
-    $$$$('.filter-btn').forEach(function (btn) {
-      btn.addEventListener('click', function () {
-        $$('.filter-btn').forEach(function (b) { b.classList.remove('active'); });
-        btn.classList.add('active');
-        blogState.filter = btn.dataset.filter;
-        blogState.page = 1;
-        renderBlogGrid();
-        trackEvent('blog_filter', { filter: blogState.filter });
-      });
+  if (searchToggle && searchOverlay) {
+    searchToggle.addEventListener('click', function () {
+      searchOverlay.hidden = false;
+      this.setAttribute('aria-expanded', 'true');
+      if (searchInput) setTimeout(function () { searchInput.focus(); }, 50);
     });
 
-    // Blog search
-    var searchInput = ('#blogSearchInput');     /* ← FIX #3: was ('#blogSearchInput') */
-    if (searchInput) {
-      searchInput.addEventListener('input', debounce(function () {
-        blogState.search = searchInput.value;
-        blogState.page = 1;
-        renderBlogGrid();
-      }, CONFIG.debounceMs));
+    function closeSearch() {
+      searchOverlay.hidden = true;
+      searchToggle.setAttribute('aria-expanded', 'false');
+      searchToggle.focus();
     }
 
-    // Card clicks (delegation)
+    if (searchClose) searchClose.addEventListener('click', closeSearch);
+    searchOverlay.addEventListener('click', function (e) {
+      if (e.target === searchOverlay) closeSearch();
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && !searchOverlay.hidden) closeSearch();
+    });
+
+    if (searchInput && searchResults) {
+      searchInput.addEventListener('input', function () {
+        var q = this.value.toLowerCase().trim();
+        if (!q) { searchResults.innerHTML = ''; return; }
+        var all = $$('h2, h3').map(function (el) {
+          return { el: el, text: el.textContent, section: el.closest('section') };
+        });
+        var matches = all.filter(function (s) {
+          return s.text.toLowerCase().indexOf(q) !== -1;
+        }).slice(0, 8);
+        searchResults.innerHTML = matches.length
+          ? matches.map(function (m) {
+              return '<a href="#' + (m.section ? m.section.id : '') + '" class="search-result-item">' + m.text + '</a>';
+            }).join('')
+          : '<p style="color:var(--text-muted);padding:12px 0">No results found.</p>';
+      });
+    }
+  }
+
+  // ========================================
+  // POONAM DROPDOWN
+  // ========================================
+  var poonamTrigger = ('#poonamNavTrigger');
+  var poonamDropdown = $('#poonamDropdown');
+  if (poonamTrigger && poonamDropdown) {
+    poonamTrigger.addEventListener('click', function (e) {
+      e.stopPropagation();
+      var expanded = this.getAttribute('aria-expanded') === 'true';
+      this.setAttribute('aria-expanded', String(!expanded));
+      poonamDropdown.classList.toggle('poonam-dd-open', !expanded);
+    });
     document.addEventListener('click', function (e) {
-      var card = e.target.closest('.blog-card[data-id], .featured-card[data-id], .trending-chip[data-id]');
-      if (card && !e.target.closest('.blog-card-bookmark')) { showPost(card.dataset.id); return; }
-      var relatedCard = e.target.closest('.related-grid .blog-card[data-id]');
-      if (relatedCard) { showPost(relatedCard.dataset.id); return; }
-      var seriesLink = e.target.closest('.series-item a[data-id]');
-      if (seriesLink) { e.preventDefault(); showPost(seriesLink.dataset.id); return; }
-      var navLink = e.target.closest('.post-prevnext a[data-id]');
-      if (navLink) { e.preventDefault(); showPost(navLink.dataset.id); return; }
+      if (!poonamDropdown.contains(e.target) && e.target !== poonamTrigger) {
+        poonamTrigger.setAttribute('aria-expanded', 'false');
+        poonamDropdown.classList.remove('poonam-dd-open');
+      }
     });
+  }
 
-    // Pagination
-    if (pag) {
-      pag.addEventListener('click', function (e) {
-        var btn = e.target.closest('.page-btn');
-        if (btn && !btn.disabled) {
-          blogState.page = parseInt(btn.dataset.page);
-          renderBlogGrid();
-          window.scrollTo({ top: $('#blog-hub').offsetTop - 80, behavior: 'smooth' });
+  // ========================================
+  // FAQ ACCORDION
+  // ========================================
+  $$$$('.faq-question').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var expanded = this.getAttribute('aria-expanded') === 'true';
+      var answer = this.nextElementSibling;
+      $$('.faq-question').forEach(function (other) {
+        if (other !== btn) {
+          other.setAttribute('aria-expanded', 'false');
+          var a = other.nextElementSibling;
+          if (a) a.classList.remove('faq-answer-open');
         }
       });
-    }
-
-    // Back button
-    var backBtn = $('#backToBlog');
-    if (backBtn) backBtn.addEventListener('click', hidePost);
-
-    // Bookmark (grid)
-    document.addEventListener('click', function (e) {
-      var btn = e.target.closest('[data-bookmark]');
-      if (!btn) return;
-      var id = btn.dataset.bookmark;
-      var idx = blogState.bookmarks.indexOf(id);
-      if (idx > -1) blogState.bookmarks.splice(idx, 1);
-      else blogState.bookmarks.push(id);
-      localStorage.setItem('ps_bookmarks', JSON.stringify(blogState.bookmarks));
-      renderBlogGrid();
-      trackEvent('blog_bookmark', { post_id: id, action: idx > -1 ? 'remove' : 'add' });
+      this.setAttribute('aria-expanded', String(!expanded));
+      if (answer) answer.classList.toggle('faq-answer-open', !expanded);
     });
+  });
 
-    // Bookmark (detail view)
-    var bookmarkBtn = $('#bookmarkBtn');
-    if (bookmarkBtn) {
-      bookmarkBtn.addEventListener('click', function () {
-        if (!blogState.currentPost) return;
-        var id = blogState.currentPost.id;
-        var idx = blogState.bookmarks.indexOf(id);
-        if (idx > -1) blogState.bookmarks.splice(idx, 1);
-        else blogState.bookmarks.push(id);
-        localStorage.setItem('ps_bookmarks', JSON.stringify(blogState.bookmarks));
-        var bkm = blogState.bookmarks.includes(id);
-        bookmarkBtn.classList.toggle('bookmarked', bkm);
-        bookmarkBtn.querySelector('span').textContent = bkm ? 'Bookmarked' : 'Bookmark';
-        bookmarkBtn.querySelector('i').className = bkm ? 'fas fa-bookmark' : 'far fa-bookmark';
-      });
-    }
+  // ========================================
+  // AUTH MODAL
+  // ========================================
+  var authModal = ('#authModal');
+  var btnCloseModal = $('#btnCloseModal');
+  var authViewLogin = $('#authViewLogin');
+  var authViewSignup = $('#authViewSignup');
+  var authViewForgot = $('#authViewForgot');
 
-    // Share
-    var shareBtn = $('#shareBtn');
-    if (shareBtn) {
-      shareBtn.addEventListener('click', function () {
-        if (!blogState.currentPost) return;
-        var url = window.location.origin + window.location.pathname + '#blog-' + blogState.currentPost.slug;
-        if (navigator.share) {
-          navigator.share({ title: blogState.currentPost.title, text: blogState.currentPost.excerpt, url: url });
-        } else {
-          navigator.clipboard.writeText(url);
-          shareBtn.querySelector('span').textContent = 'Link Copied!';
-          setTimeout(function () { shareBtn.querySelector('span').textContent = 'Share'; }, 2000);
-        }
-        trackEvent('blog_share', { post_id: blogState.currentPost.id });
-      });
-    }
+  function openAuth(view) {
+    if (!authModal) return;
+    authModal.hidden = false;
+    showAuthView(view || 'login');
+  }
 
-    // Comments
-    var commentForm = $('#commentForm');
-    if (commentForm) {
-      commentForm.addEventListener('submit', function (e) {
+  function closeAuth() {
+    if (authModal) authModal.hidden = true;
+  }
+
+  function showAuthView(view) {
+    if (authViewLogin) authViewLogin.hidden = view !== 'login';
+    if (authViewSignup) authViewSignup.hidden = view !== 'signup';
+    if (authViewForgot) authViewForgot.hidden = view !== 'forgot';
+  }
+
+  var btnStudentLogin = $('#btnStudentLogin');
+  var btnParentLogin = $('#btnParentLogin');
+  if (btnStudentLogin) btnStudentLogin.addEventListener('click', function () { openAuth('login'); });
+  if (btnParentLogin) btnParentLogin.addEventListener('click', function () { openAuth('login'); });
+  if (btnCloseModal) btnCloseModal.addEventListener('click', closeAuth);
+  if (authModal) authModal.addEventListener('click', function (e) { if (e.target === authModal) closeAuth(); });
+
+  var btnGotoSignup = $('#btnGotoSignup');
+  var btnGotoLogin = $('#btnGotoLogin');
+  var btnGotoForgot = $('#btnGotoForgot');
+  var btnGotoLogin2 = $('#btnGotoLogin2');
+  if (btnGotoSignup) btnGotoSignup.addEventListener('click', function () { showAuthView('signup'); });
+  if (btnGotoLogin) btnGotoLogin.addEventListener('click', function () { showAuthView('login'); });
+  if (btnGotoForgot) btnGotoForgot.addEventListener('click', function () { showAuthView('forgot'); });
+  if (btnGotoLogin2) btnGotoLogin2.addEventListener('click', function () { showAuthView('login'); });
+
+  ['formLogin', 'formSignup', 'formForgot'].forEach(function (id) {
+    var form = $('#' + id);
+    if (form) {
+      form.addEventListener('submit', function (e) {
         e.preventDefault();
-        if (!blogState.currentPost) return;
-        var textarea = $('#commentText');
-        var text = textarea.value.trim();
-        if (!text) return;
-        var id = blogState.currentPost.id;
-        if (!blogState.comments[id]) blogState.comments[id] = [];
-        blogState.comments[id].push({
-          author: 'Guest',
-          text: text,
-          time: new Date().toLocaleString('en-IN')
-        });
-        localStorage.setItem('ps_comments', JSON.stringify(blogState.comments));
-        textarea.value = '';
-        renderComments(id);
-        trackEvent('blog_comment', { post_id: id });
+        alert('Backend integration required. This is a frontend demo.');
       });
     }
+  });
 
-    renderBlogGrid();
-  }
-
-  /* ── 11. FAQ ── */
-  function initFAQ() {
-    $$$$('.faq-question').forEach(function (btn) {
-      btn.addEventListener('click', function () {
-        var item = btn.closest('.faq-item');
-        var isOpen = item.classList.contains('open');
-        $$('.faq-item.open').forEach(function (i) {
-          i.classList.remove('open');
-          i.querySelector('.faq-question').setAttribute('aria-expanded', 'false');
-        });
-        if (!isOpen) {
-          item.classList.add('open');
-          btn.setAttribute('aria-expanded', 'true');
-        }
-      });
+  // Password strength indicator
+  var signupPass = $('#signupPass');
+  var strengthBar = $('#strengthBar');
+  var strengthFeedback = $('#strengthFeedback');
+  if (signupPass && strengthBar) {
+    signupPass.addEventListener('input', function () {
+      var v = this.value;
+      var s = 0;
+      if (v.length >= 8) s++;
+      if (/[A-Z]/.test(v)) s++;
+      if (/[0-9]/.test(v)) s++;
+      if (/[^A-Za-z0-9]/.test(v)) s++;
+      var pct = (s / 4) * 100;
+      var colors = ['#ff4444', '#ffaa00', '#aadd00', '#00df89'];
+      var labels = ['Weak', 'Fair', 'Good', 'Strong'];
+      strengthBar.style.width = pct + '%';
+      strengthBar.style.background = colors[s] || colors[0];
+      if (strengthFeedback) strengthFeedback.textContent = v.length === 0
+        ? 'Min 8 chars, uppercase, number, special char'
+        : labels[s] || labels[0];
     });
   }
 
-  /* ── 12. QUIZ ── */
-  function initQuiz() {
-    var roleStudent = ('#btnRoleStudent');    /* ← FIX #2: was ('#btnRoleStudent') */
-    var roleParent = $('#btnRoleParent');
-    var roleWindow = $('#roleSelectWindow');
-    var quizWindow = $('#quizWindow');
-    var resultWindow = $('#resultWindow');
-    var nextBtn = $('#nextBtn');
-    var restartBtn = $('#restartBtn');
-    if (!roleStudent || !roleParent) return;
-
-    var state = { role: '', current: 0, score: 0, answers: [] };
-
-    function startQuiz(role) {
-      state = { role: role, current: 0, score: 0, answers: [] };
-      roleWindow.style.display = 'none';
-      quizWindow.hidden = false;
-      resultWindow.hidden = true;
-      nextBtn.hidden = true;
-      $('#quizTrackIdentity').textContent = role === 'student' ? 'Student Profile' : 'Parent Profile';
-      renderQuestion();
-      trackEvent('quiz_start', { role: role });
-    }
-
-    function renderQuestion() {
-      var questions = QUIZ_QUESTIONS[state.role];
-      var q = questions[state.current];
-      $('#quizProgressText').textContent = 'Question ' + (state.current + 1) + ' of ' + questions.length;
-      $('#quizProgressFill').style.width = ((state.current / questions.length) * 100) + '%';
-      $('#questionText').textContent = q.q;
-      var btns = $('#answerButtons');
-      btns.innerHTML = q.opts.map(function (opt, i) {
-        return '<button class="quiz-btn" data-score="' + i + '" type="button">' + opt + '</button>';
-      }).join('');
-    }
-
-    document.addEventListener('click', function (e) {
-      var btn = e.target.closest('#answerButtons .quiz-btn');
-      if (!btn) return;
-      $$$$('#answerButtons .quiz-btn').forEach(function (b) {
-        b.style.opacity = '0.5';
-        b.disabled = true;
-      });
-      btn.style.opacity = '1';
-      btn.style.borderColor = 'var(--accent)';
-      state.score += parseInt(btn.dataset.score);
-      state.answers.push(parseInt(btn.dataset.score));
-      nextBtn.hidden = false;
+  // ========================================
+  // NOTES DOWNLOAD — opens auth modal
+  // ========================================
+  $$$$('.download-btn-style').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var notesType = this.getAttribute('data-notes') || 'unknown';
+      trackEvent('cta-notes-' + notesType);
+      openAuth('login');
     });
+  });
 
-    if (nextBtn) {
-      nextBtn.addEventListener('click', function () {
-        state.current++;
-        if (state.current >= QUIZ_QUESTIONS[state.role].length) { showResults(); return; }
-        nextBtn.hidden = true;
-        renderQuestion();
-      });
-    }
-
-    function showResults() {
-      quizWindow.hidden = true;
-      resultWindow.hidden = false;
-      nextBtn.hidden = true;
-      var insights = QUIZ_INSIGHTS[state.role];
-      var result = insights.find(function (r) {
-        return state.score >= r.range[0] && state.score <= r.range[1];
-      }) || insights[insights.length - 1];
-      $('#badgeDisplay').textContent = result.emoji;
-      $('#psychMetricsOutput').innerHTML =
-        '<strong style="color:var(--accent);font-family:var(--font-head)">' + result.label + '</strong><br><br>' +
-        result.desc + '<br><br>' +
-        '<span style="font-family:var(--font-mono);font-size:0.8rem;color:var(--text-muted)">Diagnostic Score: ' +
-        state.score + '/' + (QUIZ_QUESTIONS[state.role].length * 3) + '</span>';
-      trackEvent('quiz_complete', { role: state.role, score: state.score, result: result.label });
-    }
-
-    roleStudent.addEventListener('click', function () { startQuiz('student'); });
-    roleParent.addEventListener('click', function () { startQuiz('parent'); });
-    if (restartBtn) {
-      restartBtn.addEventListener('click', function () {
-        roleWindow.style.display = '';
-        quizWindow.hidden = true;
-        resultWindow.hidden = true;
-      });
-    }
-  }
-
-  /* ── 13. CONTACT FORM ── */
-  function initContactForm() {
-    var form = $('#contactForm');
-    if (!form) return;
-    form.addEventListener('submit', function (e) {
+  // ========================================
+  // CONTACT FORM
+  // ========================================
+  var contactForm = $('#contactForm');
+  if (contactForm) {
+    contactForm.addEventListener('submit', function (e) {
       e.preventDefault();
-      var name = $('#studentName').value.trim();
-      var email = $('#studentEmail').value.trim();
-      var phone = $('#studentPhone').value.trim();
-      if (!name || !email || !phone) {
+      var name = ($('#studentName') || {}).value;
+      var email = ($('#studentEmail') || {}).value;
+      var phone = ($('#studentPhone') || {}).value;
+
+      if (!name || !name.trim() || !email || !email.trim() || !phone || !phone.trim()) {
         alert('Please fill in all required fields.');
         return;
       }
-      trackEvent('form_submit', { form_type: 'contact', student_name: name });
-      var city = ($('#studentCity') || {}).value || 'Not specified';
-      var cls = ($('#studentClass') || {}).value || 'Not specified';
-      var exam = ($('#studentExam') || {}).value || 'Not specified';
-      var msg = encodeURIComponent(
-        'New Enquiry:\nName: ' + name +
-        '\nEmail: ' + email +
-        '\nPhone: ' + phone +
-        '\nCity: ' + city +
-        '\nClass: ' + cls +
-        '\nTarget: ' + exam
-      );
-      form.innerHTML = '<div class="form-success">' +
-        '<i class="fas fa-check-circle"></i>' +
-        '<h3>Thank you, ' + name + '!</h3>' +
-        '<p style="margin-top:8px;color:var(--text-sec)">We\'ll contact you within 24 hours. For immediate assistance:</p>' +
-        '<a href="https://wa.me/919700627812?text=' + msg + '" class="btn btn-whatsapp" target="_blank" rel="noopener noreferrer" style="margin-top:16px">' +
-        '<i class="fab fa-whatsapp"></i> WhatsApp Us Now</a></div>';
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+        alert('Please enter a valid email address.');
+        return;
+      }
+      if (!/^[0-9]{10}$/.test(phone.trim())) {
+        alert('Please enter a valid 10-digit phone number.');
+        return;
+      }
+
+      trackEvent('contact-form-submit');
+      alert('Thank you! Abhinav sir will review your profile and reach out within 24 hours.');
+      contactForm.reset();
     });
   }
 
-  /* ── 14. AUTH MODAL ── */
-  function initAuthModal() {
-    var modal = $('#authModal');
-    var closeBtn = $('#btnCloseModal');
-    var loginBtn = $('#btnStudentLogin');
-    var parentBtn = $('#btnParentLogin');
-    if (!modal) return;
+  // ========================================
+  // DATA-TRACK ANALYTICS
+  // ========================================
+  $$('[data-track]').forEach(function (el) {
+    el.addEventListener('click', function () {
+      trackEvent(this.getAttribute('data-track'));
+    });
+  });
 
-    function show(view) {
-      modal.hidden = false;
-      ['Login', 'Signup', 'Forgot'].forEach(function (v) {
-        var el = $('#authView' + v);
-        if (el) el.hidden = v !== view;
-      });
-      document.body.style.overflow = 'hidden';
-    }
+  // ========================================
+  // SMOOTH SCROLL FOR INTERNAL LINKS
+  // ========================================
+  $$('a[href^="#"]').forEach(function (link) {
+    link.addEventListener('click', function (e) {
+      var href = this.getAttribute('href');
+      if (href && href.length > 1) {
+        var target = $(href);
+        if (target) {
+          e.preventDefault();
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }
+    });
+  });
 
-    function hide() {
-      modal.hidden = true;
-      document.body.style.overflow = '';
-    }
-
-    if (loginBtn) loginBtn.addEventListener('click', function () { show('Login'); });
-    if (parentBtn) parentBtn.addEventListener('click', function () { show('Login'); });
-    if (closeBtn) closeBtn.addEventListener('click', hide);
-    modal.addEventListener('click', function (e) { if (e.target === modal) hide(); });
-    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !modal.hidden) hide(); });
-
-    var gotoSignup = $('#btnGotoSignup');
-    var gotoLogin = $('#btnGotoLogin');
-    var gotoLogin2 = $('#btnGotoLogin2');
-    var gotoForgot = $('#btnGotoForgot');
-
-    if (gotoSignup) gotoSignup.addEventListener('click', function () { show('Signup'); });
-    if (gotoLogin) gotoLogin.addEventListener('click', function () { show('Login'); });
-    if (gotoLogin2) gotoLogin2.addEventListener('click', function () { show('Login'); });
-    if (gotoForgot) gotoForgot.addEventListener('click', function () { show('Forgot'); });
-
-    // Password strength
-    var passInput = $('#signupPass');
-    var bar = $('#strengthBar');
-    var feedback = $('#strengthFeedback');
-    if (passInput && bar) {
-      passInput.addEventListener('input', function () {
-        var v = passInput.value;
-        var s = 0;
-        if (v.length >= 8) s++;
-        if (/[A-Z]/.test(v)) s++;
-        if (/[0-9]/.test(v)) s++;
-        if (/[^A-Za-z0-9]/.test(v)) s++;
-        bar.style.width = (s * 25) + '%';
-        bar.style.background = s < 2 ? '#ff4444' : s < 3 ? '#ffb700' : '#00df89';
-        feedback.textContent = ['Too weak', 'Weak', 'Fair', 'Strong', 'Very strong'][s];
-      });
-    }
-  }
-
-  /* ── 15. NOTES VAULT ── */
-  function initNotesVault() {
-    $$('.download-btn-style').forEach(function (btn) {
-      btn.addEventListener('click', function () {
-        trackEvent('notes_download_attempt', { notes_type: btn.dataset.notes });
-        var loggedIn = localStorage.getItem('ps_user');
-        if (!loggedIn) {
-          var modal = ('#authModal');      /* ← FIX #5: was ('#authModal') */
-          if (modal) {
-            modal.hidden = false;
-            document.body.style.overflow = 'hidden';
-          }
+  // ========================================
+  // BLOG FILTER BUTTONS
+  // ========================================
+  $$('.filter-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      $$('.filter-btn').forEach(function (b) { b.classList.remove('active'); });
+      this.classList.add('active');
+      var filter = this.getAttribute('data-filter');
+      $$('.blog-card, .blog-post-card').forEach(function (card) {
+        if (filter === 'all') {
+          card.style.display = '';
         } else {
-          alert('Download would start for: ' + btn.dataset.notes);
+          var tags = (card.getAttribute('data-category') || card.getAttribute('data-tags') || '').toLowerCase();
+          card.style.display = tags.indexOf(filter) !== -1 ? '' : 'none';
         }
       });
     });
+  });
+
+  // ========================================
+  // ========================================
+  //          MINDSET AUDIT QUIZ
+  // ========================================
+  // ========================================
+
+  // ---------- STUDENT QUESTIONS ----------
+  var studentQuestions = [
+    {
+      q: "When you sit down to study a completely new chapter, what's your first instinct?",
+      options: [
+        { text: "Read the textbook line by line carefully", scores: { CD: 4, ER: 3, SD: 5, SA: 3, FC: 4 } },
+        { text: "Watch a video lecture or explanation first", scores: { CD: 3, ER: 3, SD: 3, SA: 3, FC: 3 } },
+        { text: "Jump straight into solved examples", scores: { CD: 2, ER: 3, SD: 2, SA: 4, FC: 2 } },
+        { text: "Skim headings and key formulas first", scores: { CD: 2, ER: 2, SD: 2, SA: 3, FC: 2 } }
+      ]
+    },
+    {
+      q: "During a mock test, you encounter a problem you've never seen before. You:",
+      options: [
+        { text: "Break it into smaller parts and attempt logically", scores: { CD: 4, ER: 4, SD: 3, SA: 5, FC: 3 } },
+        { text: "Skip it and come back after finishing others", scores: { CD: 3, ER: 4, SD: 3, SA: 4, FC: 3 } },
+        { text: "Feel a wave of panic and lose your train of thought", scores: { CD: 2, ER: 1, SD: 2, SA: 1, FC: 2 } },
+        { text: "Use elimination to make an educated guess", scores: { CD: 2, ER: 3, SD: 2, SA: 4, FC: 3 } }
+      ]
+    },
+    {
+      q: "How would you describe your daily study routine?",
+      options: [
+        { text: "Fixed schedule — same hours every day", scores: { CD: 3, ER: 4, SD: 5, SA: 3, FC: 5 } },
+        { text: "Flexible but mostly consistent", scores: { CD: 3, ER: 3, SD: 4, SA: 3, FC: 4 } },
+        { text: "Intense bursts right before exams", scores: { CD: 2, ER: 2, SD: 2, SA: 3, FC: 2 } },
+        { text: "No fixed routine — study when motivated", scores: { CD: 2, ER: 2, SD: 1, SA: 2, FC: 1 } }
+      ]
+    },
+    {
+      q: "A formula or derivation refuses to stick in your memory. You:",
+      options: [
+        { text: "Write it out repeatedly until it sticks", scores: { CD: 2, ER: 3, SD: 4, SA: 2, FC: 4 } },
+        { text: "Try to understand the logic behind it first", scores: { CD: 5, ER: 3, SD: 3, SA: 4, FC: 3 } },
+        { text: "Create mnemonics, diagrams, or visual tricks", scores: { CD: 3, ER: 3, SD: 3, SA: 4, FC: 3 } },
+        { text: "Move on and hope I remember during the exam", scores: { CD: 1, ER: 2, SD: 1, SA: 1, FC: 2 } }
+      ]
+    },
+    {
+      q: "After a mock test, your first instinct is to:",
+      options: [
+        { text: "Analyze every wrong answer in detail", scores: { CD: 4, ER: 4, SD: 4, SA: 5, FC: 4 } },
+        { text: "Check your score and percentile ranking", scores: { CD: 2, ER: 3, SD: 3, SA: 2, FC: 3 } },
+        { text: "Feel disappointed if the score is low", scores: { CD: 2, ER: 2, SD: 2, SA: 2, FC: 2 } },
+        { text: "Move on to the next topic quickly", scores: { CD: 3, ER: 3, SD: 3, SA: 3, FC: 3 } }
+      ]
+    },
+    {
+      q: "What's the biggest barrier to your preparation right now?",
+      options: [
+        { text: "I can't maintain focus for long stretches", scores: { CD: 3, ER: 3, SD: 2, SA: 2, FC: 2 } },
+        { text: "Concepts feel unclear despite studying", scores: { CD: 2, ER: 3, SD: 3, SA: 2, FC: 3 } },
+        { text: "I don't have enough time for revision", scores: { CD: 3, ER: 3, SD: 2, SA: 3, FC: 3 } },
+        { text: "Exam pressure ruins my performance", scores: { CD: 3, ER: 1, SD: 3, SA: 2, FC: 3 } }
+      ]
+    },
+    {
+      q: "When you make the same mistake repeatedly:",
+      options: [
+        { text: "I maintain an error log and review it regularly", scores: { CD: 4, ER: 4, SD: 5, SA: 4, FC: 4 } },
+        { text: "I get frustrated but keep pushing through", scores: { CD: 3, ER: 4, SD: 3, SA: 3, FC: 3 } },
+        { text: "I solve extra problems on that specific topic", scores: { CD: 3, ER: 3, SD: 3, SA: 3, FC: 4 } },
+        { text: "I ask my teacher to re-explain the concept", scores: { CD: 4, ER: 3, SD: 3, SA: 3, FC: 3 } }
+      ]
+    },
+    {
+      q: "How do you typically approach a complex numerical problem?",
+      options: [
+        { text: "Read carefully → identify given/required → solve systematically", scores: { CD: 4, ER: 4, SD: 4, SA: 4, FC: 4 } },
+        { text: "Start solving and figure it out as I go", scores: { CD: 2, ER: 3, SD: 2, SA: 2, FC: 2 } },
+        { text: "Check if it matches a known pattern or template", scores: { CD: 3, ER: 3, SD: 3, SA: 4, FC: 3 } },
+        { text: "I often get stuck midway and lose confidence", scores: { CD: 2, ER: 1, SD: 2, SA: 2, FC: 2 } }
+      ]
+    },
+    {
+      q: "On exam day, you typically feel:",
+      options: [
+        { text: "Calm and well-prepared", scores: { CD: 3, ER: 5, SD: 4, SA: 3, FC: 4 } },
+        { text: "Nervous, but the pressure helps me focus", scores: { CD: 3, ER: 4, SD: 3, SA: 3, FC: 3 } },
+        { text: "Very anxious — I second-guess my answers", scores: { CD: 2, ER: 1, SD: 2, SA: 2, FC: 2 } },
+        { text: "Fine initially, but panic if I get stuck on a question", scores: { CD: 3, ER: 2, SD: 3, SA: 2, FC: 3 } }
+      ]
+    },
+    {
+      q: "If you could change one thing about your preparation, it would be:",
+      options: [
+        { text: "Better time management", scores: { CD: 3, ER: 3, SD: 3, SA: 4, FC: 3 } },
+        { text: "Deeper understanding of concepts", scores: { CD: 5, ER: 3, SD: 3, SA: 3, FC: 3 } },
+        { text: "A more disciplined daily routine", scores: { CD: 3, ER: 3, SD: 5, SA: 3, FC: 4 } },
+        { text: "Less anxiety and more confidence", scores: { CD: 3, ER: 5, SD: 3, SA: 3, FC: 3 } }
+      ]
+    }
+  ];
+
+  // ---------- PARENT QUESTIONS ----------
+  var parentQuestions = [
+    {
+      q: "How would you describe your child's study routine at home?",
+      options: [
+        { text: "Very disciplined — fixed schedule, rarely deviates", scores: { SL: 5, CM: 3, AW: 4, BL: 4, ST: 4 } },
+        { text: "Reasonably consistent with occasional gaps", scores: { SL: 4, CM: 3, AW: 3, BL: 4, ST: 3 } },
+        { text: "Needs constant reminders to sit and study", scores: { SL: 2, CM: 2, AW: 3, BL: 2, ST: 2 } },
+        { text: "Varies a lot — intense some weeks, absent others", scores: { SL: 2, CM: 2, AW: 2, BL: 2, ST: 2 } }
+      ]
+    },
+    {
+      q: "When your child gets lower marks than expected, you typically:",
+      options: [
+        { text: "Sit with them to understand what went wrong", scores: { SL: 5, CM: 5, AW: 4, BL: 4, ST: 4 } },
+        { text: "Encourage them to work harder next time", scores: { SL: 4, CM: 3, AW: 3, BL: 3, ST: 3 } },
+        { text: "Worry about their future prospects", scores: { SL: 3, CM: 2, AW: 3, BL: 2, ST: 2 } },
+        { text: "Compare with peers or toppers in their class", scores: { SL: 2, CM: 1, AW: 2, BL: 1, ST: 1 } }
+      ]
+    },
+    {
+      q: "How openly does your child communicate about academic struggles?",
+      options: [
+        { text: "Very open — they share difficulties and ask for help", scores: { SL: 4, CM: 5, AW: 5, BL: 4, ST: 4 } },
+        { text: "They mention challenges sometimes", scores: { SL: 3, CM: 3, AW: 3, BL: 3, ST: 3 } },
+        { text: "Rarely talks about struggles unless asked directly", scores: { SL: 2, CM: 2, AW: 2, BL: 3, ST: 2 } },
+        { text: "Gets defensive when asked about studies", scores: { SL: 1, CM: 1, AW: 2, BL: 1, ST: 1 } }
+      ]
+    },
+    {
+      q: "Do you know your child's specific weak topics or subjects?",
+      options: [
+        { text: "Yes — I track their performance regularly", scores: { SL: 4, CM: 4, AW: 5, BL: 3, ST: 5 } },
+        { text: "I have a general idea", scores: { SL: 3, CM: 3, AW: 3, BL: 3, ST: 3 } },
+        { text: "Not really — I rely on the coaching institute", scores: { SL: 2, CM: 2, AW: 2, BL: 3, ST: 2 } },
+        { text: "My child doesn't share that information", scores: { SL: 1, CM: 1, AW: 1, BL: 2, ST: 1 } }
+      ]
+    },
+    {
+      q: "How do you handle screen time and digital distractions?",
+      options: [
+        { text: "Clear rules that are consistently enforced", scores: { SL: 5, CM: 3, AW: 3, BL: 4, ST: 4 } },
+        { text: "Rules exist but enforcement is inconsistent", scores: { SL: 3, CM: 2, AW: 3, BL: 3, ST: 2 } },
+        { text: "We've mostly given up on controlling it", scores: { SL: 1, CM: 2, AW: 2, BL: 1, ST: 1 } },
+        { text: "My child self-regulates their screen time", scores: { SL: 4, CM: 4, AW: 4, BL: 5, ST: 4 } }
+      ]
+    },
+    {
+      q: "What's your biggest concern about your child's exam preparation?",
+      options: [
+        { text: "They don't put in enough effort", scores: { SL: 3, CM: 2, AW: 3, BL: 2, ST: 3 } },
+        { text: "They study hard but scores don't reflect it", scores: { SL: 3, CM: 3, AW: 4, BL: 3, ST: 4 } },
+        { text: "They're too stressed or anxious about exams", scores: { SL: 4, CM: 4, AW: 4, BL: 4, ST: 3 } },
+        { text: "They lack clear goals or motivation", scores: { SL: 3, CM: 2, AW: 3, BL: 2, ST: 3 } }
+      ]
+    },
+    {
+      q: "How involved are you in planning your child's academic journey?",
+      options: [
+        { text: "Very involved — I help choose resources and track progress", scores: { SL: 4, CM: 4, AW: 4, BL: 3, ST: 5 } },
+        { text: "Involved at a high level — goals, coaching choices", scores: { SL: 3, CM: 3, AW: 3, BL: 4, ST: 4 } },
+        { text: "Mostly leave it to the child and teachers", scores: { SL: 3, CM: 3, AW: 2, BL: 4, ST: 2 } },
+        { text: "I want to help more but don't know how", scores: { SL: 3, CM: 2, AW: 3, BL: 2, ST: 2 } }
+      ]
+    },
+    {
+      q: "Does your child maintain hobbies or activities alongside studies?",
+      options: [
+        { text: "Yes — we ensure a balanced routine", scores: { SL: 3, CM: 4, AW: 4, BL: 5, ST: 4 } },
+        { text: "They used to but stopped for exam prep", scores: { SL: 3, CM: 3, AW: 3, BL: 2, ST: 3 } },
+        { text: "Not really — mostly studying all the time", scores: { SL: 3, CM: 2, AW: 3, BL: 1, ST: 2 } },
+        { text: "Too many breaks and not enough study", scores: { SL: 2, CM: 2, AW: 3, BL: 2, ST: 2 } }
+      ]
+    },
+    {
+      q: "How does your child handle competitive pressure from peers?",
+      options: [
+        { text: "It motivates them to improve", scores: { SL: 4, CM: 3, AW: 4, BL: 4, ST: 4 } },
+        { text: "They get stressed but manage to cope", scores: { SL: 3, CM: 3, AW: 3, BL: 3, ST: 3 } },
+        { text: "It significantly affects their confidence", scores: { SL: 2, CM: 2, AW: 4, BL: 2, ST: 2 } },
+        { text: "They seem largely unaffected either way", scores: { SL: 3, CM: 3, AW: 3, BL: 3, ST: 2 } }
+      ]
+    },
+    {
+      q: "If you could improve one aspect of your child's preparation:",
+      options: [
+        { text: "Better study habits and consistency", scores: { SL: 5, CM: 3, AW: 3, BL: 3, ST: 4 } },
+        { text: "Stronger conceptual understanding", scores: { SL: 3, CM: 3, AW: 4, BL: 3, ST: 4 } },
+        { text: "Reduced exam anxiety and better mindset", scores: { SL: 4, CM: 4, AW: 4, BL: 4, ST: 3 } },
+        { text: "Better mentorship and personalized guidance", scores: { SL: 3, CM: 3, AW: 3, BL: 3, ST: 4 } }
+      ]
+    }
+  ];
+
+  // ---------- ARCHETYPE DEFINITIONS ----------
+  var studentArchetypes = {
+    CD: { badge: '🔍', name: 'The Deep Diver', tagline: 'You seek true understanding — not just memorization. This depth is your greatest weapon.' },
+    ER: { badge: '🛡️', name: 'The Unshakeable', tagline: 'Pressure doesn\'t break you — it sharpens you. Your composure is rare.' },
+    SD: { badge: '🏗️', name: 'The Architect', tagline: 'Your structure and consistency are superpowers. Results are a matter of time.' },
+    SA: { badge: '♟️', name: 'The Chess Player', tagline: 'You think several moves ahead. Strategy is your natural language.' },
+    FC: { badge: '🏃', name: 'The Marathoner', tagline: 'Your sustained focus and quiet consistency outperform short bursts every time.' }
+  };
+
+  var parentArchetypes = {
+    SL: { badge: '⚓', name: 'The Anchor', tagline: 'Your supportive presence is your child\'s strongest academic asset.' },
+    CM: { badge: '💬', name: 'The Bridge Builder', tagline: 'Open communication is the foundation of everything you do together.' },
+    AW: { badge: '🔎', name: 'The Investigator', tagline: 'You dig deep to understand what\'s really happening behind the marks.' },
+    BL: { badge: '⚖️', name: 'The Guardian', tagline: 'You protect your child\'s wellbeing — and that keeps them going long-term.' },
+    ST: { badge: '🧭', name: 'The Navigator', tagline: 'You see the big picture and chart the course before problems arise.' }
+  };
+
+  var studentDimLabels = {
+    CD: 'Conceptual Depth',
+    ER: 'Exam Resilience',
+    SD: 'Study Discipline',
+    SA: 'Strategic Aptitude',
+    FC: 'Focus & Consistency'
+  };
+
+  var parentDimLabels = {
+    SL: 'Support Level',
+    CM: 'Communication',
+    AW: 'Awareness',
+    BL: 'Balance',
+    ST: 'Strategic Support'
+  };
+
+  var barColors = {
+    CD: '#00C6FF', ER: '#00df89', SD: '#FFB800', SA: '#A855F7', FC: '#FF6B6B',
+    SL: '#00C6FF', CM: '#00df89', AW: '#FFB800', BL: '#A855F7', ST: '#FF6B6B'
+  };
+
+  // ---------- QUIZ STATE ----------
+  var quizState = {
+    role: null,
+    questions: [],
+    answers: [],
+    currentQ: 0,
+    totalQ: 10
+  };
+
+  // ---------- DOM REFERENCES ----------
+  var roleSelectWindow = ('#roleSelectWindow');
+  var quizWindow = $('#quizWindow');
+  var quizControls = $('#quizControls');
+  var resultWindow = $('#resultWindow');
+  var questionText = $('#questionText');
+  var answerButtons = $('#answerButtons');
+  var nextBtn = $('#nextBtn');
+  var restartBtn = $('#restartBtn');
+  var quizProgressFill = $('#quizProgressFill');
+  var quizProgressText = $('#quizProgressText');
+  var quizTrackIdentity = $('#quizTrackIdentity');
+  var badgeDisplay = $('#badgeDisplay');
+  var psychMetricsOutput = $('#psychMetricsOutput');
+
+  // ---------- GUARD ----------
+  if (!roleSelectWindow || !quizWindow || !questionText || !answerButtons) {
+    console.warn('[Quiz] Required DOM elements missing — quiz disabled.');
+    return;
   }
 
-  /* ── 16. SCROLL ANIMATIONS ── */
-  function initAnimateIn() {
-    var observer = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-          observer.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+  // ---------- ROLE SELECTION ----------
+  var btnRoleStudent = $('#btnRoleStudent');
+  var btnRoleParent = $('#btnRoleParent');
 
-    $$$$('.animate-in:not(.visible)').forEach(function (el) { observer.observe(el); });
+  if (btnRoleStudent) {
+    btnRoleStudent.addEventListener('click', function () { startQuiz('student'); });
+  }
+  if (btnRoleParent) {
+    btnRoleParent.addEventListener('click', function () { startQuiz('parent'); });
+  }
 
-    $$('.course-card:not(.animate-in), .testimonial-card:not(.animate-in)').forEach(function (el, i) {
-      el.classList.add('animate-in', 'stagger-' + ((i % 6) + 1));
-      observer.observe(el);
+  function startQuiz(role) {
+    quizState.role = role;
+    quizState.questions = role === 'student' ? studentQuestions : parentQuestions;
+    quizState.answers = [];
+    quizState.currentQ = 0;
+
+    roleSelectWindow.hidden = true;
+    resultWindow.hidden = true;
+    quizWindow.hidden = false;
+    if (quizControls) quizControls.hidden = false;
+
+    if (quizTrackIdentity) {
+      quizTrackIdentity.textContent = role === 'student' ? '🎓 Student Track' : '👨‍👩‍👧 Parent Track';
+    }
+
+    trackEvent('quiz-start-' + role);
+    renderQuestion();
+  }
+
+  // ---------- RENDER QUESTION ----------
+  function renderQuestion() {
+    var q = quizState.questions[quizState.currentQ];
+    var idx = quizState.currentQ;
+    var total = quizState.totalQ;
+
+    // Progress
+    if (quizProgressFill) quizProgressFill.style.width = ((idx) / total * 100) + '%';
+    if (quizProgressText) quizProgressText.textContent = 'Question ' + (idx + 1) + ' of ' + total;
+
+    // Question text
+    questionText.textContent = q.q;
+
+    // Clear + render options
+    answerButtons.innerHTML = '';
+    q.options.forEach(function (opt, i) {
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'quiz-btn';
+      btn.textContent = opt.text;
+      btn.setAttribute('data-index', String(i));
+
+      if (quizState.answers[idx] !== undefined && quizState.answers[idx] === i) {
+        btn.classList.add('quiz-btn-selected');
+      }
+
+      btn.addEventListener('click', function () { selectAnswer(i); });
+      answerButtons.appendChild(btn);
     });
+
+    // Next button visibility
+    if (nextBtn) {
+      nextBtn.hidden = quizState.answers[idx] === undefined;
+      nextBtn.innerHTML = idx === total - 1
+        ? 'View Results <i class="fas fa-arrow-right" aria-hidden="true"></i>'
+        : 'Next <i class="fas fa-arrow-right" aria-hidden="true"></i>';
+    }
   }
 
-  /* ── 17. KEYBOARD NAV ── */
-  function initKeyboardNav() {
-    document.addEventListener('keydown', function (e) {
-      if (e.key !== 'Tab') return;
-      var modal = !('#authModal').hidden ? $('#authModal .auth-modal-card') : null;   /* ← FIX #6: was !('#authModal').hidden */
-      var search = !$('#searchOverlay').hidden ? $('#searchOverlay') : null;
-      var trap = modal || search;
-      if (!trap) return;
-      var focusable = $$$$('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])', trap);
-      if (!focusable.length) return;
-      var first = focusable[0];
-      var last = focusable[focusable.length - 1];
-      if (e.shiftKey) {
-        if (document.activeElement === first) { e.preventDefault(); last.focus(); }
+  // ---------- SELECT ANSWER ----------
+  function selectAnswer(optionIndex) {
+    quizState.answers[quizState.currentQ] = optionIndex;
+
+    // Highlight
+    $$$$('.quiz-btn', answerButtons).forEach(function (btn, i) {
+      btn.classList.toggle('quiz-btn-selected', i === optionIndex);
+    });
+
+    // Show next
+    if (nextBtn) {
+      nextBtn.hidden = false;
+      nextBtn.innerHTML = quizState.currentQ === quizState.totalQ - 1
+        ? 'View Results <i class="fas fa-arrow-right" aria-hidden="true"></i>'
+        : 'Next <i class="fas fa-arrow-right" aria-hidden="true"></i>';
+    }
+  }
+
+  // ---------- NEXT BUTTON ----------
+  if (nextBtn) {
+    nextBtn.addEventListener('click', function () {
+      if (quizState.answers[quizState.currentQ] === undefined) return;
+
+      if (quizState.currentQ < quizState.totalQ - 1) {
+        quizState.currentQ++;
+        renderQuestion();
       } else {
-        if (document.activeElement === last) { e.preventDefault(); first.focus(); }
+        showResults();
       }
     });
   }
 
-  /* ── 18. INIT ── */
-  function init() {
-    initNav();            /* FIX #1 applied here — was crashing */
-    initPoonamDropdown();
-    initSearch();
-    initScrollProgress();
-    initBlog();           /* FIX #3 applied here — search now works */
-    initFAQ();
-    initQuiz();           /* FIX #2 applied here — buttons now clickable */
-    initContactForm();
-    initAuthModal();
-    initNotesVault();     /* FIX #5 applied here — modal opens */
-    initAnimateIn();
-    initKeyboardNav();    /* FIX #6 applied here — focus trap works */
-    initTracking();
+  // ---------- SHOW RESULTS ----------
+  function showResults() {
+    quizWindow.hidden = true;
+    if (quizControls) quizControls.hidden = true;
+    resultWindow.hidden = false;
+
+    var isStudent = quizState.role === 'student';
+    var archetypes = isStudent ? studentArchetypes : parentArchetypes;
+    var dimLabels = isStudent ? studentDimLabels : parentDimLabels;
+    var dimKeys = Object.keys(dimLabels);
+
+    // Calculate raw totals
+    var totals = {};
+    dimKeys.forEach(function (k) { totals[k] = 0; });
+
+    quizState.questions.forEach(function (q, i) {
+      var sel = q.options[quizState.answers[i]];
+      if (sel && sel.scores) {
+        dimKeys.forEach(function (k) {
+          totals[k] += (sel.scores[k] || 0);
+        });
+      }
+    });
+
+    // Percentages (max per dim = 10 questions × 5 score = 50)
+    var maxPerDim = quizState.totalQ * 5;
+    var pct = {};
+    dimKeys.forEach(function (k) {
+      pct[k] = Math.round((totals[k] / maxPerDim) * 100);
+    });
+
+    // Dominant dimension
+    var dominantKey = dimKeys[0];
+    dimKeys.forEach(function (k) {
+      if (pct[k] > pct[dominantKey]) dominantKey = k;
+    });
+
+    // Weakest dimension
+    var weakestKey = dimKeys[0];
+    dimKeys.forEach(function (k) {
+      if (pct[k] < pct[weakestKey]) weakestKey = k;
+    });
+
+    var archetype = archetypes[dominantKey];
+    var insights = getInsights(isStudent, dominantKey, weakestKey, pct);
+
+    // --- Badge ---
+    if (badgeDisplay) badgeDisplay.textContent = archetype.badge;
+
+    // --- Build results HTML ---
+    var html = '';
+
+    // Profile header
+    html += '<div class="quiz-profile-header">';
+    html += '<span class="quiz-profile-name">' + archetype.name + '</span>';
+    html += '<p class="quiz-profile-tagline">' + archetype.tagline + '</p>';
+    html += '</div>';
+
+    // Metrics
+    html += '<div class="quiz-metrics-grid">';
+    dimKeys.forEach(function (k) {
+      var p = pct[k];
+      var c = barColors[k] || '#00C6FF';
+      html += '<div class="quiz-metric-row">';
+      html += '<span class="quiz-metric-label">' + dimLabels[k] + '</span>';
+      html += '<div class="quiz-metric-bar"><div class="quiz-metric-fill" style="width:0%;background:' + c + '" data-width="' + p + '%"></div></div>';
+      html += '<span class="quiz-metric-value">' + p + '%</span>';
+      html += '</div>';
+    });
+    html += '</div>';
+
+    // Strength insight
+    html += '<div class="quiz-insight-box" id="insightStrength">';
+    html += '<div class="quiz-insight-label">Top Strength</div>';
+    html += '<div class="quiz-insight-title">' + dimLabels[dominantKey] + ' — ' + pct[dominantKey] + '%</div>';
+    html += '<p class="quiz-insight-text">' + insights.strength + '</p>';
+    html += '</div>';
+
+    // Growth insight
+    html += '<div class="quiz-insight-box" id="insightGrowth">';
+    html += '<div class="quiz-insight-label">Primary Growth Area</div>';
+    html += '<div class="quiz-insight-title">' + dimLabels[weakestKey] + ' — ' + pct[weakestKey] + '%</div>';
+    html += '<p class="quiz-insight-text">' + insights.growth + '</p>';
+    html += '</div>';
+
+    // Recommendation
+    html += '<div class="quiz-track-rec" id="insightRec">';
+    html += '<h4>' + insights.recTitle + '</h4>';
+    html += '<p>' + insights.recText + '</p>';
+    html += '</div>';
+
+    if (psychMetricsOutput) {
+      psychMetricsOutput.innerHTML = html;
+    }
+
+    // Animate metric bars after a short delay
+    setTimeout(function () {
+      $$('.quiz-metric-fill', psychMetricsOutput).forEach(function (bar) {
+        bar.style.width = bar.getAttribute('data-width');
+      });
+    }, 100);
+
+    // Fade in insight boxes
+    setTimeout(function () {
+      var el = $('#insightStrength');
+      if (el) el.classList.add('visible');
+    }, 600);
+    setTimeout(function () {
+      var el = $('#insightGrowth');
+      if (el) el.classList.add('visible');
+    }, 900);
+    setTimeout(function () {
+      var el = $('#insightRec');
+      if (el) el.classList.add('visible');
+    }, 1200);
+
+    // Update progress
+    if (quizProgressFill) quizProgressFill.style.width = '100%';
+    if (quizProgressText) quizProgressText.textContent = 'Scan Complete';
+
+    trackEvent('quiz-complete-' + quizState.role);
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
-  } else {
-    init();
+  // ---------- INSIGHTS ----------
+  function getInsights(isStudent, strongest, weakest, pcts) {
+    if (isStudent) {
+      var strengthMap = {
+        CD: "You have a natural drive to understand the 'why' behind every concept — not just the 'what'. This depth gives you a decisive edge in application-based questions in NEET, JEE, and boards. Keep nurturing this instinct.",
+        ER: "You handle exam pressure remarkably well. This composure under fire means your test scores consistently reflect your true preparation level — a rare advantage among aspirants.",
+        SD: "Your study routine is structured and consistent. This discipline compounds over time and is one of the strongest predictors of success in competitive exams. Protect this habit at all costs.",
+        SA: "You think strategically about your preparation — analyzing patterns, managing priorities, and focusing on what moves the needle. This big-picture thinking separates top performers.",
+        FC: "Your ability to maintain sustained focus over long periods is a significant advantage. In an era of constant distraction, this quiet consistency outperforms flashy short bursts every time."
+      };
+      var growthMap = {
+        CD: "Consider investing more time in understanding the 'why' behind formulas and derivations rather than jumping straight to problem-solving. Concept-first learning will multiply your accuracy and speed over time.",
+        ER: "Exam anxiety may be silently capping your performance. Try incorporating timed mock sessions, box-breathing before tests, and structured error analysis (not self-blame) after every practice paper.",
+        SD: "Building a consistent daily routine — even starting with just 2 focused hours at the same time each day — will compound dramatically. Use a simple tracker to build momentum before scaling up.",
+        SA: "Develop a habit of post-test analysis. After every mock, identify which question types consumed the most time and which concepts caused hesitation. Then build targeted strategies for those exact gaps.",
+        FC: "Try the Pomodoro technique (25 minutes focused work + 5 minutes break) and gradually extend your focus blocks. Remove phone notifications during study windows — even one interruption resets your flow state."
+      };
+
+      var recTitle, recText;
+      if (pcts.ER < 40 || pcts.SD < 40) {
+        recTitle = "Recommended: Elite Hyper-Personalized Micro-Batch";
+        recText = "Your profile reveals specific areas — like exam anxiety or routine consistency — where focused, 1:1 mentorship would create a dramatic shift. Our max 5-student Elite batch provides structured accountability, real-time error analysis, and psychometric counseling designed exactly for this.";
+      } else if (pcts.CD < 40 || pcts.SA < 40) {
+        recTitle = "Recommended: Advanced Personalized Cohort";
+        recText = "You'd benefit from concept-first teaching with collaborative peer benchmarks. Our max 10-student cohort balances deep conceptual instruction with competitive benchmarking — ideal for building both understanding and strategy.";
+      } else {
+        recTitle = "Recommended: Elite Hyper-Personalized Micro-Batch";
+        recText = "Your strong overall profile suggests you're ready for accelerated, precision-targeted preparation. A micro-batch environment will sharpen your existing strengths while providing surgical focus on your growth areas for maximum percentile gains.";
+      }
+
+      return { strength: strengthMap[strongest], growth: growthMap[weakest], recTitle: recTitle, recText: recText };
+    }
+
+    // Parent insights
+    var pStrengthMap = {
+      SL: "You provide a strong, supportive environment for your child. This emotional safety net is the foundation they need to take academic risks, ask questions without fear, and grow through setbacks rather than crumble.",
+      CM: "Open communication with your child about their studies means problems surface early and solutions are collaborative. Most parents struggle with this — your willingness to listen (not just direct) is a genuine advantage.",
+      AW: "Being aware of your child's specific strengths and weaknesses allows you to provide targeted support rather than generic encouragement. Informed parents are the best academic partners any mentor can have.",
+      BL: "Maintaining a balanced approach — studies alongside wellbeing, hobbies, and rest — prevents burnout and keeps long-term motivation alive. Many parents sacrifice this for short-term gains; you understand the long game.",
+      ST: "Your strategic approach to academic planning — setting goals, choosing the right resources, tracking progress — shows you're thinking about the trajectory, not just the next test. This kind of planning multiplies results."
+    };
+    var pGrowthMap = {
+      SL: "Consider creating more structured support — regular check-ins about what they're learning (not just marks), a dedicated study space at home, and consistent encouragement during low phases. Small structure creates big results.",
+      CM: "Try asking open-ended questions about what they're learning rather than what they scored. Questions like 'What was the hardest concept this week?' open more doors than 'How much did you score?' Practice listening without jumping to advice.",
+      AW: "Ask your child's mentor for a detailed breakdown of weak topics and common error patterns. Understanding exactly where the gaps are allows you to have more productive conversations and offer meaningful help.",
+      BL: "If studies have consumed all other activities, consider reintroducing one hobby or physical activity. Research consistently shows that breaks improve memory consolidation, reduce exam anxiety, and prevent the burnout that derails long-term preparation.",
+      ST: "Consider sitting down with a professional mentor who can map your child's current level to their target exam and create a realistic, phased roadmap. Knowing the plan reduces both parent anxiety and student confusion."
+    };
+
+    var rTitle, rText;
+    if (pcts.CM < 40) {
+      rTitle = "Suggested: Family Strategy Session with Abhinav Sir";
+      rText = "Our free consultation includes a parent-student alignment conversation. Bridging the communication gap between you and your child about academics can transform the entire preparation experience — less friction, more progress.";
+    } else if (pcts.SL < 40 || pcts.BL < 40) {
+      rTitle = "Suggested: Micro-Batch Coaching with Psychometric Support";
+      rText = "Our small-batch environment provides the structured support and balanced approach that complements your home environment. The included psychometric counseling helps both students and parents navigate the preparation journey together.";
+    } else {
+      rTitle = "Suggested: Book a Free Family Consultation";
+      rText = "Your involvement level is strong — a quick consultation with Abhinav sir will help align your support strategy with the right academic track, batch, and study plan for your child's specific goals and learning style.";
+    }
+
+    return { strength: pStrengthMap[strongest], growth: pGrowthMap[weakest], recTitle: rTitle, recText: rText };
+  }
+
+  // ---------- RESTART ----------
+  if (restartBtn) {
+    restartBtn.addEventListener('click', function () {
+      resultWindow.hidden = true;
+      quizWindow.hidden = true;
+      if (quizControls) quizControls.hidden = true;
+      roleSelectWindow.hidden = false;
+
+      if (quizProgressFill) quizProgressFill.style.width = '0%';
+      if (quizProgressText) quizProgressText.textContent = '';
+      if (badgeDisplay) badgeDisplay.textContent = '';
+      if (psychMetricsOutput) psychMetricsOutput.innerHTML = '';
+
+      trackEvent('quiz-restart');
+    });
   }
 
 })();
