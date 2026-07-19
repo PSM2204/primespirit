@@ -350,39 +350,11 @@
                 <!-- Trending -->
                 <div id="trendingArticles" class="trending-wrap" aria-label="Trending articles"></div>
 
-                <!-- Grid -->
-                <div id="blogPostsContainer" class="course-grid blog-grid" aria-live="polite"></div>
+                <!-- Grid: blog.js reads this ID -->
+                <div id="blog-posts-container" class="course-grid blog-grid" aria-live="polite"></div>
 
                 <!-- Pagination -->
                 <div id="blogPagination" class="blog-pagination" aria-label="Blog pagination"></div>
-
-                <!-- Post Detail (hidden until opened) -->
-                <div id="blogPostDetail" class="blog-post-detail" hidden>
-                    <button class="back-to-blog-btn" id="backToBlog" type="button" aria-label="Back to all articles"><i class="fas fa-arrow-left" aria-hidden="true"></i> Back to Articles</button>
-                    <div class="reading-progress-wrap"><div class="reading-progress-bar" id="readingProgressBar"></div></div>
-                    <article class="post-article" id="postArticle">
-                        <header class="post-header" id="postHeader"></header>
-                        <aside class="post-toc" id="postToc" aria-label="Table of contents"><h4>Contents</h4><ol id="tocList"></ol></aside>
-                        <div class="post-body" id="postBody"></div>
-                        <div class="post-actions-bar" id="postActions">
-                            <button class="post-action-btn bookmark-btn" id="bookmarkBtn" type="button" aria-label="Bookmark this article"><i class="far fa-bookmark" aria-hidden="true"></i> <span>Bookmark</span></button>
-                            <button class="post-action-btn share-btn" id="shareBtn" type="button" aria-label="Share this article"><i class="fas fa-share-alt" aria-hidden="true"></i> <span>Share</span></button>
-                        </div>
-                        <div class="post-series-nav" id="postSeriesNav"></div>
-                        <nav class="post-prevnext" id="postPrevNext" aria-label="Post navigation"></nav>
-                        <div class="related-posts" id="relatedPosts"><h3>Related Articles</h3><div class="related-grid" id="relatedGrid"></div></div>
-                        <div class="post-discussion" id="postDiscussion">
-                            <h3>Discussion</h3>
-                            <div id="commentsContainer" class="comments-list"></div>
-                            <form id="commentForm" class="comment-form" aria-label="Post a comment">
-                                <label for="commentText" class="sr-only">Your comment</label>
-                                <textarea id="commentText" placeholder="Share your thoughts or questions..." rows="3" required></textarea>
-                                <button type="submit" class="btn btn-primary btn-sm">Post Comment</button>
-                            </form>
-                            <p class="discussion-whatsapp"><i class="fab fa-whatsapp" aria-hidden="true"></i> For instant doubt-solving, <a href="https://wa.me/919700627812" target="_blank" rel="noopener noreferrer">WhatsApp Abhinav sir</a></p>
-                        </div>
-                    </article>
-                </div>
             </div>
         </section>
 
@@ -554,7 +526,7 @@
                     <li><a href="#courses">Advanced Cohort</a></li>
                     <li><a href="#poonam-foundation">Poonam Foundation</a></li>
                     <li><a href="primescore/">PrimeScore Calculator</a></li>
-                    <li><a href="primetestq/index.html">PrimeTestQ™</a></li>
+                    <li><a href="primetestq/index.html">PrimeTestQ&#8482;</a></li>
                 </ul>
             </div>
             <div class="footer-col">
@@ -590,6 +562,10 @@
     (function(){if(!window.chatbase||window.chatbase("getState")!=="initialized"){window.chatbase=(...arguments)=>{if(!window.chatbase.q){window.chatbase.q=[]}window.chatbase.q.push(arguments)};window.chatbase=new Proxy(window.chatbase,{get(target,prop){if(prop==="q"){return target.q}return(...args)=>target(prop,...args)}})}const onLoad=function(){const script=document.createElement("script");script.src="https://www.chatbase.co/embed.min.js";script.id="vzrrGCxxjob-3ToUwOkJM";script.domain="www.chatbase.co";document.body.appendChild(script)};if(document.readyState==="complete"){onLoad()}else{window.addEventListener("load",onLoad)}})();
     </script>
 
+    <!-- Main app logic -->
     <script src="script.js?v=16.0" defer></script>
+
+    <!-- Blog system: fetches blog/posts.json, renders into #blog-posts-container -->
+    <script src="blog/blog.js"></script>
 </body>
 </html>
