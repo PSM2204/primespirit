@@ -500,13 +500,8 @@ footer {
   .hero-buttons .btn { width: 100%; justify-content: center; }
   .auth-modal-card { padding: 28px 20px; }
 }
-/* ===== ANCHOR SCROLL FIX =====
-   Nav links jump to section IDs (#hero, #courses, etc). Without this, the browser
-   scrolls each section's top edge flush with the viewport top — which is exactly
-   where the sticky 80px header sits. That hides the section's heading underneath
-   the header and leaves unrelated content visible instead, which is what reads as
-   "clicked one link, a different section showed up." scroll-margin-top reserves
-   that space so the real heading lands visible, below the header, every time. */
+
+/* ===== ANCHOR SCROLL FIX ===== */
 html {
     scroll-behavior: smooth;
 }
@@ -696,12 +691,6 @@ header nav ul a[href*="primeboard"]:hover, .primeboard-btn:hover {
     .menu-toggle { display: block; }
     .logo-nav { gap: 10px; padding: 0 15px; }
     .logo { font-size: 1.3rem; }
-
-    /* Mobile nav drawer position/layout rules removed from here — they were
-       duplicating and conflicting with the "DESIGN REFRESH" block further down
-       (max-width: 1180px), which covers this same range and is declared later,
-       so it already wins. Having both caused inconsistent drawer positioning. */
-
     .hero-section { padding: 100px 0 60px 0; }
     .hero-content h1 { font-size: 2.85rem; }
     .hero-content p { font-size: 1.1rem; }
@@ -1226,14 +1215,10 @@ body.blog-page {
   .article-content { box-shadow: none; border: 1px solid #ddd; }
 }
 
-
 /* ===========================================================
    DESIGN REFRESH — GenZ/Gen Alpha polish pass
-   Append this AFTER everything else in style.css so it wins.
    =========================================================== */
 
-/* ---- FIX: Header overflow / logo getting cut off ---- */
-/* Trigger hamburger much earlier so nav never crowds the logo */
 @media screen and (max-width: 1180px) {
     .menu-toggle { display: block !important; }
     header nav {
@@ -1255,7 +1240,8 @@ body.blog-page {
     header nav.active { right: 0; }
     header nav ul { flex-direction: column; align-items: stretch; gap: 10px; width: 100%; }
     header nav ul li { width: 100%; }
-    header nav ul a, header nav ul .primeboard-btn, header nav ul .auth-trigger-btn, header nav ul .primetestq-nav-trigger {
+    header nav ul a, header nav ul .primeboard-btn, header nav ul .auth-trigger-btn,
+    header nav ul .primetestq-nav-trigger, header nav ul .poonam-nav-trigger {
         width: 100%;
         justify-content: flex-start !important;
         font-size: 1rem !important;
@@ -1267,7 +1253,6 @@ body.blog-page {
     .menu-toggle { display: none !important; }
 }
 
-/* Logo never gets squeezed */
 .logo {
     flex-shrink: 0 !important;
     min-width: max-content !important;
@@ -1277,7 +1262,6 @@ body.blog-page {
     gap: 16px;
 }
 
-/* ---- Sticker-style badges (rotated, punchy, tactile) ---- */
 .hero-badge {
     display: inline-flex;
     align-items: center;
@@ -1298,7 +1282,6 @@ body.blog-page {
     font-family: inherit;
 }
 
-/* ---- Buttons: bolder, tactile, "press-down" feel ---- */
 .btn, .btn-course-enroll, .primeboard-btn, .quiz-btn, .filter-btn {
     position: relative;
     font-weight: 800 !important;
@@ -1326,7 +1309,6 @@ body.blog-page {
     letter-spacing: 0.3px;
 }
 
-/* ---- Hero: subtle animated gradient blobs for depth ---- */
 .hero-section {
     position: relative;
     overflow: hidden;
@@ -1364,7 +1346,6 @@ body.blog-page {
 
 .hero-content { position: relative; z-index: 1; }
 
-/* ---- Course cards: playful hover tilt ---- */
 .course-card {
     transform-origin: center bottom;
 }
@@ -1373,7 +1354,6 @@ body.blog-page {
     transform: translateY(-8px) rotate(-0.4deg) !important;
 }
 
-/* ---- Testimonial cards: quote mark flair ---- */
 .testimonial-card {
     position: relative;
 }
@@ -1391,13 +1371,11 @@ body.blog-page {
     font-family: Georgia, serif;
 }
 
-/* ---- Filter pills: more playful active state ---- */
 .filter-btn.active {
     transform: scale(1.05);
     box-shadow: 0 4px 16px rgba(0, 112, 243, 0.35);
 }
 
-/* ---- Section subtitle: tag/chip feel instead of plain caption ---- */
 .section-subtitle {
     padding: 4px 12px;
     border-radius: 20px;
@@ -1405,7 +1383,6 @@ body.blog-page {
     border: 1px solid rgba(0, 223, 137, 0.2);
 }
 
-/* ---- Scrollbar (small detail, feels intentional) ---- */
 ::-webkit-scrollbar { width: 10px; }
 ::-webkit-scrollbar-track { background: var(--bg-black); }
 ::-webkit-scrollbar-thumb {
@@ -1413,14 +1390,713 @@ body.blog-page {
     border-radius: 10px;
 }
 
-/* ---- Selection color (tiny brand touch) ---- */
 ::selection {
     background: var(--primary-neon);
     color: #06080c;
 }
 
-/* ---- Responsive: keep hero badge/text tidy on small screens ---- */
 @media screen and (max-width: 480px) {
     .hero-badge { font-size: 0.8rem; padding: 6px 14px; }
     .testimonial-card::before { font-size: 3rem; }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   POONAM FOUNDATION — Nav Trigger Button
+   ═══════════════════════════════════════════════════════════════════ */
+
+.poonam-nav-li {
+    position: relative;
+}
+
+.poonam-nav-trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 8px 16px;
+    background: linear-gradient(135deg, #00df89 0%, #00C6FF 100%);
+    color: #06080c !important;
+    -webkit-text-fill-color: #06080c;
+    font-size: 0.85rem;
+    font-weight: 800;
+    border-radius: 20px;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    box-shadow: 0 3px 12px rgba(0,223,137,0.25);
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+    animation: poonamPulse 3s ease-in-out infinite;
+}
+
+@keyframes poonamPulse {
+    0%, 100% { box-shadow: 0 3px 12px rgba(0,223,137,0.25); }
+    50% { box-shadow: 0 3px 20px rgba(0,223,137,0.45), 0 0 0 4px rgba(0,223,137,0.08); }
+}
+
+.poonam-nav-trigger::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent);
+    transition: left 0.5s ease;
+}
+
+.poonam-nav-trigger:hover::before { left: 100%; }
+
+.poonam-nav-trigger:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,223,137,0.45);
+    animation: none;
+}
+
+.poonam-nav-trigger.active {
+    box-shadow: 0 6px 24px rgba(0,223,137,0.5);
+    transform: translateY(-1px);
+    animation: none;
+}
+
+.poonam-nav-trigger i.poonam-main-icon {
+    font-size: 0.9rem;
+    animation: poonamHeartBeat 2s ease-in-out infinite;
+}
+
+@keyframes poonamHeartBeat {
+    0%, 100% { transform: scale(1); }
+    15% { transform: scale(1.2); }
+    30% { transform: scale(1); }
+    45% { transform: scale(1.15); }
+    60% { transform: scale(1); }
+}
+
+.poonam-nav-trigger .poonam-chevron {
+    font-size: 0.6rem;
+    transition: transform 0.3s ease;
+    margin-left: 2px;
+}
+
+.poonam-nav-trigger.active .poonam-chevron {
+    transform: rotate(180deg);
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   POONAM FOUNDATION — Dropdown Panel
+   ═══════════════════════════════════════════════════════════════════ */
+
+.poonam-dropdown-wrapper {
+    position: relative;
+}
+
+.poonam-dropdown {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 400px;
+    max-width: calc(100vw - 40px);
+    background: rgba(8, 10, 18, 0.98);
+    border: 1px solid rgba(0,223,137,0.18);
+    border-radius: 16px;
+    padding: 0;
+    z-index: 2000;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-6px) scale(0.97);
+    transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow:
+        0 24px 64px rgba(0,0,0,0.6),
+        0 0 0 1px rgba(0,223,137,0.06),
+        0 0 40px rgba(0,223,137,0.04);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    pointer-events: none;
+}
+
+.poonam-dropdown.open {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0) scale(1);
+    pointer-events: all;
+}
+
+.poonam-dropdown::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, #00df89, #00C6FF, #0070F3, #00C6FF, #00df89);
+    background-size: 200% 100%;
+    animation: poonamDropdownBar 3s linear infinite;
+    border-radius: 16px 16px 0 0;
+}
+
+@keyframes poonamDropdownBar {
+    0% { background-position: 0% 0%; }
+    100% { background-position: 200% 0%; }
+}
+
+.poonam-dd-header {
+    padding: 22px 22px 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+.poonam-dd-header h4 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin: 0 0 5px;
+    background: linear-gradient(135deg, #00df89, #00C6FF);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.poonam-dd-header p {
+    font-size: 0.8rem;
+    color: rgba(148,163,184,0.7);
+    margin: 0;
+    line-height: 1.5;
+}
+
+.poonam-dd-price {
+    padding: 18px 22px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+.poonam-dd-price-circle {
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, rgba(0,223,137,0.12), rgba(0,198,255,0.08));
+    border: 1.5px solid rgba(0,223,137,0.2);
+    flex-shrink: 0;
+    position: relative;
+}
+
+.poonam-dd-price-circle .dd-old-price {
+    font-size: 0.55rem;
+    font-weight: 700;
+    color: rgba(148,163,184,0.5);
+    text-decoration: line-through;
+    line-height: 1;
+}
+
+.poonam-dd-price-circle .dd-new-price {
+    font-size: 1rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, #00df89, #00C6FF);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.poonam-dd-price-info {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.poonam-dd-price-info .dd-price-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.poonam-dd-price-info .dd-old-price-text {
+    font-size: 0.82rem;
+    color: rgba(148,163,184,0.45);
+    text-decoration: line-through;
+    font-weight: 500;
+}
+
+.poonam-dd-price-info .dd-new-price-text {
+    font-size: 1rem;
+    font-weight: 800;
+    color: #00df89;
+}
+
+.poonam-dd-price-info .dd-discount-tag {
+    display: inline-block;
+    padding: 2px 7px;
+    font-size: 0.62rem;
+    font-weight: 700;
+    background: rgba(0,223,137,0.15);
+    border: 1px solid rgba(0,223,137,0.3);
+    border-radius: 4px;
+    color: #00df89;
+    letter-spacing: 0.03em;
+}
+
+.poonam-dd-price-info > span:last-child {
+    font-size: 0.75rem;
+    color: rgba(148,163,184,0.6);
+}
+
+.poonam-dd-details {
+    padding: 14px 22px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+.poonam-dd-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 11px;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    font-size: 0.72rem;
+    color: rgba(148,163,184,0.8);
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.poonam-dd-chip:hover {
+    background: rgba(0,223,137,0.08);
+    border-color: rgba(0,223,137,0.2);
+}
+
+.poonam-dd-chip i { color: #00df89; font-size: 0.65rem; }
+
+.poonam-dd-actions {
+    padding: 18px 22px;
+    display: flex;
+    gap: 10px;
+}
+
+.poonam-dd-btn-primary {
+    flex: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 14px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #06080c;
+    -webkit-text-fill-color: #06080c;
+    background: linear-gradient(135deg, #00df89, #00C6FF);
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 0 #008a4d, 0 6px 16px rgba(0,223,137,0.25);
+    position: relative;
+    overflow: hidden;
+}
+
+.poonam-dd-btn-primary::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    transition: left 0.5s ease;
+}
+
+.poonam-dd-btn-primary:hover::before { left: 100%; }
+
+.poonam-dd-btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 0 #008a4d, 0 10px 24px rgba(0,223,137,0.35);
+}
+
+.poonam-dd-btn-primary:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 0 #008a4d, 0 3px 8px rgba(0,223,137,0.2);
+}
+
+.poonam-dd-btn-secondary {
+    flex: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 14px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #00C6FF;
+    background: rgba(0,198,255,0.06);
+    border: 1.5px solid rgba(0,198,255,0.2);
+    border-radius: 10px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 0 rgba(0,198,255,0.08);
+}
+
+.poonam-dd-btn-secondary:hover {
+    background: rgba(0,198,255,0.12);
+    border-color: rgba(0,198,255,0.4);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 0 rgba(0,198,255,0.08);
+}
+
+.poonam-dd-btn-secondary:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 0 rgba(0,198,255,0.08);
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   POONAM FOUNDATION — Full Section
+   ═══════════════════════════════════════════════════════════════════ */
+
+.poonam-section {
+    position: relative;
+    overflow: hidden;
+    padding: 90px 0;
+    text-align: center;
+    border-top: 1px solid var(--glass-border);
+    background:
+        radial-gradient(ellipse at 15% 80%, rgba(0,223,137,0.04) 0%, transparent 55%),
+        radial-gradient(ellipse at 85% 20%, rgba(0,198,255,0.03) 0%, transparent 50%),
+        var(--bg-black);
+}
+
+.poonam-orb {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    filter: blur(80px);
+    opacity: 0.06;
+    animation: poonamOrbFloat 14s ease-in-out infinite alternate;
+}
+
+.poonam-orb--1 { width: 400px; height: 400px; background: #00df89; top: -100px; left: -100px; }
+.poonam-orb--2 { width: 300px; height: 300px; background: #00C6FF; bottom: -80px; right: -60px; animation-delay: -7s; }
+
+@keyframes poonamOrbFloat {
+    0% { transform: translate(0, 0) scale(1); }
+    100% { transform: translate(30px, 20px) scale(1.1); }
+}
+
+.poonam-tagline {
+    text-align: center;
+    max-width: 620px;
+    margin: -28px auto 48px;
+    font-size: 1.1rem;
+    line-height: 1.7;
+    color: var(--text-dark);
+}
+
+.poonam-tagline strong { color: #00df89; }
+
+.poonam-pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 28px;
+    max-width: 820px;
+    margin: 0 auto 48px;
+    position: relative;
+    z-index: 2;
+    text-align: left;
+}
+
+.poonam-card {
+    background: var(--card-surface);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--border-radius);
+    padding: 36px 30px 32px;
+    position: relative;
+    text-align: center;
+    transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
+    overflow: hidden;
+}
+
+.poonam-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 3px;
+    background: linear-gradient(90deg, #00df89, #00C6FF, #0070F3);
+    opacity: 0.6;
+    transition: opacity 0.3s ease;
+}
+
+.poonam-card:hover {
+    transform: translateY(-8px) rotate(-0.3deg);
+    border-color: rgba(0,223,137,0.25);
+    box-shadow: 0 24px 50px rgba(0,0,0,0.45);
+}
+
+.poonam-card:hover::before { opacity: 1; }
+
+.poonam-card--info {
+    background: linear-gradient(160deg, var(--card-surface) 0%, rgba(0,223,137,0.04) 100%);
+    border-color: rgba(0,223,137,0.15);
+}
+
+.poonam-card-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    border-radius: 20px;
+    background: linear-gradient(135deg, #00df89, #00C6FF);
+    color: #06080c;
+    margin-bottom: 16px;
+    transform: rotate(-2deg);
+    box-shadow: 0 3px 0 rgba(0,0,0,0.2);
+}
+
+.poonam-card-badge--alt { background: linear-gradient(135deg, #00C6FF, #0070F3); }
+
+.poonam-card-icon {
+    width: 64px; height: 64px;
+    margin: 0 auto 18px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    background: rgba(0,223,137,0.08);
+    border: 1.5px solid rgba(0,223,137,0.15);
+    color: #00df89;
+    transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.poonam-card:hover .poonam-card-icon {
+    transform: scale(1.1);
+    border-color: rgba(0,223,137,0.4);
+    box-shadow: 0 0 20px rgba(0,223,137,0.15);
+}
+
+.poonam-card-icon--alt {
+    background: rgba(0,198,255,0.08);
+    border-color: rgba(0,198,255,0.15);
+    color: #00C6FF;
+}
+
+.poonam-card:hover .poonam-card-icon--alt {
+    border-color: rgba(0,198,255,0.4);
+    box-shadow: 0 0 20px rgba(0,198,255,0.15);
+}
+
+.poonam-card h3 { font-size: 1.35rem; font-weight: 700; margin-bottom: 4px; color: var(--text-pure); }
+.poonam-class-tag { font-size: 0.85rem; color: rgba(148,163,184,0.7); margin-bottom: 20px; }
+
+/* Price with strike-through */
+.poonam-price {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 2px;
+    flex-wrap: wrap;
+}
+
+.poonam-old-price {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: rgba(148,163,184,0.4);
+    text-decoration: line-through;
+    line-height: 1;
+}
+
+.poonam-rupee {
+    font-size: 2.8rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    background: linear-gradient(135deg, #00df89 0%, #00C6FF 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1;
+}
+
+.poonam-per { font-size: 0.95rem; color: rgba(148,163,184,0.6); font-weight: 500; }
+
+.poonam-discount-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, rgba(0,223,137,0.15), rgba(0,198,255,0.1));
+    border: 1px solid rgba(0,223,137,0.3);
+    border-radius: 6px;
+    color: #00df89;
+    margin-bottom: 4px;
+    letter-spacing: 0.03em;
+    animation: poonamBadgePop 0.6s ease-out;
+}
+
+@keyframes poonamBadgePop {
+    0% { transform: scale(0.5); opacity: 0; }
+    60% { transform: scale(1.1); }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.poonam-price-note { font-size: 0.8rem; color: rgba(148,163,184,0.5); margin-bottom: 24px; }
+
+.poonam-features {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 28px;
+    text-align: left;
+}
+
+.poonam-features li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 0;
+    font-size: 0.92rem;
+    color: #cbd5e1;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    transition: transform 0.2s ease;
+}
+
+.poonam-features li:hover { transform: translateX(4px); }
+.poonam-features li:last-child { border-bottom: none; }
+.poonam-features li i { flex-shrink: 0; font-size: 0.85rem; }
+.poonam-features li .fa-check-circle { color: #00df89; }
+.poonam-features li .fa-star { color: #00C6FF; }
+
+.poonam-mission-text { text-align: left; margin-bottom: 22px; }
+.poonam-mission-text p { font-size: 0.92rem; line-height: 1.7; color: var(--text-dark); margin-bottom: 10px; }
+.poonam-mission-text p:last-child { margin-bottom: 0; }
+.poonam-mission-text strong { color: #00df89; }
+
+.poonam-enroll-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 14px 24px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #06080c !important;
+    -webkit-text-fill-color: #06080c;
+    background: linear-gradient(135deg, #00df89 0%, #00C6FF 50%, #0070F3 100%);
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    text-decoration: none;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    box-shadow: 0 6px 0 #008a4d, 0 8px 20px rgba(0,223,137,0.3);
+}
+
+.poonam-enroll-btn::before {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    transition: left 0.5s ease;
+}
+
+.poonam-enroll-btn:hover::before { left: 100%; }
+
+.poonam-enroll-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 0 #008a4d, 0 14px 30px rgba(0,223,137,0.4);
+}
+
+.poonam-enroll-btn:active {
+    transform: translateY(2px);
+    box-shadow: 0 2px 0 #008a4d, 0 3px 8px rgba(0,223,137,0.2);
+}
+
+.poonam-enroll-btn--outline {
+    background: rgba(0,223,137,0.06);
+    color: #00df89 !important;
+    -webkit-text-fill-color: #00df89;
+    border: 1.5px solid rgba(0,223,137,0.25);
+    box-shadow: 0 4px 0 rgba(0,223,137,0.1);
+}
+
+.poonam-enroll-btn--outline::before {
+    background: linear-gradient(90deg, transparent, rgba(0,223,137,0.12), transparent);
+}
+
+.poonam-enroll-btn--outline:hover {
+    background: rgba(0,223,137,0.12);
+    border-color: rgba(0,223,137,0.5);
+    box-shadow: 0 6px 0 rgba(0,223,137,0.1), 0 10px 24px rgba(0,223,137,0.15);
+}
+
+.poonam-enroll-btn--outline:active {
+    transform: translateY(2px);
+    box-shadow: 0 2px 0 rgba(0,223,137,0.1);
+}
+
+.poonam-trust-strip {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px 24px;
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 18px 24px;
+    background: rgba(255,255,255,0.025);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 12px;
+    position: relative;
+    z-index: 2;
+}
+
+.poonam-trust-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.85rem;
+    color: rgba(148,163,184,0.7);
+    white-space: nowrap;
+}
+
+.poonam-trust-item i { color: #00df89; font-size: 0.9rem; opacity: 0.7; }
+.poonam-trust-item strong { color: #e2e8f0; }
+
+/* ═══════════════════════════════════════════════════════════════════
+   POONAM FOUNDATION — Responsive
+   ═══════════════════════════════════════════════════════════════════ */
+
+@media screen and (max-width: 1180px) {
+    .poonam-dropdown { display: none !important; }
+    .poonam-nav-trigger .poonam-chevron { display: none; }
+    .poonam-nav-trigger {
+        width: 100%;
+        justify-content: flex-start !important;
+        font-size: 1rem !important;
+        padding: 14px 18px !important;
+        border-radius: 0;
+    }
+}
+
+@media screen and (max-width: 680px) {
+    .poonam-pricing-grid { grid-template-columns: 1fr; max-width: 420px; }
+    .poonam-card { padding: 28px 20px 24px; }
+    .poonam-rupee { font-size: 2.4rem; }
+    .poonam-trust-strip { gap: 8px 16px; padding: 14px 16px; }
+    .poonam-trust-item { font-size: 0.78rem; }
+}
+
+@media screen and (max-width: 480px) {
+    .poonam-section { padding: 60px 0; }
+    .poonam-tagline { font-size: 1rem; }
+    .poonam-trust-strip { flex-direction: column; align-items: center; gap: 6px; }
+    .poonam-dd-actions { flex-direction: column; }
 }
