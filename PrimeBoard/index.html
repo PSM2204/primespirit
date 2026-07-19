@@ -767,6 +767,35 @@
     window.sendMessage = sendMessage;
 
     // ============================================================
+    // CRITICAL FIX — late-joining students seeing a blank board.
+    //
+    // The old sync relied entirely on the teacher noticing the relay's
+    // 'roster' headcount go up, then pushing only the CURRENT page. Two
+    // problems with that: (1) it depended on the relay reliably telling
+    // the teacher about new joiners at all, which isn't guaranteed by
+    // every relay implementation; and (2) even when it worked, it only
+    // sent the page the teacher happened to be on — anything drawn on
+    // other pages before the student joined stayed invisible until the
+    // teacher manually revisited each page.
+    //
+    // broadcastFullState() fixes both: it sends every page's full
+    // element set (not just the current one), and it's now triggered
+    // directly by the student's own join/request-sync messages instead
+    // of only by a roster-count heuristic.
+    function broadcastFullState() {
+        sendMessage({ type: 'pages-structure', pages: pages.map(x => ({ id: x.id, name: x.name })), currentPageId });
+        pages.forEach(p => {
+            sendMessage({
+                type: 'scene-update',
+                pageId: p.id,
+                elements: Array.from(p.elements.values()).filter(e => !e.deleted).map(stripRuntimeOnlyFields),
+                bg: p.bg,
+                grid: p.grid
+            });
+        });
+    }
+
+    // ============================================================
     // 2) ERASER FIX — eraserWidth now genuinely drives removal.
     // A stroke is deleted when any of its points falls within
     // eraserWidth/2 of the pointer path; shapes/text are hit-tested
@@ -1406,6 +1435,12 @@
         resizeCanvas();
         selectTool('selection');
 
+        // CRITICAL FIX: tracks whether this client has received any real
+        // synced content yet, so the request-sync retry loop knows when
+        // to stop (and so it doesn't get re-triggered pointlessly by
+        // every reconnect after the board is already populated).
+        let receivedAnySync = false;
+
         function connect() {
             statusDot.className = 'status-dot connecting';
             const wsUrl = `${window.PRIMEBOARD_RELAY_BASE_URL}/room/${encodeURIComponent(room)}`;
@@ -1414,6 +1449,28 @@
             socket.addEventListener('open', () => {
                 statusDot.className = 'status-dot';
                 sendMessage({ type: 'join', room, role, name });
+
+                if (role === 'student') {
+                    // CRITICAL FIX: ask directly for the current board state
+                    // instead of passively waiting for the teacher to notice
+                    // a roster change. This is what actually makes a late
+                    // joiner see existing content reliably.
+                    sendMessage({ type: 'request-sync', room, name });
+
+                    // Safety net: if the relay drops the request or the
+                    // teacher's reply, retry a couple of times. Stop once
+                    // any real content has arrived (checked via a flag set
+                    // in the scene-update handler) so this never re-syncs
+                    // over a student's own later work.
+                    let syncRetries = 0;
+                    const retrySync = () => {
+                        if (receivedAnySync || syncRetries >= 3) return;
+                        syncRetries++;
+                        sendMessage({ type: 'request-sync', room, name });
+                        setTimeout(retrySync, 1500);
+                    };
+                    setTimeout(retrySync, 1500);
+                }
             });
 
             socket.addEventListener('message', (event) => {
@@ -1429,14 +1486,31 @@
                     if (data.bg) page.bg = data.bg;
                     if (data.grid) page.grid = data.grid;
                     mergeIncomingElements(page.id, data.elements || []);
+                    // CRITICAL FIX: any real scene-update means this client
+                    // now has (or is catching up on) actual board content,
+                    // so the join-time retry loop can stop asking.
+                    if ((data.elements || []).length > 0) receivedAnySync = true;
+                }
+
+                // CRITICAL FIX: the teacher responds directly to another
+                // participant's join/request-sync, instead of only reacting
+                // to a derived roster headcount change. This is what makes
+                // sync deterministic — it no longer depends on the relay
+                // correctly notifying the teacher that someone new arrived.
+                if (role === 'teacher' && data.name !== currentUserName
+                    && (data.type === 'request-sync' || (data.type === 'join' && data.role === 'student'))) {
+                    broadcastFullState();
                 }
 
                 if (data.type === 'roster' && data.users) {
                     userCount.textContent = `${data.users.length} online`;
                     renderAvatars(data.users);
                     if (role === 'teacher' && data.users.length > lastRosterCount) {
-                        sendMessage({ type: 'pages-structure', pages: pages.map(x => ({ id: x.id, name: x.name })), currentPageId });
-                        broadcastPage(true);
+                        // Kept as a redundant fallback alongside the direct
+                        // join/request-sync handling above — harmless to
+                        // fire twice, and covers relays that only signal
+                        // via roster rather than broadcasting raw messages.
+                        broadcastFullState();
                     }
                     lastRosterCount = data.users.length;
                 }
@@ -1451,6 +1525,17 @@
                     });
                     pages = pages.filter(p => data.pages.find(x => x.id === p.id));
                     renderPageTabs();
+                    // CRITICAL FIX: students can never switch pages
+                    // themselves (only the teacher drives navigation), so
+                    // if the teacher was already on a different page than
+                    // this student's default before they joined, the
+                    // student would otherwise stay stuck looking at an
+                    // empty page even after all the real content synced in
+                    // the background. Always mirror the teacher's current
+                    // page on every pages-structure update.
+                    if (data.currentPageId && data.currentPageId !== currentPageId) {
+                        switchToPage(data.currentPageId, true);
+                    }
                 }
 
                 if (data.type === 'page-switch' && role === 'student') {
