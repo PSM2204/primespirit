@@ -1,8 +1,9 @@
 /*==========================================================
-  PRIME SPIRIT MENTORS — COMPLETE STYLESHEET v16.0
+  PRIME SPIRIT MENTORS — COMPLETE STYLESHEET v16.1
   Fonts:  Syne (display) | Source Serif 4 (body) | DM Mono
   Palette: Deep Navy | Cyan | Blue | Green
   WCAG 2.2 AA Compliant
+  FIXES: Added .btn-grid, .quiz-btn cursor, version bump
 ==========================================================*/
 
 /* ── 1. CUSTOM PROPERTIES ── */
@@ -349,8 +350,30 @@ nav li a:hover, nav li button:hover, nav li .primeboard-btn:hover { color: var(-
 /* ── 17. QUIZ ── */
 .quiz-section { background: var(--bg-deep); }
 .quiz-container { max-width: 600px; margin: 0 auto; }
-.quiz-btn { padding: 16px 24px; border: 1px solid var(--border-mid); border-radius: var(--radius); background: var(--glass); color: var(--text); font-size: 1rem; font-weight: 600; text-align: left; transition: all var(--transition); width: 100%; }
-.quiz-btn:hover { border-color: var(--accent); background: rgba(0,198,255,0.05); }
+
+/* FIX: .btn-grid was missing — quiz buttons had no spacing */
+.btn-grid { display: flex; flex-direction: column; gap: 12px; width: 100%; }
+
+.quiz-btn {
+  padding: 16px 24px;
+  border: 1px solid var(--border-mid);
+  border-radius: var(--radius);
+  background: var(--glass);
+  color: var(--text);
+  font-size: 1rem;
+  font-weight: 600;
+  text-align: left;
+  transition: all var(--transition);
+  width: 100%;
+  cursor: pointer;            /* FIX: explicit cursor */
+  position: relative;          /* FIX: ensure clickable layer */
+  z-index: 1;                  /* FIX: above any pseudo-elements */
+  pointer-events: auto;        /* FIX: ensure no parent blocks clicks */
+}
+.quiz-btn:hover { border-color: var(--accent); background: rgba(0,198,255,0.05); transform: translateX(4px); }
+.quiz-btn:active { transform: translateX(2px); }
+.quiz-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
 .quiz-progress-bar { height: 4px; background: var(--border); border-radius: 2px; margin-bottom: 16px; overflow: hidden; }
 .quiz-progress-fill { height: 100%; background: var(--gradient); border-radius: 2px; transition: width 0.4s ease; width: 0; }
 .quiz-meta { display: flex; justify-content: space-between; font-size: 0.82rem; color: var(--text-muted); margin-bottom: 16px; font-family: var(--font-mono); }
@@ -472,6 +495,8 @@ footer { background: var(--bg-deep); border-top: 1px solid var(--border); paddin
   .logo-tagline { display: none; }
   .social-sticky { right: 10px; bottom: 70px; }
   .social-btn { width: 38px; height: 38px; font-size: 0.95rem; }
+  .btn-grid { gap: 10px; }
+  .quiz-btn { padding: 14px 20px; font-size: 0.95rem; }
 }
 
 @media (max-width: 480px) {
