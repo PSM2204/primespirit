@@ -1,668 +1,865 @@
-/**
- * 🛡️ PRIME SPIRIT MENTORS PRODUCTION ENGINE v9.1
- * Fully Integrated Independent Portal Actions Layer with Web3Forms Access Routing
- * + Full 10-Question Psychometric Mindset Audit (Student & Parent tracks)
- *
- * CHANGELOG v9.1:
- * - Fixed: Blog filter buttons now match data-filter attribute (were looking for non-existent IDs)
- * - Fixed: Hamburger handler lives ONLY here — removed duplicate from index.html inline script
- * - Added: FAQ accordion handler (was only in index.html inline script before)
- * - Added: Smooth scroll anchor handler (was only in index.html inline script before)
- * - Fixed: nav backdrop closes on any nav link/button tap (covers all mobile close cases)
- */
-
-// ==========================================================================
-// DAILY BLOG DATABASE ARRAY (Add your updates right here smoothly)
-// ==========================================================================
-const blogDatabase = [
-    {
-        title: "De-coding Rotational Mechanics Parameters",
-        date: "June 24, 2026",
-        category: "physics",
-        summary: "Stop memorizing moment of inertia equations raw. Learn to map torque variables geometrically to clear advanced numerical matrices instantly."
-    },
-    {
-        title: "Visualizing National Income Parameters",
-        date: "June 23, 2026",
-        category: "economics",
-        summary: "Breaking down the expenditure and value-added computation modules without overlapping structural accounting loops."
-    },
-    {
-        title: "Conquering Named Organic Mechanisms",
-        date: "June 22, 2026",
-        category: "chemistry",
-        summary: "A systematic framework detailing how electrophilic addition coordinates across high-yield tracking metrics for competitive test setups."
-    },
-    {
-        title: "Calculus Insights: Limits & Continuity",
-        date: "June 21, 2026",
-        category: "maths",
-        summary: "An intuitive geometric breakdown designed to master continuity properties without getting caught in dense algebraic traps."
-    }
-];
-
-// Global Authorization Flags & Active Token Configuration Paths
-let isUserRegisteredAndLoggedIn = false;
-let currentOpenNotesContext = '';
-const WEB3FORMS_ACCESS_KEY = 'c5cc0f11-b241-4a89-8a11-1642cb5aa3a2';
-
-// ==========================================================================
-// PSYCHOMETRIC MINDSET AUDIT — QUESTION BANKS (10 per track)
-// Each option carries a score 1 (highest concern) to 4 (healthiest pattern).
-// ==========================================================================
-
-const studentQuizQuestions = [
-    {
-        q: "Right before a big test, what usually happens in your head?",
-        options: [
-            { text: "My mind goes blank even on topics I know well", score: 1 },
-            { text: "I get nervous but can refocus within a few minutes", score: 2 },
-            { text: "I feel a manageable rush of adrenaline that helps me focus", score: 3 },
-            { text: "I stay mostly calm regardless of the stakes", score: 4 }
-        ]
-    },
-    {
-        q: "When you get a tough problem wrong, what's your first instinct?",
-        options: [
-            { text: "I assume I'm just not good at this subject", score: 1 },
-            { text: "I feel discouraged but try again later", score: 2 },
-            { text: "I immediately want to understand exactly where I went wrong", score: 3 },
-            { text: "I see it as useful data and move on without much emotion", score: 4 }
-        ]
-    },
-    {
-        q: "What's really driving you to prepare for this exam?",
-        options: [
-            { text: "Fear of disappointing my parents or family", score: 1 },
-            { text: "Wanting to prove something to myself", score: 2 },
-            { text: "A mix of personal goals and family expectations", score: 3 },
-            { text: "Genuine interest in the field I'm aiming for", score: 4 }
-        ]
-    },
-    {
-        q: "How does your study schedule usually go?",
-        options: [
-            { text: "I plan a lot but rarely stick to it", score: 1 },
-            { text: "I study consistently but feel like I'm always behind", score: 2 },
-            { text: "I have a working rhythm most days", score: 3 },
-            { text: "I follow a structured plan and adjust it weekly", score: 4 }
-        ]
-    },
-    {
-        q: "When a classmate scores higher than you, what happens internally?",
-        options: [
-            { text: "I feel like I'm falling behind everyone", score: 1 },
-            { text: "I feel briefly bad but it fades quickly", score: 2 },
-            { text: "I get curious about what they did differently", score: 3 },
-            { text: "It barely affects me either way", score: 4 }
-        ]
-    },
-    {
-        q: "When you don't understand something in class, what do you actually do?",
-        options: [
-            { text: "I stay quiet and hope it makes sense later", score: 1 },
-            { text: "I note it down but often forget to follow up", score: 2 },
-            { text: "I try to solve it myself first, then ask if stuck", score: 3 },
-            { text: "I ask a teacher or search for it the same day", score: 4 }
-        ]
-    },
-    {
-        q: "How often do you feel physically drained just from studying (mentally exhausted, not sleep-deprived)?",
-        options: [
-            { text: "Almost every day", score: 1 },
-            { text: "A few times a week", score: 2 },
-            { text: "Occasionally, especially before exams", score: 3 },
-            { text: "Rarely", score: 4 }
-        ]
-    },
-    {
-        q: "If someone asked why you want your target exam's rank/score, could you answer clearly in one sentence?",
-        options: [
-            { text: "No, it's mostly just \"because I have to\"", score: 1 },
-            { text: "Sort of, but it feels fuzzy", score: 2 },
-            { text: "Yes, I have a fairly clear reason", score: 3 },
-            { text: "Yes, and it's very specific to what I want to become", score: 4 }
-        ]
-    },
-    {
-        q: "When you're stressed about studies, what do you usually do?",
-        options: [
-            { text: "Keep it to myself and push through alone", score: 1 },
-            { text: "Vent to a friend but don't really solve anything", score: 2 },
-            { text: "Talk to a parent or mentor about it", score: 3 },
-            { text: "Actively problem-solve with someone who can help", score: 4 }
-        ]
-    },
-    {
-        q: "Do you know what actually helps you retain a concept — visuals, practice, teaching it, or something else?",
-        options: [
-            { text: "Not really, I just do whatever everyone else does", score: 1 },
-            { text: "I have a vague idea", score: 2 },
-            { text: "Yes, I know what works for me", score: 3 },
-            { text: "Yes, and I actively use that method on purpose", score: 4 }
-        ]
-    }
-];
-
-const parentQuizQuestions = [
-    {
-        q: "When you talk to your child about their exam prep, how do you think it usually lands emotionally?",
-        options: [
-            { text: "I worry it adds pressure even when I don't mean it to", score: 1 },
-            { text: "It's a mix — sometimes reassuring, sometimes stressful", score: 2 },
-            { text: "I'm not fully sure how it lands", score: 3 },
-            { text: "I think it generally motivates them", score: 4 }
-        ]
-    },
-    {
-        q: "Do you know which specific topics or subjects your child is currently struggling with?",
-        options: [
-            { text: "Not really, they don't share much", score: 1 },
-            { text: "I have a rough idea", score: 2 },
-            { text: "Yes, fairly specifically", score: 3 },
-            { text: "Yes, and we discuss it regularly", score: 4 }
-        ]
-    },
-    {
-        q: "How often do conversations about their studies reference other students' performance?",
-        options: [
-            { text: "Fairly often, usually to motivate them", score: 1 },
-            { text: "Occasionally, without meaning to compare", score: 2 },
-            { text: "Rarely", score: 3 },
-            { text: "Never — we focus only on their own progress", score: 4 }
-        ]
-    },
-    {
-        q: "When your child makes a study-related decision (schedule, subject focus, coaching), who usually decides?",
-        options: [
-            { text: "I decide, since I know what's best for their future", score: 1 },
-            { text: "We discuss it but I have final say", score: 2 },
-            { text: "We decide together as equals", score: 3 },
-            { text: "They decide, and I support their choice", score: 4 }
-        ]
-    },
-    {
-        q: "Beyond marks and results, how often do you ask how they're feeling about the pressure itself?",
-        options: [
-            { text: "Rarely — we focus on results", score: 1 },
-            { text: "Occasionally, when they seem visibly stressed", score: 2 },
-            { text: "Regularly, it's part of our routine conversations", score: 3 },
-            { text: "Very often — it's a priority for us", score: 4 }
-        ]
-    },
-    {
-        q: "When they come home with a lower score than expected, what's usually said first?",
-        options: [
-            { text: "Some version of disappointment or concern about the number", score: 1 },
-            { text: "A question about what happened", score: 2 },
-            { text: "Recognition of effort, then a look at what to improve", score: 3 },
-            { text: "Reassurance first, analysis second", score: 4 }
-        ]
-    },
-    {
-        q: "Would you know if your child was mentally burnt out, versus just tired from a long day?",
-        options: [
-            { text: "Honestly, probably not", score: 1 },
-            { text: "I might notice if it got severe", score: 2 },
-            { text: "Yes, I can usually tell the difference", score: 3 },
-            { text: "Yes, and I actively watch for early signs", score: 4 }
-        ]
-    },
-    {
-        q: "Have you and your child explicitly discussed what \"success\" means for this exam?",
-        options: [
-            { text: "Not really, it's assumed rather than discussed", score: 1 },
-            { text: "Loosely, nothing specific", score: 2 },
-            { text: "Yes, we've talked about a general target", score: 3 },
-            { text: "Yes, we've aligned on something specific together", score: 4 }
-        ]
-    },
-    {
-        q: "How much of your own anxiety about their future do you think shows up in daily conversations?",
-        options: [
-            { text: "Quite a bit, even if I try to hide it", score: 1 },
-            { text: "Some, especially closer to exams", score: 2 },
-            { text: "I'm honestly not sure", score: 3 },
-            { text: "Very little, I try to stay neutral", score: 4 }
-        ]
-    },
-    {
-        q: "If they told you they needed to slow down or take a short break, how would you react?",
-        options: [
-            { text: "I'd worry it derails their preparation", score: 1 },
-            { text: "I'd be hesitant but probably allow it", score: 2 },
-            { text: "I'd support it if they gave a reason", score: 3 },
-            { text: "I'd trust their judgment on their own limits", score: 4 }
-        ]
-    }
-];
-
-let quizState = { role: null, index: 0, totalScore: 0 };
-
-// ==========================================================================
-// INTERACTIVE PORTAL ACTIONS ENGINE
-// ==========================================================================
-window.addEventListener('DOMContentLoaded', () => {
-
-    // 1. Render Blogs dynamically on page setup load
-    renderBlogPostsEngine();
-
-    // 2. Mobile Nav — single source of truth (no duplicate in index.html)
-    const menuToggle = document.getElementById('menu-toggle');
-    const navMenu = document.getElementById('nav-menu');
-    if (menuToggle && navMenu) {
-        // Backdrop: sits behind the slide-in drawer so tapping outside closes it.
-        const navBackdrop = document.createElement('div');
-        navBackdrop.id = 'nav-backdrop';
-        navBackdrop.style.cssText = [
-            'position:fixed', 'inset:0', 'background:rgba(0,0,0,0.5)',
-            'z-index:999', 'opacity:0', 'pointer-events:none',
-            'transition:opacity 0.3s ease'
-        ].join(';');
-        document.body.appendChild(navBackdrop);
-
-        function closeMobileNav() {
-            navMenu.classList.remove('active');
-            navBackdrop.style.opacity = '0';
-            navBackdrop.style.pointerEvents = 'none';
-        }
-        function openMobileNav() {
-            navMenu.classList.add('active');
-            navBackdrop.style.opacity = '1';
-            navBackdrop.style.pointerEvents = 'auto';
-        }
-
-        menuToggle.addEventListener('click', () => {
-            navMenu.classList.contains('active') ? closeMobileNav() : openMobileNav();
-        });
-
-        // Close when any nav link or button is tapped
-        navMenu.querySelectorAll('a, button').forEach(el => {
-            el.addEventListener('click', closeMobileNav);
-        });
-
-        // Tapping the dimmed backdrop closes the menu
-        navBackdrop.addEventListener('click', closeMobileNav);
-
-        // Escape key closes it (useful on tablets/keyboards)
-        document.addEventListener('keydown', e => {
-            if (e.key === 'Escape') closeMobileNav();
-        });
-    }
-
-    // 3. Premium Notes Download Lock Logic — bound by ID (safe, no index drift)
-    for (let i = 1; i <= 6; i++) {
-        const btn = document.getElementById(`btn-notes-${i}`);
-        if (btn) {
-            btn.addEventListener('click', () => {
-                const titles = [
-                    "Class 9/10 Foundation Notes",
-                    "Class 11/12 Physics Notes",
-                    "Class 11/12 Economics Notes",
-                    "NEET UG Master Notes",
-                    "JEE Mains Premium Notes",
-                    "CUET/IAT/NEST Advanced Notes"
-                ];
-                currentOpenNotesContext = titles[i - 1];
-                handleNotesDownloadSequence();
-            });
-        }
-    }
-
-    // 4. Blog Subject Filters — matched by data-filter attribute (buttons have no IDs)
-    document.querySelectorAll('.filter-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            const cat = btn.getAttribute('data-filter');
-            document.querySelectorAll('#blog-posts-container .course-card').forEach(card => {
-                if (cat === 'all' || card.getAttribute('data-category') === cat) {
-                    card.style.display = '';
-                } else {
-                    card.style.display = 'none';
-                }
-            });
-        });
-    });
-
-    // 5. FAQ Accordion
-    document.querySelectorAll('.faq-item').forEach(item => {
-        const btn = item.querySelector('.faq-question');
-        if (btn) {
-            btn.addEventListener('click', () => {
-                const isOpen = item.classList.contains('open');
-                // Close all first
-                document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
-                // Then open the clicked one (unless it was already open)
-                if (!isOpen) item.classList.add('open');
-            });
-        }
-    });
-
-    // 6. Smooth scroll for all anchor links
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-            const target = document.querySelector(this.getAttribute('href'));
-            if (target) {
-                e.preventDefault();
-                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }
-        });
-    });
-
-    // 7. Modal Flow View Switch Links
-    setupClick('btn-close-modal', closeAuthModal);
-    setupClick('btn-goto-forgot', () => switchAuthView('forgot'));
-    setupClick('btn-goto-signup', () => switchAuthView('signup'));
-    setupClick('btn-goto-login', () => switchAuthView('login'));
-    setupClick('btn-goto-login-2', () => switchAuthView('login'));
-    setupClick('btn-role-student', () => launchAudit('student'));
-    setupClick('btn-role-parent', () => launchAudit('parent'));
-    setupClick('restart-btn', resetAudit);
-
-    // 8. High-Capacity Form Submission Routers
-    setupForm('form-login', (e) => handleAuthProcess(e, 'login'));
-    setupForm('form-signup', (e) => handleAuthProcess(e, 'signup'));
-    setupForm('form-forgot', (e) => handleAuthProcess(e, 'forgot'));
-
-    // Email Gateway Router for the Live Consultation Strategy booking form
-    setupForm('contact-form', (e) => {
-        e.preventDefault();
-
-        const cName = document.getElementById('student-name').value;
-        const cEmail = document.getElementById('student-email').value;
-        const cPhone = document.getElementById('student-phone').value;
-        const cMsg = document.getElementById('student-msg').value;
-
-        const consultationPayload = {
-            access_key: WEB3FORMS_ACCESS_KEY,
-            subject: `🔥 NEW STRATEGY SLOT BOOKING REQUEST - ${cName}`,
-            from_name: "Prime Spirit Booking Engine",
-            applicant_name: cName,
-            applicant_email: cEmail,
-            applicant_phone: cPhone,
-            applicant_notes_and_batch: cMsg,
-            timestamp_logged: new Date().toLocaleString()
-        };
-
-        fetch('https://api.web3forms.com/submit', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-            body: JSON.stringify(consultationPayload)
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                alert('🎉 Consultation Request Logged!\n\nYour evaluation parameters have been securely routed straight to Abhinav sir\'s dashboard at primespirit.edu@gmail.com.');
-                e.target.reset();
-            } else {
-                alert('❌ Error processing request. Check script access key settings.');
-            }
-        })
-        .catch(() => {
-            alert('🌪️ Transmission failed. Please verify network links.');
-        });
-    });
-
-    // 9. Live Alphanumeric Password Tracking HUD
-    const passInput = document.getElementById('signup-pass');
-    if (passInput) passInput.addEventListener('keyup', (e) => trackPassMetrics(e.target.value));
-});
-
-// ==========================================================================
-// WINDOW GLOBAL SCOPE — Auth modal open/close (called from HTML onclick)
-// ==========================================================================
-window.openAuthModal = function (viewType) {
-    document.getElementById('auth-modal').classList.remove('hidden');
-    switchAuthView(viewType);
-};
-
-window.closeAuthModal = function () {
-    document.getElementById('auth-modal').classList.add('hidden');
-};
-
-// Alias so inline onclick="closeAuthModal()" still works if referenced anywhere
-window.closeAuthModal = window.closeAuthModal;
-
-// ==========================================================================
-// UTILITY HELPERS
-// ==========================================================================
-function setupClick(id, handler) {
-    const el = document.getElementById(id);
-    if (el) el.addEventListener('click', handler);
-}
-
-function setupForm(id, handler) {
-    const el = document.getElementById(id);
-    if (el) el.addEventListener('submit', handler);
-}
-
-function switchAuthView(view) {
-    ['login', 'signup', 'forgot'].forEach(v => {
-        document.getElementById(`auth-view-${v}`).classList.add('hidden');
-    });
-    document.getElementById(`auth-view-${view}`).classList.remove('hidden');
-}
-
-function handleNotesDownloadSequence() {
-    if (!isUserRegisteredAndLoggedIn) {
-        alert(`🔒 Authentication Required:\n\nTo access and download "${currentOpenNotesContext}", please complete your Student Profile registration form.`);
-        window.openAuthModal('signup');
-    } else {
-        alert(`🚀 Access approved! Compiling secure download package logs for: ${currentOpenNotesContext}`);
-    }
-}
-
-function trackPassMetrics(val) {
-    const bar = document.getElementById('strength-bar');
-    const txt = document.getElementById('strength-feedback-text');
-    if (!bar || !txt) return;
-    if (val.length === 0) {
-        bar.style.width = '0%';
-        txt.innerText = "Awaiting parameters...";
-        return;
-    }
-
-    let pts = 0;
-    if (val.length >= 8) pts++;
-    if (/[A-Z]/.test(val)) pts++;
-    if (/[0-9]/.test(val)) pts++;
-    if (/[@#$!%*?&]/.test(val)) pts++;
-
-    if (pts <= 1) {
-        bar.style.width = '25%';
-        bar.style.backgroundColor = '#ef4444';
-        txt.innerText = "❌ Unsafe entry profile.";
-    } else if (pts < 4) {
-        bar.style.width = '60%';
-        bar.style.backgroundColor = '#f59e0b';
-        txt.innerText = "⚠️ Missing characters rules.";
-    } else {
-        bar.style.width = '100%';
-        bar.style.backgroundColor = '#00df89';
-        txt.innerText = "🛡️ Alphanumeric Shield Active.";
-    }
-}
-
-// HIGH-CAPACITY SIGNUP ROUTER: Ships payload straight to primespirit.edu@gmail.com
-function handleAuthProcess(e, mode) {
-    e.preventDefault();
-
-    if (mode === 'signup') {
-        const nameInput = e.target.querySelector('input[placeholder*="full name"]').value;
-        const emailInput = document.getElementById('signup-email').value;
-        const phoneInput = e.target.querySelector('input[type="tel"]').value;
-        const passInput = document.getElementById('signup-pass').value;
-
-        // Alphanumeric Rules Engine Check Verification
-        if (!(passInput.length >= 8 && /[A-Z]/.test(passInput) && /[0-9]/.test(passInput) && /[@#$!%*?&]/.test(passInput))) {
-            alert("❌ Alphanumeric Security Check Failed: Your chosen password must include at least 8 characters, an uppercase letter, a number, and a special symbol.");
-            return;
-        }
-
-        const registrationPayload = {
-            access_key: WEB3FORMS_ACCESS_KEY,
-            subject: `⚡ New Student Profile Registration Request - ${nameInput}`,
-            from_name: "Prime Spirit Portal Engine",
-            student_name: nameInput,
-            student_email: emailInput,
-            student_phone: phoneInput,
-            requested_document: currentOpenNotesContext || 'Portal Quick Signup',
-            timestamp_logged: new Date().toLocaleString()
-        };
-
-        fetch('https://api.web3forms.com/submit', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-            body: JSON.stringify(registrationPayload)
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                isUserRegisteredAndLoggedIn = true;
-                alert(`🎉 Registration Successfully Verified!\n\nYour profile details have been securely logged onto primespirit.edu@gmail.com.\n"${currentOpenNotesContext}" files are now unlocked.`);
-                window.closeAuthModal();
-                e.target.reset();
-            } else {
-                alert("❌ Token validation error. Please recheck script.js configuration settings.");
-            }
-        })
-        .catch(() => {
-            alert("🌪️ Network request dropped. Please check connection logs.");
-        });
-
-    } else if (mode === 'login') {
-        isUserRegisteredAndLoggedIn = true;
-        alert("🚀 Authentication matching complete across server logs. Access ports are open.");
-        window.closeAuthModal();
-
-    } else if (mode === 'forgot') {
-        alert("📧 Recovery request processed successfully. Check your verification inbox tracks inside 5 minutes.");
-        window.closeAuthModal();
-    }
-}
-
-function renderBlogPostsEngine() {
-    const container = document.getElementById('blog-posts-container');
-    if (!container) return;
-    container.innerHTML = '';
-    blogDatabase.forEach(post => {
-        const card = document.createElement('div');
-        card.className = 'course-card blog-post-card';
-        card.setAttribute('data-category', post.category.toLowerCase());
-        card.innerHTML = `
-            <div class="blog-meta">📅 ${post.date} | By Abhinav Kashyap</div>
-            <h3>${post.title}</h3>
-            <p>${post.summary}</p>
-            <span class="target-badge">${post.category.charAt(0).toUpperCase() + post.category.slice(1)} Insights</span>
-        `;
-        container.appendChild(card);
-    });
-}
-
-// ==========================================================================
-// PSYCHOMETRIC MINDSET AUDIT ENGINE (10-question flow, both tracks)
-// ==========================================================================
-
-function launchAudit(role) {
-    quizState = { role, index: 0, totalScore: 0 };
-    document.getElementById('role-select-window').classList.add('hidden');
-    document.getElementById('result-window').classList.add('hidden');
-    document.getElementById('quiz-window').classList.remove('hidden');
-    document.getElementById('quiz-track-identity').innerText = role === 'student' ? 'Student Profile Active' : 'Parent Profile Active';
-    renderAuditQuestion();
-}
-
-function renderAuditQuestion() {
-    const bank = quizState.role === 'student' ? studentQuizQuestions : parentQuizQuestions;
-    const current = bank[quizState.index];
-
-    document.getElementById('quiz-progress-text').innerText = `Question ${quizState.index + 1} of ${bank.length}`;
-    document.getElementById('question').innerText = current.q;
-
-    const btnBox = document.getElementById('answer-buttons');
-    btnBox.innerHTML = '';
-
-    current.options.forEach(opt => {
-        const b = document.createElement('button');
-        b.innerText = opt.text;
-        b.classList.add('quiz-btn');
-        b.addEventListener('click', () => {
-            quizState.totalScore += opt.score;
-            quizState.index++;
-            if (quizState.index < bank.length) {
-                renderAuditQuestion();
-            } else {
-                showAuditResult();
-            }
-        });
-        btnBox.appendChild(b);
-    });
-}
-
-function showAuditResult() {
-    const bank = quizState.role === 'student' ? studentQuizQuestions : parentQuizQuestions;
-    const maxScore = bank.length * 4;
-    const pct = quizState.totalScore / maxScore;
-
-    let profile, badge, message;
-
-    if (pct >= 0.85) {
-        badge = "🌟";
-        profile = quizState.role === 'student' ? "Highly Resilient Learner" : "Highly Supportive Parent";
-        message = quizState.role === 'student'
-            ? "Your responses show strong self-regulation, healthy motivation, and good support-seeking habits. Abhinav sir's sessions will focus on refining strategy and pace rather than fixing foundational stress patterns."
-            : "Your responses show strong awareness of your child's emotional state and a healthy, autonomy-supportive approach. We'll focus your consultation on optimizing their study structure together.";
-    } else if (pct >= 0.65) {
-        badge = "✅";
-        profile = quizState.role === 'student' ? "Balanced, With Room to Sharpen" : "Engaged, With Room to Recalibrate";
-        message = quizState.role === 'student'
-            ? "You're managing pressure reasonably well, but a few specific friction points (likely around exam anxiety or doubt-clearing speed) are holding back consistency. This is exactly what the 1:1 mentorship track is built to fix."
-            : "You're engaged and aware, but there may be a gap between your intentions and how conversations actually land on your child. Abhinav sir can walk through a few adjustment points during your consultation.";
-    } else if (pct >= 0.45) {
-        badge = "⚠️";
-        profile = quizState.role === 'student' ? "Developing — Pressure Is Leaking Through" : "Developing — Pressure May Be Transferring";
-        message = quizState.role === 'student'
-            ? "Your answers suggest exam anxiety, self-doubt, or isolation are quietly affecting your prep more than they should. This is very fixable with the right structure and psychometric counseling — it's not a talent problem, it's a pattern problem."
-            : "Your answers suggest some unintentional pressure transfer or limited visibility into your child's actual struggles. This is common and very addressable — we'll cover practical adjustments in your strategy call.";
-    } else {
-        badge = "🔴";
-        profile = quizState.role === 'student' ? "High Support Needed — Act Now" : "High Support Needed — Let's Realign";
-        message = quizState.role === 'student'
-            ? "Your responses point to significant exam anxiety, low self-efficacy, or burnout risk. This needs direct attention, not just more study hours. Abhinav sir's psychometric counseling track was built specifically for this profile."
-            : "Your responses suggest high pressure transfer and limited insight into your child's emotional load right now. A guided conversation with Abhinav sir can help reset this before it affects performance further.";
-    }
-
-    document.getElementById('quiz-window').classList.add('hidden');
-    document.getElementById('result-window').classList.remove('hidden');
-    document.getElementById('badge-display').innerText = badge;
-    document.getElementById('psych-metrics-output').innerHTML = `
-        <strong>${profile}</strong><br><br>
-        ${message}<br><br>
-        <span style="color: var(--text-dark); font-size: 0.85rem;">Diagnostic Score: ${quizState.totalScore}/${maxScore}</span>
-    `;
-}
-
-function resetAudit() {
-    document.getElementById('result-window').classList.add('hidden');
-    document.getElementById('quiz-window').classList.add('hidden');
-    document.getElementById('role-select-window').classList.remove('hidden');
-    quizState = { role: null, index: 0, totalScore: 0 };
-}
-
-// ==========================================================================
-// ANTI-INSPECT SECURITY CONTROLLER LAYER (Isolated Perimeter Shield)
-// ==========================================================================
+/*==========================================================
+  PRIME SPIRIT MENTORS — APPLICATION v16.0
+  Modular architecture | Analytics | Blog System | Quiz
+==========================================================*/
 (function () {
-    document.addEventListener('contextmenu', (e) => e.preventDefault());
-    document.addEventListener('keydown', (e) => {
-        if (
-            e.key === 'F12' ||
-            ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.key === 'J' || e.key === 'j')) ||
-            ((e.ctrlKey || e.metaKey) && (e.key === 'U' || e.key === 'u' || e.key === 'S' || e.key === 's'))
-        ) {
-            e.preventDefault();
-            return false;
-        }
+  'use strict';
+
+  /* ── 1. CONFIG ── */
+  const CONFIG = {
+    blogPostsPerPage: 6,
+    quizQuestions: 10,
+    scrollTrackThresholds: [25, 50, 75, 100],
+    debounceMs: 100,
+  };
+
+  /* ── 2. BLOG DATA ── */
+  const BLOG_POSTS = [
+    {
+      id: 'electrostatics-01',
+      slug: 'mastering-electrostatics-coulombs-law-gauss-theorem',
+      title: 'Mastering Electrostatics: From Coulomb\'s Law to Gauss\'s Theorem',
+      excerpt: 'A systematic breakdown of electrostatics for NEET and JEE aspirants — covering Coulomb\'s Law, electric field lines, Gauss\'s theorem applications, and common problem-solving traps.',
+      content: `<h2 id="coulombs-law">Coulomb\'s Law: The Foundation</h2>
+<p>Every electrostatics problem begins with Coulomb\'s Law. The force between two point charges is directly proportional to the product of their charges and inversely proportional to the square of the distance between them. Written mathematically: <strong>F = kq₁q₂/r²</strong>. But understanding the formula is only the start — what matters is recognizing when superposition applies and how to decompose forces into components.</p>
+<p>A common mistake students make in competitive exams is forgetting that Coulomb\'s Law applies to point charges. When you\'re given a continuous charge distribution, you need integration — and the limits matter. For NEET, focus on conceptual MCQ applications. For JEE, be prepared for multi-step numerical problems involving symmetric charge configurations.</p>
+<h2 id="gauss-theorem">Gauss\'s Theorem: Elegant Problem-Solving</h2>
+<p>Gauss\'s theorem relates the electric flux through a closed surface to the charge enclosed: <strong>∮E·dA = q_enc/ε₀</strong>. Its real power lies in exploiting symmetry. Spherical, cylindrical, and planar symmetries each yield clean results — but only if you choose the correct Gaussian surface.</p>
+<p>For JEE Mains, expect problems that test whether you can identify the symmetry and pick the right surface. For NEET, the questions tend to be more conceptual — understanding that flux depends only on enclosed charge, not on the shape of the surface outside. Practice with at least 20 varied problems from each symmetry type before your exam.</p>
+<h2 id="common-traps">Common Exam Traps</h2>
+<p>First: electric field inside a conductor is zero, but that does not mean there are no charges — charges redistribute to the surface. Second: the direction of the electric field is always from positive to negative, but for a system of charges, use vector addition. Third: in Gauss\'s theorem problems, charges outside the Gaussian surface contribute zero net flux — this is tested in nearly every JEE cycle.</p>`,
+      category: 'physics',
+      examLabels: ['NEET', 'JEE'],
+      difficulty: 'intermediate',
+      series: 'Electrostatics Mastery',
+      seriesIndex: 1,
+      seriesTotal: 3,
+      featured: true,
+      trending: true,
+      author: 'Abhinav Kashyap',
+      date: '2025-11-15',
+      readTime: 8,
+      tags: ['electrostatics', 'coulombs-law', 'gauss-theorem', 'class-12-physics']
+    },
+    {
+      id: 'organic-chem-01',
+      slug: 'organic-chemistry-named-reactions-neet-guide',
+      title: 'Organic Chemistry Named Reactions: The Complete NEET Guide',
+      excerpt: 'Stop memorizing blindly. Learn the logic behind every named reaction NEET tests — from Aldol Condensation to Cannizzaro — using synthesis chain mapping.',
+      content: `<h2 id="why-named-reactions">Why Named Reactions Matter in NEET</h2>
+<p>Organic chemistry named reactions appear in almost every NEET paper. But the mistake most students make is treating them as isolated facts to memorize. Every named reaction follows a mechanistic logic — once you understand the mechanism, you can predict products even for reactions you haven\'t seen before.</p>
+<p>Start by grouping reactions by type: substitution, elimination, addition, and rearrangement. Within each group, identify the common pattern. For instance, both <strong>Aldol Condensation</strong> and <strong>Cannizzaro Reaction</strong> involve carbonyl compounds, but Aldol requires an alpha-hydrogen while Cannizzaro occurs in its absence. This single distinction is tested repeatedly.</p>
+<h2 id="chain-mapping">Synthesis Chain Mapping</h2>
+<p>At Prime Spirit Mentors, we use a technique called synthesis chain mapping. Instead of memorizing individual reactions, you build a visual map connecting reactants to products through intermediate steps. This is especially effective for multi-step synthesis problems common in NEET.</p>
+<p>Draw your starting compound on the left. For each possible reaction, branch out to the product. Label each arrow with the reagent and condition. Over time, you\'ll see convergence points — molecules that can be reached from multiple starting materials. These convergence points are your high-yield revision targets.</p>
+<h2 id="key-reactions">Must-Know Reactions for NEET 2026</h2>
+<p>Prioritize these: <strong>Markovnikov\'s addition</strong>, <strong>Saytzeff elimination</strong>, <strong>Hoffmann bromamide degradation</strong>, <strong>Gattermann-Koch reaction</strong>, and <strong>Reimer-Tiemann reaction</strong>. Each has appeared in NEET at least twice in the last five years. Practice writing mechanisms by hand — don\'t just read them from a textbook.</p>`,
+      category: 'chemistry',
+      examLabels: ['NEET'],
+      difficulty: 'advanced',
+      series: null,
+      seriesIndex: null,
+      seriesTotal: null,
+      featured: false,
+      trending: true,
+      author: 'Abhinav Kashyap',
+      date: '2025-10-28',
+      readTime: 9,
+      tags: ['organic-chemistry', 'named-reactions', 'neet', 'synthesis']
+    },
+    {
+      id: 'integration-01',
+      slug: 'integration-techniques-jee-aspirants',
+      title: 'Integration Techniques Every JEE Aspirant Must Know',
+      excerpt: 'From substitution to partial fractions, here\'s a systematic approach to integration that actually works under exam pressure.',
+      content: `<h2 id="substitution">Substitution: Your First Instinct</h2>
+<p>When you see an integral, your first move should be substitution. Look for a function and its derivative appearing together. The classic example: <strong>∫2x·e^(x²)dx</strong> — substitute u = x², and the integral simplifies to ∫e^u du. But JEE often hides the substitution inside more complex expressions.</p>
+<p>A useful trick: if the integrand contains √(a² - x²), try x = a·sinθ. For √(a² + x²), try x = a·tanθ. For √(x² - a²), try x = a·secθ. These trigonometric substitutions convert irrational expressions into rational trigonometric forms that are easier to integrate.</p>
+<h2 id="partial-fractions">Partial Fractions for Rational Functions</h2>
+<p>When you have a rational function P(x)/Q(x) where the degree of P is less than the degree of Q, decompose into partial fractions. The key step is factoring Q(x) completely. For JEE Mains, quadratic factors with no real roots require the form <strong>(Ax + B)/(x² + bx + c)</strong> rather than simple A/(x + α).</p>
+<p>Practice this: ∫(3x + 5)/((x + 1)(x + 2))dx. Decompose into A/(x+1) + B/(x+2), solve for A and B by substituting convenient values of x, then integrate term by term. Under time pressure, this method is faster than any other approach for rational integrands.</p>
+<h2 id="practice-strategy">Practice Strategy</h2>
+<p>Do not attempt to learn all techniques simultaneously. Week 1: master substitution. Week 2: master integration by parts (LIATE rule). Week 3: partial fractions. Week 4: mixed practice from previous JEE papers. By exam day, the pattern recognition will be automatic.</p>`,
+      category: 'maths',
+      examLabels: ['JEE'],
+      difficulty: 'intermediate',
+      series: 'Calculus for JEE',
+      seriesIndex: 2,
+      seriesTotal: 4,
+      featured: false,
+      trending: false,
+      author: 'Abhinav Kashyap',
+      date: '2025-12-01',
+      readTime: 7,
+      tags: ['integration', 'calculus', 'jee-mains', 'class-12-maths']
+    },
+    {
+      id: 'ncert-bio-01',
+      slug: 'how-to-read-ncert-biology-neet',
+      title: 'How to Read NCERT Biology for Maximum NEET Score',
+      excerpt: 'NCERT is the backbone of NEET Biology. But most students read it wrong. Here\'s the line-by-line strategy that top scorers use.',
+      content: `<h2 id="line-by-line">Why Line-by-Line Reading Matters</h2>
+<p>NEET Biology questions are increasingly drawn from specific NCERT sentences — sometimes from footnotes, diagrams, or summary tables that students skip. In the last three NEET exams, over 85% of Biology questions could be answered directly from NCERT content. This means your NCERT reading strategy is more important than any reference book.</p>
+<p>Read every chapter at least three times. First reading: get the big picture. Second reading: highlight key terms, definitions, and examples. Third reading: focus on tables, diagrams, and their labels. Pay special attention to lines that contain numerical data (chromosome counts, gestation periods, percentage values) — these are favourite question sources.</p>
+<h2 id="diagrams">Diagrams Are Non-Negotiable</h2>
+<p>NEET regularly asks questions based on diagram labels. The human heart, nephron structure, DNA replication fork, and floral diagrams are tested almost every year. Don\'t just look at diagrams — redraw them from memory and label every part. If you can reconstruct a diagram without looking at the book, you know the chapter.</p>
+<h2 id="revision-cycle">The 3-2-1 Revision Cycle</h2>
+<p>After completing each chapter, revise it after 3 days, then after 2 weeks, then after 1 month. This spaced repetition approach, combined with the line-by-line method, creates deep retention. At Prime Spirit, we build this cycle into every student\'s personalized study plan based on their psychometric profile and weak-area mapping.</p>`,
+      category: 'biology',
+      examLabels: ['NEET'],
+      difficulty: 'beginner',
+      series: 'NEET Biology Strategy',
+      seriesIndex: 1,
+      seriesTotal: 2,
+      featured: false,
+      trending: true,
+      author: 'Abhinav Kashyap',
+      date: '2025-09-20',
+      readTime: 6,
+      tags: ['ncert', 'biology', 'neet', 'study-strategy', 'revision']
+    },
+    {
+      id: 'econ-ied-01',
+      slug: 'indian-economic-development-cuet-guide',
+      title: 'Understanding Indian Economic Development: A CUET Perspective',
+      excerpt: 'A structured approach to Indian Economic Development for CUET aspirants — covering Five Year Plans, economic reforms, and policy analysis.',
+      content: `<h2 id="five-year-plans">Five Year Plans: Structure and Goals</h2>
+<p>Indian Economic Development is a high-scoring section in CUET if you approach it systematically. Start with the Five Year Plans — understand not just the dates and targets, but the economic philosophy behind each. The First Five Year Plan (1951-56) was based on the Harrod-Domar model and prioritized agriculture. The Second Plan shifted to heavy industry under the Mahalanobis model.</p>
+<p>For CUET, focus on the transition points: when did India shift from import substitution to liberalization? What triggered the 1991 reforms? Understanding the <strong>why</strong> behind policy changes helps you answer analytical MCQs that pure memorization cannot.</p>
+<h2 id="key-indicators">Key Economic Indicators</h2>
+<p>Know the current values and trends for: GDP growth rate, HDI ranking, poverty line methodology (Tendulkar vs Rangarajan), unemployment types (disguised, seasonal, structural), and sectoral contribution to GDP. CUET often presents data in tables or graphs and asks you to interpret — so practice reading economic data, not just memorizing it.</p>
+<h2 id="exam-strategy">Exam Strategy</h2>
+<p>Allocate 40% of your study time to Indian Economic Development and 60% to Microeconomics and Macroeconomics combined. For IED, focus on conceptual clarity over rote facts. For Micro and Macro, practice numerical problems — elasticity calculations, national income aggregates, and multiplier effects appear consistently in CUET papers.</p>`,
+      category: 'economics',
+      examLabels: ['CUET'],
+      difficulty: 'beginner',
+      series: null,
+      seriesIndex: null,
+      seriesTotal: null,
+      featured: false,
+      trending: false,
+      author: 'Abhinav Kashyap',
+      date: '2025-08-10',
+      readTime: 7,
+      tags: ['economics', 'indian-economic-development', 'cuet', 'five-year-plans']
+    },
+    {
+      id: 'thermo-01',
+      slug: 'thermodynamics-laws-explained',
+      title: 'Thermodynamics: Zeroth to Third Law in 20 Minutes',
+      excerpt: 'A rapid, concept-first revision of all four laws of thermodynamics for NEET and JEE — with exam-focused problem patterns and common mistakes.',
+      content: `<h2 id="zeroth-law">The Zeroth Law: Thermal Equilibrium</h2>
+<p>If system A is in thermal equilibrium with system C, and system B is also in thermal equilibrium with system C, then A and B are in thermal equilibrium with each other. This law establishes temperature as a measurable, transitive property. For NEET, this is usually a one-mark conceptual question — know the definition precisely.</p>
+<h2 id="first-law">The First Law: Energy Conservation</h2>
+<p><strong>ΔU = Q - W</strong>. The change in internal energy equals heat added to the system minus work done by the system. JEE problems often test sign conventions: is work done on the system or by the system? Is heat absorbed or released? Draw a diagram for every problem — it prevents sign errors.</p>
+<p>For adiabatic processes (Q = 0), the equation simplifies to ΔU = -W. For isothermal processes (ΔU = 0 for ideal gases), Q = W. Memorize these special cases — they appear in nearly every exam.</p>
+<h2 id="second-law">The Second Law: Entropy</h2>
+<p>Entropy of an isolated system never decreases: <strong>ΔS ≥ 0</strong>. This is the directionality law — it tells you which processes are spontaneous. For JEE, Carnot engine efficiency (η = 1 - T₂/T₁) is a high-frequency topic. For NEET, focus on the conceptual statement and its implications for reversible vs irreversible processes.</p>
+<h2 id="third-law">The Third Law</h2>
+<p>As temperature approaches absolute zero, entropy approaches a minimum (zero for a perfect crystal). This law is less frequently tested but when it appears, the question is usually: "Can absolute zero be reached?" The answer is no — and understanding why is the key concept.</p>`,
+      category: 'physics',
+      examLabels: ['NEET', 'JEE'],
+      difficulty: 'intermediate',
+      series: 'Electrostatics Mastery',
+      seriesIndex: 2,
+      seriesTotal: 3,
+      featured: false,
+      trending: false,
+      author: 'Abhinav Kashyap',
+      date: '2025-12-10',
+      readTime: 7,
+      tags: ['thermodynamics', 'physics', 'neet', 'jee', 'laws-of-thermodynamics']
+    }
+  ];
+
+  /* ── 3. QUIZ DATA ── */
+  const QUIZ_QUESTIONS = {
+    student: [
+      { q: 'When facing a difficult numerical problem in an exam, what do you typically do?', opts: ['Skip it immediately', 'Try for a few seconds then skip', 'Attempt systematically with what I know', 'Panic and move on'] },
+      { q: 'How do you handle study sessions when you\'re not in the mood?', opts: ['I skip studying entirely', 'I study but very distracted', 'I switch to lighter revision', 'I push through with a plan'] },
+      { q: 'After a mock test, what\'s your first reaction?', opts: ['Check only the total score', 'Feel anxious about mistakes', 'Analyze wrong answers by topic', 'Compare with peers'] },
+      { q: 'How organized is your study material?', opts: ['Very scattered', 'Somewhat organized', 'Structured by subject and chapter', 'I rely on memory only'] },
+      { q: 'When a teacher explains something you don\'t understand, you:', opts: ['Stay quiet and move on', 'Google it later', 'Ask immediately for clarification', 'Note it down and ask after class'] },
+      { q: 'How many hours of focused study can you do in a day?', opts: ['Less than 2', '2-4 hours', '4-6 hours', 'More than 6'] },
+      { q: 'Do you have a fixed daily study routine?', opts: ['No routine at all', 'Loose routine, often broken', 'Fairly consistent routine', 'Strict, timed schedule'] },
+      { q: 'How do you handle exam anxiety?', opts: ['It severely affects my performance', 'It slows me down a bit', 'I manage with breathing techniques', 'I rarely feel anxious'] },
+      { q: 'When studying, how often do you take breaks?', opts: ['Rarely — I study until exhausted', 'When I feel tired', 'Every 45-60 minutes', 'I use a timer/Pomodoro'] },
+      { q: 'What best describes your current preparation level?', opts: ['Just starting', 'Covered some syllabus', 'Mostly through, need revision', 'Confident and doing mock tests'] }
+    ],
+    parent: [
+      { q: 'How involved are you in your child\'s daily study routine?', opts: ['Not involved at all', 'Occasionally check in', 'Regularly monitor progress', 'Actively plan study schedules'] },
+      { q: 'Does your child discuss academic difficulties with you?', opts: ['Never', 'Rarely', 'Sometimes', 'Openly and regularly'] },
+      { q: 'How does your child react to low test scores?', opts: ['Gives up easily', 'Gets frustrated but tries again', 'Analyzes mistakes constructively', 'Becomes overly anxious'] },
+      { q: 'Does your child have a distraction problem (phone, games, social media)?', opts: ['Severe — major concern', 'Moderate — needs guidance', 'Mild — mostly managed', 'Minimal — very disciplined'] },
+      { q: 'What type of coaching environment works best for your child?', opts: ['Large classroom', 'Online recorded lectures', 'Small group with personal attention', 'One-on-one tutoring'] },
+      { q: 'Has your child ever expressed wanting to quit preparation?', opts: ['Frequently', 'Occasionally during stress', 'Once or twice', 'Never'] },
+      { q: 'How well does your child manage time between school and competitive exam prep?', opts: ['Poorly — always behind', 'Struggles but manages', 'Reasonably well', 'Excellent time management'] },
+      { q: 'Is your child receiving any form of mental health or stress support?', opts: ['No, and it\'s needed', 'No, but seems fine', 'Informal support from family', 'Professional guidance'] },
+      { q: 'How does your child perform in timed test conditions vs practice?', opts: ['Much worse under pressure', 'Slightly worse', 'About the same', 'Performs better under pressure'] },
+      { q: 'What is your primary concern about your child\'s preparation?', opts: ['Academic performance', 'Mental well-being', 'Lack of direction/motivation', 'Finding the right coaching'] }
+    ]
+  };
+
+  const QUIZ_INSIGHTS = {
+    student: [
+      { range: [0, 15], label: 'Foundation Rebuild', emoji: '🛠️', desc: 'Your diagnostic suggests foundational gaps in study habits and exam strategy. A structured mentorship program with consistent tracking can transform your approach within 8 weeks.' },
+      { range: [16, 25], label: 'Strategic Pivot Needed', emoji: '🔄', desc: 'You have awareness but inconsistency. The micro-batch format with real-time error mapping can close the gap between knowing what to do and actually doing it.' },
+      { range: [26, 35], label: 'Optimization Phase', emoji: '📈', desc: 'Strong foundation with room for refinement. Psychometric counseling and targeted doubt-clearing can push you from good to exceptional.' },
+      { range: [36, 40], label: 'Peak Performance Track', emoji: '🏆', desc: 'Excellent self-awareness and discipline. The Elite micro-batch (5 students) with advanced test simulation and error analysis is your ideal track.' }
+    ],
+    parent: [
+      { range: [0, 15], label: 'Intervention Recommended', emoji: '⚠️', desc: 'Your child may benefit from structured mentorship with psychometric support. Early intervention with the right coaching environment can prevent burnout and build sustainable habits.' },
+      { range: [16, 25], label: 'Guided Development', emoji: '🌱', desc: 'Your child shows potential but needs consistent guidance. Micro-batch coaching with personal attention can provide the structure and motivation they need.' },
+      { range: [26, 35], label: 'Targeted Enhancement', emoji: '🎯', desc: 'Good awareness from your side. A personalized coaching plan focusing on specific weak areas and regular progress updates can accelerate improvement.' },
+      { range: [36, 40], label: 'Empowered Learner', emoji: '✨', desc: 'Your child demonstrates strong self-management. Prime Spirit\'s Elite track can provide the academic rigor and competitive edge needed for top percentiles.' }
+    ]
+  };
+
+  /* ── 4. UTILITY FUNCTIONS ── */
+  function $(sel, ctx) { return (ctx || document).querySelector(sel); }
+  function $$(sel, ctx) { return Array.from((ctx || document).querySelectorAll(sel)); }
+  function debounce(fn, ms) { let t; return function (...args) { clearTimeout(t); t = setTimeout(() => fn.apply(this, args), ms); }; }
+  function formatDate(d) { return new Date(d).toLocaleDateString('en-IN', { year: 'numeric', month: 'short', day: 'numeric' }); }
+
+  /* ── 5. ANALYTICS ── */
+  function trackEvent(name, params) {
+    if (typeof gtag === 'function') gtag('event', name, params || {});
+  }
+  function initTracking() {
+    // CTA clicks
+    document.addEventListener('click', function (e) {
+      var el = e.target.closest('[data-track]');
+      if (el) trackEvent(el.dataset.track, { event_category: 'cta', event_label: el.textContent.trim().substring(0, 60) });
     });
+    // Scroll depth
+    var tracked = {};
+    window.addEventListener('scroll', debounce(function () {
+      var pct = Math.round((window.scrollY + window.innerHeight) / document.documentElement.scrollHeight * 100);
+      CONFIG.scrollTrackThresholds.forEach(function (t) { if (pct >= t && !tracked[t]) { tracked[t] = true; trackEvent('scroll_depth', { percent: t }); } });
+    }, 200));
+  }
+
+  /* ── 6. NAVIGATION ── */
+  function initNav() {
+    var toggle = ('#menuToggle');
+    var nav = $('#mainNav');
+    if (!toggle || !nav) return;
+    toggle.addEventListener('click', function () {
+      var open = nav.classList.toggle('active');
+      toggle.setAttribute('aria-expanded', open);
+      toggle.querySelector('i').className = open ? 'fas fa-times' : 'fas fa-bars';
+    });
+    // Close on link click (mobile)
+    $$$$('a', nav).forEach(function (a) { a.addEventListener('click', function () { nav.classList.remove('active'); toggle.setAttribute('aria-expanded', 'false'); toggle.querySelector('i').className = 'fas fa-bars'; }); });
+    // Close on outside click
+    document.addEventListener('click', function (e) { if (!nav.contains(e.target) && !toggle.contains(e.target) && nav.classList.contains('active')) { nav.classList.remove('active'); toggle.setAttribute('aria-expanded', 'false'); toggle.querySelector('i').className = 'fas fa-bars'; } });
+  }
+
+  /* ── 7. POONAM DROPDOWN ── */
+  function initPoonamDropdown() {
+    var trigger = $('#poonamNavTrigger');
+    var dd = $('#poonamDropdown');
+    var learn = $('#poonamLearnMore');
+    if (!trigger || !dd) return;
+    trigger.addEventListener('click', function (e) {
+      e.stopPropagation();
+      if (window.innerWidth <= 1180) { var target = $('#poonam-foundation'); if (target) target.scrollIntoView({ behavior: 'smooth' }); return; }
+      dd.classList.toggle('open');
+      trigger.classList.toggle('active');
+      trigger.setAttribute('aria-expanded', dd.classList.contains('open'));
+    });
+    document.addEventListener('click', function (e) { if (!dd.contains(e.target) && !trigger.contains(e.target)) { dd.classList.remove('open'); trigger.classList.remove('active'); trigger.setAttribute('aria-expanded', 'false'); } });
+    if (learn) learn.addEventListener('click', function () { dd.classList.remove('open'); trigger.classList.remove('active'); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && dd.classList.contains('open')) { dd.classList.remove('open'); trigger.classList.remove('active'); trigger.focus(); } });
+  }
+
+  /* ── 8. SEARCH ── */
+  function initSearch() {
+    var toggle = $('#searchToggle');
+    var overlay = $('#searchOverlay');
+    var input = $('#searchInput');
+    var results = $('#searchResults');
+    var closeBtn = $('#searchClose');
+    if (!toggle || !overlay) return;
+
+    var searchIndex = [
+      { title: 'Elite Micro-Batch', section: 'Programs', href: '#courses', text: 'max 5 students personalized coaching neet jee iat' },
+      { title: 'Advanced Cohort', section: 'Programs', href: '#courses', text: 'max 10 students boards cuet coaching' },
+      { title: 'Poonam Foundation', section: 'Programs', href: '#poonam-foundation', text: 'affordable class 6 7 8 maths science 999 rupees' },
+      { title: 'NEET UG Notes', section: 'Notes Vault', href: '#notes-vault', text: 'neet biology physics chemistry notes download' },
+      { title: 'JEE Mains Notes', section: 'Notes Vault', href: '#notes-vault', text: 'jee maths physics chemistry notes download' },
+      { title: 'FAQ', section: 'Info', href: '#faq', text: 'frequently asked questions batch size fee structure refund' },
+      { title: 'Student Reviews', section: 'Info', href: '#testimonials', text: 'testimonials reviews ratings students parents' },
+      { title: 'Book Free Consultation', section: 'Contact', href: '#contact', text: 'enquiry form book demo consultation phone whatsapp' },
+      { title: 'PrimeScore Calculator', section: 'Tools', href: 'primescore/', text: 'score calculator rank predictor percentile' },
+      { title: 'PrimeTestQ Assessment', section: 'Tools', href: 'primetestq/index.html', text: 'free test assessment quiz practice questions' },
+      { title: 'NEET Coaching Bengaluru', section: 'City Pages', href: 'city/neet-bengaluru.html', text: 'neet coaching bengaluru bangalore karnataka medical' },
+      { title: 'JEE Coaching Bengaluru', section: 'City Pages', href: 'city/jee-bengaluru.html', text: 'jee coaching bengaluru bangalore karnataka engineering' },
+      { title: 'NEET Coaching Hyderabad', section: 'City Pages', href: 'city/neet-hyderabad.html', text: 'neet coaching hyderabad telangana medical' },
+      { title: 'CUET Coaching Hyderabad', section: 'City Pages', href: 'city/cuet-hyderabad.html', text: 'cuet coaching hyderabad telangana university entrance' },
+    ];
+
+    BLOG_POSTS.forEach(function (p) {
+      searchIndex.push({ title: p.title, section: 'Blog', href: '#blog-hub', text: p.tags.join(' ') + ' ' + p.category + ' ' + p.examLabels.join(' ') + ' ' + p.excerpt.toLowerCase() });
+    });
+
+    function doSearch(q) {
+      if (!q || q.length < 2) { results.innerHTML = ''; return; }
+      var lq = q.toLowerCase();
+      var matches = searchIndex.filter(function (item) { return (item.title.toLowerCase().includes(lq) || item.text.includes(lq)); }).slice(0, 8);
+      if (!matches.length) { results.innerHTML = '<div class="search-no-results">No results found for "' + q + '"</div>'; return; }
+      results.innerHTML = matches.map(function (m) {
+        return '<a class="search-result-item" href="' + m.href + '"><span class="search-result-section">' + m.section + '</span><strong>' + m.title + '</strong></a>';
+      }).join('');
+    }
+
+    toggle.addEventListener('click', function () {
+      overlay.hidden = false;
+      input.focus();
+      trackEvent('search_open');
+    });
+    closeBtn.addEventListener('click', function () { overlay.hidden = true; input.value = ''; results.innerHTML = ''; });
+    input.addEventListener('input', debounce(function () { doSearch(input.value); }, CONFIG.debounceMs));
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !overlay.hidden) { overlay.hidden = true; } });
+    overlay.addEventListener('click', function (e) { if (e.target === overlay) { overlay.hidden = true; } });
+    results.addEventListener('click', function (e) { if (e.target.closest('.search-result-item')) { overlay.hidden = true; trackEvent('search_click', { query: input.value }); } });
+  }
+
+  /* ── 9. SCROLL PROGRESS ── */
+  function initScrollProgress() {
+    var bar = $('#scrollProgress');
+    var btt = $('#backToTop');
+    if (!bar) return;
+    window.addEventListener('scroll', debounce(function () {
+      var pct = Math.round((window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100);
+      bar.style.width = pct + '%';
+      bar.setAttribute('aria-valuenow', pct);
+      if (btt) btt.hidden = window.scrollY < 400;
+    }, 50));
+    if (btt) btt.addEventListener('click', function () { window.scrollTo({ top: 0, behavior: 'smooth' }); });
+  }
+
+  /* ── 10. BLOG SYSTEM ── */
+  var blogState = { filter: 'all', page: 1, search: '', view: 'grid', currentPost: null, bookmarks: JSON.parse(localStorage.getItem('ps_bookmarks') || '[]'), comments: JSON.parse(localStorage.getItem('ps_comments') || '{}') };
+
+  function getFilteredPosts() {
+    var posts = BLOG_POSTS.slice();
+    if (blogState.filter !== 'all') posts = posts.filter(function (p) { return p.category === blogState.filter; });
+    if (blogState.search) { var sq = blogState.search.toLowerCase(); posts = posts.filter(function (p) { return p.title.toLowerCase().includes(sq) || p.excerpt.toLowerCase().includes(sq) || p.tags.some(function (t) { return t.includes(sq); }); }); }
+    return posts;
+  }
+
+  function renderBlogGrid() {
+    var container = $('#blogPostsContainer');
+    var pag = $('#blogPagination');
+    var featured = $('#featuredArticle');
+    var trending = $('#trendingArticles');
+    if (!container) return;
+
+    var posts = getFilteredPosts();
+    var perPage = CONFIG.blogPostsPerPage;
+    var paged = posts.slice((blogState.page - 1) * perPage, blogState.page * perPage);
+
+    // Featured
+    if (featured) {
+      var fp = blogState.filter === 'all' ? BLOG_POSTS.find(function (p) { return p.featured; }) : null;
+      if (fp && !blogState.search) {
+        featured.innerHTML = '<div class="featured-card" data-id="' + fp.id + '"><span class="featured-tag">Featured</span><div class="blog-card-meta">' + renderLabels(fp) + '</div><h3>' + fp.title + '</h3><p>' + fp.excerpt + '</p></div>';
+        featured.style.display = '';
+      } else { featured.style.display = 'none'; }
+    }
+
+    // Trending
+    if (trending && blogState.filter === 'all' && !blogState.search) {
+      var tp = BLOG_POSTS.filter(function (p) { return p.trending; }).slice(0, 4);
+      trending.innerHTML = '<h3><i class="fas fa-fire" style="color:#ff6b6b;margin-right:6px"></i> Trending</h3><div class="trending-list">' + tp.map(function (p, i) { return '<div class="trending-chip" data-id="' + p.id + '"><span class="trending-rank">#' + (i + 1) + '</span>' + p.title + '</div>'; }).join('') + '</div>';
+      trending.style.display = '';
+    } else if (trending) { trending.style.display = 'none'; }
+
+    // Grid
+    container.innerHTML = paged.map(function (p) {
+      var isBkm = blogState.bookmarks.includes(p.id);
+      return '<div class="course-card blog-card animate-in" data-id="' + p.id + '"><div class="blog-card-meta">' + renderLabels(p) + '</div><h3 class="blog-card-title">' + p.title + '</h3><p>' + p.excerpt.substring(0, 120) + '...</p><div style="display:flex;align-items:center;gap:12px;margin-top:auto"><span class="blog-card-date">' + formatDate(p.date) + '</span><span class="blog-card-readtime">' + p.readTime + ' min</span><button class="blog-card-bookmark ' + (isBkm ? 'bookmarked' : '') + '" data-bookmark="' + p.id + '" aria-label="Bookmark"><i class="' + (isBkm ? 'fas' : 'far') + ' fa-bookmark"></i></button></div></div>';
+    }).join('');
+
+    // Pagination
+    if (pag) {
+      var totalPages = Math.ceil(posts.length / perPage);
+      if (totalPages <= 1) { pag.innerHTML = ''; return; }
+      var html = '<button class="page-btn" data-page="' + (blogState.page - 1) + '"' + (blogState.page <= 1 ? ' disabled' : '') + ' aria-label="Previous page">&laquo;</button>';
+      for (var i = 1; i <= totalPages; i++) html += '<button class="page-btn' + (i === blogState.page ? ' active' : '') + '" data-page="' + i + '">' + i + '</button>';
+      html += '<button class="page-btn" data-page="' + (blogState.page + 1) + '"' + (blogState.page >= totalPages ? ' disabled' : '') + ' aria-label="Next page">&raquo;</button>';
+      pag.innerHTML = html;
+    }
+
+    initAnimateIn();
+  }
+
+  function renderLabels(p) {
+    var h = '<span class="blog-label blog-label-category">' + p.category + '</span>';
+    h += '<span class="blog-label blog-label-difficulty" data-diff="' + p.difficulty + '">' + p.difficulty + '</span>';
+    p.examLabels.forEach(function (e) { h += '<span class="blog-label blog-label-exam">' + e + '</span>'; });
+    return h;
+  }
+
+  function showPost(id) {
+    var post = BLOG_POSTS.find(function (p) { return p.id === id; });
+    if (!post) return;
+    blogState.currentPost = post;
+    blogState.view = 'detail';
+    var grid = $('#blogPostsContainer');
+    var detail = $('#blogPostDetail');
+    var featured = $('#featuredArticle');
+    var trending = $('#trendingArticles');
+    var pag = $('#blogPagination');
+    var filters = $('.blog-filters');
+    var searchWrap = $('.blog-search-wrap');
+    if (grid) grid.style.display = 'none';
+    if (featured) featured.style.display = 'none';
+    if (trending) trending.style.display = 'none';
+    if (pag) pag.style.display = 'none';
+    if (filters) filters.style.display = 'none';
+    if (searchWrap) searchWrap.style.display = 'none';
+    if (detail) detail.hidden = false;
+
+    // Header
+    var header = $('#postHeader');
+    if (header) {
+      var isBkm = blogState.bookmarks.includes(post.id);
+      header.innerHTML = '<div class="blog-card-meta">' + renderLabels(post) + '<span class="blog-card-date">' + formatDate(post.date) + '</span><span class="blog-card-readtime">' + post.readTime + ' min read</span></div><h1>' + post.title + '</h1><p class="post-excerpt">' + post.excerpt + '</p>';
+    }
+
+    // Body
+    var body = $('#postBody');
+    if (body) body.innerHTML = post.content;
+
+    // TOC
+    generateTOC();
+
+    // Bookmark/Share buttons
+    var bBtn = $('#bookmarkBtn');
+    if (bBtn) { var bkm = blogState.bookmarks.includes(post.id); bBtn.classList.toggle('bookmarked', bkm); bBtn.querySelector('span').textContent = bkm ? 'Bookmarked' : 'Bookmark'; bBtn.querySelector('i').className = bkm ? 'fas fa-bookmark' : 'far fa-bookmark'; }
+
+    // Series nav
+    renderSeriesNav(post);
+
+    // Prev/Next
+    renderPrevNext(post);
+
+    // Related
+    renderRelated(post);
+
+    // Comments
+    renderComments(post.id);
+
+    // Reading progress
+    initReadingProgress();
+
+    trackEvent('blog_post_view', { post_id: post.id, post_title: post.title, post_category: post.category });
+    window.scrollTo({ top: detail.offsetTop - 80, behavior: 'smooth' });
+  }
+
+  function hidePost() {
+    blogState.view = 'grid';
+    blogState.currentPost = null;
+    var grid = $('#blogPostsContainer');
+    var detail = $('#blogPostDetail');
+    var filters = $('.blog-filters');
+    var searchWrap = $('.blog-search-wrap');
+    if (grid) grid.style.display = '';
+    if (detail) detail.hidden = true;
+    if (filters) filters.style.display = '';
+    if (searchWrap) searchWrap.style.display = '';
+    renderBlogGrid();
+  }
+
+  function generateTOC() {
+    var body = $('#postBody');
+    var tocList = $('#tocList');
+    var tocWrap = $('#postToc');
+    if (!body || !tocList) return;
+    var headings = $$('h2[id], h3[id]', body);
+    if (headings.length < 2) { if (tocWrap) tocWrap.style.display = 'none'; return; }
+    if (tocWrap) tocWrap.style.display = '';
+    tocList.innerHTML = headings.map(function (h) { return '<li><a href="#' + h.id + '">' + h.textContent + '</a></li>'; }).join('');
+    // Scroll spy
+    var observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        var link = tocList.querySelector('a[href="#' + entry.target.id + '"]');
+        if (link) link.classList.toggle('active', entry.isIntersecting);
+      });
+    }, { rootMargin: '-80px 0px -70% 0px' });
+    headings.forEach(function (h) { observer.observe(h); });
+  }
+
+  function initReadingProgress() {
+    var bar = ('#readingProgressBar');
+    var detail = $('#blogPostDetail');
+    if (!bar || !detail) return;
+    var handler = debounce(function () {
+      var rect = detail.getBoundingClientRect();
+      var total = detail.offsetHeight - window.innerHeight;
+      var scrolled = -rect.top + 80;
+      var pct = Math.max(0, Math.min(100, Math.round((scrolled / total) * 100)));
+      bar.style.width = pct + '%';
+    }, 30);
+    window.addEventListener('scroll', handler);
+    // Store for cleanup
+    blogState._progressHandler = handler;
+  }
+
+  function renderSeriesNav(post) {
+    var el = $('#postSeriesNav');
+    if (!el || !post.series) { if (el) el.style.display = 'none'; return; }
+    var seriesPosts = BLOG_POSTS.filter(function (p) { return p.series === post.series; }).sort(function (a, b) { return a.seriesIndex - b.seriesIndex; });
+    if (seriesPosts.length < 2) { el.style.display = 'none'; return; }
+    el.style.display = '';
+    el.innerHTML = '<h4>Series: ' + post.series + '</h4><div class="series-list">' + seriesPosts.map(function (p) {
+      if (p.id === post.id) return '<div class="series-item current">' + p.seriesIndex + '. ' + p.title + ' (current)</div>';
+      return '<div class="series-item"><a href="#" data-id="' + p.id + '">' + p.seriesIndex + '. ' + p.title + '</a></div>';
+    }).join('') + '</div>';
+  }
+
+  function renderPrevNext(post) {
+    var el = $('#postPrevNext');
+    if (!el) return;
+    var sorted = BLOG_POSTS.slice().sort(function (a, b) { return new Date(b.date) - new Date(a.date); });
+    var idx = sorted.findIndex(function (p) { return p.id === post.id; });
+    var prev = sorted[idx + 1];
+    var next = sorted[idx - 1];
+    el.innerHTML = (prev ? '<a href="#" data-id="' + prev.id + '"><span class="post-nav-label">← Previous</span><span class="post-nav-title">' + prev.title + '</span></a>' : '<div></div>') + (next ? '<a href="#" data-id="' + next.id + '" class="post-nav-next"><span class="post-nav-label">Next →</span><span class="post-nav-title">' + next.title + '</span></a>' : '<div></div>');
+  }
+
+  function renderRelated(post) {
+    var grid = $('#relatedGrid');
+    if (!grid) return;
+    var related = BLOG_POSTS.filter(function (p) { return p.id !== post.id && (p.category === post.category || p.examLabels.some(function (e) { return post.examLabels.includes(e); })); }).slice(0, 3);
+    grid.innerHTML = related.map(function (p) {
+      return '<div class="course-card blog-card" data-id="' + p.id + '" style="padding:20px"><div class="blog-card-meta">' + renderLabels(p) + '</div><h3 style="font-size:0.95rem">' + p.title + '</h3><span class="blog-card-date">' + formatDate(p.date) + '</span></div>';
+    }).join('');
+  }
+
+  function renderComments(postId) {
+    var container = $('#commentsContainer');
+    if (!container) return;
+    var comments = blogState.comments[postId] || [];
+    container.innerHTML = comments.length ? comments.map(function (c) {
+      return '<div class="comment-item"><div class="comment-author">' + c.author + '</div><div class="comment-text">' + c.text + '</div><div class="comment-time">' + c.time + '</div></div>';
+    }).join('') : '<p style="color:var(--text-muted);font-size:0.9rem">No comments yet. Be the first to share your thoughts.</p>';
+  }
+
+  function initBlog() {
+    var container = $('#blogPostsContainer');
+    var pag = $('#blogPagination');
+    var featured = $('#featuredArticle');
+    var trending = $('#trendingArticles');
+    if (!container) return;
+
+    // Filters
+    $$$$('.filter-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        $$('.filter-btn').forEach(function (b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+        blogState.filter = btn.dataset.filter;
+        blogState.page = 1;
+        renderBlogGrid();
+        trackEvent('blog_filter', { filter: blogState.filter });
+      });
+    });
+
+    // Blog search
+    var searchInput = ('#blogSearchInput');
+    if (searchInput) searchInput.addEventListener('input', debounce(function () { blogState.search = searchInput.value; blogState.page = 1; renderBlogGrid(); }, CONFIG.debounceMs));
+
+    // Card clicks (delegation)
+    document.addEventListener('click', function (e) {
+      var card = e.target.closest('.blog-card[data-id], .featured-card[data-id], .trending-chip[data-id]');
+      if (card && !e.target.closest('.blog-card-bookmark')) { showPost(card.dataset.id); return; }
+      var relatedCard = e.target.closest('.related-grid .blog-card[data-id]');
+      if (relatedCard) { showPost(relatedCard.dataset.id); return; }
+      var seriesLink = e.target.closest('.series-item a[data-id]');
+      if (seriesLink) { e.preventDefault(); showPost(seriesLink.dataset.id); return; }
+      var navLink = e.target.closest('.post-prevnext a[data-id]');
+      if (navLink) { e.preventDefault(); showPost(navLink.dataset.id); return; }
+    });
+
+    // Pagination
+    if (pag) pag.addEventListener('click', function (e) {
+      var btn = e.target.closest('.page-btn');
+      if (btn && !btn.disabled) { blogState.page = parseInt(btn.dataset.page); renderBlogGrid(); window.scrollTo({ top: $('#blog-hub').offsetTop - 80, behavior: 'smooth' }); }
+    });
+
+    // Back button
+    var backBtn = $('#backToBlog');
+    if (backBtn) backBtn.addEventListener('click', hidePost);
+
+    // Bookmark
+    document.addEventListener('click', function (e) {
+      var btn = e.target.closest('[data-bookmark]');
+      if (!btn) return;
+      var id = btn.dataset.bookmark;
+      var idx = blogState.bookmarks.indexOf(id);
+      if (idx > -1) blogState.bookmarks.splice(idx, 1); else blogState.bookmarks.push(id);
+      localStorage.setItem('ps_bookmarks', JSON.stringify(blogState.bookmarks));
+      renderBlogGrid();
+      trackEvent('blog_bookmark', { post_id: id, action: idx > -1 ? 'remove' : 'add' });
+    });
+
+    // Bookmark (detail view)
+    var bookmarkBtn = $('#bookmarkBtn');
+    if (bookmarkBtn) bookmarkBtn.addEventListener('click', function () {
+      if (!blogState.currentPost) return;
+      var id = blogState.currentPost.id;
+      var idx = blogState.bookmarks.indexOf(id);
+      if (idx > -1) blogState.bookmarks.splice(idx, 1); else blogState.bookmarks.push(id);
+      localStorage.setItem('ps_bookmarks', JSON.stringify(blogState.bookmarks));
+      var bkm = blogState.bookmarks.includes(id);
+      bookmarkBtn.classList.toggle('bookmarked', bkm);
+      bookmarkBtn.querySelector('span').textContent = bkm ? 'Bookmarked' : 'Bookmark';
+      bookmarkBtn.querySelector('i').className = bkm ? 'fas fa-bookmark' : 'far fa-bookmark';
+    });
+
+    // Share
+    var shareBtn = $('#shareBtn');
+    if (shareBtn) shareBtn.addEventListener('click', function () {
+      if (!blogState.currentPost) return;
+      var url = window.location.origin + window.location.pathname + '#blog-' + blogState.currentPost.slug;
+      if (navigator.share) { navigator.share({ title: blogState.currentPost.title, text: blogState.currentPost.excerpt, url: url }); }
+      else { navigator.clipboard.writeText(url); shareBtn.querySelector('span').textContent = 'Link Copied!'; setTimeout(function () { shareBtn.querySelector('span').textContent = 'Share'; }, 2000); }
+      trackEvent('blog_share', { post_id: blogState.currentPost.id });
+    });
+
+    // Comments
+    var commentForm = $('#commentForm');
+    if (commentForm) commentForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+      if (!blogState.currentPost) return;
+      var textarea = $('#commentText');
+      var text = textarea.value.trim();
+      if (!text) return;
+      var id = blogState.currentPost.id;
+      if (!blogState.comments[id]) blogState.comments[id] = [];
+      blogState.comments[id].push({ author: 'Guest', text: text, time: new Date().toLocaleString('en-IN') });
+      localStorage.setItem('ps_comments', JSON.stringify(blogState.comments));
+      textarea.value = '';
+      renderComments(id);
+      trackEvent('blog_comment', { post_id: id });
+    });
+
+    renderBlogGrid();
+  }
+
+  /* ── 11. FAQ ── */
+  function initFAQ() {
+    $$$$('.faq-question').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var item = btn.closest('.faq-item');
+        var isOpen = item.classList.contains('open');
+        // Close all
+        $$('.faq-item.open').forEach(function (i) { i.classList.remove('open'); i.querySelector('.faq-question').setAttribute('aria-expanded', 'false'); });
+        if (!isOpen) { item.classList.add('open'); btn.setAttribute('aria-expanded', 'true'); }
+      });
+    });
+  }
+
+  /* ── 12. QUIZ ── */
+  function initQuiz() {
+    var roleStudent = ('#btnRoleStudent');
+    var roleParent = $('#btnRoleParent');
+    var roleWindow = $('#roleSelectWindow');
+    var quizWindow = $('#quizWindow');
+    var resultWindow = $('#resultWindow');
+    var nextBtn = $('#nextBtn');
+    var restartBtn = $('#restartBtn');
+    if (!roleStudent || !roleParent) return;
+
+    var state = { role: '', current: 0, score: 0, answers: [] };
+
+    function startQuiz(role) {
+      state = { role: role, current: 0, score: 0, answers: [] };
+      roleWindow.style.display = 'none';
+      quizWindow.hidden = false;
+      resultWindow.hidden = true;
+      nextBtn.hidden = true;
+      $('#quizTrackIdentity').textContent = role === 'student' ? 'Student Profile' : 'Parent Profile';
+      renderQuestion();
+      trackEvent('quiz_start', { role: role });
+    }
+
+    function renderQuestion() {
+      var questions = QUIZ_QUESTIONS[state.role];
+      var q = questions[state.current];
+      $('#quizProgressText').textContent = 'Question ' + (state.current + 1) + ' of ' + questions.length;
+      $('#quizProgressFill').style.width = ((state.current / questions.length) * 100) + '%';
+      $('#questionText').textContent = q.q;
+      var btns = $('#answerButtons');
+      btns.innerHTML = q.opts.map(function (opt, i) { return '<button class="quiz-btn" data-score="' + i + '" type="button">' + opt + '</button>'; }).join('');
+    }
+
+    document.addEventListener('click', function (e) {
+      var btn = e.target.closest('#answerButtons .quiz-btn');
+      if (!btn) return;
+      $$$$('#answerButtons .quiz-btn').forEach(function (b) { b.style.opacity = '0.5'; b.disabled = true; });
+      btn.style.opacity = '1';
+      btn.style.borderColor = 'var(--accent)';
+      state.score += parseInt(btn.dataset.score);
+      state.answers.push(parseInt(btn.dataset.score));
+      nextBtn.hidden = false;
+    });
+
+    if (nextBtn) nextBtn.addEventListener('click', function () {
+      state.current++;
+      if (state.current >= QUIZ_QUESTIONS[state.role].length) { showResults(); return; }
+      nextBtn.hidden = true;
+      renderQuestion();
+    });
+
+    function showResults() {
+      quizWindow.hidden = true;
+      resultWindow.hidden = false;
+      nextBtn.hidden = true;
+      var insights = QUIZ_INSIGHTS[state.role];
+      var result = insights.find(function (r) { return state.score >= r.range[0] && state.score <= r.range[1]; }) || insights[insights.length - 1];
+      $('#badgeDisplay').textContent = result.emoji;
+      $('#psychMetricsOutput').innerHTML = '<strong style="color:var(--accent);font-family:var(--font-head)">' + result.label + '</strong><br><br>' + result.desc + '<br><br><span style="font-family:var(--font-mono);font-size:0.8rem;color:var(--text-muted)">Diagnostic Score: ' + state.score + '/' + (QUIZ_QUESTIONS[state.role].length * 3) + '</span>';
+      trackEvent('quiz_complete', { role: state.role, score: state.score, result: result.label });
+    }
+
+    roleStudent.addEventListener('click', function () { startQuiz('student'); });
+    roleParent.addEventListener('click', function () { startQuiz('parent'); });
+    if (restartBtn) restartBtn.addEventListener('click', function () { roleWindow.style.display = ''; quizWindow.hidden = true; resultWindow.hidden = true; });
+  }
+
+  /* ── 13. CONTACT FORM ── */
+  function initContactForm() {
+    var form = $('#contactForm');
+    if (!form) return;
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var name = $('#studentName').value.trim();
+      var email = $('#studentEmail').value.trim();
+      var phone = $('#studentPhone').value.trim();
+      if (!name || !email || !phone) { alert('Please fill in all required fields.'); return; }
+      trackEvent('form_submit', { form_type: 'contact', student_name: name });
+      // Build WhatsApp message
+      var city = ($('#studentCity') || {}).value || 'Not specified';
+      var cls = ($('#studentClass') || {}).value || 'Not specified';
+      var exam = ($('#studentExam') || {}).value || 'Not specified';
+      var msg = encodeURIComponent('New Enquiry:\nName: ' + name + '\nEmail: ' + email + '\nPhone: ' + phone + '\nCity: ' + city + '\nClass: ' + cls + '\nTarget: ' + exam);
+      // Show success
+      form.innerHTML = '<div class="form-success"><i class="fas fa-check-circle"></i><h3>Thank you, ' + name + '!</h3><p style="margin-top:8px;color:var(--text-sec)">We\'ll contact you within 24 hours. For immediate assistance:</p><a href="https://wa.me/919700627812?text=' + msg + '" class="btn btn-whatsapp" target="_blank" rel="noopener noreferrer" style="margin-top:16px"><i class="fab fa-whatsapp"></i> WhatsApp Us Now</a></div>';
+    });
+  }
+
+  /* ── 14. AUTH MODAL ── */
+  function initAuthModal() {
+    var modal = $('#authModal');
+    var closeBtn = $('#btnCloseModal');
+    var loginBtn = $('#btnStudentLogin');
+    var parentBtn = $('#btnParentLogin');
+    if (!modal) return;
+
+    function show(view) {
+      modal.hidden = false;
+      ['Login', 'Signup', 'Forgot'].forEach(function (v) { var el = $('#authView' + v); if (el) el.hidden = v !== view; });
+      document.body.style.overflow = 'hidden';
+    }
+    function hide() { modal.hidden = true; document.body.style.overflow = ''; }
+
+    if (loginBtn) loginBtn.addEventListener('click', function () { show('Login'); });
+    if (parentBtn) parentBtn.addEventListener('click', function () { show('Login'); });
+    if (closeBtn) closeBtn.addEventListener('click', hide);
+    modal.addEventListener('click', function (e) { if (e.target === modal) hide(); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !modal.hidden) hide(); });
+
+    var gotoSignup = $('#btnGotoSignup');
+    var gotoLogin = $('#btnGotoLogin');
+    var gotoLogin2 = $('#btnGotoLogin2');
+    var gotoForgot = $('#btnGotoForgot');
+    if (gotoSignup) gotoSignup.addEventListener('click', function () { show('Signup'); });
+    if (gotoLogin || gotoLogin2) { if (gotoLogin) gotoLogin.addEventListener('click', function () { show('Login'); }); if (gotoLogin2) gotoLogin2.addEventListener('click', function () { show('Login'); }); }
+    if (gotoForgot) gotoForgot.addEventListener('click', function () { show('Forgot'); });
+
+    // Password strength
+    var passInput = $('#signupPass');
+    var bar = $('#strengthBar');
+    var feedback = $('#strengthFeedback');
+    if (passInput && bar) {
+      passInput.addEventListener('input', function () {
+        var v = passInput.value;
+        var s = 0;
+        if (v.length >= 8) s++;
+        if (/[A-Z]/.test(v)) s++;
+        if (/[0-9]/.test(v)) s++;
+        if (/[^A-Za-z0-9]/.test(v)) s++;
+        bar.style.width = (s * 25) + '%';
+        bar.style.background = s < 2 ? '#ff4444' : s < 3 ? '#ffb700' : '#00df89';
+        feedback.textContent = ['Too weak', 'Weak', 'Fair', 'Strong', 'Very strong'][s];
+      });
+    }
+  }
+
+  /* ── 15. NOTES VAULT ── */
+  function initNotesVault() {
+    $$('.download-btn-style').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        trackEvent('notes_download_attempt', { notes_type: btn.dataset.notes });
+        // Check if user is "logged in" (simple localStorage check)
+        var loggedIn = localStorage.getItem('ps_user');
+        if (!loggedIn) { var modal = ('#authModal'); if (modal) { modal.hidden = false; document.body.style.overflow = 'hidden'; } }
+        else { alert('Download would start for: ' + btn.dataset.notes); }
+      });
+    });
+  }
+
+  /* ── 16. SCROLL ANIMATIONS ── */
+  function initAnimateIn() {
+    var observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) { entry.target.classList.add('visible'); observer.unobserve(entry.target); }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+    $$$$('.animate-in:not(.visible)').forEach(function (el) { observer.observe(el); });
+    // Add animate-in to cards that don't have it
+    $$('.course-card:not(.animate-in), .testimonial-card:not(.animate-in)').forEach(function (el, i) { el.classList.add('animate-in', 'stagger-' + ((i % 6) + 1)); observer.observe(el); });
+  }
+
+  /* ── 17. KEYBOARD NAV ── */
+  function initKeyboardNav() {
+    // Trap focus in modals
+    document.addEventListener('keydown', function (e) {
+      if (e.key !== 'Tab') return;
+      var modal = !('#authModal').hidden ? $('#authModal .auth-modal-card') : null;
+      var search = !$('#searchOverlay').hidden ? $('#searchOverlay') : null;
+      var trap = modal || search;
+      if (!trap) return;
+      var focusable = $$$$('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])', trap);
+      if (!focusable.length) return;
+      var first = focusable[0];
+      var last = focusable[focusable.length - 1];
+      if (e.shiftKey) { if (document.activeElement === first) { e.preventDefault(); last.focus(); } }
+      else { if (document.activeElement === last) { e.preventDefault(); first.focus(); } }
+    });
+  }
+
+  /* ── 18. INIT ── */
+  function init() {
+    initNav();
+    initPoonamDropdown();
+    initSearch();
+    initScrollProgress();
+    initBlog();
+    initFAQ();
+    initQuiz();
+    initContactForm();
+    initAuthModal();
+    initNotesVault();
+    initAnimateIn();
+    initKeyboardNav();
+    initTracking();
+  }
+
+  if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', init); }
+  else { init(); }
+
 })();
