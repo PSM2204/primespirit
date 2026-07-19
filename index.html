@@ -65,6 +65,16 @@
     button{font-family:inherit;cursor:pointer}
     ::selection{background:var(--accent);color:#000}
     :focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+
+    /* Quiz layout helpers — previously inline styles */
+    .quiz-role-select{text-align:center}
+    .quiz-role-select h3{margin-bottom:20px;font-size:1.4rem}
+    .quiz-btn-spaced{margin-top:10px}
+    .quiz-badge-display{text-align:center;font-size:3.5rem;margin-bottom:15px}
+    .quiz-result-title{text-align:center;margin-bottom:15px}
+    .quiz-note{text-align:center}
+    .quiz-btn-retake{width:100%;margin-top:10px}
+    .quiz-btn-consult{width:100%;margin-top:10px;display:block;text-align:center}
     </style>
 
     <!-- Main CSS -->
@@ -73,35 +83,248 @@
 
     <!-- Schema: EducationalOrganization -->
     <script type="application/ld+json">
-    {"@context":"https://schema.org","@type":"EducationalOrganization","name":"Prime Spirit Mentors","url":"https://primespirit.co.in","logo":"https://primespirit.co.in/og-image.jpg","telephone":"+919700627812","founder":{"@type":"Person","name":"Abhinav Kashyap","jobTitle":"Founder & Lead Mentor","description":"B.Tech graduate and ex-Vedantu educator with 10+ years of teaching experience."},"areaServed":[{"@type":"City","name":"Bengaluru"},{"@type":"City","name":"Hyderabad"},{"@type":"City","name":"Bhubaneswar"},{"@type":"City","name":"Cuttack"},{"@type":"Country","name":"India"}],"description":"Elite micro-batch online coaching (5-10 students) for NEET UG, JEE Mains, CUET, IAT, NEST and Class 6-12 CBSE/ICSE Boards.","hasOfferCatalog":{"@type":"OfferCatalog","name":"Coaching Programs","itemListElement":[{"@type":"Offer","itemOffered":{"@type":"Course","name":"NEET UG Coaching"}},{"@type":"Offer","itemOffered":{"@type":"Course","name":"JEE Mains Coaching"}},{"@type":"Offer","itemOffered":{"@type":"Course","name":"CUET Preparation"}},{"@type":"Offer","itemOffered":{"@type":"Course","name":"IAT IISER Coaching"}},{"@type":"Offer","itemOffered":{"@type":"Course","name":"NEST NISER Coaching"}},{"@type":"Offer","itemOffered":{"@type":"Course","name":"Class 6-12 CBSE ICSE Boards"}},{"@type":"Offer","itemOffered":{"@type":"Course","name":"Poonam Foundation — Affordable Class 6-8 Coaching","description":"Maths and Science coaching for Class 6, 7 and 8 at Rs. 999/month."}}]},"sameAs":["https://instagram.com/primespiritmentors","https://facebook.com/psmentors","https://wa.me/919700627812"],"review":[{"@type":"Review","reviewRating":{"@type":"Rating","ratingValue":"5","bestRating":"5"},"author":{"@type":"Person","name":"Sahitya Pandey"},"reviewBody":"Abhinav sir's specialized deep-dives completely changed how I process complex derivations."},{"@type":"Review","reviewRating":{"@type":"Rating","ratingValue":"5","bestRating":"5"},"author":{"@type":"Person","name":"Sulochana Parihar"},"reviewBody":"The early core foundation program completely shifted my performance."},{"@type":"Review","reviewRating":{"@type":"Rating","ratingValue":"5","bestRating":"5"},"author":{"@type":"Person","name":"Tatvam"},"reviewBody":"The micro-batch format meant I could ask doubts mid-lecture."},{"@type":"Review","reviewRating":{"@type":"Rating","ratingValue":"5","bestRating":"5"},"author":{"@type":"Person","name":"Srinidhi"},"reviewBody":"Biology felt like rote memorization until Prime Spirit restructured how I approach NCERT."},{"@type":"Review","reviewRating":{"@type":"Rating","ratingValue":"5","bestRating":"5"},"author":{"@type":"Person","name":"Shantanu"},"reviewBody":"Error mapping after every test gave me a clear breakdown of which concepts needed rework."},{"@type":"Review","reviewRating":{"@type":"Rating","ratingValue":"5","bestRating":"5"},"author":{"@type":"Person","name":"Dhairya"},"reviewBody":"Organic Chemistry synthesis chain mapping made the logic finally click."},{"@type":"Review","reviewRating":{"@type":"Rating","ratingValue":"5","bestRating":"5"},"author":{"@type":"Person","name":"Sanyukta"},"reviewBody":"The psychometric mindset audit flagged exactly where my exam anxiety was coming from."},{"@type":"Review","reviewRating":{"@type":"Rating","ratingValue":"5","bestRating":"5"},"author":{"@type":"Person","name":"Piyush"},"reviewBody":"Shift to a 5-student batch was night and day."},{"@type":"Review","reviewRating":{"@type":"Rating","ratingValue":"5","bestRating":"5"},"author":{"@type":"Person","name":"Riddhima"},"reviewBody":"Study plan adapted around my actual weak topics."}],"aggregateRating":{"@type":"AggregateRating","ratingValue":"4.9","reviewCount":"9","bestRating":"5","worstRating":"1"}}
+    {
+      "@context": "https://schema.org",
+      "@type": "EducationalOrganization",
+      "name": "Prime Spirit Mentors",
+      "url": "https://primespirit.co.in",
+      "logo": "https://primespirit.co.in/og-image.jpg",
+      "telephone": "+919700627812",
+      "founder": {
+        "@type": "Person",
+        "name": "Abhinav Kashyap",
+        "jobTitle": "Founder & Lead Mentor",
+        "description": "B.Tech graduate and ex-Vedantu educator with 10+ years of teaching experience."
+      },
+      "areaServed": [
+        {"@type": "City", "name": "Bengaluru"},
+        {"@type": "City", "name": "Hyderabad"},
+        {"@type": "City", "name": "Bhubaneswar"},
+        {"@type": "City", "name": "Cuttack"},
+        {"@type": "Country", "name": "India"}
+      ],
+      "description": "Elite micro-batch online coaching (5-10 students) for NEET UG, JEE Mains, CUET, IAT, NEST and Class 6-12 CBSE/ICSE Boards.",
+      "hasOfferCatalog": {
+        "@type": "OfferCatalog",
+        "name": "Coaching Programs",
+        "itemListElement": [
+          {"@type": "Offer", "itemOffered": {"@type": "Course", "name": "NEET UG Coaching"}},
+          {"@type": "Offer", "itemOffered": {"@type": "Course", "name": "JEE Mains Coaching"}},
+          {"@type": "Offer", "itemOffered": {"@type": "Course", "name": "CUET Preparation"}},
+          {"@type": "Offer", "itemOffered": {"@type": "Course", "name": "IAT IISER Coaching"}},
+          {"@type": "Offer", "itemOffered": {"@type": "Course", "name": "NEST NISER Coaching"}},
+          {"@type": "Offer", "itemOffered": {"@type": "Course", "name": "Class 6-12 CBSE ICSE Boards"}},
+          {"@type": "Offer", "itemOffered": {"@type": "Course", "name": "Poonam Foundation — Affordable Class 6-8 Coaching", "description": "Maths and Science coaching for Class 6, 7 and 8 at Rs. 999/month."}}
+        ]
+      },
+      "sameAs": [
+        "https://instagram.com/primespiritmentors",
+        "https://facebook.com/psmentors",
+        "https://wa.me/919700627812"
+      ],
+      "review": [
+        {"@type": "Review", "reviewRating": {"@type": "Rating", "ratingValue": 5, "bestRating": 5}, "author": {"@type": "Person", "name": "Sahitya Pandey"}, "reviewBody": "Abhinav sir's specialized deep-dives completely changed how I process complex derivations."},
+        {"@type": "Review", "reviewRating": {"@type": "Rating", "ratingValue": 5, "bestRating": 5}, "author": {"@type": "Person", "name": "Sulochana Parihar"}, "reviewBody": "The early core foundation program completely shifted my performance."},
+        {"@type": "Review", "reviewRating": {"@type": "Rating", "ratingValue": 5, "bestRating": 5}, "author": {"@type": "Person", "name": "Tatvam"}, "reviewBody": "The micro-batch format meant I could ask doubts mid-lecture."},
+        {"@type": "Review", "reviewRating": {"@type": "Rating", "ratingValue": 5, "bestRating": 5}, "author": {"@type": "Person", "name": "Srinidhi"}, "reviewBody": "Biology felt like rote memorization until Prime Spirit restructured how I approach NCERT."},
+        {"@type": "Review", "reviewRating": {"@type": "Rating", "ratingValue": 5, "bestRating": 5}, "author": {"@type": "Person", "name": "Shantanu"}, "reviewBody": "Error mapping after every test gave me a clear breakdown of which concepts needed rework."},
+        {"@type": "Review", "reviewRating": {"@type": "Rating", "ratingValue": 5, "bestRating": 5}, "author": {"@type": "Person", "name": "Dhairya"}, "reviewBody": "Organic Chemistry synthesis chain mapping made the logic finally click."},
+        {"@type": "Review", "reviewRating": {"@type": "Rating", "ratingValue": 5, "bestRating": 5}, "author": {"@type": "Person", "name": "Sanyukta"}, "reviewBody": "The psychometric mindset audit flagged exactly where my exam anxiety was coming from."},
+        {"@type": "Review", "reviewRating": {"@type": "Rating", "ratingValue": 5, "bestRating": 5}, "author": {"@type": "Person", "name": "Piyush"}, "reviewBody": "Shift to a 5-student batch was night and day."},
+        {"@type": "Review", "reviewRating": {"@type": "Rating", "ratingValue": 5, "bestRating": 5}, "author": {"@type": "Person", "name": "Riddhima"}, "reviewBody": "Study plan adapted around my actual weak topics."}
+      ],
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": 4.9,
+        "reviewCount": 9,
+        "bestRating": 5,
+        "worstRating": 1
+      }
+    }
     </script>
 
-    <!-- Schema: FAQPage -->
+    <!-- Schema: FAQPage (answers aligned with visible HTML content) -->
     <script type="application/ld+json">
-    {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Is Prime Spirit Mentors suitable for Bengaluru students?","acceptedAnswer":{"@type":"Answer","text":"Yes. Fully online coaching, ideal for students across Bengaluru and all of India."}},{"@type":"Question","name":"Does Prime Spirit Mentors offer online NEET coaching for Hyderabad students?","acceptedAnswer":{"@type":"Answer","text":"Yes. Fully online personalized NEET and JEE coaching for students in Hyderabad."}},{"@type":"Question","name":"Is online NEET coaching available for students in Bhubaneswar and Cuttack?","acceptedAnswer":{"@type":"Answer","text":"Yes. Prime Spirit Mentors serves students in Bhubaneswar, Cuttack and across Odisha through fully online micro-batch coaching."}},{"@type":"Question","name":"What is the batch size at Prime Spirit Mentors?","acceptedAnswer":{"@type":"Answer","text":"Maximum 5 students (Elite track) or maximum 10 students (Advanced Cohort)."}},{"@type":"Question","name":"Which exams does Prime Spirit Mentors coach for?","acceptedAnswer":{"@type":"Answer","text":"NEET UG, JEE Mains, CUET, IAT (IISER), NEST (NISER), and Class 6-12 CBSE/ICSE Boards."}},{"@type":"Question","name":"Who is Abhinav Kashyap?","acceptedAnswer":{"@type":"Answer","text":"B.Tech graduate and ex-Vedantu educator with 10+ years of teaching experience. Founder of Prime Spirit Mentors."}},{"@type":"Question","name":"What is psychometric mentorship?","acceptedAnswer":{"@type":"Answer","text":"Identifies a student's mental blocks, exam anxiety triggers, and learning patterns, then designs a custom strategy."}},{"@type":"Question","name":"Is there a free trial or demo class available?","acceptedAnswer":{"@type":"Answer","text":"Yes. Book a free strategy evaluation session through the enquiry form on our website."}},{"@type":"Question","name":"What is Poonam Foundation?","acceptedAnswer":{"@type":"Answer","text":"Poonam Foundation is a community initiative offering affordable Maths and Science coaching for Class 6, 7 and 8 students at Rs. 999 per month (MRP Rs. 1999) for two subjects, in batches of 20 students."}}]}
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Is Prime Spirit Mentors suitable for Bengaluru students?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Prime Spirit Mentors offers fully online coaching, ideal for students across Bengaluru — including Whitefield, Electronic City, Koramangala, Indiranagar, and JP Nagar — and all of India."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does Prime Spirit Mentors offer NEET and JEE coaching for Hyderabad students?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Fully online personalized NEET and JEE coaching for students in Hyderabad including Gachibowli, Banjara Hills, Kondapur, and Madhapur."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is coaching available for Bhubaneswar and Cuttack students?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Prime Spirit Mentors serves students in Bhubaneswar, Cuttack, and across Odisha through fully online micro-batch coaching."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How is micro-batch coaching different from regular online coaching?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Unlike mass platforms with 100+ students per class, Prime Spirit limits every batch to 5–10 students. Every doubt gets addressed in real time, and the study plan adapts to each student's weak areas."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Who is Abhinav Kashyap?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "B.Tech graduate and ex-Vedantu educator with 10+ years of teaching experience. Founder and lead mentor at Prime Spirit Mentors."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Which exams does Prime Spirit prepare students for?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "NEET UG, JEE Mains, CUET, IAT (IISER), NEST (NISER), and Class 6–12 CBSE/ICSE Boards."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is psychometric mentorship?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It identifies a student's mental blocks, exam anxiety triggers, and learning patterns, then designs a custom strategy. Included in all batches at no extra cost."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the fee structure?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Two tiers: Elite Hyper-Personalized (max 5 students) and Advanced Personalized Cohort (max 10 students). Contact us for current fee details. Poonam Foundation for Class 6–8 is ₹999/month."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is Poonam Foundation?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "A community initiative offering affordable Maths and Science coaching for Class 6, 7, and 8 at ₹999/month (MRP ₹1999) for two subjects, in batches of 20 students."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is there a free demo class?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Book a free strategy evaluation session through the enquiry form or WhatsApp us at +91 97006 27812."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is your refund policy?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "We offer a 7-day satisfaction guarantee. If you're not satisfied after the first week of classes, we provide a full refund. Contact us for complete terms."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I enrol in a batch?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Fill out the enquiry form on this page or WhatsApp us at +91 97006 27812. We'll schedule a free consultation to match you with the right batch."
+          }
+        }
+      ]
+    }
     </script>
 
     <!-- Schema: WebSite with SearchAction -->
     <script type="application/ld+json">
-    {"@context":"https://schema.org","@type":"WebSite","name":"Prime Spirit Mentors","url":"https://primespirit.co.in","description":"Best online micro-batch coaching for NEET, JEE, CUET, IAT, NEST and Class 6-12 Boards.","publisher":{"@type":"EducationalOrganization","name":"Prime Spirit Mentors"},"potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://primespirit.co.in/?q={search_term_string}"},"query-input":"required name=search_term_string"}}
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "Prime Spirit Mentors",
+      "url": "https://primespirit.co.in",
+      "description": "Best online micro-batch coaching for NEET, JEE, CUET, IAT, NEST and Class 6-12 Boards.",
+      "publisher": {
+        "@type": "EducationalOrganization",
+        "name": "Prime Spirit Mentors"
+      },
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": "https://primespirit.co.in/?q={search_term_string}"
+        },
+        "query-input": "required name=search_term_string"
+      }
+    }
     </script>
 
     <!-- Schema: BreadcrumbList -->
     <script type="application/ld+json">
-    {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://primespirit.co.in/"},{"@type":"ListItem","position":2,"name":"Programs","item":"https://primespirit.co.in/#courses"},{"@type":"ListItem","position":3,"name":"Notes Vault","item":"https://primespirit.co.in/#notes-vault"},{"@type":"ListItem","position":4,"name":"Blog","item":"https://primespirit.co.in/#blog-hub"},{"@type":"ListItem","position":5,"name":"FAQ","item":"https://primespirit.co.in/#faq"}]}
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://primespirit.co.in/"},
+        {"@type": "ListItem", "position": 2, "name": "Programs", "item": "https://primespirit.co.in/#courses"},
+        {"@type": "ListItem", "position": 3, "name": "Notes Vault", "item": "https://primespirit.co.in/#notes-vault"},
+        {"@type": "ListItem", "position": 4, "name": "Blog", "item": "https://primespirit.co.in/#blog-hub"},
+        {"@type": "ListItem", "position": 5, "name": "FAQ", "item": "https://primespirit.co.in/#faq"}
+      ]
+    }
     </script>
 
     <!-- Schema: Person -->
     <script type="application/ld+json">
-    {"@context":"https://schema.org","@type":"Person","name":"Abhinav Kashyap","jobTitle":"Founder & Lead Mentor","worksFor":{"@type":"EducationalOrganization","name":"Prime Spirit Mentors","url":"https://primespirit.co.in"},"description":"B.Tech graduate and ex-Vedantu educator with 10+ years of experience.","url":"https://primespirit.co.in","sameAs":["https://instagram.com/primespiritmentors","https://facebook.com/psmentors"]}
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Abhinav Kashyap",
+      "jobTitle": "Founder & Lead Mentor",
+      "worksFor": {
+        "@type": "EducationalOrganization",
+        "name": "Prime Spirit Mentors",
+        "url": "https://primespirit.co.in"
+      },
+      "description": "B.Tech graduate and ex-Vedantu educator with 10+ years of experience.",
+      "url": "https://primespirit.co.in",
+      "sameAs": [
+        "https://instagram.com/primespiritmentors",
+        "https://facebook.com/psmentors"
+      ]
+    }
     </script>
 
     <!-- GA4 — replace G-XXXXXXXXXX with real ID -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
-    <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-XXXXXXXXXX',{cookie_flags:'SameSite=None;Secure'});</script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){ dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-XXXXXXXXXX', { cookie_flags: 'SameSite=None;Secure' });
+    </script>
 
     <!-- Microsoft Clarity — replace XXXXXXXXX with real ID -->
-    <script>(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y)})(window,document,"clarity","script","XXXXXXXXX");</script>
+    <script>
+    (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window,document,"clarity","script","XXXXXXXXX");
+    </script>
 </head>
 <body>
 
@@ -236,7 +459,7 @@
             <div class="container">
                 <span class="section-subtitle">Premium Cohorts</span>
                 <h2 id="courses-heading">Personalized Learning Tracks</h2>
-                <hr class="title-line">
+                <hr class="title-line" aria-hidden="true">
                 <div class="course-grid">
                     <div class="course-card premium"><div class="card-badge">Max 5 Students</div><h3>Elite Hyper-Personalized Micro-Batch</h3><p>Our flagship track for advanced aspirants. Ultra-limited seating for absolute focus, real-time tracking, 1:1 error analysis, and ongoing mindset counseling.</p><span class="target-badge">Class 6–12 | NEET | JEE | IAT</span><a href="#contact" class="btn-course-enroll" data-track="cta-course-elite">Book Free Demo <i class="fas fa-arrow-right" aria-hidden="true"></i></a></div>
                     <div class="course-card"><div class="card-badge" style="background:var(--accent);color:#000">Max 10 Students</div><h3>Advanced Personalized Cohort</h3><p>Highly interactive batches focusing on rigorous concept-building, comprehensive question banks, and competitive benchmarking for high-tier exams.</p><span class="target-badge">Class 6–12 | Boards | CUET</span><a href="#contact" class="btn-course-enroll" data-track="cta-course-advanced">Free Consultation <i class="fas fa-arrow-right" aria-hidden="true"></i></a></div>
@@ -253,15 +476,15 @@
             <div class="container">
                 <span class="section-subtitle">Resource Engine</span>
                 <h2 id="notes-heading">Premium Notes Vault</h2>
-                <hr class="title-line">
+                <hr class="title-line" aria-hidden="true">
                 <p class="section-description">Unlock high-yield revision summaries, formula sheets, and blueprints. Premium files require student authorization.</p>
                 <div class="course-grid">
-                    <div class="course-card"><div class="repo-icon"><i class="fas fa-graduation-cap" aria-hidden="true"></i></div><h3>Class 6–10 Foundation</h3><p>Conceptual blueprints and structured chapter summaries for Mathematics &amp; Science.</p><span class="target-badge">Class 6–10</span><button class="btn-course-enroll download-btn-style" data-notes="foundation" data-track="cta-notes-foundation">Download Notes <i class="fas fa-download" aria-hidden="true"></i></button></div>
-                    <div class="course-card"><div class="repo-icon"><i class="fas fa-atom" aria-hidden="true"></i></div><h3>Class 11 &amp; 12 Physics</h3><p>Advanced derivation maps, numerical sets, and visual guides from Mechanics to Modern Physics.</p><span class="target-badge">Physics</span><button class="btn-course-enroll download-btn-style" data-notes="physics" data-track="cta-notes-physics">Download Notes <i class="fas fa-download" aria-hidden="true"></i></button></div>
-                    <div class="course-card"><div class="repo-icon"><i class="fas fa-chart-line" aria-hidden="true"></i></div><h3>Class 11 &amp; 12 Economics</h3><p>Microeconomics data breakdowns, Macro calculations, and Indian Economic Development timelines.</p><span class="target-badge">Economics</span><button class="btn-course-enroll download-btn-style" data-notes="economics" data-track="cta-notes-economics">Download Notes <i class="fas fa-download" aria-hidden="true"></i></button></div>
-                    <div class="course-card premium"><div class="card-badge">Medical Matrix</div><div class="repo-icon"><i class="fas fa-stethoscope" aria-hidden="true"></i></div><h3>NEET UG National Track</h3><p>NCERT analytical diagrams, Zoology matrices, Botany cheat sheets, and integrated formula indexes.</p><span class="target-badge">NEET (Phy, Chem, Bio)</span><button class="btn-course-enroll download-btn-style" data-notes="neet" data-track="cta-notes-neet">Download Notes <i class="fas fa-download" aria-hidden="true"></i></button></div>
-                    <div class="course-card premium"><div class="card-badge">Engineering Track</div><div class="repo-icon"><i class="fas fa-laptop-code" aria-hidden="true"></i></div><h3>JEE Mains Engineering Track</h3><p>Calculus templates, complex number grids, organic synthesis chains, and rapid numerical hacks.</p><span class="target-badge">JEE (Phy, Chem, Maths)</span><button class="btn-course-enroll download-btn-style" data-notes="jee" data-track="cta-notes-jee">Download Notes <i class="fas fa-download" aria-hidden="true"></i></button></div>
-                    <div class="course-card"><div class="repo-icon"><i class="fas fa-flask" aria-hidden="true"></i></div><h3>Aptitude Test Core</h3><p>Strategy matrices and aptitude question vaults for CUET, IAT, and NEST national tracking.</p><span class="target-badge">CUET | IAT | NEST</span><button class="btn-course-enroll download-btn-style" data-notes="aptitude" data-track="cta-notes-aptitude">Download Notes <i class="fas fa-download" aria-hidden="true"></i></button></div>
+                    <div class="course-card"><div class="repo-icon"><i class="fas fa-graduation-cap" aria-hidden="true"></i></div><h3>Class 6–10 Foundation</h3><p>Conceptual blueprints and structured chapter summaries for Mathematics &amp; Science.</p><span class="target-badge">Class 6–10</span><button class="btn-course-enroll download-btn-style" type="button" data-notes="foundation" data-track="cta-notes-foundation">Download Notes <i class="fas fa-download" aria-hidden="true"></i></button></div>
+                    <div class="course-card"><div class="repo-icon"><i class="fas fa-atom" aria-hidden="true"></i></div><h3>Class 11 &amp; 12 Physics</h3><p>Advanced derivation maps, numerical sets, and visual guides from Mechanics to Modern Physics.</p><span class="target-badge">Physics</span><button class="btn-course-enroll download-btn-style" type="button" data-notes="physics" data-track="cta-notes-physics">Download Notes <i class="fas fa-download" aria-hidden="true"></i></button></div>
+                    <div class="course-card"><div class="repo-icon"><i class="fas fa-chart-line" aria-hidden="true"></i></div><h3>Class 11 &amp; 12 Economics</h3><p>Microeconomics data breakdowns, Macro calculations, and Indian Economic Development timelines.</p><span class="target-badge">Economics</span><button class="btn-course-enroll download-btn-style" type="button" data-notes="economics" data-track="cta-notes-economics">Download Notes <i class="fas fa-download" aria-hidden="true"></i></button></div>
+                    <div class="course-card premium"><div class="card-badge">Medical Matrix</div><div class="repo-icon"><i class="fas fa-stethoscope" aria-hidden="true"></i></div><h3>NEET UG National Track</h3><p>NCERT analytical diagrams, Zoology matrices, Botany cheat sheets, and integrated formula indexes.</p><span class="target-badge">NEET (Phy, Chem, Bio)</span><button class="btn-course-enroll download-btn-style" type="button" data-notes="neet" data-track="cta-notes-neet">Download Notes <i class="fas fa-download" aria-hidden="true"></i></button></div>
+                    <div class="course-card premium"><div class="card-badge">Engineering Track</div><div class="repo-icon"><i class="fas fa-laptop-code" aria-hidden="true"></i></div><h3>JEE Mains Engineering Track</h3><p>Calculus templates, complex number grids, organic synthesis chains, and rapid numerical hacks.</p><span class="target-badge">JEE (Phy, Chem, Maths)</span><button class="btn-course-enroll download-btn-style" type="button" data-notes="jee" data-track="cta-notes-jee">Download Notes <i class="fas fa-download" aria-hidden="true"></i></button></div>
+                    <div class="course-card"><div class="repo-icon"><i class="fas fa-flask" aria-hidden="true"></i></div><h3>Aptitude Test Core</h3><p>Strategy matrices and aptitude question vaults for CUET, IAT, and NEST national tracking.</p><span class="target-badge">CUET | IAT | NEST</span><button class="btn-course-enroll download-btn-style" type="button" data-notes="aptitude" data-track="cta-notes-aptitude">Download Notes <i class="fas fa-download" aria-hidden="true"></i></button></div>
                 </div>
             </div>
         </section>
@@ -273,7 +496,7 @@
                 <div class="poonam-orb poonam-orb--2" aria-hidden="true"></div>
                 <span class="section-subtitle">Community Initiative</span>
                 <h2 id="poonam-heading">Poonam Foundation</h2>
-                <hr class="title-line">
+                <hr class="title-line" aria-hidden="true">
                 <p class="poonam-tagline">Quality education shouldn't have a premium price tag. <strong>Maths &amp; Science for Class 6, 7 &amp; 8</strong> — built for every household.</p>
                 <div class="poonam-pricing-grid">
                     <div class="poonam-card">
@@ -326,7 +549,7 @@
             <div class="container">
                 <span class="section-subtitle">Academic Intelligence</span>
                 <h2 id="blog-heading">The Mentorship Blog</h2>
-                <hr class="title-line">
+                <hr class="title-line" aria-hidden="true">
 
                 <!-- Blog Search -->
                 <div class="blog-search-wrap">
@@ -351,7 +574,7 @@
                 <div id="trendingArticles" class="trending-wrap" aria-label="Trending articles"></div>
 
                 <!-- Grid: blog.js reads this ID -->
-                <div id="blog-posts-container" class="course-grid blog-grid" aria-live="polite"></div>
+                <div id="blog-posts-container" class="course-grid blog-grid" aria-label="Blog articles" aria-live="polite"></div>
 
                 <!-- Pagination -->
                 <div id="blogPagination" class="blog-pagination" aria-label="Blog pagination"></div>
@@ -363,12 +586,12 @@
             <div class="container">
                 <span class="section-subtitle">Deep Mindset Audit</span>
                 <h2 id="quiz-heading">Student &amp; Parent Alignment Scan</h2>
-                <hr class="title-line">
+                <hr class="title-line" aria-hidden="true">
                 <div class="quiz-container">
-                    <div id="roleSelectWindow" class="btn-grid" style="text-align:center">
-                        <h3 style="margin-bottom:20px;font-size:1.4rem">Identify your profile to begin:</h3>
+                    <div id="roleSelectWindow" class="btn-grid quiz-role-select">
+                        <h3>Identify your profile to begin:</h3>
                         <button class="quiz-btn" id="btnRoleStudent" type="button"><i class="fas fa-user-graduate" aria-hidden="true"></i> I am a Student</button>
-                        <button class="quiz-btn" id="btnRoleParent" type="button" style="margin-top:10px"><i class="fas fa-user-friends" aria-hidden="true"></i> I am a Parent</button>
+                        <button class="quiz-btn quiz-btn-spaced" id="btnRoleParent" type="button"><i class="fas fa-user-friends" aria-hidden="true"></i> I am a Parent</button>
                     </div>
                     <div id="quizWindow" hidden>
                         <div class="quiz-progress-bar"><div class="quiz-progress-fill" id="quizProgressFill"></div></div>
@@ -377,13 +600,13 @@
                         <div id="answerButtons" class="btn-grid"></div>
                     </div>
                     <div id="quizControls"><button id="nextBtn" class="btn btn-primary" type="button" hidden>Next <i class="fas fa-arrow-right" aria-hidden="true"></i></button></div>
-                    <div id="resultWindow" hidden>
-                        <div id="badgeDisplay" style="text-align:center;font-size:3.5rem;margin-bottom:15px" aria-hidden="true"></div>
-                        <h3 style="text-align:center;margin-bottom:15px">Diagnostic Scan Complete</h3>
+                    <div id="resultWindow" hidden aria-live="polite">
+                        <div id="badgeDisplay" class="quiz-badge-display" aria-hidden="true"></div>
+                        <h3 class="quiz-result-title">Diagnostic Scan Complete</h3>
                         <div id="psychMetricsOutput" class="quiz-results-box"></div>
-                        <p class="quiz-note" style="text-align:center">Submit the enquiry form below to unlock full resolution templates from Abhinav sir.</p>
-                        <button id="restartBtn" class="btn btn-secondary" type="button" style="width:100%;margin-top:10px" data-track="cta-quiz-retake">Retake Diagnostic</button>
-                        <a href="#contact" class="btn btn-primary" style="width:100%;margin-top:10px;display:block;text-align:center" data-track="cta-quiz-consult">Book Free Consultation</a>
+                        <p class="quiz-note">Submit the enquiry form below to unlock full resolution templates from Abhinav sir.</p>
+                        <button id="restartBtn" class="btn btn-secondary quiz-btn-retake" type="button" data-track="cta-quiz-retake">Retake Diagnostic</button>
+                        <a href="#contact" class="btn btn-primary quiz-btn-consult" data-track="cta-quiz-consult">Book Free Consultation</a>
                     </div>
                 </div>
             </div>
@@ -394,7 +617,7 @@
             <div class="container">
                 <span class="section-subtitle">Quick Answers</span>
                 <h2 id="faq-heading">Frequently Asked Questions</h2>
-                <hr class="title-line">
+                <hr class="title-line" aria-hidden="true">
                 <div class="faq-grid" role="list">
                     <div class="faq-item" role="listitem"><button class="faq-question" type="button" aria-expanded="false"><span>Is Prime Spirit Mentors suitable for Bengaluru students?</span><i class="fas fa-chevron-down" aria-hidden="true"></i></button><div class="faq-answer" role="region">Yes. Prime Spirit Mentors offers fully online coaching, ideal for students across Bengaluru — including Whitefield, Electronic City, Koramangala, Indiranagar, and JP Nagar — and all of India.</div></div>
                     <div class="faq-item" role="listitem"><button class="faq-question" type="button" aria-expanded="false"><span>Does Prime Spirit Mentors offer NEET and JEE coaching for Hyderabad students?</span><i class="fas fa-chevron-down" aria-hidden="true"></i></button><div class="faq-answer" role="region">Yes. Fully online personalized NEET and JEE coaching for students in Hyderabad including Gachibowli, Banjara Hills, Kondapur, and Madhapur.</div></div>
@@ -417,9 +640,9 @@
             <div class="container">
                 <span class="section-subtitle">Verified Reviews</span>
                 <h2 id="testimonials-heading">What Our Mentees Say</h2>
-                <hr class="title-line">
+                <hr class="title-line" aria-hidden="true">
                 <div class="testimonial-grid">
-                    <div class="testimonial-card" itemscope itemtype="https://schema.org/Review"><div class="stars" aria-label="5 out of 5 stars"><i class="fas fa-star" aria-hidden="true"></i><i class="fas fa-star" aria-hidden="true"></i><i class="fas fa-star" aria-hidden="true"></i><i class="fas fa-star" aria-hidden="true"></i><i class="fas fa-star" aria-hidden="true"></i></div><p class="quote" itemprop="reviewBody">"Abhinav sir's specialized deep-dives completely changed how I process complex derivations."</p><h4 itemprop="author" itemscope itemtype="https://schema.org/Person"><span itemprop="name">Sahitya Pandey</span></h4><span>Class 12 Physics | DPS RK Puram</span></div>
+                    <div class="testimonial-card"><div class="stars" aria-label="5 out of 5 stars"><i class="fas fa-star" aria-hidden="true"></i><i class="fas fa-star" aria-hidden="true"></i><i class="fas fa-star" aria-hidden="true"></i><i class="fas fa-star" aria-hidden="true"></i><i class="fas fa-star" aria-hidden="true"></i></div><p class="quote">"Abhinav sir's specialized deep-dives completely changed how I process complex derivations."</p><h4>Sahitya Pandey</h4><span>Class 12 Physics | DPS RK Puram</span></div>
                     <div class="testimonial-card"><div class="stars" aria-label="5 out of 5 stars"><i class="fas fa-star" aria-hidden="true"></i><i class="fas fa-star" aria-hidden="true"></i><i class="fas fa-star" aria-hidden="true"></i><i class="fas fa-star" aria-hidden="true"></i><i class="fas fa-star" aria-hidden="true"></i></div><p class="quote">"The early core foundation program completely shifted my performance. The logical steps are explained so simply that advanced concepts feel natural now."</p><h4>Sulochana Parihar</h4><span>Class 10 | The Hyderabad Public School</span></div>
                     <div class="testimonial-card"><div class="stars" aria-label="5 out of 5 stars"><i class="fas fa-star" aria-hidden="true"></i><i class="fas fa-star" aria-hidden="true"></i><i class="fas fa-star" aria-hidden="true"></i><i class="fas fa-star" aria-hidden="true"></i><i class="fas fa-star" aria-hidden="true"></i></div><p class="quote">"The micro-batch format meant I could ask doubts mid-lecture. My Maths speed for JEE Mains has improved massively."</p><h4>Tatvam</h4><span>JEE Mains Aspirant</span></div>
                     <div class="testimonial-card"><div class="stars" aria-label="5 out of 5 stars"><i class="fas fa-star" aria-hidden="true"></i><i class="fas fa-star" aria-hidden="true"></i><i class="fas fa-star" aria-hidden="true"></i><i class="fas fa-star" aria-hidden="true"></i><i class="fas fa-star" aria-hidden="true"></i></div><p class="quote">"Biology felt like rote memorization until Prime Spirit restructured how I approach NCERT line-by-line."</p><h4>Srinidhi</h4><span>NEET Aspirant</span></div>
@@ -437,7 +660,7 @@
             <div class="container">
                 <span class="section-subtitle">Get Started</span>
                 <h2 id="contact-heading">Book Your Free Consultation</h2>
-                <hr class="title-line">
+                <hr class="title-line" aria-hidden="true">
                 <p class="section-description">Fill in your details. Abhinav sir will personally review your profile and recommend the ideal batch and study strategy — completely free.</p>
                 <div class="contact-wrapper">
                     <form id="contactForm" class="contact-form" novalidate>
@@ -559,13 +782,35 @@
 
     <!-- Chatbase -->
     <script>
-    (function(){if(!window.chatbase||window.chatbase("getState")!=="initialized"){window.chatbase=(...arguments)=>{if(!window.chatbase.q){window.chatbase.q=[]}window.chatbase.q.push(arguments)};window.chatbase=new Proxy(window.chatbase,{get(target,prop){if(prop==="q"){return target.q}return(...args)=>target(prop,...args)}})}const onLoad=function(){const script=document.createElement("script");script.src="https://www.chatbase.co/embed.min.js";script.id="vzrrGCxxjob-3ToUwOkJM";script.domain="www.chatbase.co";document.body.appendChild(script)};if(document.readyState==="complete"){onLoad()}else{window.addEventListener("load",onLoad)}})();
+    (function(){
+        if(!window.chatbase||window.chatbase("getState")!=="initialized"){
+            window.chatbase=(...arguments)=>{
+                if(!window.chatbase.q){window.chatbase.q=[]}
+                window.chatbase.q.push(arguments)
+            };
+            window.chatbase=new Proxy(window.chatbase,{
+                get(target,prop){
+                    if(prop==="q"){return target.q}
+                    return(...args)=>target(prop,...args)
+                }
+            })
+        }
+        const onLoad=function(){
+            const script=document.createElement("script");
+            script.src="https://www.chatbase.co/embed.min.js";
+            script.id="vzrrGCxxjob-3ToUwOkJM";
+            script.domain="www.chatbase.co";
+            document.body.appendChild(script)
+        };
+        if(document.readyState==="complete"){onLoad()}
+        else{window.addEventListener("load",onLoad)}
+    })();
     </script>
 
     <!-- Main app logic -->
     <script src="script.js?v=16.0" defer></script>
 
     <!-- Blog system: fetches blog/posts.json, renders into #blog-posts-container -->
-    <script src="blog/blog.js"></script>
+    <script src="blog/blog.js" defer></script>
 </body>
 </html>
