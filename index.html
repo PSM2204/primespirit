@@ -48,7 +48,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
     <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
 
-    <!-- Critical inline CSS: above-the-fold only -->
+    <!-- Critical inline CSS -->
     <style>
     :root{--bg:#0a0e27;--surface:#111633;--elevated:#1a2040;--border:rgba(255,255,255,.06);--border-mid:rgba(255,255,255,.1);--text:#e8ecf4;--text-sec:#8b95ad;--text-muted:#7a8499;--accent:#00C6FF;--blue:#0070F3;--green:#00df89;--font-head:'Syne',sans-serif;--font-body:'Source Serif 4',Georgia,serif;--font-mono:'DM Mono',monospace}
     *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
@@ -65,8 +65,6 @@
     button{font-family:inherit;cursor:pointer}
     ::selection{background:var(--accent);color:#000}
     :focus-visible{outline:2px solid var(--accent);outline-offset:3px}
-
-    /* Quiz layout helpers — previously inline styles */
     .quiz-role-select{text-align:center}
     .quiz-role-select h3{margin-bottom:20px;font-size:1.4rem}
     .quiz-btn-spaced{margin-top:10px}
@@ -78,8 +76,8 @@
     </style>
 
     <!-- Main CSS -->
-    <link rel="preload" href="style.css?v=16.0" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="style.css?v=16.0"></noscript>
+    <link rel="preload" href="style.css?v=17.0" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="style.css?v=17.0"></noscript>
 
     <!-- Schema: EducationalOrganization -->
     <script type="application/ld+json">
@@ -143,169 +141,41 @@
     }
     </script>
 
-    <!-- Schema: FAQPage (answers aligned with visible HTML content) -->
+    <!-- Schema: FAQPage -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "FAQPage",
       "mainEntity": [
-        {
-          "@type": "Question",
-          "name": "Is Prime Spirit Mentors suitable for Bengaluru students?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Yes. Prime Spirit Mentors offers fully online coaching, ideal for students across Bengaluru — including Whitefield, Electronic City, Koramangala, Indiranagar, and JP Nagar — and all of India."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "Does Prime Spirit Mentors offer NEET and JEE coaching for Hyderabad students?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Yes. Fully online personalized NEET and JEE coaching for students in Hyderabad including Gachibowli, Banjara Hills, Kondapur, and Madhapur."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "Is coaching available for Bhubaneswar and Cuttack students?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Yes. Prime Spirit Mentors serves students in Bhubaneswar, Cuttack, and across Odisha through fully online micro-batch coaching."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "How is micro-batch coaching different from regular online coaching?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Unlike mass platforms with 100+ students per class, Prime Spirit limits every batch to 5–10 students. Every doubt gets addressed in real time, and the study plan adapts to each student's weak areas."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "Who is Abhinav Kashyap?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "B.Tech graduate and ex-Vedantu educator with 10+ years of teaching experience. Founder and lead mentor at Prime Spirit Mentors."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "Which exams does Prime Spirit prepare students for?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "NEET UG, JEE Mains, CUET, IAT (IISER), NEST (NISER), and Class 6–12 CBSE/ICSE Boards."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "What is psychometric mentorship?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "It identifies a student's mental blocks, exam anxiety triggers, and learning patterns, then designs a custom strategy. Included in all batches at no extra cost."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "What is the fee structure?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Two tiers: Elite Hyper-Personalized (max 5 students) and Advanced Personalized Cohort (max 10 students). Contact us for current fee details. Poonam Foundation for Class 6–8 is ₹999/month."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "What is Poonam Foundation?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "A community initiative offering affordable Maths and Science coaching for Class 6, 7, and 8 at ₹999/month (MRP ₹1999) for two subjects, in batches of 20 students."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "Is there a free demo class?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Yes. Book a free strategy evaluation session through the enquiry form or WhatsApp us at +91 97006 27812."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "What is your refund policy?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "We offer a 7-day satisfaction guarantee. If you're not satisfied after the first week of classes, we provide a full refund. Contact us for complete terms."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "How do I enrol in a batch?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Fill out the enquiry form on this page or WhatsApp us at +91 97006 27812. We'll schedule a free consultation to match you with the right batch."
-          }
-        }
+        {"@type": "Question", "name": "Is Prime Spirit Mentors suitable for Bengaluru students?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Prime Spirit Mentors offers fully online coaching, ideal for students across Bengaluru — including Whitefield, Electronic City, Koramangala, Indiranagar, and JP Nagar — and all of India."}},
+        {"@type": "Question", "name": "Does Prime Spirit Mentors offer NEET and JEE coaching for Hyderabad students?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Fully online personalized NEET and JEE coaching for students in Hyderabad including Gachibowli, Banjara Hills, Kondapur, and Madhapur."}},
+        {"@type": "Question", "name": "Is coaching available for Bhubaneswar and Cuttack students?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Prime Spirit Mentors serves students in Bhubaneswar, Cuttack, and across Odisha through fully online micro-batch coaching."}},
+        {"@type": "Question", "name": "How is micro-batch coaching different from regular online coaching?", "acceptedAnswer": {"@type": "Answer", "text": "Unlike mass platforms with 100+ students per class, Prime Spirit limits every batch to 5–10 students. Every doubt gets addressed in real time, and the study plan adapts to each student's weak areas."}},
+        {"@type": "Question", "name": "Who is Abhinav Kashyap?", "acceptedAnswer": {"@type": "Answer", "text": "B.Tech graduate and ex-Vedantu educator with 10+ years of teaching experience. Founder and lead mentor at Prime Spirit Mentors."}},
+        {"@type": "Question", "name": "Which exams does Prime Spirit prepare students for?", "acceptedAnswer": {"@type": "Answer", "text": "NEET UG, JEE Mains, CUET, IAT (IISER), NEST (NISER), and Class 6–12 CBSE/ICSE Boards."}},
+        {"@type": "Question", "name": "What is psychometric mentorship?", "acceptedAnswer": {"@type": "Answer", "text": "It identifies a student's mental blocks, exam anxiety triggers, and learning patterns, then designs a custom strategy. Included in all batches at no extra cost."}},
+        {"@type": "Question", "name": "What is the fee structure?", "acceptedAnswer": {"@type": "Answer", "text": "Two tiers: Elite Hyper-Personalized (max 5 students) and Advanced Personalized Cohort (max 10 students). Contact us for current fee details. Poonam Foundation for Class 6–8 is ₹999/month."}},
+        {"@type": "Question", "name": "What is Poonam Foundation?", "acceptedAnswer": {"@type": "Answer", "text": "A community initiative offering affordable Maths and Science coaching for Class 6, 7, and 8 at ₹999/month (MRP ₹1999) for two subjects, in batches of 20 students."}},
+        {"@type": "Question", "name": "Is there a free demo class?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Book a free strategy evaluation session through the enquiry form or WhatsApp us at +91 97006 27812."}},
+        {"@type": "Question", "name": "What is your refund policy?", "acceptedAnswer": {"@type": "Answer", "text": "We offer a 7-day satisfaction guarantee. If you're not satisfied after the first week of classes, we provide a full refund."}},
+        {"@type": "Question", "name": "How do I enrol in a batch?", "acceptedAnswer": {"@type": "Answer", "text": "Fill out the enquiry form on this page or WhatsApp us at +91 97006 27812. We'll schedule a free consultation to match you with the right batch."}}
       ]
     }
     </script>
 
-    <!-- Schema: WebSite with SearchAction -->
+    <!-- Schema: WebSite -->
     <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "WebSite",
-      "name": "Prime Spirit Mentors",
-      "url": "https://primespirit.co.in",
-      "description": "Best online micro-batch coaching for NEET, JEE, CUET, IAT, NEST and Class 6-12 Boards.",
-      "publisher": {
-        "@type": "EducationalOrganization",
-        "name": "Prime Spirit Mentors"
-      },
-      "potentialAction": {
-        "@type": "SearchAction",
-        "target": {
-          "@type": "EntryPoint",
-          "urlTemplate": "https://primespirit.co.in/?q={search_term_string}"
-        },
-        "query-input": "required name=search_term_string"
-      }
-    }
+    {"@context":"https://schema.org","@type":"WebSite","name":"Prime Spirit Mentors","url":"https://primespirit.co.in","description":"Best online micro-batch coaching for NEET, JEE, CUET, IAT, NEST and Class 6-12 Boards.","publisher":{"@type":"EducationalOrganization","name":"Prime Spirit Mentors"},"potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://primespirit.co.in/?q={search_term_string}"},"query-input":"required name=search_term_string"}}
     </script>
 
     <!-- Schema: BreadcrumbList -->
     <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "BreadcrumbList",
-      "itemListElement": [
-        {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://primespirit.co.in/"},
-        {"@type": "ListItem", "position": 2, "name": "Programs", "item": "https://primespirit.co.in/#courses"},
-        {"@type": "ListItem", "position": 3, "name": "Notes Vault", "item": "https://primespirit.co.in/#notes-vault"},
-        {"@type": "ListItem", "position": 4, "name": "Blog", "item": "https://primespirit.co.in/#blog-hub"},
-        {"@type": "ListItem", "position": 5, "name": "FAQ", "item": "https://primespirit.co.in/#faq"}
-      ]
-    }
+    {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://primespirit.co.in/"},{"@type":"ListItem","position":2,"name":"Programs","item":"https://primespirit.co.in/#courses"},{"@type":"ListItem","position":3,"name":"Notes Vault","item":"https://primespirit.co.in/#notes-vault"},{"@type":"ListItem","position":4,"name":"Blog","item":"https://primespirit.co.in/#blog-hub"},{"@type":"ListItem","position":5,"name":"FAQ","item":"https://primespirit.co.in/#faq"}]}
     </script>
 
     <!-- Schema: Person -->
     <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "Person",
-      "name": "Abhinav Kashyap",
-      "jobTitle": "Founder & Lead Mentor",
-      "worksFor": {
-        "@type": "EducationalOrganization",
-        "name": "Prime Spirit Mentors",
-        "url": "https://primespirit.co.in"
-      },
-      "description": "B.Tech graduate and ex-Vedantu educator with 10+ years of experience.",
-      "url": "https://primespirit.co.in",
-      "sameAs": [
-        "https://instagram.com/primespiritmentors",
-        "https://facebook.com/psmentors"
-      ]
-    }
+    {"@context":"https://schema.org","@type":"Person","name":"Abhinav Kashyap","jobTitle":"Founder & Lead Mentor","worksFor":{"@type":"EducationalOrganization","name":"Prime Spirit Mentors","url":"https://primespirit.co.in"},"description":"B.Tech graduate and ex-Vedantu educator with 10+ years of experience.","url":"https://primespirit.co.in","sameAs":["https://instagram.com/primespiritmentors","https://facebook.com/psmentors"]}
     </script>
 
     <!-- GA4 — replace G-XXXXXXXXXX with real ID -->
@@ -408,7 +278,7 @@
                 </div>
                 <div class="poonam-dd-actions">
                     <a href="https://wa.me/919700627812?text=Hi%2C%20I%20want%20to%20enrol%20in%20Poonam%20Foundation%20(Class%206%2F7%2F8).%20Please%20share%20details." class="poonam-dd-btn-primary" target="_blank" rel="noopener noreferrer"><i class="fab fa-whatsapp" aria-hidden="true"></i> Enrol Now</a>
-                    <a href="#poonam-foundation" class="poonam-dd-btn-secondary" id="poonamLearnMore"><i class="fas fa-arrow-right" aria-hidden="true"></i> Full Details</a>
+                    <a href="poonam-foundation.html" class="poonam-dd-btn-secondary" id="poonamLearnMore"><i class="fas fa-arrow-right" aria-hidden="true"></i> Full Details</a>
                 </div>
             </div>
         </div>
@@ -489,7 +359,7 @@
             </div>
         </section>
 
-        <!-- POONAM FOUNDATION -->
+        <!-- POONAM FOUNDATION (homepage preview) -->
         <section id="poonam-foundation" class="poonam-section" aria-labelledby="poonam-heading">
             <div class="container">
                 <div class="poonam-orb poonam-orb--1" aria-hidden="true"></div>
@@ -531,7 +401,7 @@
                             <li><i class="fas fa-star" aria-hidden="true"></i> Experienced Prime Spirit mentors</li>
                             <li><i class="fas fa-star" aria-hidden="true"></i> CBSE / ICSE aligned</li>
                         </ul>
-                        <a href="https://wa.me/919700627812?text=Hi%2C%20I%20have%20questions%20about%20Poonam%20Foundation." class="poonam-enroll-btn poonam-enroll-btn--outline" target="_blank" rel="noopener noreferrer" data-track="cta-poonam-ask"><i class="fab fa-whatsapp" aria-hidden="true"></i> Ask About the Foundation</a>
+                        <a href="poonam-foundation.html" class="poonam-enroll-btn poonam-enroll-btn--outline" data-track="cta-poonam-learn-more"><i class="fas fa-info-circle" aria-hidden="true"></i> Learn More About the Foundation</a>
                     </div>
                 </div>
                 <div class="poonam-trust-strip" aria-label="Poonam Foundation highlights">
@@ -550,13 +420,9 @@
                 <span class="section-subtitle">Academic Intelligence</span>
                 <h2 id="blog-heading">The Mentorship Blog</h2>
                 <hr class="title-line" aria-hidden="true">
-
-                <!-- Blog Search -->
                 <div class="blog-search-wrap">
                     <div class="blog-search-input"><i class="fas fa-search" aria-hidden="true"></i><input type="search" id="blogSearchInput" placeholder="Search articles by topic, exam, or keyword..." aria-label="Search blog articles" autocomplete="off"></div>
                 </div>
-
-                <!-- Blog Filters -->
                 <div class="blog-filters" role="group" aria-label="Blog category filters">
                     <button class="filter-btn active" data-filter="all" type="button">All</button>
                     <button class="filter-btn" data-filter="physics" type="button">Physics</button>
@@ -566,17 +432,9 @@
                     <button class="filter-btn" data-filter="economics" type="button">Economics</button>
                     <button class="filter-btn" data-filter="strategy" type="button">Strategy</button>
                 </div>
-
-                <!-- Featured -->
                 <div id="featuredArticle" class="featured-article-wrap" aria-label="Featured article"></div>
-
-                <!-- Trending -->
                 <div id="trendingArticles" class="trending-wrap" aria-label="Trending articles"></div>
-
-                <!-- Grid: blog.js reads this ID -->
                 <div id="blog-posts-container" class="course-grid blog-grid" aria-label="Blog articles" aria-live="polite"></div>
-
-                <!-- Pagination -->
                 <div id="blogPagination" class="blog-pagination" aria-label="Blog pagination"></div>
             </div>
         </section>
@@ -627,7 +485,7 @@
                     <div class="faq-item" role="listitem"><button class="faq-question" type="button" aria-expanded="false"><span>Which exams does Prime Spirit prepare students for?</span><i class="fas fa-chevron-down" aria-hidden="true"></i></button><div class="faq-answer" role="region">NEET UG, JEE Mains, CUET, IAT (IISER), NEST (NISER), and Class 6–12 CBSE/ICSE Boards.</div></div>
                     <div class="faq-item" role="listitem"><button class="faq-question" type="button" aria-expanded="false"><span>What is psychometric mentorship?</span><i class="fas fa-chevron-down" aria-hidden="true"></i></button><div class="faq-answer" role="region">It identifies a student's mental blocks, exam anxiety triggers, and learning patterns, then designs a custom strategy. Included in all batches at no extra cost.</div></div>
                     <div class="faq-item" role="listitem"><button class="faq-question" type="button" aria-expanded="false"><span>What is the fee structure?</span><i class="fas fa-chevron-down" aria-hidden="true"></i></button><div class="faq-answer" role="region">Two tiers: Elite Hyper-Personalized (max 5 students) and Advanced Personalized Cohort (max 10 students). Contact us for current fee details. Poonam Foundation for Class 6–8 is ₹999/month.</div></div>
-                    <div class="faq-item" role="listitem"><button class="faq-question" type="button" aria-expanded="false"><span>What is Poonam Foundation?</span><i class="fas fa-chevron-down" aria-hidden="true"></i></button><div class="faq-answer" role="region">A community initiative offering affordable Maths and Science coaching for Class 6, 7, and 8 at ₹999/month (MRP ₹1999) for two subjects, in batches of 20 students.</div></div>
+                    <div class="faq-item" role="listitem"><button class="faq-question" type="button" aria-expanded="false"><span>What is Poonam Foundation?</span><i class="fas fa-chevron-down" aria-hidden="true"></i></button><div class="faq-answer" role="region">A community initiative offering affordable Maths and Science coaching for Class 6, 7, and 8 at ₹999/month (MRP ₹1999) for two subjects, in batches of 20 students. <a href="poonam-foundation.html">Learn more about Poonam Foundation</a>.</div></div>
                     <div class="faq-item" role="listitem"><button class="faq-question" type="button" aria-expanded="false"><span>Is there a free demo class?</span><i class="fas fa-chevron-down" aria-hidden="true"></i></button><div class="faq-answer" role="region">Yes. Book a free strategy evaluation session through the enquiry form or WhatsApp us at +91 97006 27812.</div></div>
                     <div class="faq-item" role="listitem"><button class="faq-question" type="button" aria-expanded="false"><span>What is your refund policy?</span><i class="fas fa-chevron-down" aria-hidden="true"></i></button><div class="faq-answer" role="region">We offer a 7-day satisfaction guarantee. If you're not satisfied after the first week of classes, we provide a full refund. Contact us for complete terms.</div></div>
                     <div class="faq-item" role="listitem"><button class="faq-question" type="button" aria-expanded="false"><span>How do I enrol in a batch?</span><i class="fas fa-chevron-down" aria-hidden="true"></i></button><div class="faq-answer" role="region">Fill out the enquiry form on this page or WhatsApp us at +91 97006 27812. We'll schedule a free consultation to match you with the right batch.</div></div>
@@ -684,8 +542,6 @@
     <div id="authModal" class="auth-modal-overlay" hidden>
         <div class="auth-modal-card" role="dialog" aria-modal="true" aria-labelledby="authModalTitle">
             <button class="close-modal-btn" id="btnCloseModal" type="button" aria-label="Close"><i class="fas fa-times" aria-hidden="true"></i></button>
-
-            <!-- Login -->
             <div id="authViewLogin" class="auth-view-panel">
                 <h3 id="authModalTitle">Welcome Back <span class="gradient-text">Mentee</span></h3>
                 <p class="auth-sub">Log in to download premium study materials and track your progress.</p>
@@ -697,8 +553,6 @@
                 </form>
                 <p class="auth-switch-prompt">New here? <button id="btnGotoSignup" class="text-link-btn" type="button">Create account</button></p>
             </div>
-
-            <!-- Signup -->
             <div id="authViewSignup" class="auth-view-panel" hidden>
                 <h3>Create Your <span class="gradient-text">Student Profile</span></h3>
                 <p class="auth-sub">Register to save quiz results and download notes.</p>
@@ -711,8 +565,6 @@
                 </form>
                 <p class="auth-switch-prompt">Have an account? <button id="btnGotoLogin" class="text-link-btn" type="button">Log in</button></p>
             </div>
-
-            <!-- Forgot -->
             <div id="authViewForgot" class="auth-view-panel" hidden>
                 <h3>Reset <span class="gradient-text">Password</span></h3>
                 <p class="auth-sub">Enter your registered email. A recovery link will be sent.</p>
@@ -747,7 +599,7 @@
                 <ul>
                     <li><a href="#courses">Elite Micro-Batch</a></li>
                     <li><a href="#courses">Advanced Cohort</a></li>
-                    <li><a href="#poonam-foundation">Poonam Foundation</a></li>
+                    <li><a href="poonam-foundation.html">Poonam Foundation</a></li>
                     <li><a href="primescore/">PrimeScore Calculator</a></li>
                     <li><a href="primetestq/index.html">PrimeTestQ&#8482;</a></li>
                 </ul>
@@ -808,9 +660,9 @@
     </script>
 
     <!-- Main app logic -->
-    <script src="script.js?v=16.0" defer></script>
+    <script src="script.js?v=17.0" defer></script>
 
-    <!-- Blog system: fetches blog/posts.json, renders into #blog-posts-container -->
+    <!-- Blog system -->
     <script src="blog/blog.js" defer></script>
 </body>
 </html>
