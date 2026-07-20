@@ -28,7 +28,7 @@
     <meta name="twitter:description" content="Elite micro-batch online coaching. Serving Bengaluru, Hyderabad, Bhubaneswar, Cuttack &amp; India.">
     <meta name="twitter:image" content="https://primespirit.co.in/og-image.jpg">
 
-    <!-- Google Search Console: replace with your real verification token -->
+    <!-- Google Search Console -->
     <meta name="google-site-verification" content="YOUR_GSC_VERIFICATION_TOKEN">
 
     <!-- Favicon -->
@@ -39,19 +39,23 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://cdnjs.cloudflare.com">
 
-    <!-- Fonts -->
+    <!-- Fonts: Syne, Source Serif 4, DM Mono -->
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=DM+Mono:wght@400&display=swap" as="style">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=DM+Mono:wght@400&display=swap" media="print" onload="this.media='all'">
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=DM+Mono:wght@400&display=swap"></noscript>
+
+    <!-- Fonts: Bangers + Nunito (Anime Quiz) -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bangers&family=Nunito:wght@400;600;700;800&display=swap" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bangers&family=Nunito:wght@400;600;700;800&display=swap"></noscript>
 
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
     <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
 
-    <!-- GSAP (used by the new header for scroll-shrink + dropdown/menu animation) -->
+    <!-- GSAP -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 
-    <!-- Critical inline CSS — minimal above-fold only -->
+    <!-- Critical inline CSS -->
     <style>
     :root{--bg:#0a0e27;--surface:#111633;--elevated:#1a2040;--border:rgba(255,255,255,.06);--border-mid:rgba(255,255,255,.1);--text:#e8ecf4;--text-sec:#8b95ad;--text-muted:#7a8499;--accent:#00C6FF;--blue:#0070F3;--green:#00df89;--font-head:'Syne',sans-serif;--font-body:'Source Serif 4',Georgia,serif;--font-mono:'DM Mono',monospace;--header-h:78px}
     *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
@@ -70,15 +74,11 @@
     :focus-visible{outline:2px solid var(--accent);outline-offset:3px}
     </style>
 
-    <!-- Main CSS v18.1 -->
+    <!-- Main CSS -->
     <link rel="preload" href="style.css?v=18.1" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="style.css?v=18.1"></noscript>
 
-    <!-- ============================================================
-         NEW HEADER CSS — move this block into style.css when ready.
-         Kept inline here so this file works standalone if you paste
-         it as-is into a fresh index.html.
-         ============================================================ -->
+    <!-- Header CSS -->
     <style>
     header{
       position:sticky; top:0; z-index:1000;
@@ -147,7 +147,6 @@
     .m-cta{display:block;text-align:center;margin-top:24px;padding:14px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--blue));color:#00121f;font-family:var(--font-head);font-weight:800}
     .m-secondary{background:none !important;color:var(--text-sec) !important;font-weight:600 !important}
 
-    /* Mobile <1024px: hamburger + drawer. Laptop/Desktop 1024px+: full dropdown nav */
     @media (max-width:1023px){
       .desktop-nav{display:none}
       .menu-toggle{display:flex}
@@ -163,6 +162,413 @@
     }
     @media (prefers-reduced-motion: reduce){
       *{transition:none !important;animation:none !important}
+    }
+    </style>
+
+    <!-- ═══════════════════════════════════════════════════════
+         ANIME MIND AUDIT — Section-scoped CSS
+         All selectors are prefixed with .anime-quiz-section
+         to prevent collisions with the main site stylesheet.
+         ═══════════════════════════════════════════════════════ -->
+    <style>
+    /* ── section shell ── */
+    .anime-quiz-section{
+      position:relative; overflow:hidden;
+      background:linear-gradient(180deg,var(--bg) 0%,#07080f 12%,#07080f 88%,var(--bg) 100%);
+      padding-top:0; padding-bottom:0;
+    }
+    .anime-quiz-section .container{position:relative;z-index:2}
+
+    /* stars */
+    .anime-quiz-section .aq-stars{
+      position:absolute; inset:0; pointer-events:none; z-index:0;
+      background:
+        radial-gradient(1px 1px at 20% 30%,rgba(255,255,255,.6) 0%,transparent 100%),
+        radial-gradient(1px 1px at 80% 10%,rgba(255,255,255,.4) 0%,transparent 100%),
+        radial-gradient(1px 1px at 50% 70%,rgba(255,255,255,.5) 0%,transparent 100%),
+        radial-gradient(1px 1px at 10% 80%,rgba(255,255,255,.3) 0%,transparent 100%),
+        radial-gradient(1px 1px at 90% 60%,rgba(255,255,255,.5) 0%,transparent 100%),
+        radial-gradient(1px 1px at 40% 90%,rgba(255,255,255,.4) 0%,transparent 100%),
+        radial-gradient(1px 1px at 65% 45%,rgba(255,255,255,.3) 0%,transparent 100%);
+    }
+
+    /* wrap */
+    .anime-quiz-section .aq-wrap{
+      position:relative; z-index:1;
+      max-width:680px; margin:0 auto;
+      padding:40px 0 80px;
+    }
+
+    /* badge */
+    .anime-quiz-section .aq-badge{
+      display:flex; align-items:center; gap:10px;
+      margin-bottom:48px;
+    }
+    .anime-quiz-section .aq-logo{
+      width:38px; height:38px;
+      background:linear-gradient(135deg,#00c6ff,#0070f3);
+      border-radius:50%; display:grid; place-items:center;
+      font-family:'Bangers',cursive; font-size:16px; color:#fff;
+      letter-spacing:1px;
+    }
+    .anime-quiz-section .aq-badge span{
+      font-size:13px; color:var(--text-sec);
+      font-weight:700; letter-spacing:.5px; text-transform:uppercase;
+    }
+
+    /* intro */
+    .anime-quiz-section .aq-intro{text-align:center}
+
+    .anime-quiz-section .aq-intro-orb{
+      width:120px; height:120px; margin:0 auto 32px;
+      border-radius:50%;
+      background:radial-gradient(circle at 35% 35%,#a855f7,#0070f3,#e63946);
+      box-shadow:0 0 60px rgba(168,85,247,.4),0 0 120px rgba(0,112,243,.2);
+      animation:aq-orb-pulse 3s ease-in-out infinite;
+      display:grid; place-items:center; font-size:48px;
+    }
+    @keyframes aq-orb-pulse{
+      0%,100%{transform:scale(1);box-shadow:0 0 60px rgba(168,85,247,.4)}
+      50%{transform:scale(1.06);box-shadow:0 0 90px rgba(168,85,247,.6)}
+    }
+
+    .anime-quiz-section .aq-eyebrow{
+      font-family:var(--font-mono); font-size:11px;
+      color:#a855f7; letter-spacing:3px; text-transform:uppercase;
+      margin-bottom:16px;
+    }
+    .anime-quiz-section .aq-intro-title{
+      font-family:'Bangers',cursive;
+      font-size:clamp(2.4rem,8vw,3.8rem);
+      letter-spacing:2px; line-height:1.05;
+      margin-bottom:18px;
+      background:linear-gradient(135deg,#fff 30%,#a855f7);
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+      background-clip:text;
+    }
+    .anime-quiz-section .aq-intro-sub{
+      color:var(--text-sec); font-size:1rem; line-height:1.7;
+      max-width:480px; margin:0 auto 36px;
+    }
+
+    .anime-quiz-section .aq-char-row{
+      display:flex; justify-content:center; gap:12px;
+      flex-wrap:wrap; margin-bottom:40px;
+    }
+    .anime-quiz-section .aq-pill{
+      display:flex; align-items:center; gap:8px;
+      background:var(--elevated); border:1px solid var(--border);
+      border-radius:40px; padding:8px 16px;
+      font-size:13px; font-weight:700;
+      transition:transform .2s,border-color .2s;
+    }
+    .anime-quiz-section .aq-pill:hover{transform:translateY(-2px)}
+    .anime-quiz-section .aq-dot{width:8px;height:8px;border-radius:50%}
+
+    .anime-quiz-section .aq-btn-start{
+      display:inline-flex; align-items:center; gap:10px;
+      background:linear-gradient(135deg,#a855f7,#0070f3);
+      color:#fff; font-family:'Nunito',sans-serif; font-size:1.1rem;
+      font-weight:800; padding:18px 44px; border-radius:50px;
+      border:none; cursor:pointer;
+      box-shadow:0 8px 32px rgba(168,85,247,.35);
+      transition:transform .2s,box-shadow .2s;
+    }
+    .anime-quiz-section .aq-btn-start:hover{transform:translateY(-3px);box-shadow:0 12px 40px rgba(168,85,247,.5)}
+    .anime-quiz-section .aq-btn-start svg{width:20px;height:20px}
+
+    .anime-quiz-section .aq-intro-note{
+      margin-top:16px; font-size:12px; color:var(--text-sec);
+    }
+
+    /* quiz screen */
+    .anime-quiz-section .aq-quiz{display:none}
+
+    .anime-quiz-section .aq-progress-row{
+      display:flex; align-items:center; gap:14px; margin-bottom:32px;
+    }
+    .anime-quiz-section .aq-progress-track{
+      flex:1; height:4px; background:var(--surface);
+      border-radius:4px; overflow:hidden;
+    }
+    .anime-quiz-section .aq-progress-fill{
+      height:100%; border-radius:4px;
+      background:linear-gradient(90deg,#a855f7,#00c6ff);
+      transition:width .5s cubic-bezier(.4,0,.2,1);
+    }
+    .anime-quiz-section .aq-progress-label{
+      font-family:var(--font-mono); font-size:11px;
+      color:var(--text-sec); white-space:nowrap;
+    }
+
+    .anime-quiz-section .aq-q-card{
+      background:var(--elevated);
+      border:1px solid var(--border);
+      border-radius:20px; padding:36px 32px;
+      animation:aq-card-in .4s cubic-bezier(.4,0,.2,1);
+    }
+    @keyframes aq-card-in{
+      from{opacity:0;transform:translateY(16px)}
+      to{opacity:1;transform:translateY(0)}
+    }
+
+    .anime-quiz-section .aq-q-number{
+      font-family:var(--font-mono); font-size:11px;
+      color:#a855f7; letter-spacing:2px;
+      margin-bottom:14px; text-transform:uppercase;
+    }
+    .anime-quiz-section .aq-q-text{
+      font-size:1.25rem; font-weight:800; line-height:1.45;
+      margin-bottom:28px;
+    }
+
+    .anime-quiz-section .aq-options{display:flex;flex-direction:column;gap:12px}
+
+    .anime-quiz-section .aq-option{
+      background:var(--surface);
+      border:1.5px solid var(--border);
+      border-radius:14px; padding:16px 20px;
+      text-align:left; cursor:pointer;
+      font-family:'Nunito',sans-serif;
+      font-size:.97rem; font-weight:600; color:var(--text);
+      display:flex; align-items:center; gap:14px;
+      transition:border-color .2s,background .2s,transform .15s;
+      position:relative; overflow:hidden;
+    }
+    .anime-quiz-section .aq-option::before{
+      content:''; position:absolute; inset:0;
+      background:linear-gradient(135deg,rgba(168,85,247,.08),rgba(0,198,255,.06));
+      opacity:0; transition:opacity .2s;
+    }
+    .anime-quiz-section .aq-option:hover{border-color:#a855f7;transform:translateX(4px)}
+    .anime-quiz-section .aq-option:hover::before{opacity:1}
+    .anime-quiz-section .aq-option.aq-selected{border-color:#a855f7;background:rgba(168,85,247,.12)}
+    .anime-quiz-section .aq-option.aq-selected::before{opacity:1}
+
+    .anime-quiz-section .aq-letter{
+      width:28px; height:28px; min-width:28px;
+      border-radius:8px; background:var(--elevated);
+      border:1px solid var(--border);
+      display:grid; place-items:center;
+      font-family:var(--font-mono); font-size:12px;
+      color:var(--text-sec); font-weight:400;
+      transition:background .2s,color .2s;
+    }
+    .anime-quiz-section .aq-option.aq-selected .aq-letter,
+    .anime-quiz-section .aq-option:hover .aq-letter{
+      background:#a855f7;color:#fff;border-color:#a855f7;
+    }
+
+    .anime-quiz-section .aq-btn-next{
+      margin-top:24px;
+      display:inline-flex; align-items:center; gap:8px;
+      background:linear-gradient(135deg,#a855f7,#0070f3);
+      color:#fff; font-family:'Nunito',sans-serif;
+      font-size:1rem; font-weight:800;
+      padding:14px 36px; border-radius:50px; border:none;
+      cursor:pointer; opacity:0; pointer-events:none;
+      transition:opacity .3s,transform .2s,box-shadow .2s;
+    }
+    .anime-quiz-section .aq-btn-next.aq-visible{opacity:1;pointer-events:all}
+    .anime-quiz-section .aq-btn-next:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(168,85,247,.4)}
+
+    /* scan screen */
+    .anime-quiz-section .aq-scan{display:none;text-align:center;padding:60px 0}
+
+    .anime-quiz-section .aq-scan-orb{
+      width:100px; height:100px; margin:0 auto 32px;
+      border-radius:50%;
+      border:2px solid transparent;
+      background:linear-gradient(var(--elevated),var(--elevated)) padding-box,
+                  linear-gradient(135deg,#a855f7,#00c6ff,#e63946) border-box;
+      display:grid; place-items:center; font-size:40px;
+      animation:aq-scan-spin 1.5s linear infinite;
+    }
+    @keyframes aq-scan-spin{
+      0%{box-shadow:0 0 0 0 rgba(168,85,247,.6)}
+      50%{box-shadow:0 0 40px 10px rgba(168,85,247,.2)}
+      100%{box-shadow:0 0 0 0 rgba(168,85,247,0)}
+    }
+
+    .anime-quiz-section .aq-scan-title{
+      font-family:'Bangers',cursive; font-size:2rem;
+      letter-spacing:2px; margin-bottom:12px;
+    }
+    .anime-quiz-section .aq-scan-sub{color:var(--text-sec);font-size:.9rem}
+
+    .anime-quiz-section .aq-scan-bars{margin:32px auto;max-width:300px}
+    .anime-quiz-section .aq-scan-bar{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+    .anime-quiz-section .aq-scan-label{font-family:var(--font-mono);font-size:10px;color:var(--text-sec);width:80px;text-align:right}
+    .anime-quiz-section .aq-scan-track{flex:1;height:3px;background:var(--surface);border-radius:3px;overflow:hidden}
+    .anime-quiz-section .aq-scan-fill{
+      height:100%; border-radius:3px;
+      animation:aq-scan-fill 1.8s ease-out forwards;
+      transform-origin:left;
+    }
+    @keyframes aq-scan-fill{from{width:0}to{width:var(--w,70%)}}
+
+    /* result screen */
+    .anime-quiz-section .aq-result{display:none}
+
+    .anime-quiz-section .aq-result-head{text-align:center;margin-bottom:36px}
+    .anime-quiz-section .aq-result-eyebrow{
+      font-family:var(--font-mono); font-size:11px;
+      letter-spacing:3px; text-transform:uppercase;
+      margin-bottom:14px; color:var(--text-sec);
+    }
+
+    .anime-quiz-section .aq-reveal{
+      position:relative; width:160px; height:160px;
+      margin:0 auto 28px;
+    }
+    .anime-quiz-section .aq-avatar{
+      width:160px; height:160px; border-radius:50%;
+      display:grid; place-items:center; font-size:72px;
+      border:3px solid transparent;
+      animation:aq-avatar-pop .6s cubic-bezier(.34,1.56,.64,1) both;
+    }
+    @keyframes aq-avatar-pop{
+      from{transform:scale(0) rotate(-20deg);opacity:0}
+      to{transform:scale(1) rotate(0deg);opacity:1}
+    }
+    .anime-quiz-section .aq-glow{
+      position:absolute; inset:-10px; border-radius:50%;
+      animation:aq-glow-pulse 2.5s ease-in-out infinite; z-index:-1;
+    }
+    @keyframes aq-glow-pulse{
+      0%,100%{opacity:.4;transform:scale(1)}
+      50%{opacity:.8;transform:scale(1.1)}
+    }
+
+    .anime-quiz-section .aq-char-name{
+      font-family:'Bangers',cursive;
+      font-size:clamp(2rem,8vw,3rem);
+      letter-spacing:3px; line-height:1; margin-bottom:6px;
+    }
+    .anime-quiz-section .aq-char-title{
+      font-size:.85rem; font-weight:700; letter-spacing:2px;
+      text-transform:uppercase; color:var(--text-sec); margin-bottom:20px;
+    }
+    .anime-quiz-section .aq-type-badge{
+      display:inline-block; padding:6px 18px; border-radius:40px;
+      font-size:12px; font-weight:800; letter-spacing:1px;
+      text-transform:uppercase; margin-bottom:32px;
+    }
+
+    /* result cards */
+    .anime-quiz-section .aq-section{
+      background:var(--elevated); border:1px solid var(--border);
+      border-radius:20px; padding:28px; margin-bottom:16px;
+      animation:aq-card-in .5s ease both;
+    }
+    .anime-quiz-section .aq-section:nth-child(2){animation-delay:.1s}
+    .anime-quiz-section .aq-section:nth-child(3){animation-delay:.2s}
+    .anime-quiz-section .aq-section:nth-child(4){animation-delay:.3s}
+
+    .anime-quiz-section .aq-label{
+      font-family:var(--font-mono); font-size:10px;
+      letter-spacing:3px; text-transform:uppercase;
+      color:var(--text-sec); margin-bottom:14px;
+      display:flex; align-items:center; gap:8px;
+    }
+    .anime-quiz-section .aq-label::after{
+      content:''; flex:1; height:1px; background:var(--border);
+    }
+    .anime-quiz-section .aq-desc{font-size:.97rem;line-height:1.75;color:var(--text)}
+
+    .anime-quiz-section .aq-traits{display:flex;flex-wrap:wrap;gap:10px}
+    .anime-quiz-section .aq-trait{
+      padding:7px 16px; border-radius:40px;
+      font-size:13px; font-weight:700;
+      border:1.5px solid var(--border);
+      background:var(--surface);
+      display:flex; align-items:center; gap:6px;
+    }
+
+    .anime-quiz-section .aq-tips{list-style:none}
+    .anime-quiz-section .aq-tips li{
+      display:flex; gap:12px; align-items:flex-start;
+      padding:10px 0; border-bottom:1px solid var(--border);
+      font-size:.93rem; line-height:1.6;
+    }
+    .anime-quiz-section .aq-tips li:last-child{border-bottom:none}
+    .anime-quiz-section .aq-tip-icon{font-size:18px;min-width:28px}
+
+    .anime-quiz-section .aq-program{
+      display:flex; align-items:center; justify-content:space-between;
+      gap:16px; flex-wrap:wrap;
+    }
+    .anime-quiz-section .aq-program-info h4{font-size:1rem;font-weight:800;margin-bottom:4px}
+    .anime-quiz-section .aq-program-info p{font-size:.85rem;color:var(--text-sec)}
+    .anime-quiz-section .aq-cta{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:13px 28px; border-radius:40px;
+      font-family:'Nunito',sans-serif; font-weight:800;
+      font-size:.9rem; text-decoration:none; white-space:nowrap;
+      transition:transform .2s,box-shadow .2s;
+    }
+    .anime-quiz-section .aq-cta:hover{transform:translateY(-2px)}
+
+    .anime-quiz-section .aq-scores{display:flex;flex-direction:column;gap:10px}
+    .anime-quiz-section .aq-score-row{display:flex;align-items:center;gap:12px}
+    .anime-quiz-section .aq-score-name{font-size:12px;font-weight:700;width:100px;min-width:100px}
+    .anime-quiz-section .aq-score-track{flex:1;height:8px;background:var(--surface);border-radius:8px;overflow:hidden}
+    .anime-quiz-section .aq-score-fill{
+      height:100%; border-radius:8px;
+      transition:width 1s cubic-bezier(.4,0,.2,1); width:0;
+    }
+    .anime-quiz-section .aq-score-pct{
+      font-family:var(--font-mono); font-size:11px;
+      color:var(--text-sec); width:32px; text-align:right;
+    }
+
+    .anime-quiz-section .aq-actions{
+      display:flex; gap:12px; margin-top:28px; flex-wrap:wrap;
+    }
+    .anime-quiz-section .aq-share{
+      flex:1; display:flex; align-items:center; justify-content:center;
+      gap:8px; padding:14px 20px; border-radius:40px;
+      font-family:'Nunito',sans-serif; font-weight:800; font-size:.9rem;
+      cursor:pointer; border:none; transition:transform .2s;
+    }
+    .anime-quiz-section .aq-share:hover{transform:translateY(-2px)}
+    .anime-quiz-section .aq-retake{
+      background:var(--surface); color:var(--text);
+      border:1.5px solid var(--border);
+    }
+    .anime-quiz-section .aq-whatsapp{
+      background:#25d366; color:#fff;
+      text-decoration:none; display:flex;
+      align-items:center; justify-content:center; gap:8px;
+      padding:14px 20px; border-radius:40px;
+      font-family:'Nunito',sans-serif; font-weight:800; font-size:.9rem;
+      flex:1; transition:transform .2s;
+    }
+    .anime-quiz-section .aq-whatsapp:hover{transform:translateY(-2px)}
+
+    /* particles */
+    .aq-particle{
+      position:absolute; border-radius:50%; pointer-events:none; z-index:3;
+      animation:aq-float-up 4s ease-out forwards;
+    }
+    @keyframes aq-float-up{
+      0%{opacity:1;transform:translateY(0) scale(1)}
+      100%{opacity:0;transform:translateY(-200px) scale(0)}
+    }
+
+    /* new badge on pill */
+    .anime-quiz-section .aq-new-tag{
+      font-size:9px;font-weight:800;background:#a855f7;color:#fff;
+      padding:2px 6px;border-radius:6px;margin-left:4px;letter-spacing:.5px;
+    }
+
+    @media(max-width:480px){
+      .anime-quiz-section .aq-q-card{padding:24px 18px}
+      .anime-quiz-section .aq-section{padding:20px 16px}
+      .anime-quiz-section .aq-program{flex-direction:column;align-items:flex-start}
+    }
+    @media(prefers-reduced-motion:reduce){
+      .anime-quiz-section *{animation:none !important;transition:none !important}
     }
     </style>
 
@@ -245,7 +651,8 @@
         {"@type": "Question", "name": "What is Poonam Foundation?", "acceptedAnswer": {"@type": "Answer", "text": "A community initiative offering affordable Maths and Science coaching for Class 6, 7, and 8 at Rs.999/month (MRP Rs.1999) for two subjects, in batches of 20 students."}},
         {"@type": "Question", "name": "Is there a free demo class?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Book a free strategy evaluation session through the enquiry form or WhatsApp us at +91 97006 27812."}},
         {"@type": "Question", "name": "What is your refund policy?", "acceptedAnswer": {"@type": "Answer", "text": "We offer a 7-day satisfaction guarantee. If you are not satisfied after the first week of classes, we provide a full refund."}},
-        {"@type": "Question", "name": "How do I enrol in a batch?", "acceptedAnswer": {"@type": "Answer", "text": "Fill out the enquiry form on this page or WhatsApp us at +91 97006 27812."}}
+        {"@type": "Question", "name": "How do I enrol in a batch?", "acceptedAnswer": {"@type": "Answer", "text": "Fill out the enquiry form on this page or WhatsApp us at +91 97006 27812."}},
+        {"@type": "Question", "name": "What is the Anime Mind Audit?", "acceptedAnswer": {"@type": "Answer", "text": "A free interactive quiz that matches your study personality to an anime character archetype — Tanjiro, Naruto, Deku, Gojo, Conan, or Levi — and gives you personalized study strategies. Take it at primespirit.co.in/#anime-quiz."}}
       ]
     }
     </script>
@@ -257,7 +664,7 @@
 
     <!-- Schema: BreadcrumbList -->
     <script type="application/ld+json">
-    {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://primespirit.co.in/"},{"@type":"ListItem","position":2,"name":"Programs","item":"https://primespirit.co.in/#courses"},{"@type":"ListItem","position":3,"name":"Notes Vault","item":"https://primespirit.co.in/#notes-vault"},{"@type":"ListItem","position":4,"name":"Blog","item":"https://primespirit.co.in/#blog-hub"},{"@type":"ListItem","position":5,"name":"FAQ","item":"https://primespirit.co.in/#faq"}]}
+    {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://primespirit.co.in/"},{"@type":"ListItem","position":2,"name":"Programs","item":"https://primespirit.co.in/#courses"},{"@type":"ListItem","position":3,"name":"Notes Vault","item":"https://primespirit.co.in/#notes-vault"},{"@type":"ListItem","position":4,"name":"Blog","item":"https://primespirit.co.in/#blog-hub"},{"@type":"ListItem","position":5,"name":"Anime Mind Audit","item":"https://primespirit.co.in/#anime-quiz"},{"@type":"ListItem","position":6,"name":"FAQ","item":"https://primespirit.co.in/#faq"}]}
     </script>
 
     <!-- Schema: Person -->
@@ -296,10 +703,7 @@
         Now serving students in <span>Bengaluru</span> &middot; <span>Hyderabad</span> &middot; <span>Bhubaneswar</span> &middot; <span>Cuttack</span> &middot; and across India
     </div>
 
-    <!-- ===================================================================
-         NEW HEADER — replaces the old 14-item flat nav.
-         Grouped: Programs / Free Tools / Resources / Contact / Login / CTA
-         =================================================================== -->
+    <!-- HEADER -->
     <header role="banner" id="siteHeader">
         <div class="container nav-row">
 
@@ -314,30 +718,31 @@
                 <span class="logo-text-wrap"><span class="logo-name">Prime Spirit</span><span class="logo-tagline">Mentors</span></span>
             </a>
 
-            <!-- DESKTOP NAV (1024px and up) -->
+            <!-- DESKTOP NAV -->
             <nav class="desktop-nav" role="navigation" aria-label="Main navigation">
 
                 <div class="nav-item" data-dd="programs">
-                    <button class="nav-link" aria-expanded="false">Programs <span class="chev">▾</span></button>
+                    <button class="nav-link" aria-expanded="false">Programs <span class="chev">&#9662;</span></button>
                     <div class="dropdown">
                         <a href="#courses">Elite Micro-Batch<small>Max 5 students</small></a>
                         <a href="#courses">Advanced Cohort<small>Max 10 students</small></a>
-                        <a href="#courses">JEE/NEET Foundation<small>Class 6–10</small></a>
-                        <a href="poonam-foundation.html">Poonam Foundation<small>&#8377;999/mo &middot; Class 6–8</small></a>
+                        <a href="#courses">JEE/NEET Foundation<small>Class 6&ndash;10</small></a>
+                        <a href="poonam-foundation.html">Poonam Foundation<small>&#8377;999/mo &middot; Class 6&ndash;8</small></a>
                     </div>
                 </div>
 
                 <div class="nav-item" data-dd="tools">
-                    <button class="nav-link" aria-expanded="false">Free Tools <span class="chev">▾</span></button>
+                    <button class="nav-link" aria-expanded="false">Free Tools <span class="chev">&#9662;</span></button>
                     <div class="dropdown">
                         <a href="primescore/">PrimeScore<small>Score calculator</small></a>
                         <a href="primetestq/index.html">PrimeTestQ&#8482;<small>Free assessment test</small></a>
                         <a href="#quiz">Mindset Audit<small>Student &amp; parent scan</small></a>
+                        <a href="#anime-quiz">Anime Mind Audit<small>Discover your study type</small></a>
                     </div>
                 </div>
 
                 <div class="nav-item" data-dd="resources">
-                    <button class="nav-link" aria-expanded="false">Resources <span class="chev">▾</span></button>
+                    <button class="nav-link" aria-expanded="false">Resources <span class="chev">&#9662;</span></button>
                     <div class="dropdown">
                         <a href="#notes-vault">Notes Vault<small>Subject-wise study material</small></a>
                         <a href="#blog-hub">Blog<small>Physics, Chem, Maths &amp; more</small></a>
@@ -382,10 +787,10 @@
         </div>
     </header>
 
-    <!-- MOBILE NAV (below 1024px) -->
+    <!-- MOBILE NAV -->
     <div class="mobile-nav" id="mobileNav" role="navigation" aria-label="Mobile navigation">
         <div class="m-group">
-            <button class="m-group-trigger" aria-expanded="false">Programs <span class="chev">▾</span></button>
+            <button class="m-group-trigger" aria-expanded="false">Programs <span class="chev">&#9662;</span></button>
             <div class="m-panel">
                 <a href="#courses">Elite Micro-Batch</a>
                 <a href="#courses">Advanced Cohort</a>
@@ -394,15 +799,16 @@
             </div>
         </div>
         <div class="m-group">
-            <button class="m-group-trigger" aria-expanded="false">Free Tools <span class="chev">▾</span></button>
+            <button class="m-group-trigger" aria-expanded="false">Free Tools <span class="chev">&#9662;</span></button>
             <div class="m-panel">
                 <a href="primescore/">PrimeScore</a>
                 <a href="primetestq/index.html">PrimeTestQ&#8482;</a>
                 <a href="#quiz">Mindset Audit</a>
+                <a href="#anime-quiz">Anime Mind Audit</a>
             </div>
         </div>
         <div class="m-group">
-            <button class="m-group-trigger" aria-expanded="false">Resources <span class="chev">▾</span></button>
+            <button class="m-group-trigger" aria-expanded="false">Resources <span class="chev">&#9662;</span></button>
             <div class="m-panel">
                 <a href="#notes-vault">Notes Vault</a>
                 <a href="#blog-hub">Blog</a>
@@ -411,7 +817,7 @@
             </div>
         </div>
         <div class="m-group">
-            <button class="m-group-trigger" aria-expanded="false">Account <span class="chev">▾</span></button>
+            <button class="m-group-trigger" aria-expanded="false">Account <span class="chev">&#9662;</span></button>
             <div class="m-panel">
                 <a href="#" id="mBtnStudentLogin">Student Login</a>
                 <a href="#" id="mBtnParentLogin">Parent Login</a>
@@ -577,7 +983,7 @@
             </div>
         </section>
 
-        <!-- QUIZ -->
+        <!-- QUIZ (Existing Mindset Audit) -->
         <section id="quiz" class="section-block quiz-section" aria-labelledby="quiz-heading">
             <div class="container">
                 <span class="section-subtitle">Deep Mindset Audit</span>
@@ -608,6 +1014,79 @@
             </div>
         </section>
 
+        <!-- ═══════════════════════════════════════════════════════
+             ANIME MIND AUDIT QUIZ — New Gen-Z/Alpha Section
+             ═══════════════════════════════════════════════════════ -->
+        <section id="anime-quiz" class="section-block anime-quiz-section" aria-labelledby="anime-quiz-heading">
+            <div class="aq-stars" aria-hidden="true"></div>
+            <div class="container">
+                <span class="section-subtitle">Interactive Free Tool</span>
+                <h2 id="anime-quiz-heading">Anime Mind Audit</h2>
+                <hr class="title-line" aria-hidden="true">
+
+                <div class="aq-wrap">
+
+                    <!-- INTRO SCREEN -->
+                    <div class="aq-intro" id="aqIntro">
+                        <div class="aq-intro-orb" aria-hidden="true">&#128302;</div>
+                        <p class="aq-eyebrow">Psychometric &middot; Mind Audit &middot; 2025</p>
+                        <h3 class="aq-intro-title">Which Anime<br>Learner Are You?</h3>
+                        <p class="aq-intro-sub">Answer 10 questions about how you study, think, and handle challenges. We'll match you to the anime character whose learning superpower mirrors yours &mdash; and unlock your personal study strategy.</p>
+
+                        <div class="aq-char-row">
+                            <div class="aq-pill"><span class="aq-dot" style="background:#e63946"></span>Tanjiro</div>
+                            <div class="aq-pill"><span class="aq-dot" style="background:#ff9900"></span>Naruto</div>
+                            <div class="aq-pill"><span class="aq-dot" style="background:#00c6ff"></span>Deku</div>
+                            <div class="aq-pill"><span class="aq-dot" style="background:#a855f7"></span>Gojo</div>
+                            <div class="aq-pill"><span class="aq-dot" style="background:#22c55e"></span>Conan</div>
+                            <div class="aq-pill"><span class="aq-dot" style="background:#64748b"></span>Levi</div>
+                        </div>
+
+                        <button class="aq-btn-start" id="aqStartBtn" type="button">
+                            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M5 3l14 9-14 9V3z"/></svg>
+                            Begin Your Audit
+                        </button>
+                        <p class="aq-intro-note">&#10022; 10 questions &middot; 3 minutes &middot; No login needed</p>
+                    </div>
+
+                    <!-- QUIZ SCREEN -->
+                    <div class="aq-quiz" id="aqQuiz">
+                        <div class="aq-progress-row">
+                            <div class="aq-progress-track"><div class="aq-progress-fill" id="aqProgressFill"></div></div>
+                            <span class="aq-progress-label" id="aqProgressLabel">1 / 10</span>
+                        </div>
+                        <div class="aq-q-card" id="aqQCard">
+                            <p class="aq-q-number" id="aqQNumber">Question 01</p>
+                            <p class="aq-q-text" id="aqQText"></p>
+                            <div class="aq-options" id="aqOptions"></div>
+                        </div>
+                        <button class="aq-btn-next" id="aqNextBtn" type="button">
+                            Next &#8250;
+                        </button>
+                    </div>
+
+                    <!-- SCAN SCREEN -->
+                    <div class="aq-scan" id="aqScan">
+                        <div class="aq-scan-orb" aria-hidden="true">&#129504;</div>
+                        <h3 class="aq-scan-title">Scanning Your Mind...</h3>
+                        <p class="aq-scan-sub">Matching your responses to 6 anime archetypes</p>
+                        <div class="aq-scan-bars">
+                            <div class="aq-scan-bar"><span class="aq-scan-label">Resilience</span><div class="aq-scan-track"><div class="aq-scan-fill" style="background:#e63946;--w:85%"></div></div></div>
+                            <div class="aq-scan-bar"><span class="aq-scan-label">Creativity</span><div class="aq-scan-track"><div class="aq-scan-fill" style="background:#ff9900;--w:70%;animation-delay:.2s"></div></div></div>
+                            <div class="aq-scan-bar"><span class="aq-scan-label">Analysis</span><div class="aq-scan-track"><div class="aq-scan-fill" style="background:#00c6ff;--w:90%;animation-delay:.4s"></div></div></div>
+                            <div class="aq-scan-bar"><span class="aq-scan-label">Intuition</span><div class="aq-scan-track"><div class="aq-scan-fill" style="background:#a855f7;--w:60%;animation-delay:.6s"></div></div></div>
+                            <div class="aq-scan-bar"><span class="aq-scan-label">Logic</span><div class="aq-scan-track"><div class="aq-scan-fill" style="background:#22c55e;--w:95%;animation-delay:.8s"></div></div></div>
+                            <div class="aq-scan-bar"><span class="aq-scan-label">Discipline</span><div class="aq-scan-track"><div class="aq-scan-fill" style="background:#64748b;--w:80%;animation-delay:1s"></div></div></div>
+                        </div>
+                    </div>
+
+                    <!-- RESULT SCREEN -->
+                    <div class="aq-result" id="aqResult"></div>
+
+                </div>
+            </div>
+        </section>
+
         <!-- FAQ -->
         <section id="faq" class="section-block faq-section" aria-labelledby="faq-heading">
             <div class="container">
@@ -627,6 +1106,7 @@
                     <div class="faq-item" role="listitem"><button class="faq-question" type="button" aria-expanded="false" aria-controls="faq-answer-10" id="faq-btn-10"><span>Is there a free demo class?</span><i class="fas fa-chevron-down" aria-hidden="true"></i></button><div class="faq-answer" role="region" id="faq-answer-10" aria-labelledby="faq-btn-10">Yes. Book a free strategy evaluation session through the enquiry form or WhatsApp us at +91 97006 27812.</div></div>
                     <div class="faq-item" role="listitem"><button class="faq-question" type="button" aria-expanded="false" aria-controls="faq-answer-11" id="faq-btn-11"><span>What is your refund policy?</span><i class="fas fa-chevron-down" aria-hidden="true"></i></button><div class="faq-answer" role="region" id="faq-answer-11" aria-labelledby="faq-btn-11">We offer a 7-day satisfaction guarantee. If you're not satisfied after the first week of classes, we provide a full refund. Contact us for complete terms.</div></div>
                     <div class="faq-item" role="listitem"><button class="faq-question" type="button" aria-expanded="false" aria-controls="faq-answer-12" id="faq-btn-12"><span>How do I enrol in a batch?</span><i class="fas fa-chevron-down" aria-hidden="true"></i></button><div class="faq-answer" role="region" id="faq-answer-12" aria-labelledby="faq-btn-12">Fill out the enquiry form on this page or WhatsApp us at +91 97006 27812. We'll schedule a free consultation to match you with the right batch.</div></div>
+                    <div class="faq-item" role="listitem"><button class="faq-question" type="button" aria-expanded="false" aria-controls="faq-answer-13" id="faq-btn-13"><span>What is the Anime Mind Audit?</span><i class="fas fa-chevron-down" aria-hidden="true"></i></button><div class="faq-answer" role="region" id="faq-answer-13" aria-labelledby="faq-btn-13">A free interactive quiz that matches your study personality to an anime character archetype &mdash; Tanjiro, Naruto, Deku, Gojo, Conan, or Levi &mdash; and gives you personalized study strategies based on your result. <a href="#anime-quiz">Take the Anime Mind Audit</a>.</div></div>
                 </div>
             </div>
         </section>
@@ -740,6 +1220,7 @@
                     <li><a href="poonam-foundation.html">Poonam Foundation</a></li>
                     <li><a href="primescore/">PrimeScore Calculator</a></li>
                     <li><a href="primetestq/index.html">PrimeTestQ&#8482;</a></li>
+                    <li><a href="#anime-quiz">Anime Mind Audit</a></li>
                 </ul>
             </div>
             <div class="footer-col">
@@ -797,13 +1278,7 @@
     })();
     </script>
 
-    <!-- ============================================================
-         NEW HEADER JS — move this block into script.js when ready.
-         Handles: scroll-shrink header, dropdown open/close,
-         mobile hamburger drawer, mobile accordion groups.
-         Existing auth-modal / quiz / blog logic in script.js is
-         untouched — this only wires up the new nav markup.
-         ============================================================ -->
+    <!-- Header JS -->
     <script>
     (function(){
       const header = document.getElementById('siteHeader');
@@ -888,7 +1363,6 @@
         });
       });
 
-      /* Wire login dropdown items to the existing auth modal triggers if present */
       const openAuth = () => document.getElementById('authModal') && (document.getElementById('authModal').hidden = false);
       ['btnStudentLogin','btnParentLogin','mBtnStudentLogin','mBtnParentLogin'].forEach(id => {
         const el = document.getElementById(id);
@@ -897,10 +1371,432 @@
     })();
     </script>
 
-    <!-- Main app logic v18.1 -->
+    <!-- Main app logic -->
     <script src="script.js?v=18.1" defer></script>
 
     <!-- Blog system -->
     <script src="blog/blog.js" defer></script>
+
+    <!-- ═══════════════════════════════════════════════════════
+         ANIME MIND AUDIT — Self-contained quiz engine
+         All functions are namespaced under window.AQ to
+         prevent collisions with the existing quiz in script.js
+         ═══════════════════════════════════════════════════════ -->
+    <script>
+    (function(){
+
+    /* ── CHARACTER DATA ── */
+    const CHARACTERS = {
+      tanjiro: {
+        name:"Tanjiro Kamado", show:"Demon Slayer", emoji:"&#127754;",
+        type:"The Heart-Driven Learner", color:"#e63946",
+        colorBg:"rgba(230,57,70,.12)",
+        gradient:"linear-gradient(135deg,#e63946,#ff6b6b)",
+        glowColor:"rgba(230,57,70,.35)",
+        desc:"You learn through emotion, empathy, and deep personal connection to the subject. Like Tanjiro, you never give up \u2014 even when topics feel impossible. You care deeply about understanding the 'why' behind every concept, not just the 'what'. Your biggest strength is your ability to stay calm under pressure and support your study group. You absorb knowledge best when it connects to real life or a meaningful goal.",
+        traits:["\u{1F496} Empathetic thinker","\u{1F525} Never gives up","\u{1F30A} Calm under pressure","\u{1F465} Team player","\u{1F4A1} Meaning-seeker"],
+        tips:[
+          {icon:"\u{1F4D6}",tip:"Link every chapter to a real-world example \u2014 your brain bonds to 'why it matters'."},
+          {icon:"\u{1F3AF}",tip:"Set a personal purpose before every study session. Your motivation is emotion-driven."},
+          {icon:"\u{1F465}",tip:"Study groups energize you \u2014 teach concepts to friends to lock them in."},
+          {icon:"\u{1F319}",tip:"Review before bed; you process deeply overnight, not in rushed cramming."},
+          {icon:"\u{1F4DD}",tip:"Write short 'meaning summaries' after each chapter in your own words."}
+        ],
+        program:{name:"Advanced Personalized Cohort",desc:"Best for your collaborative, meaning-driven learning style.",color:"#e63946",link:"https://primespirit.co.in/#contact"}
+      },
+      naruto: {
+        name:"Naruto Uzumaki", show:"Naruto / Boruto", emoji:"\u{1F363}",
+        type:"The Relentless Grinder", color:"#ff9900",
+        colorBg:"rgba(255,153,0,.12)",
+        gradient:"linear-gradient(135deg,#ff9900,#ffcc00)",
+        glowColor:"rgba(255,153,0,.35)",
+        desc:"You learn by doing, repeating, and refusing to quit. Like Naruto, you might not be the fastest learner in the room \u2014 but you outwork everyone. Your secret weapon is raw effort and a burning desire to prove yourself. You thrive on challenge and get stronger every time you fail. You need variety and movement in your study sessions to stay locked in.",
+        traits:["\u26A1 High energy","\u{1F4AA} Outwork everyone","\u{1F501} Learns by repetition","\u{1F3C6} Driven by challenge","\u{1F31F} Proves doubters wrong"],
+        tips:[
+          {icon:"\u23F1\uFE0F",tip:"Use the Pomodoro method \u2014 25 min on, 5 min off. Your energy comes in powerful bursts."},
+          {icon:"\u{1F501}",tip:"Repeat practice problems 3x. Your brain needs repetition to lock in new skills."},
+          {icon:"\u{1F3AE}",tip:"Turn study goals into a daily challenge \u2014 'beat yesterday's score.'"},
+          {icon:"\u{1F3C3}",tip:"Take short movement breaks. Your mind and body are linked \u2014 walking resets focus."},
+          {icon:"\u{1F4CA}",tip:"Track your progress visibly. Seeing growth on paper fuels your fire to keep going."}
+        ],
+        program:{name:"NEET & JEE Excel Accelerator",desc:"Built for high-energy, practice-driven learners who love a challenge.",color:"#ff9900",link:"https://primespirit.co.in/#contact"}
+      },
+      deku: {
+        name:"Izuku Midoriya", show:"My Hero Academia", emoji:"\u{1F4D4}",
+        type:"The Analytical Note-Taker", color:"#00c6ff",
+        colorBg:"rgba(0,198,255,.12)",
+        gradient:"linear-gradient(135deg,#00c6ff,#0070f3)",
+        glowColor:"rgba(0,198,255,.35)",
+        desc:"You are a deep observer who turns every experience into knowledge. Like Deku, you fill notebooks, analyze patterns, and study others to understand strategies. You're methodical and detail-oriented \u2014 you want to understand every step before attempting a problem. Your note-taking is legendary, and you learn by studying multiple perspectives before forming your own view.",
+        traits:["\u{1F4D4} Detail-oriented","\u{1F50D} Pattern finder","\u{1F4CA} Strategic thinker","\u{1F4DA} Research-driven","\u{1F9E9} Connects the dots"],
+        tips:[
+          {icon:"\u{1F4D4}",tip:"Create 'Deku Notebooks' \u2014 dedicated subject journals with your own diagrams and observations."},
+          {icon:"\u{1F5FA}\uFE0F",tip:"Mind-map chapters before reading them. Your brain loves seeing the full picture first."},
+          {icon:"\u{1F50D}",tip:"When stuck, analyze solved examples step-by-step. You learn by reverse-engineering."},
+          {icon:"\u{1F4CB}",tip:"Use checklists and structured plans. You perform best with a clear roadmap."},
+          {icon:"\u{1F3AF}",tip:"Attempt past papers \u2014 analyzing answer keys is how your learning type sharpens fastest."}
+        ],
+        program:{name:"Elite Hyper-Personalized Micro-Batch",desc:"Perfect for your methodical, structured approach \u2014 small batch means zero concepts get skipped.",color:"#00c6ff",link:"https://primespirit.co.in/#contact"}
+      },
+      gojo: {
+        name:"Satoru Gojo", show:"Jujutsu Kaisen", emoji:"\u267E\uFE0F",
+        type:"The Intuitive Genius", color:"#a855f7",
+        colorBg:"rgba(168,85,247,.12)",
+        gradient:"linear-gradient(135deg,#a855f7,#6366f1)",
+        glowColor:"rgba(168,85,247,.35)",
+        desc:"You grasp concepts with lightning speed and often see solutions before others even understand the question. Like Gojo, you operate on a different level \u2014 traditional study methods can feel slow and boring for you. You need intellectual stimulation, creative problems, and space to think unconventionally. Your challenge isn't understanding \u2014 it's patience, consistency, and not underestimating what you still need to learn.",
+        traits:["\u26A1 Ultra-fast grasper","\u{1F3A8} Creative solver","\u267E\uFE0F Unconventional thinker","\u{1F9E0} Big-picture vision","\u{1F3AD} Needs variety"],
+        tips:[
+          {icon:"\u{1F680}",tip:"Skip re-reading basics. Use the time to explore why \u2014 go deeper into concepts you find easy."},
+          {icon:"\u{1F3A8}",tip:"Create visual explainers, analogies, or mini-lessons. Teaching reveals what you actually know."},
+          {icon:"\u231B",tip:"Your weakness is consistency \u2014 build a non-negotiable 30-min daily habit before going big."},
+          {icon:"\u{1F9E9}",tip:"Solve non-standard / olympiad-level questions. Standard drills will bore you into disengaging."},
+          {icon:"\u{1F4C5}",tip:"Use weekly reviews to close gaps \u2014 your intuition can create blind spots on basics."}
+        ],
+        program:{name:"National Aptitude Test Program",desc:"Designed for quick thinkers who need intellectual depth \u2014 CUET, IAT, NEST track.",color:"#a855f7",link:"https://primespirit.co.in/#contact"}
+      },
+      conan: {
+        name:"Conan Edogawa", show:"Detective Conan", emoji:"\u{1F50E}",
+        type:"The Logical Detective", color:"#22c55e",
+        colorBg:"rgba(34,197,94,.12)",
+        gradient:"linear-gradient(135deg,#22c55e,#16a34a)",
+        glowColor:"rgba(34,197,94,.35)",
+        desc:"You approach every problem like a detective solving a mystery. Like Conan, you don't accept 'just memorize it' \u2014 you need logic, evidence, and a clear chain of reasoning. You're systematic, curious, and exceptionally good at elimination-style thinking. You excel in subjects with clear rules: Maths, Physics, Chemistry. Your study style is structured investigation \u2014 you build from evidence to conclusion.",
+        traits:["\u{1F50E} Evidence-based thinker","\u{1F4D0} Loves systems & rules","\u{1F9EE} Strong in logic","\u{1F575}\uFE0F Curious & investigative","\u2705 Methodical problem-solver"],
+        tips:[
+          {icon:"\u{1F50E}",tip:"Ask 'why does this formula work?' before memorizing it. Understanding beats rote every time."},
+          {icon:"\u{1F4D0}",tip:"Build concept maps that show logical connections between formulas, not isolated facts."},
+          {icon:"\u{1F9EE}",tip:"Prioritize Maths and Science \u2014 your logical mind will compound gains there quickly."},
+          {icon:"\u{1F5C2}\uFE0F",tip:"Organize notes by 'case files' \u2014 problem type, method, variations, exceptions."},
+          {icon:"\u2697\uFE0F",tip:"Study Chemistry reactions by their logical pattern, not by rote memorization."}
+        ],
+        program:{name:"Senior Secondary Board Mastery",desc:"Your systematic thinking is built for board exam precision \u2014 Physics, Chemistry, Maths.",color:"#22c55e",link:"https://primespirit.co.in/#contact"}
+      },
+      levi: {
+        name:"Levi Ackerman", show:"Attack on Titan", emoji:"\u2694\uFE0F",
+        type:"The Disciplined Strategist", color:"#64748b",
+        colorBg:"rgba(100,116,139,.12)",
+        gradient:"linear-gradient(135deg,#64748b,#475569)",
+        glowColor:"rgba(100,116,139,.35)",
+        desc:"You are the definition of efficiency. Like Levi, you don't waste time \u2014 you study with sharp focus, cut unnecessary work, and always have a plan. You're not the loudest in the room, but your results speak. You set high standards for yourself, stick to routines, and push through discomfort without complaint. Your challenge is flexibility \u2014 you can struggle when plans change or subjects feel 'unworthy' of your effort.",
+        traits:["\u2694\uFE0F Laser focus","\u{1F4CB} Master of routines","\u{1F3C1} Goal-driven","\u{1F92B} Self-reliant","\u{1F4C9} Cuts out the noise"],
+        tips:[
+          {icon:"\u{1F4CB}",tip:"Create a fixed weekly timetable and protect it. Your discipline works best with structure."},
+          {icon:"\u2694\uFE0F",tip:"Attack your weakest subject first every day, when your mental energy is sharpest."},
+          {icon:"\u{1F3C1}",tip:"Set a clear end-of-week target every Sunday. You work best with defined missions."},
+          {icon:"\u{1F92B}",tip:"Study in silence or with instrumental music only. Distractions cost you more than others."},
+          {icon:"\u{1F504}",tip:"Build in deliberate rest \u2014 overwork is your hidden weakness. Recovery is strategy."}
+        ],
+        program:{name:"Elite Hyper-Personalized Micro-Batch",desc:"Your discipline deserves a mentor who matches your standard \u2014 max 5 students.",color:"#64748b",link:"https://primespirit.co.in/#contact"}
+      }
+    };
+
+    /* ── QUESTIONS ── */
+    const QUESTIONS = [
+      {
+        text:"You have a tough chapter to study tonight. What's your first move?",
+        options:[
+          {text:"Read through it once to understand the full picture",scores:{deku:2,conan:1}},
+          {text:"Jump straight into practice problems to learn by doing",scores:{naruto:2,tanjiro:1}},
+          {text:"Make a structured plan and break it into parts",scores:{levi:2,conan:1}},
+          {text:"Look up creative explanations online or connect it to something I love",scores:{gojo:2,tanjiro:1}}
+        ]
+      },
+      {
+        text:"You get a question wrong in class. How do you react?",
+        options:[
+          {text:"Feel embarrassed but use it to try even harder next time",scores:{naruto:2,tanjiro:1}},
+          {text:"Analyze why I went wrong and fix my notes immediately",scores:{deku:2,levi:1}},
+          {text:"It doesn't bother me much \u2014 I already see how to solve it now",scores:{gojo:2,conan:1}},
+          {text:"I feel it deeply but I remind myself why I'm here",scores:{tanjiro:2,naruto:1}}
+        ]
+      },
+      {
+        text:"Your study group is working on a problem. You usually...",
+        options:[
+          {text:"Listen carefully and bring everyone together when they disagree",scores:{tanjiro:2,deku:1}},
+          {text:"Dive in loudly with ideas even if they're half-formed",scores:{naruto:2,gojo:1}},
+          {text:"Stay quiet until you've figured it out, then explain clearly",scores:{conan:2,levi:1}},
+          {text:"Come up with an unusual approach no one else thought of",scores:{gojo:2,deku:1}}
+        ]
+      },
+      {
+        text:"Which sentence describes your notes best?",
+        options:[
+          {text:"Color-coded, full of diagrams, borderline obsessive detail",scores:{deku:2,conan:1}},
+          {text:"Minimal but organized \u2014 I write only what matters",scores:{levi:2,gojo:1}},
+          {text:"A bit messy but full of energy \u2014 I learn by writing fast",scores:{naruto:2,tanjiro:1}},
+          {text:"Full of 'what does this remind me of?' connections to real life",scores:{tanjiro:2,conan:1}}
+        ]
+      },
+      {
+        text:"It's 3 days before your exam. What are you doing?",
+        options:[
+          {text:"Calm, focused revision \u2014 I already have a plan for each day",scores:{levi:2,deku:1}},
+          {text:"Frantically doing every practice paper I can find",scores:{naruto:2,conan:1}},
+          {text:"Reviewing my notes and making sure I understand why everything works",scores:{conan:2,deku:1}},
+          {text:"Getting a bit anxious but reminding myself of how far I've come",scores:{tanjiro:2,naruto:1}}
+        ]
+      },
+      {
+        text:"When a subject feels boring or pointless, you...",
+        options:[
+          {text:"Grind through it anyway because the goal matters",scores:{naruto:2,levi:1}},
+          {text:"Try to find a hidden logic or pattern that makes it interesting",scores:{conan:2,gojo:1}},
+          {text:"Connect it to something I personally care about",scores:{tanjiro:2,deku:1}},
+          {text:"Honestly check out and struggle to stay interested",scores:{gojo:2,naruto:1}}
+        ]
+      },
+      {
+        text:"Your biggest challenge when studying is...",
+        options:[
+          {text:"Getting distracted or losing energy mid-session",scores:{naruto:2,tanjiro:1}},
+          {text:"Over-thinking and spending too long on one problem",scores:{deku:2,conan:1}},
+          {text:"Boredom \u2014 I understand things fast but find most work repetitive",scores:{gojo:2,levi:1}},
+          {text:"Keeping my emotions from affecting my focus",scores:{tanjiro:2,naruto:1}}
+        ]
+      },
+      {
+        text:"Which type of exam question excites you most?",
+        options:[
+          {text:"Multi-step logic problems where I have to work something out",scores:{conan:2,deku:1}},
+          {text:"Application questions that connect to real scenarios",scores:{tanjiro:2,conan:1}},
+          {text:"Creative or unusual questions no one has seen before",scores:{gojo:2,naruto:1}},
+          {text:"Practice-style drilling that rewards consistent effort",scores:{naruto:2,levi:1}}
+        ]
+      },
+      {
+        text:"After a study session, you feel most satisfied when you...",
+        options:[
+          {text:"Completed everything on your planned list for today",scores:{levi:2,deku:1}},
+          {text:"Solved a problem you were stuck on for days",scores:{naruto:2,tanjiro:1}},
+          {text:"Had an 'aha' moment and finally understood something deeply",scores:{conan:2,gojo:1}},
+          {text:"Felt like you grew as a person, not just as a student",scores:{tanjiro:2,deku:1}}
+        ]
+      },
+      {
+        text:"If you could have one superpower for studying, you'd pick...",
+        options:[
+          {text:"Limitless Infinity \u2014 understand everything instantly",scores:{gojo:2,conan:1}},
+          {text:"Water Breathing \u2014 calm, fluid, never give up",scores:{tanjiro:2,levi:1}},
+          {text:"One For All \u2014 grow stronger through pure effort and training",scores:{naruto:2,deku:1}},
+          {text:"Ackerman Instinct \u2014 perfect discipline, zero wasted movement",scores:{levi:2,conan:1}}
+        ]
+      }
+    ];
+
+    /* ── DOM REFS ── */
+    const $ = id => document.getElementById(id);
+    const introEl   = $('aqIntro');
+    const quizEl    = $('aqQuiz');
+    const scanEl    = $('aqScan');
+    const resultEl  = $('aqResult');
+    const progressFill  = $('aqProgressFill');
+    const progressLabel = $('aqProgressLabel');
+    const qNumber       = $('aqQNumber');
+    const qText         = $('aqQText');
+    const optionsDiv    = $('aqOptions');
+    const nextBtn       = $('aqNextBtn');
+    const startBtn      = $('aqStartBtn');
+
+    /* ── STATE ── */
+    let currentQ = 0;
+    let selectedOption = null;
+    let scores = {tanjiro:0,naruto:0,deku:0,gojo:0,conan:0,levi:0};
+
+    /* ── QUIZ LOGIC ── */
+    function startQuiz() {
+      currentQ = 0;
+      selectedOption = null;
+      scores = {tanjiro:0,naruto:0,deku:0,gojo:0,conan:0,levi:0};
+      introEl.style.display = 'none';
+      quizEl.style.display = 'block';
+      scanEl.style.display = 'none';
+      resultEl.style.display = 'none';
+      renderQuestion();
+    }
+
+    function renderQuestion() {
+      const q = QUESTIONS[currentQ];
+      selectedOption = null;
+
+      qNumber.textContent = 'Question ' + String(currentQ + 1).padStart(2, '0');
+      qText.textContent = q.text;
+      progressFill.style.width = ((currentQ) / QUESTIONS.length * 100) + '%';
+      progressLabel.textContent = (currentQ + 1) + ' / ' + QUESTIONS.length;
+
+      optionsDiv.innerHTML = '';
+      const letters = ['A', 'B', 'C', 'D'];
+
+      q.options.forEach(function(opt, i) {
+        const btn = document.createElement('button');
+        btn.className = 'aq-option';
+        btn.innerHTML = '<span class="aq-letter">' + letters[i] + '</span>' + opt.text;
+        btn.addEventListener('click', function() { selectOption(i, btn); });
+        optionsDiv.appendChild(btn);
+      });
+
+      nextBtn.classList.remove('aq-visible');
+
+      /* re-trigger card animation */
+      const card = $('aqQCard');
+      card.style.animation = 'none';
+      void card.offsetWidth;
+      card.style.animation = '';
+    }
+
+    function selectOption(index, btnEl) {
+      optionsDiv.querySelectorAll('.aq-option').forEach(function(b) { b.classList.remove('aq-selected'); });
+      btnEl.classList.add('aq-selected');
+      selectedOption = index;
+      nextBtn.classList.add('aq-visible');
+    }
+
+    function nextQuestion() {
+      if (selectedOption === null) return;
+
+      var q = QUESTIONS[currentQ];
+      var chosen = q.options[selectedOption];
+      for (var key in chosen.scores) {
+        scores[key] += chosen.scores[key];
+      }
+
+      currentQ++;
+      if (currentQ >= QUESTIONS.length) {
+        showScan();
+      } else {
+        renderQuestion();
+      }
+    }
+
+    /* ── SCAN → RESULT ── */
+    function showScan() {
+      quizEl.style.display = 'none';
+      scanEl.style.display = 'block';
+      setTimeout(showResult, 3000);
+    }
+
+    function showResult() {
+      scanEl.style.display = 'none';
+
+      var winner = Object.entries(scores).sort(function(a, b) { return b[1] - a[1]; })[0][0];
+      var ch = CHARACTERS[winner];
+      spawnParticles(ch.color);
+
+      var maxScore = Math.max.apply(null, Object.values(scores));
+
+      var barsHTML = Object.entries(scores)
+        .sort(function(a, b) { return b[1] - a[1]; })
+        .map(function(entry) {
+          var key = entry[0], val = entry[1];
+          var c = CHARACTERS[key];
+          var pct = Math.round((val / maxScore) * 100);
+          return '<div class="aq-score-row">' +
+            '<span class="aq-score-name" style="color:' + c.color + '">' + c.name.split(' ')[0] + '</span>' +
+            '<div class="aq-score-track"><div class="aq-score-fill" style="background:' + c.color + ';width:' + pct + '%"></div></div>' +
+            '<span class="aq-score-pct">' + pct + '%</span>' +
+          '</div>';
+        }).join('');
+
+      resultEl.style.display = 'block';
+      resultEl.innerHTML =
+        '<div class="aq-result-head">' +
+          '<p class="aq-result-eyebrow">Your Mind Audit Result</p>' +
+          '<div class="aq-reveal">' +
+            '<div class="aq-glow" style="background:radial-gradient(circle,' + ch.glowColor + ',transparent 70%)"></div>' +
+            '<div class="aq-avatar" style="background:' + ch.colorBg + ';border-color:' + ch.color + '">' + ch.emoji + '</div>' +
+          '</div>' +
+          '<h3 class="aq-char-name" style="background:' + ch.gradient + ';-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">' + ch.name + '</h3>' +
+          '<p class="aq-char-title">' + ch.show + '</p>' +
+          '<span class="aq-type-badge" style="background:' + ch.colorBg + ';color:' + ch.color + ';border:1.5px solid ' + ch.color + '">' + ch.type + '</span>' +
+        '</div>' +
+
+        '<div class="aq-section">' +
+          '<p class="aq-label">Your Learning Identity</p>' +
+          '<p class="aq-desc">' + ch.desc + '</p>' +
+        '</div>' +
+
+        '<div class="aq-section">' +
+          '<p class="aq-label">Your Power Traits</p>' +
+          '<div class="aq-traits">' +
+            ch.traits.map(function(t) { return '<span class="aq-trait" style="border-color:' + ch.color + '30;color:' + ch.color + '">' + t + '</span>'; }).join('') +
+          '</div>' +
+        '</div>' +
+
+        '<div class="aq-section">' +
+          '<p class="aq-label">Your Personal Study Strategy</p>' +
+          '<ul class="aq-tips">' +
+            ch.tips.map(function(t) { return '<li><span class="aq-tip-icon">' + t.icon + '</span><span>' + t.tip + '</span></li>'; }).join('') +
+          '</ul>' +
+        '</div>' +
+
+        '<div class="aq-section">' +
+          '<p class="aq-label">Your Recommended Program</p>' +
+          '<div class="aq-program">' +
+            '<div class="aq-program-info">' +
+              '<h4 style="color:' + ch.program.color + '">' + ch.program.name + '</h4>' +
+              '<p>' + ch.program.desc + '</p>' +
+            '</div>' +
+            '<a href="' + ch.program.link + '" class="aq-cta" style="background:' + ch.gradient + ';color:#fff;box-shadow:0 6px 20px ' + ch.glowColor + '">Book Free Demo &rarr;</a>' +
+          '</div>' +
+        '</div>' +
+
+        '<div class="aq-section">' +
+          '<p class="aq-label">Your Full Anime Spectrum</p>' +
+          '<div class="aq-scores">' + barsHTML + '</div>' +
+        '</div>' +
+
+        '<div class="aq-actions">' +
+          '<button class="aq-share aq-retake" id="aqRetakeBtn" type="button">&larr; Retake Audit</button>' +
+          '<a class="aq-whatsapp" href="https://wa.me/919700627812?text=' + encodeURIComponent("Hi, I just took the Prime Spirit Anime Mind Audit and got " + ch.name + " - " + ch.type + "! I'd love to book a free demo.") + '" target="_blank" rel="noopener noreferrer">' +
+            '<svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>' +
+            'Share on WhatsApp' +
+          '</a>' +
+        '</div>';
+
+      /* wire retake button */
+      $('aqRetakeBtn').addEventListener('click', startQuiz);
+
+      /* animate score bars */
+      setTimeout(function() {
+        resultEl.querySelectorAll('.aq-score-fill').forEach(function(bar) {
+          var target = bar.style.width;
+          bar.style.width = '0';
+          requestAnimationFrame(function() { bar.style.width = target; });
+        });
+      }, 300);
+    }
+
+    /* ── PARTICLES ── */
+    function spawnParticles(color) {
+      var section = document.querySelector('.anime-quiz-section');
+      for (var i = 0; i < 20; i++) {
+        (function(idx) {
+          setTimeout(function() {
+            var p = document.createElement('div');
+            p.className = 'aq-particle';
+            var size = Math.random() * 8 + 4;
+            p.style.cssText =
+              'width:' + size + 'px;height:' + size + 'px;' +
+              'background:' + color + ';' +
+              'left:' + (Math.random() * 100) + '%;' +
+              'bottom:' + (Math.random() * 30) + '%;' +
+              'opacity:' + (Math.random() * .8 + .2) + ';' +
+              'animation-duration:' + (Math.random() * 2 + 2) + 's;' +
+              'animation-delay:' + (Math.random() * .5) + 's;';
+            section.appendChild(p);
+            setTimeout(function() { p.remove(); }, 4500);
+          }, idx * 80);
+        })(i);
+      }
+    }
+
+    /* ── EVENT WIRING ── */
+    startBtn.addEventListener('click', startQuiz);
+    nextBtn.addEventListener('click', nextQuestion);
+
+    })();
+    </script>
+
 </body>
 </html>
