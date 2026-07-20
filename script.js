@@ -1,9 +1,36 @@
+/*  ============================================================
+    script.js — Prime Spirit Mentors (collision-safe)
+    ============================================================ */
 (function () {
   'use strict';
 
-  // ========================================
-  // INJECT QUIZ-SPECIFIC STYLES
-  // ========================================
+  // ----------------------------------------------------------
+  // Safe DOM helpers — NEVER use $ or $$ (collides with jQuery)
+  // ----------------------------------------------------------
+  function qs(sel, ctx) {
+    return (ctx || document).querySelector(sel);
+  }
+  function qsa(sel, ctx) {
+    return Array.prototype.slice.call(
+      (ctx || document).querySelectorAll(sel)
+    );
+  }
+  function on(el, evt, fn, opts) {
+    if (el && typeof el.addEventListener === 'function') {
+      el.addEventListener(evt, fn, opts || false);
+    }
+  }
+  function trackEvent(label) {
+    try {
+      if (typeof window.gtag === 'function') {
+        window.gtag('event', 'click', { event_label: label });
+      }
+    } catch (_) { /* silent */ }
+  }
+
+  // ----------------------------------------------------------
+  // Inject quiz-specific CSS
+  // ----------------------------------------------------------
   var quizCSS = document.createElement('style');
   quizCSS.textContent = [
     '.quiz-btn-selected{border-color:var(--accent)!important;background:rgba(0,198,255,.12)!important;box-shadow:0 0 24px rgba(0,198,255,.18);transform:scale(1.02)}',
@@ -30,59 +57,49 @@
   ].join('\n');
   document.head.appendChild(quizCSS);
 
-  // ========================================
-  // UTILITIES
-  // ========================================
-  var $ = function (sel, ctx) { return (ctx || document).querySelector(sel); };
-  var $$$$ = function (sel, ctx) { return Array.prototype.slice.call((ctx || document).querySelectorAll(sel)); };
-
-  function trackEvent(label) {
-    if (typeof gtag === 'function') {
-      gtag('event', 'click', { event_label: label });
-    }
-  }
-
-  // ========================================
-  // SCROLL PROGRESS BAR
-  // ========================================
-  var scrollProgress = $('#scrollProgress');
+  // ----------------------------------------------------------
+  // SCROLL PROGRESS
+  // ----------------------------------------------------------
+  var scrollProgress = qs('#scrollProgress');
   if (scrollProgress) {
-    window.addEventListener('scroll', function () {
+    on(window, 'scroll', function () {
       var st = window.pageYOffset || document.documentElement.scrollTop;
       var dh = document.documentElement.scrollHeight - window.innerHeight;
       var pct = dh > 0 ? (st / dh) * 100 : 0;
       scrollProgress.style.width = pct + '%';
-      scrollProgress.setAttribute('aria-valuenow', Math.round(pct));
+      scrollProgress.setAttribute('aria-valuenow', String(Math.round(pct)));
     }, { passive: true });
   }
 
-  // ========================================
+  // ----------------------------------------------------------
   // BACK TO TOP
-  // ========================================
-  var backToTop = $('#backToTop');
+  // ----------------------------------------------------------
+  var backToTop = qs('#backToTop');
   if (backToTop) {
-    window.addEventListener('scroll', function () {
-      backToTop.hidden = (window.pageYOffset || document.documentElement.scrollTop) < 400;
+    on(window, 'scroll', function () {
+      var st = window.pageYOffset || document.documentElement.scrollTop;
+      backToTop.hidden = st < 400;
     }, { passive: true });
-    backToTop.addEventListener('click', function () {
+    on(backToTop, 'click', function () {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     });
   }
 
-  // ========================================
+  // ----------------------------------------------------------
   // MOBILE MENU
-  // ========================================
-  var menuToggle = $('#menuToggle');
-  var mainNav = $('#mainNav');
+  // ----------------------------------------------------------
+  var menuToggle = qs('#menuToggle');
+  var mainNav    = qs('#mainNav');
+
   if (menuToggle && mainNav) {
-    menuToggle.addEventListener('click', function () {
+    on(menuToggle, 'click', function () {
       var expanded = this.getAttribute('aria-expanded') === 'true';
       this.setAttribute('aria-expanded', String(!expanded));
       mainNav.classList.toggle('nav-open');
       var icon = this.querySelector('i');
       if (icon) icon.className = expanded ? 'fas fa-bars' : 'fas fa-times';
     });
-    mainNav.addEventListener('click', function (e) {
+    on(mainNav, 'click', function (e) {
       if (e.target.closest('a') && mainNav.classList.contains('nav-open')) {
         mainNav.classList.remove('nav-open');
         menuToggle.setAttribute('aria-expanded', 'false');
@@ -92,20 +109,20 @@
     });
   }
 
-  // ========================================
+  // ----------------------------------------------------------
   // SEARCH OVERLAY
-  // ========================================
-  var searchToggle = $('#searchToggle');
-  var searchOverlay = $('#searchOverlay');
-  var searchClose = $('#searchClose');
-  var searchInput = $('#searchInput');
-  var searchResults = $('#searchResults');
+  // ----------------------------------------------------------
+  var searchToggle  = qs('#searchToggle');
+  var searchOverlay = qs('#searchOverlay');
+  var searchClose   = qs('#searchClose');
+  var searchInput   = qs('#searchInput');
+  var searchResults = qs('#searchResults');
 
   if (searchToggle && searchOverlay) {
-    searchToggle.addEventListener('click', function () {
+    on(searchToggle, 'click', function () {
       searchOverlay.hidden = false;
       this.setAttribute('aria-expanded', 'true');
-      if (searchInput) setTimeout(function () { searchInput.focus(); }, 50);
+      if (searchInput) setTimeout(function () { searchInput.focus(); }, 60);
     });
 
     function closeSearch() {
@@ -114,61 +131,66 @@
       searchToggle.focus();
     }
 
-    if (searchClose) searchClose.addEventListener('click', closeSearch);
-    searchOverlay.addEventListener('click', function (e) {
+    on(searchClose, 'click', closeSearch);
+    on(searchOverlay, 'click', function (e) {
       if (e.target === searchOverlay) closeSearch();
     });
-    document.addEventListener('keydown', function (e) {
+    on(document, 'keydown', function (e) {
       if (e.key === 'Escape' && !searchOverlay.hidden) closeSearch();
     });
 
     if (searchInput && searchResults) {
-      searchInput.addEventListener('input', function () {
+      on(searchInput, 'input', function () {
         var q = this.value.toLowerCase().trim();
         if (!q) { searchResults.innerHTML = ''; return; }
-        var all = $$('h2, h3').map(function (el) {
-          return { el: el, text: el.textContent, section: el.closest('section') };
-        });
-        var matches = all.filter(function (s) {
-          return s.text.toLowerCase().indexOf(q) !== -1;
-        }).slice(0, 8);
+        var headings = qsa('h2, h3');
+        var matches = headings
+          .map(function (el) {
+            return { el: el, text: el.textContent, section: el.closest('section') };
+          })
+          .filter(function (s) { return s.text.toLowerCase().indexOf(q) !== -1; })
+          .slice(0, 8);
         searchResults.innerHTML = matches.length
           ? matches.map(function (m) {
-              return '<a href="#' + (m.section ? m.section.id : '') + '" class="search-result-item">' + m.text + '</a>';
+              var id = m.section ? m.section.id : '';
+              return '<a href="#' + id + '" class="search-result-item">' + m.text + '</a>';
             }).join('')
           : '<p style="color:var(--text-muted);padding:12px 0">No results found.</p>';
       });
     }
   }
 
-  // ========================================
+  // ----------------------------------------------------------
   // POONAM DROPDOWN
-  // ========================================
-  var poonamTrigger = ('#poonamNavTrigger');
-  var poonamDropdown = $('#poonamDropdown');
+  // ----------------------------------------------------------
+  var poonamTrigger  = qs('#poonamNavTrigger');
+  var poonamDropdown = qs('#poonamDropdown');
+
   if (poonamTrigger && poonamDropdown) {
-    poonamTrigger.addEventListener('click', function (e) {
+    on(poonamTrigger, 'click', function (e) {
       e.stopPropagation();
       var expanded = this.getAttribute('aria-expanded') === 'true';
       this.setAttribute('aria-expanded', String(!expanded));
       poonamDropdown.classList.toggle('poonam-dd-open', !expanded);
     });
-    document.addEventListener('click', function (e) {
-      if (!poonamDropdown.contains(e.target) && e.target !== poonamTrigger) {
+    on(document, 'click', function (e) {
+      if (poonamDropdown && poonamTrigger &&
+          !poonamDropdown.contains(e.target) && e.target !== poonamTrigger) {
         poonamTrigger.setAttribute('aria-expanded', 'false');
         poonamDropdown.classList.remove('poonam-dd-open');
       }
     });
   }
 
-  // ========================================
+  // ----------------------------------------------------------
   // FAQ ACCORDION
-  // ========================================
-  $$$$('.faq-question').forEach(function (btn) {
-    btn.addEventListener('click', function () {
+  // ----------------------------------------------------------
+  qsa('.faq-question').forEach(function (btn) {
+    on(btn, 'click', function () {
       var expanded = this.getAttribute('aria-expanded') === 'true';
-      var answer = this.nextElementSibling;
-      $$('.faq-question').forEach(function (other) {
+      var answer   = this.nextElementSibling;
+      // Close others
+      qsa('.faq-question').forEach(function (other) {
         if (other !== btn) {
           other.setAttribute('aria-expanded', 'false');
           var a = other.nextElementSibling;
@@ -180,138 +202,138 @@
     });
   });
 
-  // ========================================
+  // ----------------------------------------------------------
   // AUTH MODAL
-  // ========================================
-  var authModal = ('#authModal');
-  var btnCloseModal = $('#btnCloseModal');
-  var authViewLogin = $('#authViewLogin');
-  var authViewSignup = $('#authViewSignup');
-  var authViewForgot = $('#authViewForgot');
+  // ----------------------------------------------------------
+  var authModal      = qs('#authModal');
+  var btnCloseModal  = qs('#btnCloseModal');
+  var authViewLogin  = qs('#authViewLogin');
+  var authViewSignup = qs('#authViewSignup');
+  var authViewForgot = qs('#authViewForgot');
 
   function openAuth(view) {
     if (!authModal) return;
     authModal.hidden = false;
     showAuthView(view || 'login');
   }
-
   function closeAuth() {
     if (authModal) authModal.hidden = true;
   }
-
   function showAuthView(view) {
-    if (authViewLogin) authViewLogin.hidden = view !== 'login';
-    if (authViewSignup) authViewSignup.hidden = view !== 'signup';
-    if (authViewForgot) authViewForgot.hidden = view !== 'forgot';
+    if (authViewLogin)  authViewLogin.hidden  = (view !== 'login');
+    if (authViewSignup) authViewSignup.hidden = (view !== 'signup');
+    if (authViewForgot) authViewForgot.hidden = (view !== 'forgot');
   }
 
-  var btnStudentLogin = $('#btnStudentLogin');
-  var btnParentLogin = $('#btnParentLogin');
-  if (btnStudentLogin) btnStudentLogin.addEventListener('click', function () { openAuth('login'); });
-  if (btnParentLogin) btnParentLogin.addEventListener('click', function () { openAuth('login'); });
-  if (btnCloseModal) btnCloseModal.addEventListener('click', closeAuth);
-  if (authModal) authModal.addEventListener('click', function (e) { if (e.target === authModal) closeAuth(); });
+  on(qs('#btnStudentLogin'), 'click', function () { openAuth('login'); });
+  on(qs('#btnParentLogin'),   'click', function () { openAuth('login'); });
+  on(btnCloseModal,           'click', closeAuth);
+  on(authModal,               'click', function (e) { if (e.target === authModal) closeAuth(); });
+  on(document,                'keydown', function (e) {
+    if (e.key === 'Escape' && authModal && !authModal.hidden) closeAuth();
+  });
 
-  var btnGotoSignup = $('#btnGotoSignup');
-  var btnGotoLogin = $('#btnGotoLogin');
-  var btnGotoForgot = $('#btnGotoForgot');
-  var btnGotoLogin2 = $('#btnGotoLogin2');
-  if (btnGotoSignup) btnGotoSignup.addEventListener('click', function () { showAuthView('signup'); });
-  if (btnGotoLogin) btnGotoLogin.addEventListener('click', function () { showAuthView('login'); });
-  if (btnGotoForgot) btnGotoForgot.addEventListener('click', function () { showAuthView('forgot'); });
-  if (btnGotoLogin2) btnGotoLogin2.addEventListener('click', function () { showAuthView('login'); });
+  on(qs('#btnGotoSignup'),  'click', function () { showAuthView('signup'); });
+  on(qs('#btnGotoLogin'),   'click', function () { showAuthView('login'); });
+  on(qs('#btnGotoForgot'),  'click', function () { showAuthView('forgot'); });
+  on(qs('#btnGotoLogin2'),  'click', function () { showAuthView('login'); });
 
   ['formLogin', 'formSignup', 'formForgot'].forEach(function (id) {
-    var form = $('#' + id);
+    var form = qs('#' + id);
     if (form) {
-      form.addEventListener('submit', function (e) {
+      on(form, 'submit', function (e) {
         e.preventDefault();
         alert('Backend integration required. This is a frontend demo.');
       });
     }
   });
 
-  // Password strength indicator
-  var signupPass = $('#signupPass');
-  var strengthBar = $('#strengthBar');
-  var strengthFeedback = $('#strengthFeedback');
+  // Password strength
+  var signupPass       = qs('#signupPass');
+  var strengthBar      = qs('#strengthBar');
+  var strengthFeedback = qs('#strengthFeedback');
+
   if (signupPass && strengthBar) {
-    signupPass.addEventListener('input', function () {
+    on(signupPass, 'input', function () {
       var v = this.value;
       var s = 0;
       if (v.length >= 8) s++;
       if (/[A-Z]/.test(v)) s++;
       if (/[0-9]/.test(v)) s++;
       if (/[^A-Za-z0-9]/.test(v)) s++;
-      var pct = (s / 4) * 100;
+      var pct    = (s / 4) * 100;
       var colors = ['#ff4444', '#ffaa00', '#aadd00', '#00df89'];
       var labels = ['Weak', 'Fair', 'Good', 'Strong'];
-      strengthBar.style.width = pct + '%';
+      strengthBar.style.width    = pct + '%';
       strengthBar.style.background = colors[s] || colors[0];
-      if (strengthFeedback) strengthFeedback.textContent = v.length === 0
-        ? 'Min 8 chars, uppercase, number, special char'
-        : labels[s] || labels[0];
+      if (strengthFeedback) {
+        strengthFeedback.textContent = v.length === 0
+          ? 'Min 8 chars, uppercase, number, special char'
+          : (labels[s] || labels[0]);
+      }
     });
   }
 
-  // ========================================
-  // NOTES DOWNLOAD — opens auth modal
-  // ========================================
-  $$$$('.download-btn-style').forEach(function (btn) {
-    btn.addEventListener('click', function () {
+  // ----------------------------------------------------------
+  // NOTES DOWNLOAD — requires auth
+  // ----------------------------------------------------------
+  qsa('.download-btn-style').forEach(function (btn) {
+    on(btn, 'click', function () {
       var notesType = this.getAttribute('data-notes') || 'unknown';
       trackEvent('cta-notes-' + notesType);
       openAuth('login');
     });
   });
 
-  // ========================================
+  // ----------------------------------------------------------
   // CONTACT FORM
-  // ========================================
-  var contactForm = $('#contactForm');
+  // ----------------------------------------------------------
+  var contactForm = qs('#contactForm');
   if (contactForm) {
-    contactForm.addEventListener('submit', function (e) {
+    on(contactForm, 'submit', function (e) {
       e.preventDefault();
-      var name = ($('#studentName') || {}).value;
-      var email = ($('#studentEmail') || {}).value;
-      var phone = ($('#studentPhone') || {}).value;
+      var nameEl  = qs('#studentName');
+      var emailEl = qs('#studentEmail');
+      var phoneEl = qs('#studentPhone');
+      var name  = nameEl  ? nameEl.value.trim()  : '';
+      var email = emailEl ? emailEl.value.trim()  : '';
+      var phone = phoneEl ? phoneEl.value.trim()  : '';
 
-      if (!name || !name.trim() || !email || !email.trim() || !phone || !phone.trim()) {
+      if (!name || !email || !phone) {
         alert('Please fill in all required fields.');
         return;
       }
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+/.test(email)) {
         alert('Please enter a valid email address.');
         return;
       }
-      if (!/^[0-9]{10}$/.test(phone.trim())) {
+      if (!/^[0-9]{10}$/.test(phone)) {
         alert('Please enter a valid 10-digit phone number.');
         return;
       }
-
       trackEvent('contact-form-submit');
       alert('Thank you! Abhinav sir will review your profile and reach out within 24 hours.');
       contactForm.reset();
     });
   }
 
-  // ========================================
+  // ----------------------------------------------------------
   // DATA-TRACK ANALYTICS
-  // ========================================
-  $$('[data-track]').forEach(function (el) {
-    el.addEventListener('click', function () {
+  // ----------------------------------------------------------
+  qsa('[data-track]').forEach(function (el) {
+    on(el, 'click', function () {
       trackEvent(this.getAttribute('data-track'));
     });
   });
 
-  // ========================================
-  // SMOOTH SCROLL FOR INTERNAL LINKS
-  // ========================================
-  $$('a[href^="#"]').forEach(function (link) {
-    link.addEventListener('click', function (e) {
+  // ----------------------------------------------------------
+  // SMOOTH SCROLL (anchor links)
+  // ----------------------------------------------------------
+  qsa('a[href^="#"]').forEach(function (link) {
+    on(link, 'click', function (e) {
       var href = this.getAttribute('href');
       if (href && href.length > 1) {
-        var target = $(href);
+        var target = qs(href);
         if (target) {
           e.preventDefault();
           target.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -320,15 +342,15 @@
     });
   });
 
-  // ========================================
+  // ----------------------------------------------------------
   // BLOG FILTER BUTTONS
-  // ========================================
-  $$('.filter-btn').forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      $$('.filter-btn').forEach(function (b) { b.classList.remove('active'); });
+  // ----------------------------------------------------------
+  qsa('.filter-btn').forEach(function (btn) {
+    on(btn, 'click', function () {
+      qsa('.filter-btn').forEach(function (b) { b.classList.remove('active'); });
       this.classList.add('active');
       var filter = this.getAttribute('data-filter');
-      $$('.blog-card, .blog-post-card').forEach(function (card) {
+      qsa('.blog-card, .blog-post-card').forEach(function (card) {
         if (filter === 'all') {
           card.style.display = '';
         } else {
@@ -339,11 +361,11 @@
     });
   });
 
-  // ========================================
-  // ========================================
-  //          MINDSET AUDIT QUIZ
-  // ========================================
-  // ========================================
+  // ==========================================================
+  // ==========================================================
+  //           MINDSET AUDIT QUIZ
+  // ==========================================================
+  // ==========================================================
 
   // ---------- STUDENT QUESTIONS ----------
   var studentQuestions = [
@@ -533,38 +555,24 @@
     }
   ];
 
-  // ---------- ARCHETYPE DEFINITIONS ----------
+  // ---------- ARCHETYPES ----------
   var studentArchetypes = {
-    CD: { badge: '🔍', name: 'The Deep Diver', tagline: 'You seek true understanding — not just memorization. This depth is your greatest weapon.' },
-    ER: { badge: '🛡️', name: 'The Unshakeable', tagline: 'Pressure doesn\'t break you — it sharpens you. Your composure is rare.' },
-    SD: { badge: '🏗️', name: 'The Architect', tagline: 'Your structure and consistency are superpowers. Results are a matter of time.' },
-    SA: { badge: '♟️', name: 'The Chess Player', tagline: 'You think several moves ahead. Strategy is your natural language.' },
-    FC: { badge: '🏃', name: 'The Marathoner', tagline: 'Your sustained focus and quiet consistency outperform short bursts every time.' }
+    CD: { badge: '🔍', name: 'The Deep Diver', tagline: "You seek true understanding — not just memorization. This depth is your greatest weapon." },
+    ER: { badge: '🛡️', name: 'The Unshakeable', tagline: "Pressure doesn't break you — it sharpens you. Your composure is rare." },
+    SD: { badge: '🏗️', name: 'The Architect', tagline: "Your structure and consistency are superpowers. Results are a matter of time." },
+    SA: { badge: '♟️', name: 'The Chess Player', tagline: "You think several moves ahead. Strategy is your natural language." },
+    FC: { badge: '🏃', name: 'The Marathoner', tagline: "Your sustained focus and quiet consistency outperform short bursts every time." }
   };
-
   var parentArchetypes = {
-    SL: { badge: '⚓', name: 'The Anchor', tagline: 'Your supportive presence is your child\'s strongest academic asset.' },
-    CM: { badge: '💬', name: 'The Bridge Builder', tagline: 'Open communication is the foundation of everything you do together.' },
-    AW: { badge: '🔎', name: 'The Investigator', tagline: 'You dig deep to understand what\'s really happening behind the marks.' },
-    BL: { badge: '⚖️', name: 'The Guardian', tagline: 'You protect your child\'s wellbeing — and that keeps them going long-term.' },
-    ST: { badge: '🧭', name: 'The Navigator', tagline: 'You see the big picture and chart the course before problems arise.' }
+    SL: { badge: '⚓', name: 'The Anchor', tagline: "Your supportive presence is your child's strongest academic asset." },
+    CM: { badge: '💬', name: 'The Bridge Builder', tagline: "Open communication is the foundation of everything you do together." },
+    AW: { badge: '🔎', name: 'The Investigator', tagline: "You dig deep to understand what's really happening behind the marks." },
+    BL: { badge: '⚖️', name: 'The Guardian', tagline: "You protect your child's wellbeing — and that keeps them going long-term." },
+    ST: { badge: '🧭', name: 'The Navigator', tagline: "You see the big picture and chart the course before problems arise." }
   };
 
-  var studentDimLabels = {
-    CD: 'Conceptual Depth',
-    ER: 'Exam Resilience',
-    SD: 'Study Discipline',
-    SA: 'Strategic Aptitude',
-    FC: 'Focus & Consistency'
-  };
-
-  var parentDimLabels = {
-    SL: 'Support Level',
-    CM: 'Communication',
-    AW: 'Awareness',
-    BL: 'Balance',
-    ST: 'Strategic Support'
-  };
+  var studentDimLabels = { CD: 'Conceptual Depth', ER: 'Exam Resilience', SD: 'Study Discipline', SA: 'Strategic Aptitude', FC: 'Focus & Consistency' };
+  var parentDimLabels  = { SL: 'Support Level', CM: 'Communication', AW: 'Awareness', BL: 'Balance', ST: 'Strategic Support' };
 
   var barColors = {
     CD: '#00C6FF', ER: '#00df89', SD: '#FFB800', SA: '#A855F7', FC: '#FF6B6B',
@@ -580,75 +588,67 @@
     totalQ: 10
   };
 
-  // ---------- DOM REFERENCES ----------
-  var roleSelectWindow = ('#roleSelectWindow');
-  var quizWindow = $('#quizWindow');
-  var quizControls = $('#quizControls');
-  var resultWindow = $('#resultWindow');
-  var questionText = $('#questionText');
-  var answerButtons = $('#answerButtons');
-  var nextBtn = $('#nextBtn');
-  var restartBtn = $('#restartBtn');
-  var quizProgressFill = $('#quizProgressFill');
-  var quizProgressText = $('#quizProgressText');
-  var quizTrackIdentity = $('#quizTrackIdentity');
-  var badgeDisplay = $('#badgeDisplay');
-  var psychMetricsOutput = $('#psychMetricsOutput');
+  // ---------- QUIZ DOM REFS ----------
+  var roleSelectWindow  = qs('#roleSelectWindow');
+  var quizWindow        = qs('#quizWindow');
+  var quizControls      = qs('#quizControls');
+  var resultWindow      = qs('#resultWindow');
+  var questionText      = qs('#questionText');
+  var answerButtons     = qs('#answerButtons');
+  var nextBtn           = qs('#nextBtn');
+  var restartBtn        = qs('#restartBtn');
+  var quizProgressFill  = qs('#quizProgressFill');
+  var quizProgressText  = qs('#quizProgressText');
+  var quizTrackIdentity = qs('#quizTrackIdentity');
+  var badgeDisplay      = qs('#badgeDisplay');
+  var psychMetricsOutput = qs('#psychMetricsOutput');
 
-  // ---------- GUARD ----------
+  // Guard: quiz section must exist
   if (!roleSelectWindow || !quizWindow || !questionText || !answerButtons) {
     console.warn('[Quiz] Required DOM elements missing — quiz disabled.');
     return;
   }
 
   // ---------- ROLE SELECTION ----------
-  var btnRoleStudent = $('#btnRoleStudent');
-  var btnRoleParent = $('#btnRoleParent');
+  var btnRoleStudent = qs('#btnRoleStudent');
+  var btnRoleParent  = qs('#btnRoleParent');
 
-  if (btnRoleStudent) {
-    btnRoleStudent.addEventListener('click', function () { startQuiz('student'); });
-  }
-  if (btnRoleParent) {
-    btnRoleParent.addEventListener('click', function () { startQuiz('parent'); });
-  }
+  on(btnRoleStudent, 'click', function () { startQuiz('student'); });
+  on(btnRoleParent,  'click', function () { startQuiz('parent'); });
 
   function startQuiz(role) {
-    quizState.role = role;
-    quizState.questions = role === 'student' ? studentQuestions : parentQuestions;
-    quizState.answers = [];
-    quizState.currentQ = 0;
+    quizState.role      = role;
+    quizState.questions = (role === 'student') ? studentQuestions : parentQuestions;
+    quizState.answers   = [];
+    quizState.currentQ  = 0;
 
     roleSelectWindow.hidden = true;
-    resultWindow.hidden = true;
-    quizWindow.hidden = false;
+    resultWindow.hidden     = true;
+    quizWindow.hidden       = false;
     if (quizControls) quizControls.hidden = false;
 
     if (quizTrackIdentity) {
-      quizTrackIdentity.textContent = role === 'student' ? '🎓 Student Track' : '👨‍👩‍👧 Parent Track';
+      quizTrackIdentity.textContent = (role === 'student') ? '🎓 Student Track' : '👨‍👩‍👧 Parent Track';
     }
-
     trackEvent('quiz-start-' + role);
     renderQuestion();
   }
 
   // ---------- RENDER QUESTION ----------
   function renderQuestion() {
-    var q = quizState.questions[quizState.currentQ];
-    var idx = quizState.currentQ;
+    var q     = quizState.questions[quizState.currentQ];
+    var idx   = quizState.currentQ;
     var total = quizState.totalQ;
 
-    // Progress
     if (quizProgressFill) quizProgressFill.style.width = ((idx) / total * 100) + '%';
     if (quizProgressText) quizProgressText.textContent = 'Question ' + (idx + 1) + ' of ' + total;
 
-    // Question text
     questionText.textContent = q.q;
 
-    // Clear + render options
     answerButtons.innerHTML = '';
     q.options.forEach(function (opt, i) {
       var btn = document.createElement('button');
-      btn.type = 'button';
+      btn.type      = 'button';
       btn.className = 'quiz-btn';
       btn.textContent = opt.text;
       btn.setAttribute('data-index', String(i));
@@ -656,15 +656,13 @@
       if (quizState.answers[idx] !== undefined && quizState.answers[idx] === i) {
         btn.classList.add('quiz-btn-selected');
       }
-
-      btn.addEventListener('click', function () { selectAnswer(i); });
+      on(btn, 'click', function () { selectAnswer(i); });
       answerButtons.appendChild(btn);
     });
 
-    // Next button visibility
     if (nextBtn) {
-      nextBtn.hidden = quizState.answers[idx] === undefined;
-      nextBtn.innerHTML = idx === total - 1
+      nextBtn.hidden = (quizState.answers[idx] === undefined);
+      nextBtn.innerHTML = (idx === total - 1)
         ? 'View Results <i class="fas fa-arrow-right" aria-hidden="true"></i>'
         : 'Next <i class="fas fa-arrow-right" aria-hidden="true"></i>';
     }
@@ -674,46 +672,41 @@
   function selectAnswer(optionIndex) {
     quizState.answers[quizState.currentQ] = optionIndex;
 
-    // Highlight
-    $$$$('.quiz-btn', answerButtons).forEach(function (btn, i) {
+    qsa('.quiz-btn', answerButtons).forEach(function (btn, i) {
       btn.classList.toggle('quiz-btn-selected', i === optionIndex);
     });
 
-    // Show next
     if (nextBtn) {
       nextBtn.hidden = false;
-      nextBtn.innerHTML = quizState.currentQ === quizState.totalQ - 1
+      nextBtn.innerHTML = (quizState.currentQ === quizState.totalQ - 1)
         ? 'View Results <i class="fas fa-arrow-right" aria-hidden="true"></i>'
         : 'Next <i class="fas fa-arrow-right" aria-hidden="true"></i>';
     }
   }
 
-  // ---------- NEXT BUTTON ----------
-  if (nextBtn) {
-    nextBtn.addEventListener('click', function () {
-      if (quizState.answers[quizState.currentQ] === undefined) return;
-
-      if (quizState.currentQ < quizState.totalQ - 1) {
-        quizState.currentQ++;
-        renderQuestion();
-      } else {
-        showResults();
-      }
-    });
-  }
+  // ---------- NEXT ----------
+  on(nextBtn, 'click', function () {
+    if (quizState.answers[quizState.currentQ] === undefined) return;
+    if (quizState.currentQ < quizState.totalQ - 1) {
+      quizState.currentQ++;
+      renderQuestion();
+    } else {
+      showResults();
+    }
+  });
 
   // ---------- SHOW RESULTS ----------
   function showResults() {
-    quizWindow.hidden = true;
+    quizWindow.hidden       = true;
     if (quizControls) quizControls.hidden = true;
-    resultWindow.hidden = false;
+    resultWindow.hidden     = false;
 
-    var isStudent = quizState.role === 'student';
+    var isStudent  = (quizState.role === 'student');
     var archetypes = isStudent ? studentArchetypes : parentArchetypes;
-    var dimLabels = isStudent ? studentDimLabels : parentDimLabels;
-    var dimKeys = Object.keys(dimLabels);
+    var dimLabels  = isStudent ? studentDimLabels  : parentDimLabels;
+    var dimKeys    = Object.keys(dimLabels);
 
-    // Calculate raw totals
+    // Calculate scores
     var totals = {};
     dimKeys.forEach(function (k) { totals[k] = 0; });
 
@@ -726,116 +719,92 @@
       }
     });
 
-    // Percentages (max per dim = 10 questions × 5 score = 50)
     var maxPerDim = quizState.totalQ * 5;
     var pct = {};
     dimKeys.forEach(function (k) {
       pct[k] = Math.round((totals[k] / maxPerDim) * 100);
     });
 
-    // Dominant dimension
+    // Dominant & weakest
     var dominantKey = dimKeys[0];
+    var weakestKey  = dimKeys[0];
     dimKeys.forEach(function (k) {
       if (pct[k] > pct[dominantKey]) dominantKey = k;
-    });
-
-    // Weakest dimension
-    var weakestKey = dimKeys[0];
-    dimKeys.forEach(function (k) {
-      if (pct[k] < pct[weakestKey]) weakestKey = k;
+      if (pct[k] < pct[weakestKey])  weakestKey  = k;
     });
 
     var archetype = archetypes[dominantKey];
-    var insights = getInsights(isStudent, dominantKey, weakestKey, pct);
+    var insights  = getInsights(isStudent, dominantKey, weakestKey, pct);
 
-    // --- Badge ---
     if (badgeDisplay) badgeDisplay.textContent = archetype.badge;
 
-    // --- Build results HTML ---
+    // Build results HTML
     var html = '';
-
-    // Profile header
     html += '<div class="quiz-profile-header">';
-    html += '<span class="quiz-profile-name">' + archetype.name + '</span>';
-    html += '<p class="quiz-profile-tagline">' + archetype.tagline + '</p>';
+    html +=   '<span class="quiz-profile-name">' + archetype.name + '</span>';
+    html +=   '<p class="quiz-profile-tagline">' + archetype.tagline + '</p>';
     html += '</div>';
 
-    // Metrics
     html += '<div class="quiz-metrics-grid">';
     dimKeys.forEach(function (k) {
       var p = pct[k];
       var c = barColors[k] || '#00C6FF';
       html += '<div class="quiz-metric-row">';
-      html += '<span class="quiz-metric-label">' + dimLabels[k] + '</span>';
-      html += '<div class="quiz-metric-bar"><div class="quiz-metric-fill" style="width:0%;background:' + c + '" data-width="' + p + '%"></div></div>';
-      html += '<span class="quiz-metric-value">' + p + '%</span>';
+      html +=   '<span class="quiz-metric-label">' + dimLabels[k] + '</span>';
+      html +=   '<div class="quiz-metric-bar"><div class="quiz-metric-fill" style="width:0%;background:' + c + '" data-width="' + p + '%"></div></div>';
+      html +=   '<span class="quiz-metric-value">' + p + '%</span>';
       html += '</div>';
     });
     html += '</div>';
 
-    // Strength insight
     html += '<div class="quiz-insight-box" id="insightStrength">';
-    html += '<div class="quiz-insight-label">Top Strength</div>';
-    html += '<div class="quiz-insight-title">' + dimLabels[dominantKey] + ' — ' + pct[dominantKey] + '%</div>';
-    html += '<p class="quiz-insight-text">' + insights.strength + '</p>';
+    html +=   '<div class="quiz-insight-label">Top Strength</div>';
+    html +=   '<div class="quiz-insight-title">' + dimLabels[dominantKey] + ' — ' + pct[dominantKey] + '%</div>';
+    html +=   '<p class="quiz-insight-text">' + insights.strength + '</p>';
     html += '</div>';
 
-    // Growth insight
     html += '<div class="quiz-insight-box" id="insightGrowth">';
-    html += '<div class="quiz-insight-label">Primary Growth Area</div>';
-    html += '<div class="quiz-insight-title">' + dimLabels[weakestKey] + ' — ' + pct[weakestKey] + '%</div>';
-    html += '<p class="quiz-insight-text">' + insights.growth + '</p>';
+    html +=   '<div class="quiz-insight-label">Primary Growth Area</div>';
+    html +=   '<div class="quiz-insight-title">' + dimLabels[weakestKey] + ' — ' + pct[weakestKey] + '%</div>';
+    html +=   '<p class="quiz-insight-text">' + insights.growth + '</p>';
     html += '</div>';
 
-    // Recommendation
     html += '<div class="quiz-track-rec" id="insightRec">';
-    html += '<h4>' + insights.recTitle + '</h4>';
-    html += '<p>' + insights.recText + '</p>';
+    html +=   '<h4>' + insights.recTitle + '</h4>';
+    html +=   '<p>' + insights.recText + '</p>';
     html += '</div>';
 
-    if (psychMetricsOutput) {
-      psychMetricsOutput.innerHTML = html;
-    }
+    if (psychMetricsOutput) psychMetricsOutput.innerHTML = html;
 
-    // Animate metric bars after a short delay
+    // Animate bars
     setTimeout(function () {
-      $$('.quiz-metric-fill', psychMetricsOutput).forEach(function (bar) {
+      qsa('.quiz-metric-fill', psychMetricsOutput).forEach(function (bar) {
         bar.style.width = bar.getAttribute('data-width');
       });
     }, 100);
 
-    // Fade in insight boxes
-    setTimeout(function () {
-      var el = $('#insightStrength');
-      if (el) el.classList.add('visible');
-    }, 600);
-    setTimeout(function () {
-      var el = $('#insightGrowth');
-      if (el) el.classList.add('visible');
-    }, 900);
-    setTimeout(function () {
-      var el = $('#insightRec');
-      if (el) el.classList.add('visible');
-    }, 1200);
+    // Fade in insight boxes (staggered)
+    setTimeout(function () { var el = qs('#insightStrength'); if (el) el.classList.add('visible'); }, 600);
+    setTimeout(function () { var el = qs('#insightGrowth');   if (el) el.classList.add('visible'); }, 900);
+    setTimeout(function () { var el = qs('#insightRec');      if (el) el.classList.add('visible'); }, 1200);
 
-    // Update progress
     if (quizProgressFill) quizProgressFill.style.width = '100%';
     if (quizProgressText) quizProgressText.textContent = 'Scan Complete';
 
     trackEvent('quiz-complete-' + quizState.role);
   }
 
-  // ---------- INSIGHTS ----------
+  // ---------- INSIGHTS ENGINE ----------
   function getInsights(isStudent, strongest, weakest, pcts) {
     if (isStudent) {
-      var strengthMap = {
+      var sMap = {
         CD: "You have a natural drive to understand the 'why' behind every concept — not just the 'what'. This depth gives you a decisive edge in application-based questions in NEET, JEE, and boards. Keep nurturing this instinct.",
         ER: "You handle exam pressure remarkably well. This composure under fire means your test scores consistently reflect your true preparation level — a rare advantage among aspirants.",
         SD: "Your study routine is structured and consistent. This discipline compounds over time and is one of the strongest predictors of success in competitive exams. Protect this habit at all costs.",
         SA: "You think strategically about your preparation — analyzing patterns, managing priorities, and focusing on what moves the needle. This big-picture thinking separates top performers.",
         FC: "Your ability to maintain sustained focus over long periods is a significant advantage. In an era of constant distraction, this quiet consistency outperforms flashy short bursts every time."
       };
-      var growthMap = {
+      var gMap = {
         CD: "Consider investing more time in understanding the 'why' behind formulas and derivations rather than jumping straight to problem-solving. Concept-first learning will multiply your accuracy and speed over time.",
         ER: "Exam anxiety may be silently capping your performance. Try incorporating timed mock sessions, box-breathing before tests, and structured error analysis (not self-blame) after every practice paper.",
         SD: "Building a consistent daily routine — even starting with just 2 focused hours at the same time each day — will compound dramatically. Use a simple tracker to build momentum before scaling up.",
@@ -843,67 +812,63 @@
         FC: "Try the Pomodoro technique (25 minutes focused work + 5 minutes break) and gradually extend your focus blocks. Remove phone notifications during study windows — even one interruption resets your flow state."
       };
 
-      var recTitle, recText;
+      var rTitle, rText;
       if (pcts.ER < 40 || pcts.SD < 40) {
-        recTitle = "Recommended: Elite Hyper-Personalized Micro-Batch";
-        recText = "Your profile reveals specific areas — like exam anxiety or routine consistency — where focused, 1:1 mentorship would create a dramatic shift. Our max 5-student Elite batch provides structured accountability, real-time error analysis, and psychometric counseling designed exactly for this.";
+        rTitle = "Recommended: Elite Hyper-Personalized Micro-Batch";
+        rText   = "Your profile reveals specific areas where focused, 1:1 mentorship would create a dramatic shift. Our max 5-student Elite batch provides structured accountability, real-time error analysis, and psychometric counseling designed exactly for this.";
       } else if (pcts.CD < 40 || pcts.SA < 40) {
-        recTitle = "Recommended: Advanced Personalized Cohort";
-        recText = "You'd benefit from concept-first teaching with collaborative peer benchmarks. Our max 10-student cohort balances deep conceptual instruction with competitive benchmarking — ideal for building both understanding and strategy.";
+        rTitle = "Recommended: Advanced Personalized Cohort";
+        rText   = "You'd benefit from concept-first teaching with collaborative peer benchmarks. Our max 10-student cohort balances deep conceptual instruction with competitive benchmarking.";
       } else {
-        recTitle = "Recommended: Elite Hyper-Personalized Micro-Batch";
-        recText = "Your strong overall profile suggests you're ready for accelerated, precision-targeted preparation. A micro-batch environment will sharpen your existing strengths while providing surgical focus on your growth areas for maximum percentile gains.";
+        rTitle = "Recommended: Elite Hyper-Personalized Micro-Batch";
+        rText   = "Your strong overall profile suggests you're ready for accelerated, precision-targeted preparation. A micro-batch environment will sharpen your existing strengths while providing surgical focus on your growth areas.";
       }
-
-      return { strength: strengthMap[strongest], growth: growthMap[weakest], recTitle: recTitle, recText: recText };
+      return { strength: sMap[strongest], growth: gMap[weakest], recTitle: rTitle, recText: rText };
     }
 
-    // Parent insights
-    var pStrengthMap = {
-      SL: "You provide a strong, supportive environment for your child. This emotional safety net is the foundation they need to take academic risks, ask questions without fear, and grow through setbacks rather than crumble.",
-      CM: "Open communication with your child about their studies means problems surface early and solutions are collaborative. Most parents struggle with this — your willingness to listen (not just direct) is a genuine advantage.",
-      AW: "Being aware of your child's specific strengths and weaknesses allows you to provide targeted support rather than generic encouragement. Informed parents are the best academic partners any mentor can have.",
-      BL: "Maintaining a balanced approach — studies alongside wellbeing, hobbies, and rest — prevents burnout and keeps long-term motivation alive. Many parents sacrifice this for short-term gains; you understand the long game.",
-      ST: "Your strategic approach to academic planning — setting goals, choosing the right resources, tracking progress — shows you're thinking about the trajectory, not just the next test. This kind of planning multiplies results."
+    // Parent
+    var pSMap = {
+      SL: "You provide a strong, supportive environment for your child. This emotional safety net is the foundation they need to take academic risks and grow through setbacks.",
+      CM: "Open communication with your child about their studies means problems surface early and solutions are collaborative. Most parents struggle with this — your willingness to listen is a genuine advantage.",
+      AW: "Being aware of your child's specific strengths and weaknesses allows you to provide targeted support rather than generic encouragement. Informed parents are the best academic partners.",
+      BL: "Maintaining a balanced approach — studies alongside wellbeing, hobbies, and rest — prevents burnout and keeps long-term motivation alive. You understand the long game.",
+      ST: "Your strategic approach to academic planning — setting goals, choosing resources, tracking progress — shows you're thinking about the trajectory, not just the next test."
     };
-    var pGrowthMap = {
-      SL: "Consider creating more structured support — regular check-ins about what they're learning (not just marks), a dedicated study space at home, and consistent encouragement during low phases. Small structure creates big results.",
-      CM: "Try asking open-ended questions about what they're learning rather than what they scored. Questions like 'What was the hardest concept this week?' open more doors than 'How much did you score?' Practice listening without jumping to advice.",
-      AW: "Ask your child's mentor for a detailed breakdown of weak topics and common error patterns. Understanding exactly where the gaps are allows you to have more productive conversations and offer meaningful help.",
-      BL: "If studies have consumed all other activities, consider reintroducing one hobby or physical activity. Research consistently shows that breaks improve memory consolidation, reduce exam anxiety, and prevent the burnout that derails long-term preparation.",
-      ST: "Consider sitting down with a professional mentor who can map your child's current level to their target exam and create a realistic, phased roadmap. Knowing the plan reduces both parent anxiety and student confusion."
+    var pGMap = {
+      SL: "Consider creating more structured support — regular check-ins about what they're learning (not just marks), a dedicated study space, and consistent encouragement during low phases.",
+      CM: "Try asking open-ended questions about what they're learning rather than what they scored. Questions like 'What was the hardest concept this week?' open more doors than 'How much did you score?'",
+      AW: "Ask your child's mentor for a detailed breakdown of weak topics and common error patterns. Understanding exactly where the gaps are allows you to have more productive conversations.",
+      BL: "If studies have consumed all other activities, consider reintroducing one hobby or physical activity. Research consistently shows that breaks improve memory consolidation and reduce exam anxiety.",
+      ST: "Consider sitting down with a professional mentor who can map your child's current level to their target exam and create a realistic, phased roadmap."
     };
 
-    var rTitle, rText;
+    var rt, rx;
     if (pcts.CM < 40) {
-      rTitle = "Suggested: Family Strategy Session with Abhinav Sir";
-      rText = "Our free consultation includes a parent-student alignment conversation. Bridging the communication gap between you and your child about academics can transform the entire preparation experience — less friction, more progress.";
+      rt = "Suggested: Family Strategy Session with Abhinav Sir";
+      rx = "Our free consultation includes a parent-student alignment conversation. Bridging the communication gap can transform the entire preparation experience.";
     } else if (pcts.SL < 40 || pcts.BL < 40) {
-      rTitle = "Suggested: Micro-Batch Coaching with Psychometric Support";
-      rText = "Our small-batch environment provides the structured support and balanced approach that complements your home environment. The included psychometric counseling helps both students and parents navigate the preparation journey together.";
+      rt = "Suggested: Micro-Batch Coaching with Psychometric Support";
+      rx = "Our small-batch environment provides the structured support and balanced approach that complements your home environment.";
     } else {
-      rTitle = "Suggested: Book a Free Family Consultation";
-      rText = "Your involvement level is strong — a quick consultation with Abhinav sir will help align your support strategy with the right academic track, batch, and study plan for your child's specific goals and learning style.";
+      rt = "Suggested: Book a Free Family Consultation";
+      rx = "Your involvement level is strong — a quick consultation with Abhinav sir will help align your support strategy with the right academic track for your child.";
     }
-
-    return { strength: pStrengthMap[strongest], growth: pGrowthMap[weakest], recTitle: rTitle, recText: rText };
+    return { strength: pSMap[strongest], growth: pGMap[weakest], recTitle: rt, recText: rx };
   }
 
   // ---------- RESTART ----------
-  if (restartBtn) {
-    restartBtn.addEventListener('click', function () {
-      resultWindow.hidden = true;
-      quizWindow.hidden = true;
-      if (quizControls) quizControls.hidden = true;
-      roleSelectWindow.hidden = false;
+  on(restartBtn, 'click', function () {
+    resultWindow.hidden      = true;
+    quizWindow.hidden        = true;
+    if (quizControls) quizControls.hidden = true;
+    roleSelectWindow.hidden  = false;
 
-      if (quizProgressFill) quizProgressFill.style.width = '0%';
-      if (quizProgressText) quizProgressText.textContent = '';
-      if (badgeDisplay) badgeDisplay.textContent = '';
-      if (psychMetricsOutput) psychMetricsOutput.innerHTML = '';
+    if (quizProgressFill)  quizProgressFill.style.width  = '0%';
+    if (quizProgressText)  quizProgressText.textContent  = '';
+    if (badgeDisplay)      badgeDisplay.textContent      = '';
+    if (psychMetricsOutput) psychMetricsOutput.innerHTML  = '';
 
-      trackEvent('quiz-restart');
-    });
-  }
+    trackEvent('quiz-restart');
+  });
 
 })();
