@@ -28,7 +28,7 @@
     <meta name="twitter:description" content="Elite micro-batch online coaching. Serving Bengaluru, Hyderabad, Bhubaneswar, Cuttack &amp; India.">
     <meta name="twitter:image" content="https://primespirit.co.in/og-image.jpg">
 
-    <!-- Google Search Console -->
+    <!-- Google Search Console: replace with your real verification token -->
     <meta name="google-site-verification" content="YOUR_GSC_VERIFICATION_TOKEN">
 
     <!-- Favicon -->
@@ -48,9 +48,12 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
     <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
 
+    <!-- GSAP (used by the new header for scroll-shrink + dropdown/menu animation) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+
     <!-- Critical inline CSS — minimal above-fold only -->
     <style>
-    :root{--bg:#0a0e27;--surface:#111633;--elevated:#1a2040;--border:rgba(255,255,255,.06);--border-mid:rgba(255,255,255,.1);--text:#e8ecf4;--text-sec:#8b95ad;--text-muted:#7a8499;--accent:#00C6FF;--blue:#0070F3;--green:#00df89;--font-head:'Syne',sans-serif;--font-body:'Source Serif 4',Georgia,serif;--font-mono:'DM Mono',monospace}
+    :root{--bg:#0a0e27;--surface:#111633;--elevated:#1a2040;--border:rgba(255,255,255,.06);--border-mid:rgba(255,255,255,.1);--text:#e8ecf4;--text-sec:#8b95ad;--text-muted:#7a8499;--accent:#00C6FF;--blue:#0070F3;--green:#00df89;--font-head:'Syne',sans-serif;--font-body:'Source Serif 4',Georgia,serif;--font-mono:'DM Mono',monospace;--header-h:78px}
     *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
     html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
     body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-size:1rem;line-height:1.7;overflow-x:hidden;-webkit-font-smoothing:antialiased}
@@ -59,7 +62,6 @@
     .scroll-progress{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--blue),var(--green));z-index:99999;width:0;transition:width 50ms}
     .container{max-width:1200px;margin:0 auto;padding:0 20px}
     @media(min-width:481px){.container{padding:0 28px}}
-    header{position:sticky;top:0;z-index:1000;background:rgba(10,14,39,.92);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
     a{color:var(--accent);text-decoration:none}
     img{max-width:100%;height:auto;display:block}
     h1,h2,h3,h4,h5,h6{font-family:var(--font-head);font-weight:700;line-height:1.2;color:var(--text)}
@@ -71,6 +73,98 @@
     <!-- Main CSS v18.1 -->
     <link rel="preload" href="style.css?v=18.1" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="style.css?v=18.1"></noscript>
+
+    <!-- ============================================================
+         NEW HEADER CSS — move this block into style.css when ready.
+         Kept inline here so this file works standalone if you paste
+         it as-is into a fresh index.html.
+         ============================================================ -->
+    <style>
+    header{
+      position:sticky; top:0; z-index:1000;
+      height:var(--header-h);
+      display:flex; align-items:center;
+      background:rgba(10,14,39,.85);
+      backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
+      border-bottom:1px solid var(--border);
+      transition:box-shadow .3s ease;
+    }
+    header.scrolled{box-shadow:0 8px 30px rgba(0,0,0,.35)}
+    .nav-row{width:100%;display:flex;align-items:center;justify-content:space-between;gap:24px}
+
+    .logo{display:flex;align-items:center;gap:10px;flex-shrink:0}
+    .logo svg{width:38px;height:38px;flex-shrink:0}
+    .logo-text-wrap{font-family:var(--font-head);font-weight:800;font-size:1.05rem;line-height:1.15;letter-spacing:.01em;display:flex;flex-direction:column}
+    .logo-tagline{display:block;font-size:.68rem;font-weight:700;color:var(--text-sec);letter-spacing:.12em;text-transform:uppercase}
+
+    .desktop-nav{display:flex;align-items:center;gap:4px;flex:1;justify-content:center}
+    .nav-item{position:relative}
+    .nav-link{
+      display:flex;align-items:center;gap:6px;padding:10px 16px;
+      font-family:var(--font-head);font-size:.88rem;font-weight:700;color:var(--text-sec);
+      border-radius:8px;transition:color .2s ease,background .2s ease;white-space:nowrap;border:none;background:none;
+    }
+    .nav-link:hover,.nav-link[aria-expanded="true"]{color:var(--text);background:rgba(255,255,255,.05)}
+    .nav-link .chev{font-size:.6rem;transition:transform .25s ease;color:var(--text-sec)}
+    .nav-link[aria-expanded="true"] .chev{transform:rotate(180deg);color:var(--accent)}
+
+    .dropdown{
+      position:absolute;top:calc(100% + 10px);left:50%;transform:translateX(-50%);
+      min-width:240px;background:var(--elevated);border:1px solid var(--border);border-radius:14px;padding:10px;
+      box-shadow:0 20px 50px rgba(0,0,0,.5);opacity:0;visibility:hidden;pointer-events:none;
+    }
+    .dropdown a{display:flex;flex-direction:column;gap:2px;padding:10px 12px;border-radius:9px;font-size:.88rem;font-weight:600;color:var(--text);transition:background .15s ease}
+    .dropdown a:hover{background:rgba(0,198,255,.08);color:var(--accent)}
+    .dropdown a small{font-family:var(--font-body);font-weight:400;color:var(--text-sec);font-size:.76rem}
+
+    .header-actions{display:flex;align-items:center;gap:10px;flex-shrink:0}
+    .btn-cta-header{
+      font-family:var(--font-head);font-weight:800;font-size:.85rem;
+      background:linear-gradient(135deg,var(--accent),var(--blue));color:#00121f;
+      padding:11px 20px;border-radius:9px;white-space:nowrap;box-shadow:0 6px 20px rgba(0,198,255,.25);display:inline-flex;align-items:center;gap:8px;
+    }
+    .icon-btn{width:38px;height:38px;display:flex;align-items:center;justify-content:center;border-radius:9px;color:var(--text-sec);border:1px solid var(--border);background:none}
+    .icon-btn:hover{color:var(--text);border-color:rgba(255,255,255,.18)}
+
+    .menu-toggle{display:none;flex-direction:column;gap:4px;width:38px;height:38px;align-items:center;justify-content:center;border-radius:9px;border:1px solid var(--border);background:none}
+    .menu-toggle span{width:18px;height:2px;background:var(--text);border-radius:2px;transition:transform .25s ease,opacity .25s ease}
+    .menu-toggle.open span:nth-child(1){transform:translateY(6px) rotate(45deg)}
+    .menu-toggle.open span:nth-child(2){opacity:0}
+    .menu-toggle.open span:nth-child(3){transform:translateY(-6px) rotate(-45deg)}
+
+    .mobile-nav{
+      position:fixed;top:var(--header-h);left:0;right:0;bottom:0;background:var(--bg);z-index:999;
+      overflow-y:auto;padding:20px;display:none;
+    }
+    .mobile-nav.active{display:block}
+    .m-group{border-bottom:1px solid var(--border)}
+    .m-group-trigger{width:100%;display:flex;justify-content:space-between;align-items:center;padding:16px 4px;font-family:var(--font-head);font-weight:700;font-size:1rem;background:none;border:none;color:var(--text)}
+    .m-group-trigger .chev{transition:transform .25s ease;color:var(--text-sec)}
+    .m-group-trigger[aria-expanded="true"] .chev{transform:rotate(180deg);color:var(--accent)}
+    .m-panel{overflow:hidden;height:0}
+    .m-panel a{display:block;padding:11px 4px 11px 14px;color:var(--text-sec);font-size:.92rem;border-left:2px solid var(--border);margin-left:2px}
+    .m-panel a:hover{color:var(--accent)}
+    .m-cta{display:block;text-align:center;margin-top:24px;padding:14px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--blue));color:#00121f;font-family:var(--font-head);font-weight:800}
+    .m-secondary{background:none !important;color:var(--text-sec) !important;font-weight:600 !important}
+
+    /* Mobile <1024px: hamburger + drawer. Laptop/Desktop 1024px+: full dropdown nav */
+    @media (max-width:1023px){
+      .desktop-nav{display:none}
+      .menu-toggle{display:flex}
+      .btn-cta-header span{display:none}
+    }
+    @media (min-width:1024px){
+      .mobile-nav{display:none !important}
+    }
+    @media (max-width:480px){
+      header{--header-h:64px}
+      .logo-text-wrap{font-size:.92rem}
+      .btn-cta-header{padding:9px 12px}
+    }
+    @media (prefers-reduced-motion: reduce){
+      *{transition:none !important;animation:none !important}
+    }
+    </style>
 
     <!-- Schema: EducationalOrganization -->
     <script type="application/ld+json">
@@ -202,11 +296,15 @@
         Now serving students in <span>Bengaluru</span> &middot; <span>Hyderabad</span> &middot; <span>Bhubaneswar</span> &middot; <span>Cuttack</span> &middot; and across India
     </div>
 
-    <!-- ===== HEADER ===== -->
-    <header role="banner">
-        <div class="container logo-nav">
+    <!-- ===================================================================
+         NEW HEADER — replaces the old 14-item flat nav.
+         Grouped: Programs / Free Tools / Resources / Contact / Login / CTA
+         =================================================================== -->
+    <header role="banner" id="siteHeader">
+        <div class="container nav-row">
+
             <a href="#hero" class="logo" aria-label="Prime Spirit Mentors Home">
-                <svg class="logo-orbit-svg" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" width="42" height="42">
+                <svg class="logo-orbit-svg" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                     <defs><linearGradient id="psGrad" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#00C6FF"/><stop offset="100%" stop-color="#0070F3"/></linearGradient></defs>
                     <ellipse cx="24" cy="24" rx="22" ry="9.5" fill="none" stroke="url(#psGrad)" stroke-width="1.8" transform="rotate(-32 24 24)"/>
                     <circle cx="24" cy="24" r="13" fill="#060810" stroke="url(#psGrad)" stroke-width="1.5"/>
@@ -216,67 +314,113 @@
                 <span class="logo-text-wrap"><span class="logo-name">Prime Spirit</span><span class="logo-tagline">Mentors</span></span>
             </a>
 
-            <div class="header-actions">
-                <button class="search-toggle" id="searchToggle" type="button" aria-label="Search" aria-expanded="false" aria-controls="searchOverlay">
-                    <i class="fas fa-search" aria-hidden="true"></i>
-                </button>
-                <button class="menu-toggle" id="menuToggle" type="button" aria-label="Open navigation menu" aria-expanded="false" aria-controls="mainNav">
-                    <i class="fas fa-bars" aria-hidden="true"></i>
-                </button>
-            </div>
+            <!-- DESKTOP NAV (1024px and up) -->
+            <nav class="desktop-nav" role="navigation" aria-label="Main navigation">
 
-            <nav id="mainNav" role="navigation" aria-label="Main navigation">
-                <span class="nav-close-hint" aria-hidden="true">Tap X to close</span>
-                <ul>
-                    <li><a href="#hero">Home</a></li>
-                    <li><a href="#courses">Programs</a></li>
-                    <li><a href="#notes-vault">Notes Vault</a></li>
-                    <li><a href="#blog-hub">Blog</a></li>
-                    <li><a href="#quiz">Mindset Audit</a></li>
-                    <li><a href="#faq">FAQ</a></li>
-                    <li><a href="#testimonials">Reviews</a></li>
-                    <li><a href="primescore/"><i class="fas fa-calculator" aria-hidden="true"></i> PrimeScore</a></li>
-                    <li><a href="primetestq/index.html"><i class="fas fa-rocket" aria-hidden="true"></i> PrimeTestQ&#8482;</a></li>
-                    <li><a href="city/neet-bengaluru.html">NEET Bengaluru</a></li>
-                    <li><a href="city/jee-bengaluru.html">JEE Bengaluru</a></li>
-                    <li><a href="city/neet-hyderabad.html">NEET Hyderabad</a></li>
-                    <li>
-                        <button class="poonam-nav-trigger" id="poonamNavTrigger" type="button" aria-expanded="false" aria-controls="poonamDropdown">
-                            <i class="fas fa-hand-holding-heart" aria-hidden="true"></i> Poonam Foundation <i class="fas fa-chevron-down poonam-chevron" aria-hidden="true"></i>
-                        </button>
-                    </li>
-                    <li><a href="https://primespirit.co.in/PrimeBoard/" class="primeboard-btn" target="_blank" rel="noopener noreferrer"><i class="fas fa-chalkboard" aria-hidden="true"></i> PrimeBoard</a></li>
-                    <li><button class="auth-trigger-btn" id="btnStudentLogin" type="button"><i class="fas fa-user-circle" aria-hidden="true"></i> Student Login</button></li>
-                    <li><button class="auth-trigger-btn auth-trigger-parent" id="btnParentLogin" type="button"><i class="fas fa-users" aria-hidden="true"></i> Parent Login</button></li>
-                </ul>
-            </nav>
-
-            <!-- Poonam Dropdown -->
-            <div id="poonamDropdown" class="poonam-dropdown" role="region" aria-labelledby="poonamNavTrigger">
-                <div class="poonam-dd-header">
-                    <h4>Poonam Foundation</h4>
-                    <p>Quality education at an accessible price. Maths &amp; Science for young learners.</p>
-                </div>
-                <div class="poonam-dd-price">
-                    <div class="poonam-dd-price-circle"><span class="dd-old-price">&#8377;1999</span><span class="dd-new-price">&#8377;999</span></div>
-                    <div class="poonam-dd-price-info">
-                        <div class="dd-price-row"><span class="dd-old-price-text">&#8377;1999</span><span class="dd-new-price-text">&#8377;999/mo</span><span class="dd-discount-tag">50% OFF</span></div>
-                        <span>Maths &amp; Science for Class 6th, 7th &amp; 8th</span>
+                <div class="nav-item" data-dd="programs">
+                    <button class="nav-link" aria-expanded="false">Programs <span class="chev">▾</span></button>
+                    <div class="dropdown">
+                        <a href="#courses">Elite Micro-Batch<small>Max 5 students</small></a>
+                        <a href="#courses">Advanced Cohort<small>Max 10 students</small></a>
+                        <a href="#courses">JEE/NEET Foundation<small>Class 6–10</small></a>
+                        <a href="poonam-foundation.html">Poonam Foundation<small>&#8377;999/mo &middot; Class 6–8</small></a>
                     </div>
                 </div>
-                <div class="poonam-dd-details">
-                    <span class="poonam-dd-chip"><i class="fas fa-check" aria-hidden="true"></i> Maths &amp; Science</span>
-                    <span class="poonam-dd-chip"><i class="fas fa-check" aria-hidden="true"></i> Class 6 &middot; 7 &middot; 8</span>
-                    <span class="poonam-dd-chip"><i class="fas fa-check" aria-hidden="true"></i> Batch of 20</span>
-                    <span class="poonam-dd-chip"><i class="fas fa-check" aria-hidden="true"></i> Live Classes</span>
+
+                <div class="nav-item" data-dd="tools">
+                    <button class="nav-link" aria-expanded="false">Free Tools <span class="chev">▾</span></button>
+                    <div class="dropdown">
+                        <a href="primescore/">PrimeScore<small>Score calculator</small></a>
+                        <a href="primetestq/index.html">PrimeTestQ&#8482;<small>Free assessment test</small></a>
+                        <a href="#quiz">Mindset Audit<small>Student &amp; parent scan</small></a>
+                    </div>
                 </div>
-                <div class="poonam-dd-actions">
-                    <a href="https://wa.me/919700627812?text=Hi%2C%20I%20want%20to%20enrol%20in%20Poonam%20Foundation%20(Class%206%2F7%2F8).%20Please%20share%20details." class="poonam-dd-btn-primary" target="_blank" rel="noopener noreferrer"><i class="fab fa-whatsapp" aria-hidden="true"></i> Enrol Now</a>
-                    <a href="poonam-foundation.html" class="poonam-dd-btn-secondary" id="poonamLearnMore"><i class="fas fa-arrow-right" aria-hidden="true"></i> Full Details</a>
+
+                <div class="nav-item" data-dd="resources">
+                    <button class="nav-link" aria-expanded="false">Resources <span class="chev">▾</span></button>
+                    <div class="dropdown">
+                        <a href="#notes-vault">Notes Vault<small>Subject-wise study material</small></a>
+                        <a href="#blog-hub">Blog<small>Physics, Chem, Maths &amp; more</small></a>
+                        <a href="#faq">FAQ<small>Common questions</small></a>
+                        <a href="#testimonials">Reviews<small>Student &amp; parent stories</small></a>
+                    </div>
                 </div>
+
+                <div class="nav-item">
+                    <a href="https://primespirit.co.in/PrimeBoard/" class="nav-link" target="_blank" rel="noopener noreferrer">PrimeBoard</a>
+                </div>
+
+                <div class="nav-item">
+                    <a href="#contact" class="nav-link">Contact</a>
+                </div>
+
+            </nav>
+
+            <div class="header-actions">
+                <button class="icon-btn" id="searchToggle" type="button" aria-label="Search" aria-expanded="false" aria-controls="searchOverlay">
+                    <i class="fas fa-search" aria-hidden="true"></i>
+                </button>
+
+                <div class="nav-item" data-dd="login">
+                    <button class="icon-btn nav-link" aria-expanded="false" aria-label="Login">
+                        <i class="fas fa-user-circle" aria-hidden="true"></i>
+                    </button>
+                    <div class="dropdown" style="min-width:180px">
+                        <a href="#" id="btnStudentLogin">Student Login</a>
+                        <a href="#" id="btnParentLogin">Parent Login</a>
+                    </div>
+                </div>
+
+                <a href="https://wa.me/919700627812?text=Hi%2C%20I%20want%20to%20book%20a%20free%20demo%20class." class="btn-cta-header" target="_blank" rel="noopener noreferrer" data-track="cta-header-whatsapp">
+                    <i class="fab fa-whatsapp" aria-hidden="true"></i><span>Book Free Demo</span>
+                </a>
+
+                <button class="menu-toggle" id="menuToggle" type="button" aria-label="Open navigation menu" aria-expanded="false" aria-controls="mobileNav">
+                    <span></span><span></span><span></span>
+                </button>
             </div>
         </div>
     </header>
+
+    <!-- MOBILE NAV (below 1024px) -->
+    <div class="mobile-nav" id="mobileNav" role="navigation" aria-label="Mobile navigation">
+        <div class="m-group">
+            <button class="m-group-trigger" aria-expanded="false">Programs <span class="chev">▾</span></button>
+            <div class="m-panel">
+                <a href="#courses">Elite Micro-Batch</a>
+                <a href="#courses">Advanced Cohort</a>
+                <a href="#courses">JEE/NEET Foundation</a>
+                <a href="poonam-foundation.html">Poonam Foundation</a>
+            </div>
+        </div>
+        <div class="m-group">
+            <button class="m-group-trigger" aria-expanded="false">Free Tools <span class="chev">▾</span></button>
+            <div class="m-panel">
+                <a href="primescore/">PrimeScore</a>
+                <a href="primetestq/index.html">PrimeTestQ&#8482;</a>
+                <a href="#quiz">Mindset Audit</a>
+            </div>
+        </div>
+        <div class="m-group">
+            <button class="m-group-trigger" aria-expanded="false">Resources <span class="chev">▾</span></button>
+            <div class="m-panel">
+                <a href="#notes-vault">Notes Vault</a>
+                <a href="#blog-hub">Blog</a>
+                <a href="#faq">FAQ</a>
+                <a href="#testimonials">Reviews</a>
+            </div>
+        </div>
+        <div class="m-group">
+            <button class="m-group-trigger" aria-expanded="false">Account <span class="chev">▾</span></button>
+            <div class="m-panel">
+                <a href="#" id="mBtnStudentLogin">Student Login</a>
+                <a href="#" id="mBtnParentLogin">Parent Login</a>
+            </div>
+        </div>
+        <a href="https://primespirit.co.in/PrimeBoard/" class="m-cta m-secondary" target="_blank" rel="noopener noreferrer">PrimeBoard</a>
+        <a href="#contact" class="m-cta m-secondary">Contact</a>
+        <a href="https://wa.me/919700627812?text=Hi%2C%20I%20want%20to%20book%20a%20free%20demo%20class." class="m-cta" target="_blank" rel="noopener noreferrer">Book Free Demo</a>
+    </div>
 
     <!-- Search Overlay -->
     <div id="searchOverlay" class="search-overlay" role="search" aria-label="Site search" hidden>
@@ -650,6 +794,106 @@
         };
         if(document.readyState==="complete"){onLoad()}
         else{window.addEventListener("load",onLoad)}
+    })();
+    </script>
+
+    <!-- ============================================================
+         NEW HEADER JS — move this block into script.js when ready.
+         Handles: scroll-shrink header, dropdown open/close,
+         mobile hamburger drawer, mobile accordion groups.
+         Existing auth-modal / quiz / blog logic in script.js is
+         untouched — this only wires up the new nav markup.
+         ============================================================ -->
+    <script>
+    (function(){
+      const header = document.getElementById('siteHeader');
+      const root = document.documentElement;
+      let shrunk = false;
+
+      window.addEventListener('scroll', () => {
+        const isShrunk = window.scrollY > 40;
+        if (isShrunk !== shrunk) {
+          shrunk = isShrunk;
+          header.classList.toggle('scrolled', shrunk);
+          if (window.gsap) {
+            gsap.to(root, { '--header-h': shrunk ? '58px' : '78px', duration: 0.35, ease: 'power2.out' });
+          } else {
+            root.style.setProperty('--header-h', shrunk ? '58px' : '78px');
+          }
+        }
+      });
+
+      document.querySelectorAll('.nav-item[data-dd]').forEach(item => {
+        const btn = item.querySelector('.nav-link');
+        const dd = item.querySelector('.dropdown');
+        let open = false;
+
+        function openDD(){
+          document.querySelectorAll('.dropdown').forEach(d => {
+            if (window.gsap) gsap.set(d, {visibility:'hidden', opacity:0, pointerEvents:'none'});
+            else { d.style.visibility='hidden'; d.style.opacity=0; d.style.pointerEvents='none'; }
+          });
+          document.querySelectorAll('.nav-link').forEach(b => b.setAttribute('aria-expanded','false'));
+          open = true;
+          btn.setAttribute('aria-expanded','true');
+          if (window.gsap) {
+            gsap.set(dd, {visibility:'visible', pointerEvents:'auto'});
+            gsap.fromTo(dd, {opacity:0, y:-8}, {opacity:1, y:0, duration:.22, ease:'power2.out'});
+          } else {
+            dd.style.visibility='visible'; dd.style.opacity=1; dd.style.pointerEvents='auto';
+          }
+        }
+        function closeDD(){
+          open = false;
+          btn.setAttribute('aria-expanded','false');
+          if (window.gsap) {
+            gsap.to(dd, {opacity:0, y:-8, duration:.15, ease:'power2.in', onComplete:()=>gsap.set(dd,{visibility:'hidden', pointerEvents:'none'})});
+          } else {
+            dd.style.opacity=0; dd.style.visibility='hidden'; dd.style.pointerEvents='none';
+          }
+        }
+        btn.addEventListener('click', (e) => { e.stopPropagation(); open ? closeDD() : openDD(); });
+        document.addEventListener('click', () => { if(open) closeDD(); });
+      });
+
+      const menuToggle = document.getElementById('menuToggle');
+      const mobileNav = document.getElementById('mobileNav');
+      menuToggle.addEventListener('click', () => {
+        const isOpen = mobileNav.classList.toggle('active');
+        menuToggle.classList.toggle('open', isOpen);
+        menuToggle.setAttribute('aria-expanded', isOpen);
+        if (isOpen && window.gsap) {
+          gsap.fromTo(mobileNav, {opacity:0}, {opacity:1, duration:.25});
+          gsap.fromTo('.m-group', {opacity:0, x:20}, {opacity:1, x:0, duration:.35, stagger:.06, ease:'power2.out'});
+        }
+      });
+
+      document.querySelectorAll('.m-group-trigger').forEach(trigger => {
+        const panel = trigger.nextElementSibling;
+        trigger.addEventListener('click', () => {
+          const isOpen = trigger.getAttribute('aria-expanded') === 'true';
+          trigger.setAttribute('aria-expanded', !isOpen);
+          if (!isOpen) {
+            if (window.gsap) {
+              gsap.set(panel, {height:'auto'});
+              const h = panel.offsetHeight;
+              gsap.fromTo(panel, {height:0}, {height:h, duration:.3, ease:'power2.out'});
+            } else {
+              panel.style.height = 'auto';
+            }
+          } else {
+            if (window.gsap) gsap.to(panel, {height:0, duration:.25, ease:'power2.in'});
+            else panel.style.height = '0';
+          }
+        });
+      });
+
+      /* Wire login dropdown items to the existing auth modal triggers if present */
+      const openAuth = () => document.getElementById('authModal') && (document.getElementById('authModal').hidden = false);
+      ['btnStudentLogin','btnParentLogin','mBtnStudentLogin','mBtnParentLogin'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener('click', (e) => { e.preventDefault(); openAuth(); });
+      });
     })();
     </script>
 
