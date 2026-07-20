@@ -1,11 +1,25 @@
 /*  ============================================================
-    script.js — Prime Spirit Mentors (bulletproof, collision-safe)
-    Every section isolated — one failure never kills others
+    script.js — Prime Spirit Mentors v18.0
+    Bulletproof, collision-safe, fully responsive
+
+    v18.0 CHANGES:
+    — Removed all injected CSS (moved to style.css v18.0)
+    — Fixed nav class mismatch: uses .active (matches CSS)
+    — Fixed Poonam dropdown: uses .open (matches CSS)
+    — Added body scroll lock for mobile nav and auth modal
+    — Added Escape key handling for all overlays
+    — Added focus trap for auth modal
+    — Added prefers-reduced-motion detection
+    — Added IntersectionObserver for .animate-in elements
+    — Added GSAP ScrollTrigger conditional integration
+    — Added resize handler to auto-close mobile nav on desktop
+    — Enhanced search results markup to match CSS expectations
+    — Synced nav breakpoint to 1025px across JS and CSS
     ============================================================ */
 (function () {
   'use strict';
 
-  // ── Safe helpers (no $ collision) ──
+  // ── Safe helpers ──
   function qs(sel, ctx) {
     try { return (ctx || document).querySelector(sel); }
     catch (_) { return null; }
@@ -24,515 +38,13 @@
     catch (_) {}
   }
 
-  // ── Inject essential interactive CSS ──
-  var css = document.createElement('style');
-  css.textContent = [
+  // ── Detect user motion preference ──
+  var prefersReducedMotion = false;
+  try {
+    prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  } catch (_) {}
 
-    /* ==========================================
-       MOBILE NAVIGATION
-       ========================================== */
-    '.logo-nav{display:flex;align-items:center;justify-content:space-between;position:relative}',
-    '.header-actions{display:flex;gap:8px;align-items:center;z-index:1001}',
-
-    '.menu-toggle{',
-      'display:none;',
-      'align-items:center;justify-content:center;',
-      'width:44px;height:44px;',
-      'border:1px solid rgba(255,255,255,.1);',
-      'border-radius:10px;',
-      'background:rgba(255,255,255,.04);',
-      'color:var(--text,#e8ecf4);',
-      'font-size:1.15rem;',
-      'transition:border-color .2s,background .2s;',
-    '}',
-    '.menu-toggle:hover{border-color:var(--accent,#00C6FF);background:rgba(0,198,255,.08)}',
-
-    '.search-toggle{',
-      'display:flex;align-items:center;justify-content:center;',
-      'width:44px;height:44px;',
-      'border:1px solid rgba(255,255,255,.1);',
-      'border-radius:10px;',
-      'background:rgba(255,255,255,.04);',
-      'color:var(--text,#e8ecf4);',
-      'font-size:1rem;',
-      'transition:border-color .2s,background .2s;',
-    '}',
-    '.search-toggle:hover{border-color:var(--accent,#00C6FF);background:rgba(0,198,255,.08)}',
-
-    '@media(min-width:901px){',
-      '#mainNav{',
-        'display:flex!important;',
-        'opacity:1!important;',
-        'visibility:visible!important;',
-        'pointer-events:auto!important;',
-        'position:static;',
-        'background:transparent;',
-      '}',
-      '#mainNav ul{',
-        'display:flex;flex-direction:row;align-items:center;gap:4px;flex-wrap:wrap;',
-        'list-style:none;padding:0;margin:0;',
-      '}',
-      '#mainNav ul li{white-space:nowrap}',
-      '#mainNav ul li a,#mainNav ul li button{',
-        'display:inline-flex;align-items:center;gap:6px;',
-        'padding:10px 14px;',
-        'font-size:.88rem;',
-        'color:var(--text,#e8ecf4);',
-        'text-decoration:none;',
-        'border:none;background:none;cursor:pointer;',
-        'border-radius:8px;',
-        'font-family:var(--font-head);font-weight:600;',
-        'transition:color .2s,background .2s;',
-      '}',
-      '#mainNav ul li a:hover,#mainNav ul li button:hover{',
-        'color:var(--accent,#00C6FF);background:rgba(0,198,255,.06);',
-      '}',
-      '.menu-toggle{display:none!important}',
-    '}',
-
-    '@media(max-width:900px){',
-      '.menu-toggle{display:flex!important}',
-
-      '#mainNav{',
-        'position:fixed;',
-        'top:0;left:0;right:0;bottom:0;',
-        'width:100%;height:100%;',
-        'background:rgba(10,14,39,.97);',
-        'backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);',
-        'z-index:998;',
-        'display:flex;',
-        'align-items:center;',
-        'justify-content:center;',
-        'opacity:0;',
-        'visibility:hidden;',
-        'pointer-events:none;',
-        'transition:opacity .3s ease,visibility .3s ease;',
-      '}',
-
-      '#mainNav.nav-open{',
-        'opacity:1;',
-        'visibility:visible;',
-        'pointer-events:auto;',
-      '}',
-
-      '#mainNav ul{',
-        'list-style:none;',
-        'padding:24px;',
-        'margin:0;',
-        'display:flex;',
-        'flex-direction:column;',
-        'align-items:center;',
-        'gap:4px;',
-        'width:100%;',
-        'max-height:85vh;',
-        'overflow-y:auto;',
-        '-webkit-overflow-scrolling:touch;',
-      '}',
-
-      '#mainNav ul li{',
-        'width:100%;',
-        'text-align:center;',
-      '}',
-
-      '#mainNav ul li a,#mainNav ul li button{',
-        'display:block;',
-        'width:100%;',
-        'padding:15px 24px;',
-        'font-size:1.1rem;',
-        'color:var(--text,#e8ecf4);',
-        'text-decoration:none;',
-        'border:none;',
-        'background:none;',
-        'cursor:pointer;',
-        'border-radius:12px;',
-        'font-family:var(--font-head);',
-        'font-weight:600;',
-        'transition:background .2s,color .2s;',
-      '}',
-
-      '#mainNav ul li a:hover,#mainNav ul li button:hover,',
-      '#mainNav ul li a:active,#mainNav ul li button:active{',
-        'background:rgba(0,198,255,.1);',
-        'color:var(--accent,#00C6FF);',
-      '}',
-
-      '.poonam-dropdown{display:none!important}',
-      '.poonam-nav-trigger .poonam-chevron{display:none}',
-      '.poonam-nav-trigger{',
-        'display:block;width:100%;padding:15px 24px;',
-        'font-size:1.1rem;',
-        'color:var(--text,#e8ecf4);',
-        'border:none;background:none;cursor:pointer;',
-        'border-radius:12px;',
-        'font-family:var(--font-head);font-weight:600;',
-        'transition:background .2s,color .2s;',
-      '}',
-      '.poonam-nav-trigger:hover{background:rgba(0,198,255,.1);color:var(--accent,#00C6FF)}',
-    '}',
-
-    /* ==========================================
-       FAQ ACCORDION
-       ========================================== */
-    '.faq-item{margin-bottom:12px}',
-
-    '.faq-question{',
-      'width:100%;',
-      'display:flex;',
-      'justify-content:space-between;',
-      'align-items:center;',
-      'background:none;',
-      'border:1px solid rgba(255,255,255,.08);',
-      'color:var(--text,#e8ecf4);',
-      'padding:18px 22px;',
-      'border-radius:12px;',
-      'cursor:pointer;',
-      'font-size:1rem;',
-      'font-weight:600;',
-      'text-align:left;',
-      'font-family:var(--font-head);',
-      'transition:border-color .2s,background .2s;',
-    '}',
-    '.faq-question:hover{',
-      'border-color:rgba(0,198,255,.3);',
-      'background:rgba(0,198,255,.04);',
-    '}',
-    '.faq-question[aria-expanded="true"]{',
-      'border-color:rgba(0,198,255,.4);',
-      'background:rgba(0,198,255,.06);',
-      'border-radius:12px 12px 0 0;',
-    '}',
-    '.faq-question .fa-chevron-down{',
-      'transition:transform .3s ease;',
-      'font-size:.85rem;',
-      'color:rgba(255,255,255,.4);',
-      'margin-left:16px;',
-      'flex-shrink:0;',
-    '}',
-    '.faq-question[aria-expanded="true"] .fa-chevron-down{transform:rotate(180deg)}',
-
-    '.faq-answer{',
-      'max-height:0;',
-      'overflow:hidden;',
-      'padding:0 22px;',
-      'opacity:0;',
-      'border:1px solid transparent;',
-      'border-top:none;',
-      'border-radius:0 0 12px 12px;',
-      'transition:max-height .4s cubic-bezier(.22,1,.36,1),',
-      'padding .3s ease,',
-      'opacity .3s ease;',
-    '}',
-    '.faq-answer.faq-answer-open{',
-      'max-height:600px;',
-      'padding:18px 22px;',
-      'opacity:1;',
-      'border-color:rgba(0,198,255,.15);',
-      'background:rgba(0,198,255,.02);',
-    '}',
-
-    /* ==========================================
-       AUTH MODAL
-       ========================================== */
-    '.auth-modal-overlay{',
-      'position:fixed;inset:0;',
-      'background:rgba(0,0,0,.7);',
-      'backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);',
-      'z-index:9999;',
-      'display:flex;align-items:center;justify-content:center;',
-      'padding:20px;',
-    '}',
-    '.auth-modal-overlay[hidden]{display:none!important}',
-
-    '.auth-modal-card{',
-      'background:var(--surface,#111633);',
-      'border:1px solid rgba(255,255,255,.1);',
-      'border-radius:20px;',
-      'padding:40px;',
-      'max-width:440px;',
-      'width:100%;',
-      'position:relative;',
-      'max-height:90vh;',
-      'overflow-y:auto;',
-      '-webkit-overflow-scrolling:touch;',
-    '}',
-
-    '.close-modal-btn{',
-      'position:absolute;top:16px;right:16px;',
-      'background:none;border:none;',
-      'color:var(--text-sec,#8b95ad);',
-      'font-size:1.3rem;',
-      'cursor:pointer;',
-      'padding:8px;',
-      'border-radius:8px;',
-      'width:40px;height:40px;',
-      'display:flex;align-items:center;justify-content:center;',
-      'transition:color .2s,background .2s;',
-    '}',
-    '.close-modal-btn:hover{color:var(--text,#e8ecf4);background:rgba(255,255,255,.06)}',
-
-    '.auth-view-panel h3{',
-      'font-family:var(--font-head);',
-      'font-size:1.5rem;',
-      'margin-bottom:8px;',
-    '}',
-    '.auth-sub{',
-      'color:var(--text-sec,#8b95ad);',
-      'font-size:.9rem;',
-      'margin-bottom:24px;',
-      'line-height:1.6;',
-    '}',
-    '.auth-options-row{',
-      'display:flex;',
-      'justify-content:flex-end;',
-      'margin-bottom:16px;',
-    '}',
-    '.text-link-btn{',
-      'background:none;border:none;',
-      'color:var(--accent,#00C6FF);',
-      'font-size:.85rem;',
-      'cursor:pointer;',
-      'padding:4px;',
-      'text-decoration:underline;',
-      'transition:opacity .2s;',
-    '}',
-    '.text-link-btn:hover{opacity:.8}',
-
-    '.auth-switch-prompt{',
-      'text-align:center;',
-      'margin-top:20px;',
-      'color:var(--text-sec,#8b95ad);',
-      'font-size:.9rem;',
-    '}',
-
-    '.pass-strength-meter{',
-      'height:4px;',
-      'background:rgba(255,255,255,.08);',
-      'border-radius:3px;',
-      'margin-top:8px;',
-      'overflow:hidden;',
-    '}',
-    '.strength-bar-fill{height:100%;border-radius:3px;transition:width .3s ease;width:0}',
-    '.strength-label{font-size:.75rem;color:var(--text-sec,#8b95ad);margin-top:4px;display:block}',
-
-    /* ==========================================
-       QUIZ / MINDSET AUDIT
-       ========================================== */
-    '.quiz-btn-selected{',
-      'border-color:var(--accent,#00C6FF)!important;',
-      'background:rgba(0,198,255,.12)!important;',
-      'box-shadow:0 0 24px rgba(0,198,255,.18);',
-      'transform:scale(1.02);',
-    '}',
-
-    '.quiz-profile-header{text-align:center;margin-bottom:28px}',
-    '.quiz-profile-name{',
-      'font-family:var(--font-head);',
-      'font-size:1.6rem;',
-      'font-weight:800;',
-      'color:var(--accent,#00C6FF);',
-      'display:block;',
-    '}',
-    '.quiz-profile-tagline{',
-      'color:var(--text-sec,#8b95ad);',
-      'font-size:.95rem;',
-      'margin-top:6px;',
-      'font-style:italic;',
-    '}',
-
-    '.quiz-metrics-grid{display:flex;flex-direction:column;gap:16px;margin-bottom:28px}',
-    '.quiz-metric-row{display:flex;align-items:center;gap:12px}',
-    '.quiz-metric-label{',
-      'flex:0 0 140px;',
-      'font-family:var(--font-mono);',
-      'font-size:.75rem;',
-      'color:var(--text-sec,#8b95ad);',
-      'text-transform:uppercase;',
-      'letter-spacing:.06em;',
-    '}',
-    '.quiz-metric-bar{',
-      'flex:1;height:10px;',
-      'background:rgba(255,255,255,.06);',
-      'border-radius:6px;',
-      'overflow:hidden;',
-    '}',
-    '.quiz-metric-fill{',
-      'height:100%;border-radius:6px;',
-      'transition:width 1.2s cubic-bezier(.22,1,.36,1);',
-      'width:0;',
-    '}',
-    '.quiz-metric-value{',
-      'flex:0 0 42px;',
-      'text-align:right;',
-      'font-family:var(--font-mono);',
-      'font-size:.85rem;',
-      'font-weight:600;',
-      'color:var(--text,#e8ecf4);',
-    '}',
-
-    '.quiz-insight-box{',
-      'background:var(--surface,#111633);',
-      'border:1px solid rgba(255,255,255,.1);',
-      'border-radius:14px;',
-      'padding:22px;',
-      'margin-bottom:18px;',
-      'opacity:0;transform:translateY(16px);',
-      'transition:opacity .5s ease,transform .5s ease;',
-    '}',
-    '.quiz-insight-box.visible{opacity:1;transform:translateY(0)}',
-
-    '.quiz-insight-label{',
-      'font-family:var(--font-mono);',
-      'font-size:.68rem;',
-      'text-transform:uppercase;',
-      'letter-spacing:.12em;',
-      'color:var(--accent,#00C6FF);',
-      'margin-bottom:6px;',
-    '}',
-    '.quiz-insight-title{',
-      'font-family:var(--font-head);',
-      'font-size:1.1rem;',
-      'font-weight:700;',
-      'margin-bottom:8px;',
-      'color:var(--text,#e8ecf4);',
-    '}',
-    '.quiz-insight-text{color:var(--text-sec,#8b95ad);font-size:.9rem;line-height:1.7}',
-
-    '.quiz-track-rec{',
-      'background:linear-gradient(135deg,rgba(0,198,255,.08),rgba(0,112,243,.08));',
-      'border:1px solid rgba(0,198,255,.18);',
-      'border-radius:14px;',
-      'padding:24px;',
-      'margin-top:22px;',
-      'text-align:center;',
-      'opacity:0;transform:translateY(16px);',
-      'transition:opacity .5s ease,transform .5s ease;',
-    '}',
-    '.quiz-track-rec.visible{opacity:1;transform:translateY(0)}',
-    '.quiz-track-rec h4{font-family:var(--font-head);color:var(--accent,#00C6FF);font-size:1.15rem;margin-bottom:8px}',
-    '.quiz-track-rec p{color:var(--text-sec,#8b95ad);font-size:.9rem;line-height:1.7}',
-
-    '.quiz-role-select{text-align:center}',
-    '.quiz-role-select h3{margin-bottom:20px;font-size:1.4rem}',
-    '.quiz-btn-spaced{margin-top:10px}',
-    '.quiz-badge-display{text-align:center;font-size:3.5rem;margin-bottom:15px}',
-    '.quiz-result-title{text-align:center;margin-bottom:15px}',
-    '.quiz-note{text-align:center}',
-
-    /* ==========================================
-       FORMS & BUTTONS
-       ========================================== */
-    '.form-group{margin-bottom:18px}',
-    '.form-group label{display:block;font-size:.85rem;color:var(--text-sec,#8b95ad);margin-bottom:6px;font-weight:600}',
-
-    '.form-group input,',
-    '.form-group select,',
-    '.form-group textarea{',
-      'width:100%;',
-      'padding:12px 16px;',
-      'background:rgba(255,255,255,.04);',
-      'border:1px solid rgba(255,255,255,.1);',
-      'border-radius:10px;',
-      'color:var(--text,#e8ecf4);',
-      'font-family:inherit;',
-      'font-size:.95rem;',
-      'transition:border-color .2s,box-shadow .2s;',
-    '}',
-    '.form-group input:focus,',
-    '.form-group select:focus,',
-    '.form-group textarea:focus{',
-      'outline:none;',
-      'border-color:var(--accent,#00C6FF);',
-      'box-shadow:0 0 0 3px rgba(0,198,255,.15);',
-    '}',
-
-    '.btn{',
-      'display:inline-flex;',
-      'align-items:center;gap:8px;',
-      'padding:14px 28px;',
-      'border-radius:12px;',
-      'font-weight:700;',
-      'font-size:.95rem;',
-      'border:none;cursor:pointer;',
-      'transition:all .2s ease;',
-      'text-decoration:none;',
-      'font-family:var(--font-head);',
-    '}',
-    '.btn-primary{',
-      'background:linear-gradient(135deg,var(--accent,#00C6FF),var(--blue,#0070F3));',
-      'color:#fff;',
-      'box-shadow:0 4px 20px rgba(0,198,255,.25);',
-    '}',
-    '.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(0,198,255,.35)}',
-    '.btn-secondary{background:transparent;border:2px solid rgba(255,255,255,.15);color:var(--text,#e8ecf4)}',
-    '.btn-secondary:hover{border-color:var(--accent,#00C6FF);color:var(--accent,#00C6FF)}',
-    '.btn-full{width:100%;justify-content:center}',
-
-    '.quiz-btn{',
-      'display:block;width:100%;',
-      'text-align:left;',
-      'padding:16px 22px;',
-      'margin-bottom:10px;',
-      'background:rgba(255,255,255,.03);',
-      'border:1px solid rgba(255,255,255,.08);',
-      'border-radius:12px;',
-      'color:var(--text,#e8ecf4);',
-      'font-size:.95rem;',
-      'cursor:pointer;',
-      'transition:all .2s;',
-      'font-family:inherit;',
-      'line-height:1.5;',
-    '}',
-    '.quiz-btn:hover{',
-      'border-color:rgba(0,198,255,.3);',
-      'background:rgba(0,198,255,.05);',
-    '}',
-
-    /* ==========================================
-       TOAST NOTIFICATION
-       ========================================== */
-    '.ps-toast{',
-      'position:fixed;',
-      'bottom:30px;',
-      'left:50%;',
-      'transform:translateX(-50%) translateY(80px);',
-      'background:var(--surface,#111633);',
-      'border:1px solid rgba(0,198,255,.3);',
-      'color:var(--text,#e8ecf4);',
-      'padding:16px 28px;',
-      'border-radius:14px;',
-      'z-index:10001;',
-      'font-size:.95rem;',
-      'font-family:var(--font-body);',
-      'opacity:0;',
-      'transition:all .4s cubic-bezier(.22,1,.36,1);',
-      'pointer-events:none;',
-      'max-width:90vw;',
-      'text-align:center;',
-      'box-shadow:0 8px 40px rgba(0,0,0,.4);',
-    '}',
-    '.ps-toast.show{',
-      'opacity:1;',
-      'transform:translateX(-50%) translateY(0);',
-      'pointer-events:auto;',
-    '}',
-
-    /* ==========================================
-       RESPONSIVE TWEAKS
-       ========================================== */
-    '@media(max-width:600px){',
-      '.quiz-metric-row{flex-wrap:wrap}',
-      '.quiz-metric-label{flex:0 0 90px;font-size:.65rem}',
-      '.quiz-metric-value{font-size:.78rem}',
-      '.auth-modal-card{padding:28px 20px;border-radius:16px}',
-      '.auth-view-panel h3{font-size:1.3rem}',
-      '.faq-question{padding:16px 18px;font-size:.92rem}',
-      '.faq-answer.faq-answer-open{padding:14px 18px}',
-      '.ps-toast{padding:14px 20px;font-size:.88rem;bottom:20px}',
-    '}'
-  ].join('\n');
-  document.head.appendChild(css);
-
-  // ── Toast notification (replaces alert) ──
+  // ── Toast notification ──
   function showToast(msg, duration) {
     var existing = qs('.ps-toast');
     if (existing) existing.remove();
@@ -582,31 +94,74 @@
 
   // ============================================================
   // SECTION 3: MOBILE MENU
+  // Uses .active class to match style.css v18.0
+  // Adds body scroll lock, Escape close, resize handler
   // ============================================================
   try {
     var menuToggle = qs('#menuToggle');
     var mainNav    = qs('#mainNav');
+
+    function openNav() {
+      if (!mainNav || !menuToggle) return;
+      mainNav.classList.add('active');
+      menuToggle.setAttribute('aria-expanded', 'true');
+      var icon = menuToggle.querySelector('i');
+      if (icon) icon.className = 'fas fa-times';
+      menuToggle.setAttribute('aria-label', 'Close navigation menu');
+      document.body.classList.add('nav-locked');
+    }
+
+    function closeNav() {
+      if (!mainNav || !menuToggle) return;
+      mainNav.classList.remove('active');
+      menuToggle.setAttribute('aria-expanded', 'false');
+      var icon = menuToggle.querySelector('i');
+      if (icon) icon.className = 'fas fa-bars';
+      menuToggle.setAttribute('aria-label', 'Open navigation menu');
+      document.body.classList.remove('nav-locked');
+    }
+
     if (menuToggle && mainNav) {
       on(menuToggle, 'click', function () {
-        var expanded = this.getAttribute('aria-expanded') === 'true';
-        this.setAttribute('aria-expanded', String(!expanded));
-        mainNav.classList.toggle('nav-open');
-        var icon = this.querySelector('i');
-        if (icon) icon.className = expanded ? 'fas fa-bars' : 'fas fa-times';
+        var isOpen = mainNav.classList.contains('active');
+        if (isOpen) { closeNav(); } else { openNav(); }
       });
+
+      // Close on nav link click
       on(mainNav, 'click', function (e) {
-        if (e.target.closest('a') && mainNav.classList.contains('nav-open')) {
-          mainNav.classList.remove('nav-open');
-          menuToggle.setAttribute('aria-expanded', 'false');
-          var icon = menuToggle.querySelector('i');
-          if (icon) icon.className = 'fas fa-bars';
+        if (e.target.closest('a') && mainNav.classList.contains('active')) {
+          closeNav();
         }
       });
+
+      // Escape key closes mobile nav
+      on(document, 'keydown', function (e) {
+        if (e.key === 'Escape' && mainNav.classList.contains('active')) {
+          closeNav();
+          menuToggle.focus();
+        }
+      });
+
+      // Auto-close mobile nav on resize to desktop
+      try {
+        var desktopQuery = window.matchMedia('(min-width: 1025px)');
+        function handleResize(mq) {
+          if (mq.matches && mainNav.classList.contains('active')) {
+            closeNav();
+          }
+        }
+        if (desktopQuery.addEventListener) {
+          desktopQuery.addEventListener('change', handleResize);
+        } else if (desktopQuery.addListener) {
+          desktopQuery.addListener(handleResize);
+        }
+      } catch (_) {}
     }
   } catch (_) {}
 
   // ============================================================
   // SECTION 4: SEARCH OVERLAY
+  // Enhanced result markup matches style.css expectations
   // ============================================================
   try {
     var searchToggle  = qs('#searchToggle');
@@ -634,20 +189,33 @@
       on(document, 'keydown', function (e) {
         if (e.key === 'Escape' && searchOverlay && !searchOverlay.hidden) closeSearch();
       });
+
       if (searchInput && searchResults) {
         on(searchInput, 'input', function () {
           var q = this.value.toLowerCase().trim();
           if (!q) { searchResults.innerHTML = ''; return; }
+
           var matches = qsa('h2, h3').map(function (el) {
-            return { text: el.textContent, section: el.closest('section') };
+            var section = el.closest('section');
+            return {
+              text: el.textContent.trim(),
+              sectionId: section ? section.id : '',
+              sectionLabel: section ? (section.getAttribute('aria-label') || section.id) : ''
+            };
           }).filter(function (s) {
             return s.text.toLowerCase().indexOf(q) !== -1;
           }).slice(0, 8);
-          searchResults.innerHTML = matches.length
-            ? matches.map(function (m) {
-                return '<a href="#' + (m.section ? m.section.id : '') + '" class="search-result-item">' + m.text + '</a>';
-              }).join('')
-            : '<p style="color:var(--text-sec,#8b95ad);padding:12px 0">No results found.</p>';
+
+          if (matches.length) {
+            searchResults.innerHTML = matches.map(function (m) {
+              return '<a href="#' + m.sectionId + '" class="search-result-item">' +
+                     '<strong>' + m.text + '</strong>' +
+                     '<span class="search-result-section">' + m.sectionLabel + '</span>' +
+                     '</a>';
+            }).join('');
+          } else {
+            searchResults.innerHTML = '<p class="search-no-results">No results found for "' + q.replace(/</g, '&lt;') + '"</p>';
+          }
         });
       }
     }
@@ -655,6 +223,7 @@
 
   // ============================================================
   // SECTION 5: POONAM DROPDOWN
+  // Uses .open class to match style.css v18.0
   // ============================================================
   try {
     var poonamTrigger  = qs('#poonamNavTrigger');
@@ -663,22 +232,30 @@
     if (poonamTrigger && poonamDropdown) {
       on(poonamTrigger, 'click', function (e) {
         e.stopPropagation();
-        var expanded = this.getAttribute('aria-expanded') === 'true';
-        this.setAttribute('aria-expanded', String(!expanded));
-        poonamDropdown.classList.toggle('poonam-dd-open', !expanded);
+        var isOpen = poonamDropdown.classList.contains('open');
+        this.setAttribute('aria-expanded', String(!isOpen));
+        poonamDropdown.classList.toggle('open', !isOpen);
       });
       on(document, 'click', function (e) {
-        if (poonamDropdown.classList.contains('poonam-dd-open') &&
+        if (poonamDropdown.classList.contains('open') &&
             !poonamDropdown.contains(e.target) && e.target !== poonamTrigger) {
           poonamTrigger.setAttribute('aria-expanded', 'false');
-          poonamDropdown.classList.remove('poonam-dd-open');
+          poonamDropdown.classList.remove('open');
+        }
+      });
+      // Escape closes dropdown
+      on(document, 'keydown', function (e) {
+        if (e.key === 'Escape' && poonamDropdown.classList.contains('open')) {
+          poonamTrigger.setAttribute('aria-expanded', 'false');
+          poonamDropdown.classList.remove('open');
+          poonamTrigger.focus();
         }
       });
     }
   } catch (_) {}
 
   // ============================================================
-  // SECTION 6: FAQ ACCORDION (event delegation — bulletproof)
+  // SECTION 6: FAQ ACCORDION
   // ============================================================
   try {
     on(document, 'click', function (e) {
@@ -704,7 +281,8 @@
   } catch (_) {}
 
   // ============================================================
-  // SECTION 7: AUTH MODAL (event delegation — bulletproof)
+  // SECTION 7: AUTH MODAL
+  // Added: focus trap, body scroll lock, proper Escape handling
   // ============================================================
   try {
     var authModal = qs('#authModal');
@@ -713,10 +291,15 @@
       if (!authModal) return;
       authModal.hidden = false;
       showAuthView(view || 'login');
+      document.body.classList.add('modal-locked');
+      setTimeout(function () { trapFocus(authModal); }, 60);
     }
 
     function closeAuth() {
-      if (authModal) authModal.hidden = true;
+      if (!authModal) return;
+      authModal.hidden = true;
+      document.body.classList.remove('modal-locked');
+      releaseFocusTrap(authModal);
     }
 
     function showAuthView(view) {
@@ -728,38 +311,58 @@
       if (forgot) forgot.hidden = (view !== 'forgot');
     }
 
+    // Focus trap utility
+    function trapFocus(container) {
+      var focusable = qsa(
+        'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
+        container
+      );
+      if (!focusable.length) return;
+      var first = focusable[0];
+      var last  = focusable[focusable.length - 1];
+
+      function handleTab(e) {
+        if (e.key !== 'Tab') return;
+        if (e.shiftKey) {
+          if (document.activeElement === first) { e.preventDefault(); last.focus(); }
+        } else {
+          if (document.activeElement === last) { e.preventDefault(); first.focus(); }
+        }
+      }
+
+      container._trapHandler = handleTab;
+      on(container, 'keydown', handleTab);
+      first.focus();
+    }
+
+    function releaseFocusTrap(container) {
+      if (container._trapHandler) {
+        container.removeEventListener('keydown', container._trapHandler);
+        container._trapHandler = null;
+      }
+    }
+
     // Event delegation for all auth-related clicks
     on(document, 'click', function (e) {
       var target = e.target;
 
-      // Student Login / Parent Login buttons
       if (target.closest('#btnStudentLogin') || target.closest('#btnParentLogin')) {
         e.preventDefault();
         openAuth('login');
         return;
       }
-
-      // Close modal button
-      if (target.closest('#btnCloseModal')) {
-        closeAuth();
-        return;
-      }
-
-      // Click on overlay backdrop
-      if (target === authModal) {
-        closeAuth();
-        return;
-      }
-
-      // Navigation between auth views
+      if (target.closest('#btnCloseModal')) { closeAuth(); return; }
+      if (target === authModal) { closeAuth(); return; }
       if (target.closest('#btnGotoSignup')) { showAuthView('signup'); return; }
       if (target.closest('#btnGotoLogin') || target.closest('#btnGotoLogin2')) { showAuthView('login'); return; }
       if (target.closest('#btnGotoForgot')) { showAuthView('forgot'); return; }
     });
 
-    // Escape key to close
+    // Escape key to close modal
     on(document, 'keydown', function (e) {
-      if (e.key === 'Escape' && authModal && !authModal.hidden) closeAuth();
+      if (e.key === 'Escape' && authModal && !authModal.hidden) {
+        closeAuth();
+      }
     });
 
     // Form submissions (delegation)
@@ -817,9 +420,18 @@
       var email = emailEl ? emailEl.value.trim()  : '';
       var phone = phoneEl ? phoneEl.value.trim()  : '';
 
-      if (!name || !email || !phone) { showToast('Please fill in all required fields.'); return; }
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showToast('Please enter a valid email address.'); return; }
-      if (!/^[0-9]{10}$/.test(phone)) { showToast('Please enter a valid 10-digit phone number.'); return; }
+      if (!name || !email || !phone) {
+        showToast('Please fill in all required fields.');
+        return;
+      }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        showToast('Please enter a valid email address.');
+        return;
+      }
+      if (!/^[0-9]{10}$/.test(phone)) {
+        showToast('Please enter a valid 10-digit phone number.');
+        return;
+      }
 
       trackEvent('contact-form-submit');
       showToast('Thank you! Abhinav sir will reach out within 24 hours.', 4000);
@@ -878,6 +490,7 @@
 
   // ============================================================
   // SECTION 13: MINDSET AUDIT QUIZ
+  // All questions, archetypes, scoring, and result rendering
   // ============================================================
   try {
 
@@ -899,10 +512,10 @@
         ]},
       { q: "How would you describe your daily study routine?",
         options: [
-          { text: "Fixed schedule — same hours every day", scores: { CD: 3, ER: 4, SD: 5, SA: 3, FC: 5 } },
+          { text: "Fixed schedule \u2014 same hours every day", scores: { CD: 3, ER: 4, SD: 5, SA: 3, FC: 5 } },
           { text: "Flexible but mostly consistent", scores: { CD: 3, ER: 3, SD: 4, SA: 3, FC: 4 } },
           { text: "Intense bursts right before exams", scores: { CD: 2, ER: 2, SD: 2, SA: 3, FC: 2 } },
-          { text: "No fixed routine — study when motivated", scores: { CD: 2, ER: 2, SD: 1, SA: 2, FC: 1 } }
+          { text: "No fixed routine \u2014 study when motivated", scores: { CD: 2, ER: 2, SD: 1, SA: 2, FC: 1 } }
         ]},
       { q: "A formula or derivation refuses to stick in your memory. You:",
         options: [
@@ -934,7 +547,7 @@
         ]},
       { q: "How do you typically approach a complex numerical problem?",
         options: [
-          { text: "Read carefully → identify given/required → solve systematically", scores: { CD: 4, ER: 4, SD: 4, SA: 4, FC: 4 } },
+          { text: "Read carefully \u2192 identify given/required \u2192 solve systematically", scores: { CD: 4, ER: 4, SD: 4, SA: 4, FC: 4 } },
           { text: "Start solving and figure it out as I go", scores: { CD: 2, ER: 3, SD: 2, SA: 2, FC: 2 } },
           { text: "Check if it matches a known pattern or template", scores: { CD: 3, ER: 3, SD: 3, SA: 4, FC: 3 } },
           { text: "I often get stuck midway and lose confidence", scores: { CD: 2, ER: 1, SD: 2, SA: 2, FC: 2 } }
@@ -943,7 +556,7 @@
         options: [
           { text: "Calm and well-prepared", scores: { CD: 3, ER: 5, SD: 4, SA: 3, FC: 4 } },
           { text: "Nervous, but the pressure helps me focus", scores: { CD: 3, ER: 4, SD: 3, SA: 3, FC: 3 } },
-          { text: "Very anxious — I second-guess my answers", scores: { CD: 2, ER: 1, SD: 2, SA: 2, FC: 2 } },
+          { text: "Very anxious \u2014 I second-guess my answers", scores: { CD: 2, ER: 1, SD: 2, SA: 2, FC: 2 } },
           { text: "Fine initially, but panic if I get stuck on a question", scores: { CD: 3, ER: 2, SD: 3, SA: 2, FC: 3 } }
         ]},
       { q: "If you could change one thing about your preparation, it would be:",
@@ -959,10 +572,10 @@
     var parentQuestions = [
       { q: "How would you describe your child's study routine at home?",
         options: [
-          { text: "Very disciplined — fixed schedule, rarely deviates", scores: { SL: 5, CM: 3, AW: 4, BL: 4, ST: 4 } },
+          { text: "Very disciplined \u2014 fixed schedule, rarely deviates", scores: { SL: 5, CM: 3, AW: 4, BL: 4, ST: 4 } },
           { text: "Reasonably consistent with occasional gaps", scores: { SL: 4, CM: 3, AW: 3, BL: 4, ST: 3 } },
           { text: "Needs constant reminders to sit and study", scores: { SL: 2, CM: 2, AW: 3, BL: 2, ST: 2 } },
-          { text: "Varies a lot — intense some weeks, absent others", scores: { SL: 2, CM: 2, AW: 2, BL: 2, ST: 2 } }
+          { text: "Varies a lot \u2014 intense some weeks, absent others", scores: { SL: 2, CM: 2, AW: 2, BL: 2, ST: 2 } }
         ]},
       { q: "When your child gets lower marks than expected, you typically:",
         options: [
@@ -973,16 +586,16 @@
         ]},
       { q: "How openly does your child communicate about academic struggles?",
         options: [
-          { text: "Very open — they share difficulties and ask for help", scores: { SL: 4, CM: 5, AW: 5, BL: 4, ST: 4 } },
+          { text: "Very open \u2014 they share difficulties and ask for help", scores: { SL: 4, CM: 5, AW: 5, BL: 4, ST: 4 } },
           { text: "They mention challenges sometimes", scores: { SL: 3, CM: 3, AW: 3, BL: 3, ST: 3 } },
           { text: "Rarely talks about struggles unless asked directly", scores: { SL: 2, CM: 2, AW: 2, BL: 3, ST: 2 } },
           { text: "Gets defensive when asked about studies", scores: { SL: 1, CM: 1, AW: 2, BL: 1, ST: 1 } }
         ]},
       { q: "Do you know your child's specific weak topics or subjects?",
         options: [
-          { text: "Yes — I track their performance regularly", scores: { SL: 4, CM: 4, AW: 5, BL: 3, ST: 5 } },
+          { text: "Yes \u2014 I track their performance regularly", scores: { SL: 4, CM: 4, AW: 5, BL: 3, ST: 5 } },
           { text: "I have a general idea", scores: { SL: 3, CM: 3, AW: 3, BL: 3, ST: 3 } },
-          { text: "Not really — I rely on the coaching institute", scores: { SL: 2, CM: 2, AW: 2, BL: 3, ST: 2 } },
+          { text: "Not really \u2014 I rely on the coaching institute", scores: { SL: 2, CM: 2, AW: 2, BL: 3, ST: 2 } },
           { text: "My child doesn't share that information", scores: { SL: 1, CM: 1, AW: 1, BL: 2, ST: 1 } }
         ]},
       { q: "How do you handle screen time and digital distractions?",
@@ -1001,16 +614,16 @@
         ]},
       { q: "How involved are you in planning your child's academic journey?",
         options: [
-          { text: "Very involved — I help choose resources and track progress", scores: { SL: 4, CM: 4, AW: 4, BL: 3, ST: 5 } },
-          { text: "Involved at a high level — goals, coaching choices", scores: { SL: 3, CM: 3, AW: 3, BL: 4, ST: 4 } },
+          { text: "Very involved \u2014 I help choose resources and track progress", scores: { SL: 4, CM: 4, AW: 4, BL: 3, ST: 5 } },
+          { text: "Involved at a high level \u2014 goals, coaching choices", scores: { SL: 3, CM: 3, AW: 3, BL: 4, ST: 4 } },
           { text: "Mostly leave it to the child and teachers", scores: { SL: 3, CM: 3, AW: 2, BL: 4, ST: 2 } },
           { text: "I want to help more but don't know how", scores: { SL: 3, CM: 2, AW: 3, BL: 2, ST: 2 } }
         ]},
       { q: "Does your child maintain hobbies or activities alongside studies?",
         options: [
-          { text: "Yes — we ensure a balanced routine", scores: { SL: 3, CM: 4, AW: 4, BL: 5, ST: 4 } },
+          { text: "Yes \u2014 we ensure a balanced routine", scores: { SL: 3, CM: 4, AW: 4, BL: 5, ST: 4 } },
           { text: "They used to but stopped for exam prep", scores: { SL: 3, CM: 3, AW: 3, BL: 2, ST: 3 } },
-          { text: "Not really — mostly studying all the time", scores: { SL: 3, CM: 2, AW: 3, BL: 1, ST: 2 } },
+          { text: "Not really \u2014 mostly studying all the time", scores: { SL: 3, CM: 2, AW: 3, BL: 1, ST: 2 } },
           { text: "Too many breaks and not enough study", scores: { SL: 2, CM: 2, AW: 3, BL: 2, ST: 2 } }
         ]},
       { q: "How does your child handle competitive pressure from peers?",
@@ -1031,24 +644,26 @@
 
     // ── Archetypes ──
     var studentArchetypes = {
-      CD: { badge: '🔍', name: 'The Deep Diver',      tagline: "You seek true understanding — not just memorization. This depth is your greatest weapon." },
-      ER: { badge: '🛡️', name: 'The Unshakeable',    tagline: "Pressure doesn't break you — it sharpens you. Your composure is rare." },
-      SD: { badge: '🏗️', name: 'The Architect',      tagline: "Your structure and consistency are superpowers. Results are a matter of time." },
-      SA: { badge: '♟️', name: 'The Chess Player',   tagline: "You think several moves ahead. Strategy is your natural language." },
-      FC: { badge: '🏃', name: 'The Marathoner',      tagline: "Your sustained focus and quiet consistency outperform short bursts every time." }
+      CD: { badge: '\uD83D\uDD0D', name: 'The Deep Diver',      tagline: "You seek true understanding \u2014 not just memorization. This depth is your greatest weapon." },
+      ER: { badge: '\uD83D\uDEE1\uFE0F', name: 'The Unshakeable',    tagline: "Pressure doesn't break you \u2014 it sharpens you. Your composure is rare." },
+      SD: { badge: '\uD83C\uDFD7\uFE0F', name: 'The Architect',      tagline: "Your structure and consistency are superpowers. Results are a matter of time." },
+      SA: { badge: '\u265F\uFE0F', name: 'The Chess Player',   tagline: "You think several moves ahead. Strategy is your natural language." },
+      FC: { badge: '\uD83C\uDFC3', name: 'The Marathoner',      tagline: "Your sustained focus and quiet consistency outperform short bursts every time." }
     };
     var parentArchetypes = {
-      SL: { badge: '⚓',  name: 'The Anchor',          tagline: "Your supportive presence is your child's strongest academic asset." },
-      CM: { badge: '💬', name: 'The Bridge Builder',   tagline: "Open communication is the foundation of everything you do together." },
-      AW: { badge: '🔎', name: 'The Investigator',     tagline: "You dig deep to understand what's really happening behind the marks." },
-      BL: { badge: '⚖️', name: 'The Guardian',        tagline: "You protect your child's wellbeing — and that keeps them going long-term." },
-      ST: { badge: '🧭', name: 'The Navigator',        tagline: "You see the big picture and chart the course before problems arise." }
+      SL: { badge: '\u2693',  name: 'The Anchor',          tagline: "Your supportive presence is your child's strongest academic asset." },
+      CM: { badge: '\uD83D\uDCAC', name: 'The Bridge Builder',   tagline: "Open communication is the foundation of everything you do together." },
+      AW: { badge: '\uD83D\uDD0E', name: 'The Investigator',     tagline: "You dig deep to understand what's really happening behind the marks." },
+      BL: { badge: '\u2696\uFE0F', name: 'The Guardian',        tagline: "You protect your child's wellbeing \u2014 and that keeps them going long-term." },
+      ST: { badge: '\uD83E\uDDED', name: 'The Navigator',        tagline: "You see the big picture and chart the course before problems arise." }
     };
 
     var studentDimLabels = { CD: 'Conceptual Depth', ER: 'Exam Resilience', SD: 'Study Discipline', SA: 'Strategic Aptitude', FC: 'Focus & Consistency' };
     var parentDimLabels  = { SL: 'Support Level',    CM: 'Communication',   AW: 'Awareness',        BL: 'Balance',              ST: 'Strategic Support' };
-    var barColors = { CD: '#00C6FF', ER: '#00df89', SD: '#FFB800', SA: '#A855F7', FC: '#FF6B6B',
-                      SL: '#00C6FF', CM: '#00df89', AW: '#FFB800', BL: '#A855F7', ST: '#FF6B6B' };
+    var barColors = {
+      CD: '#00C6FF', ER: '#00df89', SD: '#FFB800', SA: '#A855F7', FC: '#FF6B6B',
+      SL: '#00C6FF', CM: '#00df89', AW: '#FFB800', BL: '#A855F7', ST: '#FF6B6B'
+    };
 
     // ── Quiz state ──
     var quizState = { role: null, questions: [], answers: [], currentQ: 0, totalQ: 10 };
@@ -1069,7 +684,7 @@
     var psychMetricsOutput = qs('#psychMetricsOutput');
 
     if (!roleSelectWindow || !quizWindow || !questionText || !answerButtons) {
-      console.warn('[Quiz] Missing DOM — quiz section disabled.');
+      console.warn('[Quiz] Missing DOM \u2014 quiz section disabled.');
     } else {
 
       // Role selection (delegation)
@@ -1089,7 +704,11 @@
         resultWindow.hidden     = true;
         quizWindow.hidden       = false;
         if (quizControls) quizControls.hidden = false;
-        if (quizTrackIdentity) quizTrackIdentity.textContent = (role === 'student') ? '🎓 Student Track' : '👨‍👩‍👧 Parent Track';
+        if (quizTrackIdentity) {
+          quizTrackIdentity.textContent = (role === 'student')
+            ? '\uD83C\uDF93 Student Track'
+            : '\uD83D\uDC68\u200D\uD83D\uDC69\u200D\uD83D\uDC67 Parent Track';
+        }
         trackEvent('quiz-start-' + role);
         renderQuestion();
       }
@@ -1098,9 +717,11 @@
         var q     = quizState.questions[quizState.currentQ];
         var idx   = quizState.currentQ;
         var total = quizState.totalQ;
+
         if (quizProgressFill) quizProgressFill.style.width = ((idx) / total * 100) + '%';
         if (quizProgressText) quizProgressText.textContent = 'Question ' + (idx + 1) + ' of ' + total;
         questionText.textContent = q.q;
+
         answerButtons.innerHTML = '';
         q.options.forEach(function (opt, i) {
           var btn = document.createElement('button');
@@ -1112,6 +733,7 @@
           on(btn, 'click', function () { selectAnswer(i); });
           answerButtons.appendChild(btn);
         });
+
         if (nextBtn) {
           nextBtn.hidden = (quizState.answers[idx] === undefined);
           nextBtn.innerHTML = (idx === total - 1)
@@ -1164,7 +786,9 @@
 
         var maxPerDim = quizState.totalQ * 5;
         var pct = {};
-        dimKeys.forEach(function (k) { pct[k] = Math.round((totals[k] / maxPerDim) * 100); });
+        dimKeys.forEach(function (k) {
+          pct[k] = Math.round((totals[k] / maxPerDim) * 100);
+        });
 
         var dominantKey = dimKeys[0], weakestKey = dimKeys[0];
         dimKeys.forEach(function (k) {
@@ -1192,12 +816,12 @@
         html += '</div>';
         html += '<div class="quiz-insight-box" id="insightStrength">';
         html +=   '<div class="quiz-insight-label">Top Strength</div>';
-        html +=   '<div class="quiz-insight-title">' + dimLabels[dominantKey] + ' — ' + pct[dominantKey] + '%</div>';
+        html +=   '<div class="quiz-insight-title">' + dimLabels[dominantKey] + ' \u2014 ' + pct[dominantKey] + '%</div>';
         html +=   '<p class="quiz-insight-text">' + insights.strength + '</p>';
         html += '</div>';
         html += '<div class="quiz-insight-box" id="insightGrowth">';
         html +=   '<div class="quiz-insight-label">Primary Growth Area</div>';
-        html +=   '<div class="quiz-insight-title">' + dimLabels[weakestKey] + ' — ' + pct[weakestKey] + '%</div>';
+        html +=   '<div class="quiz-insight-title">' + dimLabels[weakestKey] + ' \u2014 ' + pct[weakestKey] + '%</div>';
         html +=   '<p class="quiz-insight-text">' + insights.growth + '</p>';
         html += '</div>';
         html += '<div class="quiz-track-rec" id="insightRec">';
@@ -1207,14 +831,28 @@
 
         if (psychMetricsOutput) psychMetricsOutput.innerHTML = html;
 
+        // Animate metric bars with stagger
         setTimeout(function () {
-          qsa('.quiz-metric-fill', psychMetricsOutput).forEach(function (bar) {
-            bar.style.width = bar.getAttribute('data-w');
+          qsa('.quiz-metric-fill', psychMetricsOutput).forEach(function (bar, i) {
+            setTimeout(function () {
+              bar.style.width = bar.getAttribute('data-w');
+            }, i * 80);
           });
         }, 100);
-        setTimeout(function () { var el = qs('#insightStrength'); if (el) el.classList.add('visible'); }, 600);
-        setTimeout(function () { var el = qs('#insightGrowth');   if (el) el.classList.add('visible'); }, 900);
-        setTimeout(function () { var el = qs('#insightRec');      if (el) el.classList.add('visible'); }, 1200);
+
+        // Animate insight boxes (respect reduced motion)
+        if (prefersReducedMotion) {
+          var s1 = qs('#insightStrength');
+          var s2 = qs('#insightGrowth');
+          var s3 = qs('#insightRec');
+          if (s1) s1.classList.add('visible');
+          if (s2) s2.classList.add('visible');
+          if (s3) s3.classList.add('visible');
+        } else {
+          setTimeout(function () { var el = qs('#insightStrength'); if (el) el.classList.add('visible'); }, 600);
+          setTimeout(function () { var el = qs('#insightGrowth');   if (el) el.classList.add('visible'); }, 900);
+          setTimeout(function () { var el = qs('#insightRec');      if (el) el.classList.add('visible'); }, 1200);
+        }
 
         if (quizProgressFill) quizProgressFill.style.width = '100%';
         if (quizProgressText) quizProgressText.textContent = 'Scan Complete';
@@ -1237,17 +875,17 @@
         if (isStudent) {
           var sMap = {
             CD: "You have a natural drive to understand the 'why' behind every concept. This depth gives you a decisive edge in application-based questions. Keep nurturing this instinct.",
-            ER: "You handle exam pressure remarkably well. This composure under fire means your test scores consistently reflect your true preparation level — a rare advantage.",
+            ER: "You handle exam pressure remarkably well. This composure under fire means your test scores consistently reflect your true preparation level \u2014 a rare advantage.",
             SD: "Your study routine is structured and consistent. This discipline compounds over time and is one of the strongest predictors of success in competitive exams.",
-            SA: "You think strategically about your preparation — analyzing patterns, managing priorities, and focusing on what moves the needle. This separates top performers.",
+            SA: "You think strategically about your preparation \u2014 analyzing patterns, managing priorities, and focusing on what moves the needle. This separates top performers.",
             FC: "Your ability to maintain sustained focus is a significant advantage. In an era of constant distraction, this quiet consistency outperforms flashy short bursts."
           };
           var gMap = {
             CD: "Invest more time in understanding the 'why' behind formulas and derivations rather than jumping straight to problem-solving. Concept-first learning multiplies accuracy.",
             ER: "Exam anxiety may be silently capping your performance. Try timed mock sessions, box-breathing before tests, and structured error analysis after every practice paper.",
-            SD: "Building a consistent daily routine — even starting with 2 focused hours at the same time each day — will compound dramatically. Use a tracker to build momentum.",
+            SD: "Building a consistent daily routine \u2014 even starting with 2 focused hours at the same time each day \u2014 will compound dramatically. Use a tracker to build momentum.",
             SA: "Develop post-test analysis habits. After every mock, identify which question types consumed the most time and which concepts caused hesitation.",
-            FC: "Try the Pomodoro technique (25 min focused + 5 min break). Remove phone notifications during study windows — even one interruption resets your flow state."
+            FC: "Try the Pomodoro technique (25 min focused + 5 min break). Remove phone notifications during study windows \u2014 even one interruption resets your flow state."
           };
           var rT, rX;
           if (pcts.ER < 40 || pcts.SD < 40) {
@@ -1267,25 +905,141 @@
           SL: "You provide a strong, supportive environment. This emotional safety net is the foundation your child needs to take academic risks and grow through setbacks.",
           CM: "Open communication means problems surface early and solutions are collaborative. Your willingness to listen is a genuine advantage most parents struggle with.",
           AW: "Being aware of specific strengths and weaknesses allows targeted support rather than generic encouragement. Informed parents are the best academic partners.",
-          BL: "A balanced approach — studies alongside wellbeing — prevents burnout and keeps long-term motivation alive. You understand the long game.",
-          ST: "Your strategic approach — setting goals, choosing resources, tracking progress — shows you're thinking about the trajectory, not just the next test."
+          BL: "A balanced approach \u2014 studies alongside wellbeing \u2014 prevents burnout and keeps long-term motivation alive. You understand the long game.",
+          ST: "Your strategic approach \u2014 setting goals, choosing resources, tracking progress \u2014 shows you're thinking about the trajectory, not just the next test."
         };
         var pGMap = {
-          SL: "Create more structured support — regular check-ins about what they're learning (not just marks), a dedicated study space, and consistent encouragement during low phases.",
+          SL: "Create more structured support \u2014 regular check-ins about what they're learning (not just marks), a dedicated study space, and consistent encouragement during low phases.",
           CM: "Ask open-ended questions about what they're learning rather than what they scored. 'What was the hardest concept this week?' opens more doors than 'How much did you score?'",
           AW: "Ask your child's mentor for a detailed breakdown of weak topics and error patterns. Understanding the gaps allows more productive conversations.",
           BL: "If studies have consumed all activities, reintroduce one hobby or physical activity. Breaks improve memory consolidation and reduce exam anxiety.",
           ST: "Consider a professional mentor who can map your child's current level to their target exam and create a realistic, phased roadmap."
         };
         var rt, rx;
-        if (pcts.CM < 40) { rt = "Suggested: Family Strategy Session"; rx = "Our free consultation includes a parent-student alignment conversation. Bridging the communication gap transforms the entire preparation experience."; }
-        else if (pcts.SL < 40 || pcts.BL < 40) { rt = "Suggested: Micro-Batch with Psychometric Support"; rx = "Our small-batch environment provides structured support and balanced approach that complements your home environment."; }
-        else { rt = "Suggested: Book a Free Family Consultation"; rx = "Your involvement level is strong — a quick consultation with Abhinav sir will align your support strategy with the right academic track."; }
+        if (pcts.CM < 40) {
+          rt = "Suggested: Family Strategy Session";
+          rx = "Our free consultation includes a parent-student alignment conversation. Bridging the communication gap transforms the entire preparation experience.";
+        } else if (pcts.SL < 40 || pcts.BL < 40) {
+          rt = "Suggested: Micro-Batch with Psychometric Support";
+          rx = "Our small-batch environment provides structured support and balanced approach that complements your home environment.";
+        } else {
+          rt = "Suggested: Book a Free Family Consultation";
+          rx = "Your involvement level is strong \u2014 a quick consultation with Abhinav sir will align your support strategy with the right academic track.";
+        }
         return { strength: pSMap[strongest], growth: pGMap[weakest], recTitle: rt, recText: rx };
       }
 
     } // end quiz guard
 
   } catch (err) { console.error('[Quiz] Error:', err); }
+
+  // ============================================================
+  // SECTION 14: SCROLL REVEAL
+  // IntersectionObserver for .animate-in elements
+  // ============================================================
+  try {
+    if (!prefersReducedMotion) {
+      var revealObserver = new IntersectionObserver(
+        function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('visible');
+              revealObserver.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.15, rootMargin: '0px 0px -50px 0px' }
+      );
+
+      // Observe all .animate-in elements
+      function observeAnimations() {
+        qsa('.animate-in').forEach(function (el) {
+          revealObserver.observe(el);
+        });
+      }
+
+      if (document.readyState === 'complete' || document.readyState === 'interactive') {
+        observeAnimations();
+      } else {
+        document.addEventListener('DOMContentLoaded', observeAnimations);
+      }
+    } else {
+      // Reduced motion: show all immediately
+      function showAllImmediate() {
+        qsa('.animate-in').forEach(function (el) {
+          el.classList.add('visible');
+        });
+      }
+      if (document.readyState === 'complete' || document.readyState === 'interactive') {
+        showAllImmediate();
+      } else {
+        document.addEventListener('DOMContentLoaded', showAllImmediate);
+      }
+    }
+  } catch (_) {}
+
+  // ============================================================
+  // SECTION 15: GSAP SCROLLTRIGGER (CONDITIONAL)
+  // Only runs if GSAP CDN is loaded before script.js
+  // Safe to omit GSAP — this section silently skips if absent
+  // ============================================================
+  try {
+    if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined' && !prefersReducedMotion) {
+      gsap.registerPlugin(ScrollTrigger);
+
+      // Course cards
+      gsap.utils.toArray('.course-card').forEach(function (card, i) {
+        gsap.from(card, {
+          scrollTrigger: { trigger: card, start: 'top 88%', toggleActions: 'play none none none' },
+          y: 30, opacity: 0, duration: 0.6, delay: i * 0.06, ease: 'power2.out'
+        });
+      });
+
+      // Testimonial cards
+      gsap.utils.toArray('.testimonial-card').forEach(function (card, i) {
+        gsap.from(card, {
+          scrollTrigger: { trigger: card, start: 'top 88%', toggleActions: 'play none none none' },
+          y: 30, opacity: 0, duration: 0.6, delay: i * 0.06, ease: 'power2.out'
+        });
+      });
+
+      // Section headings
+      gsap.utils.toArray('.section-block h2').forEach(function (heading) {
+        gsap.from(heading, {
+          scrollTrigger: { trigger: heading, start: 'top 85%', toggleActions: 'play none none none' },
+          y: 20, opacity: 0, duration: 0.6, ease: 'power2.out'
+        });
+      });
+
+      // FAQ items
+      gsap.utils.toArray('.faq-item').forEach(function (item, i) {
+        gsap.from(item, {
+          scrollTrigger: { trigger: item, start: 'top 90%', toggleActions: 'play none none none' },
+          y: 15, opacity: 0, duration: 0.4, delay: i * 0.04, ease: 'power2.out'
+        });
+      });
+
+      // Poonam cards
+      gsap.utils.toArray('.poonam-card').forEach(function (card, i) {
+        gsap.from(card, {
+          scrollTrigger: { trigger: card, start: 'top 85%', toggleActions: 'play none none none' },
+          y: 30, opacity: 0, duration: 0.6, delay: i * 0.12, ease: 'power2.out'
+        });
+      });
+
+      // Trust strip numbers
+      gsap.utils.toArray('.trust-item').forEach(function (item, i) {
+        gsap.from(item, {
+          scrollTrigger: { trigger: item, start: 'top 92%', toggleActions: 'play none none none' },
+          y: 15, opacity: 0, duration: 0.5, delay: i * 0.06, ease: 'power2.out'
+        });
+      });
+
+      // Clean up on page unload
+      on(window, 'beforeunload', function () {
+        ScrollTrigger.getAll().forEach(function (t) { t.kill(); });
+      });
+    }
+  } catch (_) {}
 
 })();
