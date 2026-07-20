@@ -1,21 +1,27 @@
 /*  ============================================================
-    script.js — Prime Spirit Mentors v18.0
+    script.js — Prime Spirit Mentors v18.1
     Bulletproof, collision-safe, fully responsive
 
+    v18.1 FIXES:
+    — Hamburger .is-open accent glow class toggled
+    — Icon fa-bars ↔ fa-times swap with font-size bump
+    — iOS-safe scroll lock (position:fixed + save/restore scroll)
+    — Tap-outside-to-close mobile nav overlay
+    — Focus management: first link focused on open,
+      hamburger focused on close
+    — Escape key closes nav, search, modal, dropdown
+    — Resize handler auto-closes mobile nav on desktop
+
     v18.0 CHANGES:
-    — Removed all injected CSS (moved to style.css v18.0)
-    — Fixed nav class mismatch: uses .active (matches CSS)
-    — Fixed Poonam dropdown: uses .open (matches CSS)
-    — Added body scroll lock for mobile nav and auth modal
-    — Added Escape key handling for all overlays
-    — Added focus trap for auth modal
-    — Added prefers-reduced-motion detection
-    — Added IntersectionObserver for .animate-in elements
-    — Added GSAP ScrollTrigger conditional integration
-    — Added resize handler to auto-close mobile nav on desktop
-    — Enhanced search results markup to match CSS expectations
-    — Synced nav breakpoint to 1025px across JS and CSS
-    ============================================================ */
+    — Removed all injected CSS (moved to style.css)
+    — Fixed nav class: .active (matches CSS)
+    — Fixed Poonam dropdown: .open (matches CSS)
+    — Focus trap for auth modal
+    — prefersReducedMotion detection
+    — IntersectionObserver for .animate-in
+    — GSAP ScrollTrigger conditional integration
+    — Enhanced search results markup
+=========================================================== */
 (function () {
   'use strict';
 
@@ -38,13 +44,13 @@
     catch (_) {}
   }
 
-  // ── Detect user motion preference ──
+  // ── Detect motion preference ──
   var prefersReducedMotion = false;
   try {
     prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   } catch (_) {}
 
-  // ── Toast notification ──
+  // ── Toast ──
   function showToast(msg, duration) {
     var existing = qs('.ps-toast');
     if (existing) existing.remove();
@@ -94,66 +100,127 @@
 
   // ============================================================
   // SECTION 3: MOBILE MENU
-  // Uses .active class to match style.css v18.0
-  // Adds body scroll lock, Escape close, resize handler
+  // v18.1: Fixed hamburger visibility, icon swap,
+  //        iOS scroll lock, tap-outside, focus management
   // ============================================================
   try {
     var menuToggle = qs('#menuToggle');
     var mainNav    = qs('#mainNav');
 
+    function getScrollY() {
+      return window.pageYOffset || document.documentElement.scrollTop || 0;
+    }
+
     function openNav() {
       if (!mainNav || !menuToggle) return;
+
+      // Store scroll position before locking
+      var scrollY = getScrollY();
+
       mainNav.classList.add('active');
       menuToggle.setAttribute('aria-expanded', 'true');
+      menuToggle.classList.add('is-open');
+
+      // Swap icon — X is larger for visibility
       var icon = menuToggle.querySelector('i');
-      if (icon) icon.className = 'fas fa-times';
+      if (icon) {
+        icon.className = 'fas fa-times';
+        icon.style.fontSize = '1.3rem';
+      }
       menuToggle.setAttribute('aria-label', 'Close navigation menu');
+
+      // Body scroll lock — iOS-safe
       document.body.classList.add('nav-locked');
+      document.body.style.top = '-' + scrollY + 'px';
+      document.body._psScrollY = scrollY;
+
+      // Focus first nav link for accessibility
+      setTimeout(function () {
+        var firstLink = mainNav.querySelector('a, button');
+        if (firstLink) firstLink.focus();
+      }, 120);
     }
 
     function closeNav() {
       if (!mainNav || !menuToggle) return;
+
       mainNav.classList.remove('active');
       menuToggle.setAttribute('aria-expanded', 'false');
+      menuToggle.classList.remove('is-open');
+
+      // Restore hamburger icon
       var icon = menuToggle.querySelector('i');
-      if (icon) icon.className = 'fas fa-bars';
+      if (icon) {
+        icon.className = 'fas fa-bars';
+        icon.style.fontSize = '';
+      }
       menuToggle.setAttribute('aria-label', 'Open navigation menu');
+
+      // Body scroll unlock — iOS-safe
       document.body.classList.remove('nav-locked');
+      document.body.style.top = '';
+
+      // Restore scroll position
+      var scrollY = document.body._psScrollY || 0;
+      if (scrollY) {
+        window.scrollTo(0, scrollY);
+        document.body._psScrollY = 0;
+      }
+
+      // Return focus to hamburger for keyboard users
+      menuToggle.focus();
+    }
+
+    function isNavOpen() {
+      return mainNav && mainNav.classList.contains('active');
     }
 
     if (menuToggle && mainNav) {
-      on(menuToggle, 'click', function () {
-        var isOpen = mainNav.classList.contains('active');
-        if (isOpen) { closeNav(); } else { openNav(); }
+      // Toggle on hamburger click
+      on(menuToggle, 'click', function (e) {
+        e.stopPropagation();
+        if (isNavOpen()) { closeNav(); } else { openNav(); }
       });
 
-      // Close on nav link click
+      // Close on nav link/button click inside nav
       on(mainNav, 'click', function (e) {
-        if (e.target.closest('a') && mainNav.classList.contains('active')) {
+        var clickedLink = e.target.closest('a');
+        var clickedBtn  = e.target.closest('button');
+
+        if (clickedLink) {
+          if (isNavOpen()) closeNav();
+          return;
+        }
+        // Close for buttons except poonam trigger
+        if (clickedBtn && !clickedBtn.classList.contains('poonam-nav-trigger')) {
+          if (isNavOpen()) closeNav();
+        }
+      });
+
+      // Tap on dark overlay outside nav content closes it
+      on(mainNav, 'click', function (e) {
+        if (e.target === mainNav && isNavOpen()) {
           closeNav();
         }
       });
 
-      // Escape key closes mobile nav
+      // Escape key closes
       on(document, 'keydown', function (e) {
-        if (e.key === 'Escape' && mainNav.classList.contains('active')) {
+        if (e.key === 'Escape' && isNavOpen()) {
           closeNav();
-          menuToggle.focus();
         }
       });
 
-      // Auto-close mobile nav on resize to desktop
+      // Auto-close on resize to desktop
       try {
-        var desktopQuery = window.matchMedia('(min-width: 1025px)');
+        var desktopMQ = window.matchMedia('(min-width: 1025px)');
         function handleResize(mq) {
-          if (mq.matches && mainNav.classList.contains('active')) {
-            closeNav();
-          }
+          if (mq.matches && isNavOpen()) closeNav();
         }
-        if (desktopQuery.addEventListener) {
-          desktopQuery.addEventListener('change', handleResize);
-        } else if (desktopQuery.addListener) {
-          desktopQuery.addListener(handleResize);
+        if (desktopMQ.addEventListener) {
+          desktopMQ.addEventListener('change', handleResize);
+        } else if (desktopMQ.addListener) {
+          desktopMQ.addListener(handleResize);
         }
       } catch (_) {}
     }
@@ -161,7 +228,6 @@
 
   // ============================================================
   // SECTION 4: SEARCH OVERLAY
-  // Enhanced result markup matches style.css expectations
   // ============================================================
   try {
     var searchToggle  = qs('#searchToggle');
@@ -223,7 +289,6 @@
 
   // ============================================================
   // SECTION 5: POONAM DROPDOWN
-  // Uses .open class to match style.css v18.0
   // ============================================================
   try {
     var poonamTrigger  = qs('#poonamNavTrigger');
@@ -243,7 +308,6 @@
           poonamDropdown.classList.remove('open');
         }
       });
-      // Escape closes dropdown
       on(document, 'keydown', function (e) {
         if (e.key === 'Escape' && poonamDropdown.classList.contains('open')) {
           poonamTrigger.setAttribute('aria-expanded', 'false');
@@ -265,7 +329,6 @@
       var expanded = btn.getAttribute('aria-expanded') === 'true';
       var answer   = btn.nextElementSibling;
 
-      // Close all others
       qsa('.faq-question').forEach(function (other) {
         if (other !== btn) {
           other.setAttribute('aria-expanded', 'false');
@@ -274,7 +337,6 @@
         }
       });
 
-      // Toggle this one
       btn.setAttribute('aria-expanded', String(!expanded));
       if (answer) answer.classList.toggle('faq-answer-open', !expanded);
     });
@@ -282,16 +344,22 @@
 
   // ============================================================
   // SECTION 7: AUTH MODAL
-  // Added: focus trap, body scroll lock, proper Escape handling
   // ============================================================
   try {
     var authModal = qs('#authModal');
 
+    function getModalScrollY() {
+      return window.pageYOffset || document.documentElement.scrollTop || 0;
+    }
+
     function openAuth(view) {
       if (!authModal) return;
+      var scrollY = getModalScrollY();
       authModal.hidden = false;
       showAuthView(view || 'login');
       document.body.classList.add('modal-locked');
+      document.body.style.top = '-' + scrollY + 'px';
+      document.body._psModalScrollY = scrollY;
       setTimeout(function () { trapFocus(authModal); }, 60);
     }
 
@@ -299,6 +367,12 @@
       if (!authModal) return;
       authModal.hidden = true;
       document.body.classList.remove('modal-locked');
+      document.body.style.top = '';
+      var scrollY = document.body._psModalScrollY || 0;
+      if (scrollY) {
+        window.scrollTo(0, scrollY);
+        document.body._psModalScrollY = 0;
+      }
       releaseFocusTrap(authModal);
     }
 
@@ -311,7 +385,6 @@
       if (forgot) forgot.hidden = (view !== 'forgot');
     }
 
-    // Focus trap utility
     function trapFocus(container) {
       var focusable = qsa(
         'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
@@ -342,10 +415,8 @@
       }
     }
 
-    // Event delegation for all auth-related clicks
     on(document, 'click', function (e) {
       var target = e.target;
-
       if (target.closest('#btnStudentLogin') || target.closest('#btnParentLogin')) {
         e.preventDefault();
         openAuth('login');
@@ -358,14 +429,10 @@
       if (target.closest('#btnGotoForgot')) { showAuthView('forgot'); return; }
     });
 
-    // Escape key to close modal
     on(document, 'keydown', function (e) {
-      if (e.key === 'Escape' && authModal && !authModal.hidden) {
-        closeAuth();
-      }
+      if (e.key === 'Escape' && authModal && !authModal.hidden) closeAuth();
     });
 
-    // Form submissions (delegation)
     on(document, 'submit', function (e) {
       var form = e.target;
       if (form.id === 'formLogin' || form.id === 'formSignup' || form.id === 'formForgot') {
@@ -374,7 +441,6 @@
       }
     });
 
-    // Password strength
     on(document, 'input', function (e) {
       if (e.target.id !== 'signupPass') return;
       var v = e.target.value;
@@ -420,18 +486,9 @@
       var email = emailEl ? emailEl.value.trim()  : '';
       var phone = phoneEl ? phoneEl.value.trim()  : '';
 
-      if (!name || !email || !phone) {
-        showToast('Please fill in all required fields.');
-        return;
-      }
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-        showToast('Please enter a valid email address.');
-        return;
-      }
-      if (!/^[0-9]{10}$/.test(phone)) {
-        showToast('Please enter a valid 10-digit phone number.');
-        return;
-      }
+      if (!name || !email || !phone) { showToast('Please fill in all required fields.'); return; }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showToast('Please enter a valid email address.'); return; }
+      if (!/^[0-9]{10}$/.test(phone)) { showToast('Please enter a valid 10-digit phone number.'); return; }
 
       trackEvent('contact-form-submit');
       showToast('Thank you! Abhinav sir will reach out within 24 hours.', 4000);
@@ -490,11 +547,9 @@
 
   // ============================================================
   // SECTION 13: MINDSET AUDIT QUIZ
-  // All questions, archetypes, scoring, and result rendering
   // ============================================================
   try {
 
-    // ── Student Questions ──
     var studentQuestions = [
       { q: "When you sit down to study a completely new chapter, what's your first instinct?",
         options: [
@@ -568,7 +623,6 @@
         ]}
     ];
 
-    // ── Parent Questions ──
     var parentQuestions = [
       { q: "How would you describe your child's study routine at home?",
         options: [
@@ -642,7 +696,6 @@
         ]}
     ];
 
-    // ── Archetypes ──
     var studentArchetypes = {
       CD: { badge: '\uD83D\uDD0D', name: 'The Deep Diver',      tagline: "You seek true understanding \u2014 not just memorization. This depth is your greatest weapon." },
       ER: { badge: '\uD83D\uDEE1\uFE0F', name: 'The Unshakeable',    tagline: "Pressure doesn't break you \u2014 it sharpens you. Your composure is rare." },
@@ -660,15 +713,10 @@
 
     var studentDimLabels = { CD: 'Conceptual Depth', ER: 'Exam Resilience', SD: 'Study Discipline', SA: 'Strategic Aptitude', FC: 'Focus & Consistency' };
     var parentDimLabels  = { SL: 'Support Level',    CM: 'Communication',   AW: 'Awareness',        BL: 'Balance',              ST: 'Strategic Support' };
-    var barColors = {
-      CD: '#00C6FF', ER: '#00df89', SD: '#FFB800', SA: '#A855F7', FC: '#FF6B6B',
-      SL: '#00C6FF', CM: '#00df89', AW: '#FFB800', BL: '#A855F7', ST: '#FF6B6B'
-    };
+    var barColors = { CD: '#00C6FF', ER: '#00df89', SD: '#FFB800', SA: '#A855F7', FC: '#FF6B6B', SL: '#00C6FF', CM: '#00df89', AW: '#FFB800', BL: '#A855F7', ST: '#FF6B6B' };
 
-    // ── Quiz state ──
     var quizState = { role: null, questions: [], answers: [], currentQ: 0, totalQ: 10 };
 
-    // ── Quiz DOM ──
     var roleSelectWindow   = qs('#roleSelectWindow');
     var quizWindow         = qs('#quizWindow');
     var quizControls       = qs('#quizControls');
@@ -687,7 +735,6 @@
       console.warn('[Quiz] Missing DOM \u2014 quiz section disabled.');
     } else {
 
-      // Role selection (delegation)
       on(document, 'click', function (e) {
         if (e.target.closest('#btnRoleStudent')) { startQuiz('student'); return; }
         if (e.target.closest('#btnRoleParent'))  { startQuiz('parent');  return; }
@@ -717,11 +764,9 @@
         var q     = quizState.questions[quizState.currentQ];
         var idx   = quizState.currentQ;
         var total = quizState.totalQ;
-
         if (quizProgressFill) quizProgressFill.style.width = ((idx) / total * 100) + '%';
         if (quizProgressText) quizProgressText.textContent = 'Question ' + (idx + 1) + ' of ' + total;
         questionText.textContent = q.q;
-
         answerButtons.innerHTML = '';
         q.options.forEach(function (opt, i) {
           var btn = document.createElement('button');
@@ -733,7 +778,6 @@
           on(btn, 'click', function () { selectAnswer(i); });
           answerButtons.appendChild(btn);
         });
-
         if (nextBtn) {
           nextBtn.hidden = (quizState.answers[idx] === undefined);
           nextBtn.innerHTML = (idx === total - 1)
@@ -786,9 +830,7 @@
 
         var maxPerDim = quizState.totalQ * 5;
         var pct = {};
-        dimKeys.forEach(function (k) {
-          pct[k] = Math.round((totals[k] / maxPerDim) * 100);
-        });
+        dimKeys.forEach(function (k) { pct[k] = Math.round((totals[k] / maxPerDim) * 100); });
 
         var dominantKey = dimKeys[0], weakestKey = dimKeys[0];
         dimKeys.forEach(function (k) {
@@ -831,23 +873,16 @@
 
         if (psychMetricsOutput) psychMetricsOutput.innerHTML = html;
 
-        // Animate metric bars with stagger
         setTimeout(function () {
           qsa('.quiz-metric-fill', psychMetricsOutput).forEach(function (bar, i) {
-            setTimeout(function () {
-              bar.style.width = bar.getAttribute('data-w');
-            }, i * 80);
+            setTimeout(function () { bar.style.width = bar.getAttribute('data-w'); }, i * 80);
           });
         }, 100);
 
-        // Animate insight boxes (respect reduced motion)
         if (prefersReducedMotion) {
-          var s1 = qs('#insightStrength');
-          var s2 = qs('#insightGrowth');
-          var s3 = qs('#insightRec');
-          if (s1) s1.classList.add('visible');
-          if (s2) s2.classList.add('visible');
-          if (s3) s3.classList.add('visible');
+          ['insightStrength', 'insightGrowth', 'insightRec'].forEach(function (id) {
+            var el = qs('#' + id); if (el) el.classList.add('visible');
+          });
         } else {
           setTimeout(function () { var el = qs('#insightStrength'); if (el) el.classList.add('visible'); }, 600);
           setTimeout(function () { var el = qs('#insightGrowth');   if (el) el.classList.add('visible'); }, 900);
@@ -929,13 +964,12 @@
         return { strength: pSMap[strongest], growth: pGMap[weakest], recTitle: rt, recText: rx };
       }
 
-    } // end quiz guard
+    }
 
   } catch (err) { console.error('[Quiz] Error:', err); }
 
   // ============================================================
   // SECTION 14: SCROLL REVEAL
-  // IntersectionObserver for .animate-in elements
   // ============================================================
   try {
     if (!prefersReducedMotion) {
@@ -951,11 +985,8 @@
         { threshold: 0.15, rootMargin: '0px 0px -50px 0px' }
       );
 
-      // Observe all .animate-in elements
       function observeAnimations() {
-        qsa('.animate-in').forEach(function (el) {
-          revealObserver.observe(el);
-        });
+        qsa('.animate-in').forEach(function (el) { revealObserver.observe(el); });
       }
 
       if (document.readyState === 'complete' || document.readyState === 'interactive') {
@@ -964,11 +995,8 @@
         document.addEventListener('DOMContentLoaded', observeAnimations);
       }
     } else {
-      // Reduced motion: show all immediately
       function showAllImmediate() {
-        qsa('.animate-in').forEach(function (el) {
-          el.classList.add('visible');
-        });
+        qsa('.animate-in').forEach(function (el) { el.classList.add('visible'); });
       }
       if (document.readyState === 'complete' || document.readyState === 'interactive') {
         showAllImmediate();
@@ -980,62 +1008,31 @@
 
   // ============================================================
   // SECTION 15: GSAP SCROLLTRIGGER (CONDITIONAL)
-  // Only runs if GSAP CDN is loaded before script.js
-  // Safe to omit GSAP — this section silently skips if absent
+  // Only runs if GSAP CDN is loaded. Safe to omit.
   // ============================================================
   try {
     if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined' && !prefersReducedMotion) {
       gsap.registerPlugin(ScrollTrigger);
 
-      // Course cards
       gsap.utils.toArray('.course-card').forEach(function (card, i) {
-        gsap.from(card, {
-          scrollTrigger: { trigger: card, start: 'top 88%', toggleActions: 'play none none none' },
-          y: 30, opacity: 0, duration: 0.6, delay: i * 0.06, ease: 'power2.out'
-        });
+        gsap.from(card, { scrollTrigger: { trigger: card, start: 'top 88%', toggleActions: 'play none none none' }, y: 30, opacity: 0, duration: 0.6, delay: i * 0.06, ease: 'power2.out' });
       });
-
-      // Testimonial cards
       gsap.utils.toArray('.testimonial-card').forEach(function (card, i) {
-        gsap.from(card, {
-          scrollTrigger: { trigger: card, start: 'top 88%', toggleActions: 'play none none none' },
-          y: 30, opacity: 0, duration: 0.6, delay: i * 0.06, ease: 'power2.out'
-        });
+        gsap.from(card, { scrollTrigger: { trigger: card, start: 'top 88%', toggleActions: 'play none none none' }, y: 30, opacity: 0, duration: 0.6, delay: i * 0.06, ease: 'power2.out' });
       });
-
-      // Section headings
       gsap.utils.toArray('.section-block h2').forEach(function (heading) {
-        gsap.from(heading, {
-          scrollTrigger: { trigger: heading, start: 'top 85%', toggleActions: 'play none none none' },
-          y: 20, opacity: 0, duration: 0.6, ease: 'power2.out'
-        });
+        gsap.from(heading, { scrollTrigger: { trigger: heading, start: 'top 85%', toggleActions: 'play none none none' }, y: 20, opacity: 0, duration: 0.6, ease: 'power2.out' });
       });
-
-      // FAQ items
       gsap.utils.toArray('.faq-item').forEach(function (item, i) {
-        gsap.from(item, {
-          scrollTrigger: { trigger: item, start: 'top 90%', toggleActions: 'play none none none' },
-          y: 15, opacity: 0, duration: 0.4, delay: i * 0.04, ease: 'power2.out'
-        });
+        gsap.from(item, { scrollTrigger: { trigger: item, start: 'top 90%', toggleActions: 'play none none none' }, y: 15, opacity: 0, duration: 0.4, delay: i * 0.04, ease: 'power2.out' });
       });
-
-      // Poonam cards
       gsap.utils.toArray('.poonam-card').forEach(function (card, i) {
-        gsap.from(card, {
-          scrollTrigger: { trigger: card, start: 'top 85%', toggleActions: 'play none none none' },
-          y: 30, opacity: 0, duration: 0.6, delay: i * 0.12, ease: 'power2.out'
-        });
+        gsap.from(card, { scrollTrigger: { trigger: card, start: 'top 85%', toggleActions: 'play none none none' }, y: 30, opacity: 0, duration: 0.6, delay: i * 0.12, ease: 'power2.out' });
       });
-
-      // Trust strip numbers
       gsap.utils.toArray('.trust-item').forEach(function (item, i) {
-        gsap.from(item, {
-          scrollTrigger: { trigger: item, start: 'top 92%', toggleActions: 'play none none none' },
-          y: 15, opacity: 0, duration: 0.5, delay: i * 0.06, ease: 'power2.out'
-        });
+        gsap.from(item, { scrollTrigger: { trigger: item, start: 'top 92%', toggleActions: 'play none none none' }, y: 15, opacity: 0, duration: 0.5, delay: i * 0.06, ease: 'power2.out' });
       });
 
-      // Clean up on page unload
       on(window, 'beforeunload', function () {
         ScrollTrigger.getAll().forEach(function (t) { t.kill(); });
       });
