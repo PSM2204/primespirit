@@ -139,6 +139,66 @@
     @media(max-width:640px){.vibe-grid{grid-template-columns:1fr}}
     </style>
 
+    <!-- ====== PRIMELAB NAV BUTTON CSS ====== -->
+    <style>
+    .nav-link--primelab{
+      position:relative;
+      font-family:var(--font-head);
+      font-weight:800;
+      font-size:.85rem;
+      padding:10px 18px;
+      border-radius:9px;
+      border:1px solid rgba(0,198,255,.3);
+      background:linear-gradient(135deg,rgba(0,198,255,.08),rgba(0,112,243,.08));
+      color:var(--accent);
+      letter-spacing:.03em;
+      white-space:nowrap;
+      display:inline-flex;
+      align-items:center;
+      gap:7px;
+      transition:background .25s ease,box-shadow .25s ease,border-color .25s ease,color .25s ease;
+      text-decoration:none;
+    }
+    .nav-link--primelab:hover{
+      background:linear-gradient(135deg,rgba(0,198,255,.16),rgba(0,112,243,.16));
+      border-color:rgba(0,198,255,.5);
+      box-shadow:0 0 18px rgba(0,198,255,.18),0 4px 16px rgba(0,0,0,.25);
+      color:#fff;
+    }
+    .nav-link--primelab .lab-dot{
+      width:7px;height:7px;border-radius:50%;
+      background:var(--accent);
+      box-shadow:0 0 6px var(--accent);
+      animation:labPulse 2s ease-in-out infinite;
+    }
+    @keyframes labPulse{
+      0%,100%{opacity:1;box-shadow:0 0 6px var(--accent)}
+      50%{opacity:.5;box-shadow:0 0 2px var(--accent)}
+    }
+
+    /* Mobile variant */
+    .m-primelab{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding:16px 4px;
+      font-family:var(--font-head);
+      font-weight:800;
+      font-size:1rem;
+      color:var(--accent);
+      border-bottom:1px solid var(--border);
+      text-decoration:none;
+      transition:color .2s ease;
+    }
+    .m-primelab:hover{color:#fff}
+    .m-primelab .lab-dot{
+      width:7px;height:7px;border-radius:50%;
+      background:var(--accent);
+      box-shadow:0 0 6px var(--accent);
+      animation:labPulse 2s ease-in-out infinite;
+    }
+    </style>
+
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -305,6 +365,9 @@
                 <div class="nav-item">
                     <a href="#contact" class="nav-link">Contact</a>
                 </div>
+                <div class="nav-item">
+                    <a href="primelab.html" class="nav-link nav-link--primelab" data-track="nav-primelab"><span class="lab-dot" aria-hidden="true"></span> PrimeLab</a>
+                </div>
             </nav>
 
             <div class="header-actions">
@@ -348,6 +411,7 @@
         </div>
         <a href="https://primespirit.co.in/PrimeBoard/" class="m-cta m-secondary" target="_blank" rel="noopener noreferrer">PrimeBoard</a>
         <a href="#contact" class="m-cta m-secondary">Contact</a>
+        <a href="primelab.html" class="m-primelab" data-track="nav-mobile-primelab"><span class="lab-dot" aria-hidden="true"></span> PrimeLab</a>
         <a href="https://wa.me/919700627812?text=Hi%2C%20I%20want%20to%20book%20a%20free%20demo%20class." class="m-cta" target="_blank" rel="noopener noreferrer">Book Free Demo</a>
     </div>
 
