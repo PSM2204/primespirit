@@ -1,0 +1,13 @@
+{
+  "gadgets": [
+    { "id": "jet_boots", "name": "Jet Boots", "desc": "Blast off with Newton's Third Law. Gives a second chance on wrong answers.", "cost": 200, "effect": "retry", "icon": "🚀" },
+    { "id": "gravity_belt", "name": "Gravity Belt", "desc": "Manipulate gravity to reduce boss damage by 50% for one turn.", "cost": 300, "effect": "shield", "icon": "🛡️" },
+    { "id": "photon_shield", "name": "Photon Shield", "desc": "A barrier of pure light. Blocks all boss damage for one attack.", "cost": 500, "effect": "block", "icon": "✨" },
+    { "id": "laser_compass", "name": "Laser Compass", "desc": "Highlights the correct answer with a faint glow. Use wisely!", "cost": 400, "effect": "hint", "icon": "🔦" },
+    { "id": "rocket_pack", "name": "Rocket Pack", "desc": "Double XP earned for the next 3 questions.", "cost": 250, "effect": "xp_boost", "icon": "🎆" },
+    { "id": "quantum_scanner", "name": "Quantum Scanner", "desc": "Eliminates two wrong options in MCQ questions.", "cost": 350, "effect": "eliminate", "icon": "📡" },
+    { "id": "magnetic_gloves", "name": "Magnetic Gloves", "desc": "Attract bonus coins. +50% coin reward for the next level.", "cost": 300, "effect": "coin_boost", "icon": "🧤" },
+    { "id": "electric_hammer", "name": "Electric Hammer", "desc": "Deal double damage to the boss on your next correct answer.", "cost": 450, "effect": "double_damage", "icon": "🔨" },
+    { "id": "time_stabilizer", "name": "Time Stabilizer", "desc": "Pauses the timer on timed questions for 30 seconds.", "cost": 200, "effect": "time_pause", "icon": "⏱️" }
+  ]
+}
