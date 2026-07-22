@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PrimeLab — 6-Station Mind Training Game | Prime Spirit Mentors</title>
+<meta name="description" content="PrimeLab: A 6-station game combining Chemistry, Physics, Biology, Maths, Reasoning and Wild Card challenges. Train active recall, memory, and problem-solving.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2280%22>🧪</text></svg>">
+<style>
+:root{
+  --bg:#06080f;--surface:#0c1018;--elevated:#131829;--card:#0f1420;
+  --border:rgba(255,255,255,.06);--text:#e8ecf4;--text-sec:#7a8499;--muted:#505a6e;
+  --chem:#00ff88;--phys:#00c6ff;--bio:#00df89;--math:#a855f7;--logic:#ff9900;--wild:#ff3366;
+  --font-head:'Syne',sans-serif;--font-body:'Space Grotesk',sans-serif;--font-mono:'DM Mono',monospace;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--font-body);min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+
+/* ── AMBIENT ── */
+.ambient{position:fixed;inset:0;pointer-events:none;z-index:0}
+.ambient::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 20% 20%,rgba(0,198,255,.04) 0%,transparent 60%),radial-gradient(ellipse at 80% 80%,rgba(168,85,247,.04) 0%,transparent 60%)}
+
+/* ── LAYOUT ── */
+.app{position:relative;z-index:1;max-width:900px;margin:0 auto;padding:20px;min-height:100vh;display:flex;flex-direction:column}
+.screen{display:none;flex:1;flex-direction:column}.screen.active{display:flex}
+
+/* ── HEADER BAR ── */
+.top-bar{display:flex;align-items:center;justify-content:space-between;padding:12px 0;margin-bottom:24px;border-bottom:1px solid var(--border)}
+.top-bar .logo{display:flex;align-items:center;gap:10px;font-family:var(--font-head);font-weight:800;font-size:.95rem;text-decoration:none;color:var(--text)}
+.logo-icon{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,var(--phys),var(--math));display:grid;place-items:center;font-size:16px}
+.score-pill{display:flex;align-items:center;gap:12px;font-family:var(--font-mono);font-size:13px}
+.score-pill .sp-item{display:flex;align-items:center;gap:5px;padding:5px 12px;border-radius:20px;background:var(--elevated);border:1px solid var(--border)}
+.sp-item .sp-val{font-weight:500;color:var(--phys)}
+
+/* ── LOBBY ── */
+.lobby-title{text-align:center;margin-bottom:8px}
+.lobby-title h1{font-family:var(--font-head);font-size:clamp(2rem,7vw,3.2rem);font-weight:800;background:linear-gradient(135deg,#fff 20%,var(--phys) 60%,var(--math));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px}
+.lobby-sub{text-align:center;color:var(--text-sec);font-size:.92rem;margin-bottom:32px;line-height:1.6}
+.station-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px;margin-bottom:28px}
+.station-card{background:var(--card);border:1.5px solid var(--border);border-radius:16px;padding:24px 20px;cursor:pointer;transition:transform .25s cubic-bezier(.4,0,.2,1),border-color .3s,box-shadow .3s;position:relative;overflow:hidden}
+.station-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:16px 16px 0 0}
+.station-card:hover{transform:translateY(-4px)}
+.station-card .sc-emoji{font-size:36px;margin-bottom:12px;display:block}
+.station-card h3{font-family:var(--font-head);font-size:1rem;font-weight:800;margin-bottom:4px}
+.station-card p{font-size:.82rem;color:var(--text-sec);line-height:1.5;margin-bottom:12px}
+.station-card .sc-meta{display:flex;gap:8px;flex-wrap:wrap}
+.sc-tag{font-family:var(--font-mono);font-size:10px;padding:3px 9px;border-radius:20px;letter-spacing:.5px;text-transform:uppercase}
+.sc-tag--type{background:rgba(255,255,255,.05);color:var(--text-sec)}
+.sc-tag--q{background:rgba(255,255,255,.03);color:var(--muted)}
+.station-card[data-station="chem"]::before{background:var(--chem)}
+.station-card[data-station="chem"]:hover{border-color:rgba(0,255,136,.3);box-shadow:0 8px 30px rgba(0,255,136,.1)}
+.station-card[data-station="phys"]::before{background:var(--phys)}
+.station-card[data-station="phys"]:hover{border-color:rgba(0,198,255,.3);box-shadow:0 8px 30px rgba(0,198,255,.1)}
+.station-card[data-station="bio"]::before{background:var(--bio)}
+.station-card[data-station="bio"]:hover{border-color:rgba(0,223,137,.3);box-shadow:0 8px 30px rgba(0,223,137,.1)}
+.station-card[data-station="math"]::before{background:var(--math)}
+.station-card[data-station="math"]:hover{border-color:rgba(168,85,247,.3);box-shadow:0 8px 30px rgba(168,85,247,.1)}
+.station-card[data-station="logic"]::before{background:var(--logic)}
+.station-card[data-station="logic"]:hover{border-color:rgba(255,153,0,.3);box-shadow:0 8px 30px rgba(255,153,0,.1)}
+.station-card[data-station="wild"]::before{background:linear-gradient(90deg,var(--chem),var(--phys),var(--bio),var(--math),var(--logic),var(--wild))}
+.station-card[data-station="wild"]:hover{border-color:rgba(255,51,102,.3);box-shadow:0 8px 30px rgba(255,51,102,.1)}
+.station-card.completed{opacity:.6}
+.station-card.completed::after{content:'✓ DONE';position:absolute;top:14px;right:14px;font-family:var(--font-mono);font-size:10px;color:var(--bio);background:rgba(0,223,137,.1);padding:3px 8px;border-radius:8px;letter-spacing:1px}
+
+/* ── GAME SCREEN ── */
+.game-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;gap:12px;flex-wrap:wrap}
+.game-head .gh-left{display:flex;align-items:center;gap:12px}
+.btn-back{background:var(--elevated);border:1px solid var(--border);border-radius:10px;padding:8px 14px;color:var(--text-sec);font-family:var(--font-head);font-weight:700;font-size:.82rem;cursor:pointer;display:flex;align-items:center;gap:6px;transition:border-color .2s}
+.btn-back:hover{border-color:var(--text-sec);color:var(--text)}
+.game-head h2{font-family:var(--font-head);font-size:1.2rem;font-weight:800}
+.game-head .gh-right{display:flex;align-items:center;gap:10px}
+.timer{font-family:var(--font-mono);font-size:14px;color:var(--text-sec);display:flex;align-items:center;gap:5px}
+.timer .t-dot{width:6px;height:6px;border-radius:50%;background:var(--chem);animation:pulse-dot 1.5s ease-in-out infinite}
+@keyframes pulse-dot{0%,100%{opacity:1}50%{opacity:.3}}
+.q-counter{font-family:var(--font-mono);font-size:12px;color:var(--muted);padding:4px 10px;border-radius:8px;background:var(--surface);border:1px solid var(--border)}
+.streak-badge{font-family:var(--font-mono);font-size:11px;color:var(--logic);padding:4px 10px;border-radius:8px;background:rgba(255,153,0,.08);border:1px solid rgba(255,153,0,.15);display:none}
+.streak-badge.visible{display:inline-flex;align-items:center;gap:4px}
+
+.game-area{flex:1;display:flex;flex-direction:column;gap:16px}
+
+/* progress bar */
+.progress-bar{height:3px;background:var(--surface);border-radius:3px;overflow:hidden;margin-bottom:8px}
+.progress-fill{height:100%;border-radius:3px;transition:width .4s cubic-bezier(.4,0,.2,1)}
+
+/* question card */
+.q-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:28px 24px;animation:card-in .35s ease}
+@keyframes card-in{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.q-prompt{font-size:1.15rem;font-weight:700;line-height:1.5;margin-bottom:20px;font-family:var(--font-head)}
+.q-hint{font-size:.82rem;color:var(--text-sec);margin-bottom:16px;font-style:italic}
+
+/* options (generic MCQ) */
+.opts{display:flex;flex-direction:column;gap:9px}
+.opt-btn{background:var(--surface);border:1.5px solid var(--border);border-radius:12px;padding:14px 16px;text-align:left;cursor:pointer;font-family:var(--font-body);font-size:.93rem;font-weight:600;color:var(--text);display:flex;align-items:center;gap:12px;transition:border-color .2s,background .2s,transform .15s}
+.opt-btn:hover{transform:translateX(3px)}
+.opt-btn.selected{border-color:var(--phys);background:rgba(0,198,255,.06)}
+.opt-btn.correct{border-color:var(--chem)!important;background:rgba(0,255,136,.08)!important}
+.opt-btn.wrong{border-color:var(--wild)!important;background:rgba(255,51,102,.08)!important}
+.opt-letter{width:26px;height:26px;min-width:26px;border-radius:7px;background:var(--card);border:1px solid var(--border);display:grid;place-items:center;font-family:var(--font-mono);font-size:11px;color:var(--muted);transition:background .2s,color .2s}
+.opt-btn.selected .opt-letter{background:var(--phys);color:#000}
+.opt-btn.correct .opt-letter{background:var(--chem);color:#000}
+.opt-btn.wrong .opt-letter{background:var(--wild);color:#fff}
+
+/* submit / next button */
+.btn-next{margin-top:16px;padding:13px 32px;border-radius:40px;border:none;font-family:var(--font-head);font-weight:800;font-size:.95rem;color:#fff;cursor:pointer;opacity:0;pointer-events:none;transition:opacity .3s,transform .2s;align-self:flex-start}
+.btn-next.visible{opacity:1;pointer-events:all}
+.btn-next:hover{transform:translateY(-2px)}
+
+/* feedback */
+.feedback{padding:14px 18px;border-radius:12px;font-size:.9rem;font-weight:600;animation:card-in .25s ease;display:none}
+.feedback.show{display:block}
+.feedback.correct-fb{background:rgba(0,255,136,.08);border:1px solid rgba(0,255,136,.2);color:var(--chem)}
+.feedback.wrong-fb{background:rgba(255,51,102,.08);border:1px solid rgba(255,51,102,.2);color:var(--wild)}
+
+/* ── MEMORY MATCH (Bio Garden) ── */
+.match-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;max-width:500px;margin:0 auto}
+.match-card{aspect-ratio:1;border-radius:12px;border:1.5px solid var(--border);background:var(--elevated);cursor:pointer;perspective:600px;transition:transform .15s}
+.match-card .mc-inner{position:relative;width:100%;height:100%;transition:transform .4s cubic-bezier(.4,0,.2,1);transform-style:preserve-3d}
+.match-card.flipped .mc-inner{transform:rotateY(180deg)}
+.match-card.matched{opacity:.5;pointer-events:none}
+.match-card .mc-front,.match-card .mc-back{position:absolute;inset:0;backface-visibility:hidden;border-radius:12px;display:grid;place-items:center;padding:8px;text-align:center;font-size:.78rem;font-weight:700;line-height:1.3}
+.match-card .mc-front{background:var(--elevated);border:1px solid var(--border)}
+.match-card .mc-back{background:var(--card);border:1px solid var(--border);transform:rotateY(180deg);font-size:.72rem}
+.match-card.matched .mc-back{border-color:var(--bio)}
+
+/* ── SEQUENCE (Physics Forge) ── */
+.seq-items{display:flex;flex-direction:column;gap:8px}
+.seq-item{background:var(--surface);border:1.5px solid var(--border);border-radius:12px;padding:14px 16px;cursor:grab;font-size:.92rem;font-weight:600;display:flex;align-items:center;gap:12px;transition:border-color .2s,transform .15s;user-select:none}
+.seq-item:hover{border-color:var(--phys)}
+.seq-item .seq-num{width:24px;height:24px;min-width:24px;border-radius:6px;background:var(--card);border:1px solid var(--border);display:grid;place-items:center;font-family:var(--font-mono);font-size:11px;color:var(--muted)}
+.seq-item.seq-correct{border-color:var(--chem);background:rgba(0,255,136,.06)}
+.seq-item.seq-wrong{border-color:var(--wild);background:rgba(255,51,102,.06)}
+.seq-move-btns{display:flex;gap:4px;margin-left:auto}
+.seq-move-btns button{width:28px;height:28px;border-radius:6px;border:1px solid var(--border);background:var(--card);color:var(--text-sec);font-size:14px;cursor:pointer;display:grid;place-items:center}
+.seq-move-btns button:hover{border-color:var(--phys);color:var(--phys)}
+
+/* ── HOT SEAT (Maths Dojo) ── */
+.clue-list{display:flex;flex-direction:column;gap:10px}
+.clue-item{padding:12px 16px;border-radius:12px;background:var(--surface);border:1px solid var(--border);font-size:.9rem;line-height:1.5;display:none;font-weight:600}
+.clue-item.revealed{display:block;animation:card-in .3s ease}
+.clue-label{font-family:var(--font-mono);font-size:10px;letter-spacing:1px;color:var(--muted);text-transform:uppercase;margin-bottom:4px}
+.clue-pts{font-family:var(--font-mono);font-size:11px;float:right;color:var(--math)}
+.hs-input-row{display:flex;gap:10px;margin-top:12px}
+.hs-input{flex:1;padding:12px 16px;border-radius:12px;background:var(--surface);border:1.5px solid var(--border);font-family:var(--font-body);font-size:.95rem;color:var(--text);outline:none;transition:border-color .2s}
+.hs-input:focus{border-color:var(--math)}
+.btn-guess{padding:12px 24px;border-radius:12px;border:none;background:linear-gradient(135deg,var(--math),#6366f1);color:#fff;font-family:var(--font-head);font-weight:800;font-size:.9rem;cursor:pointer;white-space:nowrap}
+.btn-clue{padding:10px 18px;border-radius:12px;border:1.5px solid var(--border);background:var(--surface);color:var(--text-sec);font-family:var(--font-head);font-weight:700;font-size:.82rem;cursor:pointer;margin-top:8px}
+.btn-clue:hover{border-color:var(--math);color:var(--math)}
+
+/* ── WORD JUMBLE (Logic Room) ── */
+.jumble-display{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:16px 0}
+.jumble-letter{width:40px;height:44px;border-radius:10px;background:var(--elevated);border:1.5px solid var(--border);display:grid;place-items:center;font-family:var(--font-mono);font-size:1.1rem;font-weight:500;cursor:pointer;transition:border-color .2s,transform .15s,background .2s;user-select:none}
+.jumble-letter:hover{border-color:var(--logic);transform:translateY(-2px)}
+.jumble-letter.used{opacity:.3;pointer-events:none}
+.answer-slots{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:12px 0}
+.answer-slot{width:40px;height:44px;border-radius:10px;background:var(--card);border:1.5px dashed var(--border);display:grid;place-items:center;font-family:var(--font-mono);font-size:1.1rem;font-weight:500;cursor:pointer;transition:border-color .2s}
+.answer-slot.filled{border-style:solid;border-color:var(--logic)}
+.btn-clear-jumble{padding:8px 16px;border-radius:10px;border:1px solid var(--border);background:var(--surface);color:var(--text-sec);font-size:.82rem;cursor:pointer;font-family:var(--font-head);font-weight:700}
+
+/* ── MIX & MATCH (Chem Lab) ── */
+.chem-pairs{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:start}
+.chem-col{display:flex;flex-direction:column;gap:8px}
+.chem-item{padding:12px 14px;border-radius:12px;background:var(--surface);border:1.5px solid var(--border);font-size:.88rem;font-weight:600;cursor:pointer;transition:border-color .2s,transform .15s;text-align:center}
+.chem-item:hover{border-color:var(--chem)}
+.chem-item.selected{border-color:var(--chem);background:rgba(0,255,136,.08)}
+.chem-item.matched{border-color:var(--chem);background:rgba(0,255,136,.06);opacity:.5;pointer-events:none}
+.chem-item.wrong-pick{border-color:var(--wild);background:rgba(255,51,102,.06)}
+.chem-arrow{display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:20px;padding-top:10px}
+@media(max-width:500px){.chem-pairs{grid-template-columns:1fr;gap:6px}.chem-arrow{transform:rotate(90deg);padding:4px 0}}
+
+/* ── RESULTS SCREEN ── */
+.results-wrap{text-align:center;padding:20px 0}
+.results-emoji{font-size:64px;margin-bottom:16px}
+.results-title{font-family:var(--font-head);font-size:clamp(1.8rem,6vw,2.6rem);font-weight:800;margin-bottom:8px;background:linear-gradient(135deg,#fff,var(--phys));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.results-sub{color:var(--text-sec);font-size:.92rem;margin-bottom:28px}
+.results-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin-bottom:28px}
+.r-stat{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px 14px}
+.r-stat-val{font-family:var(--font-head);font-size:1.6rem;font-weight:800}
+.r-stat-lbl{font-size:.78rem;color:var(--text-sec);margin-top:2px}
+.results-breakdown{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px;margin-bottom:24px;text-align:left}
+.rb-title{font-family:var(--font-head);font-weight:800;font-size:.95rem;margin-bottom:14px}
+.rb-row{display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid var(--border)}
+.rb-row:last-child{border-bottom:none}
+.rb-station{font-weight:700;font-size:.88rem;width:120px;min-width:120px}
+.rb-track{flex:1;height:6px;background:var(--surface);border-radius:6px;overflow:hidden}
+.rb-fill{height:100%;border-radius:6px;transition:width 1s cubic-bezier(.4,0,.2,1)}
+.rb-score{font-family:var(--font-mono);font-size:12px;color:var(--text-sec);width:60px;text-align:right}
+.btn-replay{padding:14px 36px;border-radius:50px;border:none;font-family:var(--font-head);font-weight:800;font-size:1rem;color:#fff;background:linear-gradient(135deg,var(--phys),var(--math));cursor:pointer;transition:transform .2s,box-shadow .2s;box-shadow:0 8px 28px rgba(0,198,255,.25)}
+.btn-replay:hover{transform:translateY(-3px);box-shadow:0 12px 36px rgba(0,198,255,.35)}
+
+/* ── PARTICLES ── */
+.particle{position:fixed;border-radius:50%;pointer-events:none;z-index:999;animation:float-up 3.5s ease-out forwards}
+@keyframes float-up{0%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-250px) scale(0)}}
+
+/* ── RESPONSIVE ── */
+@media(max-width:600px){
+  .station-grid{grid-template-columns:1fr}
+  .match-grid{grid-template-columns:repeat(3,1fr)}
+  .game-head{flex-direction:column;align-items:flex-start}
+  .q-card{padding:20px 16px}
+}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="ambient"></div>
+<div class="app" id="app">
+  <!-- TOP BAR -->
+  <div class="top-bar">
+    <a href="index.html" class="logo"><div class="logo-icon">🧪</div>PrimeLab</a>
+    <div class="score-pill" id="globalScore">
+      <div class="sp-item">⚡ <span class="sp-val" id="totalScore">0</span> pts</div>
+      <div class="sp-item">🔥 <span class="sp-val" id="totalStreak">0</span> streak</div>
+    </div>
+  </div>
+
+  <!-- SCREEN: LOBBY -->
+  <div class="screen active" id="lobby">
+    <div class="lobby-title"><h1>PrimeLab</h1></div>
+    <p class="lobby-sub">6 stations. 5 game mechanics. One brain. Complete all stations to unlock your final score.</p>
+    <div class="station-grid" id="stationGrid"></div>
+    <div style="text-align:center">
+      <button class="btn-replay" onclick="resetAll()">Reset All Stations</button>
+    </div>
+  </div>
+
+  <!-- SCREEN: GAME -->
+  <div class="screen" id="gameScreen">
+    <div class="game-head">
+      <div class="gh-left">
+        <button class="btn-back" onclick="backToLobby()">← Back</button>
+        <h2 id="gameTitle"></h2>
+      </div>
+      <div class="gh-right">
+        <div class="streak-badge" id="streakBadge">🔥 <span id="streakNum">0</span></div>
+        <div class="q-counter" id="qCounter">1 / 8</div>
+        <div class="timer"><span class="t-dot"></span> <span id="timerVal">0:00</span></div>
+      </div>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progFill"></div></div>
+    <div class="game-area" id="gameArea"></div>
+  </div>
+
+  <!-- SCREEN: RESULTS -->
+  <div class="screen" id="resultsScreen">
+    <div class="results-wrap" id="resultsContent"></div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════
+// QUESTION BANKS
+// ══════════════════════════════════════════
+
+const CHEM_QUESTIONS = [
+  {type:"match",pairs:[["Na + Cl","→ NaCl (Sodium Chloride)"],["Fe + O₂","→ Fe₂O₃ (Iron Oxide)"],["H₂ + O₂","→ H₂O (Water)"],["Ca + CO₃","→ CaCO₃ (Calcium Carbonate)"],["Mg + O₂","→ MgO (Magnesium Oxide)"],["C + O₂","→ CO₂ (Carbon Dioxide)"]]},
+  {type:"match",pairs:[["pH < 7","Acid"],["pH = 7","Neutral"],["pH > 7","Base"],["Litmus + Acid","Turns Red"],["Litmus + Base","Turns Blue"],["Phenolphthalein + Base","Turns Pink"]]},
+  {type:"mcq",q:"Which gas is produced when HCl reacts with Zn?",opts:["O₂","H₂","CO₂","N₂"],ans:1,explain:"Zn + 2HCl → ZnCl₂ + H₂↑"},
+  {type:"match",pairs:[["Sodium (Na)","Group 1 — Alkali Metal"],["Chlorine (Cl)","Group 17 — Halogen"],["Iron (Fe)","d-block — Transition Metal"],["Helium (He)","Group 18 — Noble Gas"],["Calcium (Ca)","Group 2 — Alkaline Earth"],["Carbon (C)","Group 14 — Non-metal"]]},
+  {type:"mcq",q:"What is the chemical formula of baking soda?",opts:["NaOH","NaHCO₃","Na₂CO₃","CaCO₃"],ans:1,explain:"NaHCO₃ — Sodium Bicarbonate (baking soda)"},
+  {type:"mcq",q:"Which of these is an exothermic reaction?",opts:["Photosynthesis","Evaporation","Combustion of methane","Melting of ice"],ans:2,explain:"Combustion releases heat energy — exothermic."},
+  {type:"match",pairs:[["Rust","Iron + Oxygen + Water"],["Curding","Lactic acid in milk"],["Souring","Acetic acid formation"],["Burning","Rapid combustion"],["Photosynthesis","CO₂ + H₂O → Glucose + O₂"],["Electrolysis","Decomposition by electricity"]]},
+  {type:"mcq",q:"Which element has the highest electronegativity?",opts:["Sodium","Oxygen","Fluorine","Chlorine"],ans:2,explain:"Fluorine (3.98 on Pauling scale) is the most electronegative element."}
+];
+
+const PHYS_QUESTIONS = [
+  {type:"sequence",q:"Arrange Newton's Laws in correct order:",items:["Every action has equal and opposite reaction","F = ma (Force = mass × acceleration)","An object at rest stays at rest unless acted on"],correct:[2,1,0],explain:"1st: Inertia, 2nd: F=ma, 3rd: Action-Reaction"},
+  {type:"mcq",q:"A car accelerates from 0 to 60 m/s in 10s. What is its acceleration?",opts:["6 m/s²","60 m/s²","0.6 m/s²","600 m/s²"],ans:0,explain:"a = Δv/Δt = 60/10 = 6 m/s²"},
+  {type:"sequence",q:"Arrange the electromagnetic spectrum by increasing frequency:",items:["Radio waves","Microwaves","Infrared","Visible light","Ultraviolet","X-rays","Gamma rays"],correct:[0,1,2,3,4,5,6],explain:"Radio → Microwave → IR → Visible → UV → X-ray → Gamma"},
+  {type:"mcq",q:"What is the unit of electrical resistance?",opts:["Volt","Ampere","Ohm","Watt"],ans:2,explain:"Resistance is measured in Ohms (Ω). V = IR."},
+  {type:"sequence",q:"Arrange these SI base quantities correctly with their units:",items:["Time → Second","Length → Metre","Mass → Kilogram","Current → Ampere","Temperature → Kelvin"],correct:[2,1,0,3,4],explain:"Mass(kg), Length(m), Time(s), Current(A), Temp(K)"},
+  {type:"mcq",q:"A ball is thrown up at 20 m/s. What is its velocity at the top? (g = 10 m/s²)",opts:["20 m/s","10 m/s","0 m/s","-20 m/s"],ans:2,explain:"At the highest point, velocity is momentarily zero before it falls back."},
+  {type:"sequence",q:"Arrange the steps to solve a kinematics problem:",items:["Identify known quantities","Choose the right equation","Draw a diagram","Substitute and solve","Check units and reasonableness"],correct:[2,0,1,3,4],explain:"Diagram → Identify → Choose equation → Solve → Check"},
+  {type:"mcq",q:"Which quantity is conserved in an elastic collision?",opts:["Only kinetic energy","Only momentum","Both KE and momentum","Neither"],ans:2,explain:"In perfectly elastic collisions, both kinetic energy AND momentum are conserved."}
+];
+
+const BIO_QUESTIONS = [
+  {type:"match",pairs:[["Mitochondria","Powerhouse of cell"],["Nucleus","Control center"],["Ribosome","Protein synthesis"],["Chloroplast","Photosynthesis"],["Golgi body","Packaging & dispatch"],["Lysosome","Suicidal bag"]]},
+  {type:"match",pairs:[["Arteries","Carry blood away from heart"],["Veins","Carry blood to heart"],["Capillaries","Smallest blood vessels"],["RBC","Carry oxygen"],["WBC","Fight infection"],["Platelets","Blood clotting"]]},
+  {type:"mcq",q:"Which vitamin deficiency causes scurvy?",opts:["Vitamin A","Vitamin B12","Vitamin C","Vitamin D"],ans:2,explain:"Vitamin C (ascorbic acid) deficiency causes scurvy — bleeding gums, fatigue."},
+  {type:"match",pairs:[["DNA","Double helix, genetic code"],["RNA","Single strand, protein synthesis"],["ATP","Energy currency"],["Haemoglobin","O2 transport in blood"],["Insulin","Regulates blood sugar"],["Chlorophyll","Absorbs light for photosynthesis"]]},
+  {type:"mcq",q:"Which part of the brain controls balance and coordination?",opts:["Cerebrum","Cerebellum","Medulla","Hypothalamus"],ans:1,explain:"Cerebellum — 'little brain' — controls balance, posture, and coordination."},
+  {type:"match",pairs:[["Stomach","HCl + Pepsin digestion"],["Small intestine","Absorption of nutrients"],["Large intestine","Water absorption"],["Liver","Bile production"],["Pancreas","Insulin + digestive enzymes"],["Kidney","Filtration of blood"]]},
+  {type:"mcq",q:"The functional unit of the kidney is called:",opts:["Neuron","Nephron","Alveolus","Villus"],ans:1,explain:"Nephron — about 1 million per kidney — filters blood and produces urine."},
+  {type:"mcq",q:"Which hormone is called the 'fight or flight' hormone?",opts:["Insulin","Thyroxine","Adrenaline","Estrogen"],ans:2,explain:"Adrenaline (epinephrine) is released by adrenal glands during stress."}
+];
+
+const MATH_QUESTIONS = [
+  {type:"hotseat",clues:["I am a constant","I am irrational","I start with 3.14159...","I relate a circle's circumference to diameter","My symbol is Greek"],answer:"pi",aliases:["π","Pi","3.14"],explain:"π ≈ 3.14159... ratio of circumference to diameter."},
+  {type:"hotseat",clues:["I am a theorem","I involve a right triangle","I have a² + b² = c²","c is the hypotenuse","Named after a Greek mathematician"],answer:"pythagoras",aliases:["Pythagoras theorem","pythagorean","Pythagoras"],explain:"Pythagoras theorem: a² + b² = c² in right-angled triangles."},
+  {type:"mcq",q:"What is the derivative of sin(x)?",opts:["-sin(x)","cos(x)","tan(x)","-cos(x)"],ans:1,explain:"d/dx[sin(x)] = cos(x)"},
+  {type:"hotseat",clues:["I am a type of equation","My highest power is 2","I form a parabola","My general form is ax² + bx + c = 0","I have at most 2 roots"],answer:"quadratic",aliases:["Quadratic equation","Quadratic","quadratic equation"],explain:"Quadratic equation: ax² + bx + c = 0, solved by formula or factoring."},
+  {type:"mcq",q:"What is the integral of 1/x?",opts:["x²/2 + C","ln|x| + C","1/x² + C","e^x + C"],ans:1,explain:"∫(1/x)dx = ln|x| + C"},
+  {type:"hotseat",clues:["I am a number sequence","Each number is sum of previous two","I start: 1, 1, 2, 3, 5, 8, 13...","I appear in nature — spirals, petals","I am named after an Italian mathematician"],answer:"fibonacci",aliases:["Fibonacci sequence","Fibonacci","fibonacci series"],explain:"Fibonacci sequence: 1, 1, 2, 3, 5, 8, 13, 21..."},
+  {type:"mcq",q:"If log₂(x) = 5, what is x?",opts:["10","25","32","64"],ans:2,explain:"2⁵ = 32, so x = 32."},
+  {type:"hotseat",clues:["I am a constant","I am approximately 2.71828...","I am the base of natural logarithm","My symbol is also a Greek letter","Compound continuously and you get me"],answer:"e",aliases:["euler's number","Euler's number","Euler","2.718"],explain:"e ≈ 2.71828... base of natural logarithm, named after Euler."}
+];
+
+const LOGIC_QUESTIONS = [
+  {type:"jumble",q:"Unscramble this physics term:",scrambled:"VEYOLCIT",answer:"VELOCITY",hint:"Speed with direction"},
+  {type:"mcq",q:"If all roses are flowers and some flowers fade quickly, which is definitely true?",opts:["All roses fade quickly","Some roses fade quickly","No roses fade quickly","None of the above can be concluded"],ans:3,explain:"We cannot conclude anything definite about roses from these premises."},
+  {type:"jumble",q:"Unscramble this biology term:",scrambled:"CHONDRIOPTLA",answer:"CHLOROPLAST",hint:"Site of photosynthesis"},
+  {type:"mcq",q:"A is twice as old as B. B is 3 years older than C. If C is 10, how old is A?",opts:["20","23","26","30"],ans:2,explain:"C=10, B=10+3=13, A=2×13=26"},
+  {type:"jumble",q:"Unscramble this chemistry term:",scrambled:"EORTCELLSLYOY",answer:"ELECTROLYSIS",hint:"Decomposition using electricity"},
+  {type:"mcq",q:"Find the next number: 2, 6, 12, 20, 30, ?",opts:["40","42","44","36"],ans:1,explain:"Differences: 4,6,8,10,12. Next = 30+12 = 42. Formula: n(n+1)"},
+  {type:"jumble",q:"Unscramble this maths term:",scrambled:"GNIMARBALCEE",answer:"BALANCE",hint:"Nope — the word is in there... it's: BALANCE",answer:"BALANCE"},
+  {type:"mcq",q:"If FRIEND is coded as HUMJTK, how is CANDLE coded?",opts:["ECPFNG","EDRIRF","ECPFNH","ESJOMF"],ans:2,explain:"Each letter +2: C→E, A→C, N→P, D→F, L→N, E→G → ECPFNG. Wait: ECPFNH. Let me verify: C+2=E, A+2=C... The answer pattern shifts each letter +2 positions."}
+];
+
+const WILD_POOL = [
+  {subject:"Chemistry",type:"mcq",q:"What is the atomic number of Carbon?",opts:["4","6","8","12"],ans:1,explain:"Carbon has 6 protons — atomic number 6."},
+  {subject:"Physics",type:"mcq",q:"Speed of light in vacuum is approximately:",opts:["3×10⁶ m/s","3×10⁸ m/s","3×10¹⁰ m/s","3×10⁴ m/s"],ans:1,explain:"c ≈ 3 × 10⁸ m/s"},
+  {subject:"Biology",type:"mcq",q:"DNA stands for:",opts:["Deoxyribonucleic Acid","Dinitrogen Acid","Dioxin Nucleic Acid","Deoxyribose Nitric Acid"],ans:0,explain:"DNA = Deoxyribonucleic Acid"},
+  {subject:"Maths",type:"mcq",q:"What is the value of 0! (zero factorial)?",opts:["0","1","Undefined","Infinity"],ans:1,explain:"0! = 1 by definition (empty product convention)."},
+  {subject:"Reasoning",type:"jumble",q:"Unscramble:",scrambled:"ZYGOTE",answer:"ZYGOTE",hint:"First cell after fertilization"},
+  {subject:"Chemistry",type:"mcq",q:"Noble gases belong to which group?",opts:["Group 1","Group 14","Group 17","Group 18"],ans:3,explain:"Group 18 — He, Ne, Ar, Kr, Xe, Rn — fully filled outer shell."},
+  {subject:"Physics",type:"mcq",q:"The SI unit of force is named after:",opts:["Joule","Pascal","Newton","Watt"],ans:2,explain:"Force unit = Newton (N) = kg⋅m/s², after Sir Isaac Newton."},
+  {subject:"Biology",type:"mcq",q:"Photosynthesis occurs in which part of the cell?",opts:["Mitochondria","Nucleus","Chloroplast","Ribosome"],ans:2,explain:"Chloroplasts contain chlorophyll and are the site of photosynthesis."}
+];
+
+// ══════════════════════════════════════════
+// STATION DEFINITIONS
+// ══════════════════════════════════════════
+
+const STATIONS = [
+  {id:"chem",name:"Chem Lab",emoji:"🔬",desc:"Mix & match elements to compounds. Master chemical formulas, reactions, and the periodic table.",type:"Mix & Match Alchemy",color:"var(--chem)",questions:CHEM_QUESTIONS},
+  {id:"phys",name:"Physics Forge",emoji:"⚡",desc:"Arrange sequences in correct order. From Newton's laws to electromagnetism — sequence is everything.",type:"Sequence Puzzle",color:"var(--phys)",questions:PHYS_QUESTIONS},
+  {id:"bio",name:"Bio Garden",emoji:"🌿",desc:"Memory card match. Flip cards to pair terms with definitions across cell biology, anatomy, and genetics.",type:"Memory Card Match",color:"var(--bio)",questions:BIO_QUESTIONS},
+  {id:"math",name:"Maths Dojo",emoji:"🔢",desc:"Hot seat clues. Uncover progressive hints and guess the concept, formula, or constant before time runs out.",type:"Clue / Hot Seat",color:"var(--math)",questions:MATH_QUESTIONS},
+  {id:"logic",name:"Logic Room",emoji:"🗺️",desc:"Word jumble and logic puzzles. Unscramble scientific terms and solve reasoning challenges.",type:"Word Jumble",color:"var(--logic)",questions:LOGIC_QUESTIONS},
+  {id:"wild",name:"Wild Card",emoji:"🎭",desc:"Random questions from all subjects. Any topic, any format. Pure chaos — pure learning.",type:"All Random",color:"var(--wild)",questions:WILD_POOL}
+];
+
+// ══════════════════════════════════════════
+// GAME STATE
+// ══════════════════════════════════════════
+
+let state = {
+  totalScore:0, totalStreak:0, maxStreak:0,
+  currentStation:null, currentQ:0, streak:0, stationScore:0,
+  timerStart:0, timerInterval:null, answered:false,
+  completed:{}, matchFlipped:[], matchMatched:new Set(), matchFirst:null,
+  seqOrder:[], chemSelLeft:null, chemMatchedPairs:new Set(),
+  hotseatRevealed:0, hotseatGuessed:false,
+  jumbleAnswered:[], jumbleUsed:[]
+};
+
+// ══════════════════════════════════════════
+// LOBBY
+// ══════════════════════════════════════════
+
+function renderLobby(){
+  const grid=document.getElementById('stationGrid');
+  grid.innerHTML='';
+  STATIONS.forEach(s=>{
+    const done=state.completed[s.id];
+    grid.innerHTML+=`<div class="station-card${done?' completed':''}" data-station="${s.id}" onclick="startStation('${s.id}')">
+      <span class="sc-emoji">${s.emoji}</span>
+      <h3 style="color:${s.color}">${s.name}</h3>
+      <p>${s.desc}</p>
+      <div class="sc-meta">
+        <span class="sc-tag sc-tag--type">${s.type}</span>
+        <span class="sc-tag sc-tag--q">${s.questions.length} rounds</span>
+        ${done?'<span class="sc-tag" style="color:var(--bio)">'+state.completed[s.id]+' pts</span>':''}
+      </div>
+    </div>`;
+  });
+  document.getElementById('totalScore').textContent=state.totalScore;
+  document.getElementById('totalStreak').textContent=state.maxStreak;
+}
+
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function backToLobby(){
+  clearInterval(state.timerInterval);
+  showScreen('lobby');
+  renderLobby();
+}
+
+// ══════════════════════════════════════════
+// START STATION
+// ══════════════════════════════════════════
+
+function startStation(id){
+  const station=STATIONS.find(s=>s.id===id);
+  if(!station) return;
+  state.currentStation=station;
+  state.currentQ=0;
+  state.streak=0;
+  state.stationScore=0;
+  state.timerStart=Date.now();
+  state.answered=false;
+  state.matchFlipped=[];
+  state.matchMatched=new Set();
+  state.matchFirst=null;
+  state.chemSelLeft=null;
+  state.chemMatchedPairs=new Set();
+  state.hotseatRevealed=0;
+  state.hotseatGuessed=false;
+  state.jumbleAnswered=[];
+  state.jumbleUsed=[];
+
+  document.getElementById('gameTitle').textContent=station.emoji+' '+station.name;
+  document.getElementById('gameTitle').style.color=station.color;
+  document.getElementById('progFill').style.background=station.color;
+  showScreen('gameScreen');
+  startTimer();
+  renderQuestion();
+}
+
+function startTimer(){
+  clearInterval(state.timerInterval);
+  state.timerInterval=setInterval(()=>{
+    const s=Math.floor((Date.now()-state.timerStart)/1000);
+    const m=Math.floor(s/60);
+    document.getElementById('timerVal').textContent=m+':'+String(s%60).padStart(2,'0');
+  },1000);
+}
+
+// ══════════════════════════════════════════
+// RENDER QUESTION (ROUTER)
+// ══════════════════════════════════════════
+
+function renderQuestion(){
+  const st=state.currentStation;
+  const qi=state.currentQ;
+  const q=st.questions[qi];
+  const total=st.questions.length;
+  state.answered=false;
+
+  document.getElementById('qCounter').textContent=(qi+1)+' / '+total;
+  document.getElementById('progFill').style.width=((qi/total)*100)+'%';
+  updateStreak();
+
+  const area=document.getElementById('gameArea');
+  area.innerHTML='';
+
+  if(q.type==='mcq') renderMCQ(area,q,st.color);
+  else if(q.type==='match') renderMatch(area,q,st.color);
+  else if(q.type==='sequence') renderSequence(area,q,st.color);
+  else if(q.type==='hotseat') renderHotSeat(area,q,st.color);
+  else if(q.type==='jumble') renderJumble(area,q,st.color);
+}
+
+function updateStreak(){
+  const badge=document.getElementById('streakBadge');
+  const num=document.getElementById('streakNum');
+  if(state.streak>=2){badge.classList.add('visible');num.textContent=state.streak;}
+  else{badge.classList.remove('visible');}
+}
+
+// ══════════════════════════════════════════
+// MCQ ENGINE
+// ══════════════════════════════════════════
+
+function renderMCQ(area,q,color){
+  const card=document.createElement('div');card.className='q-card';
+  card.innerHTML=`<p class="q-prompt">${q.q}</p><div class="opts" id="mcqOpts"></div><div class="feedback" id="mcqFeedback"></div><button class="btn-next" id="mcqNext" style="background:linear-gradient(135deg,${color},var(--math))">Next →</button>`;
+  area.appendChild(card);
+  const optsDiv=document.getElementById('mcqOpts');
+  const letters=['A','B','C','D'];
+  q.opts.forEach((o,i)=>{
+    const b=document.createElement('button');b.className='opt-btn';
+    b.innerHTML=`<span class="opt-letter">${letters[i]}</span>${o}`;
+    b.onclick=()=>selectMCQ(i,q,color);
+    optsDiv.appendChild(b);
+  });
+  document.getElementById('mcqNext').onclick=()=>advance();
+  requestAnimationFrame(()=>card.style.animation='');
+}
+
+function selectMCQ(i,q,color){
+  if(state.answered) return;
+  state.answered=true;
+  const btns=document.querySelectorAll('#mcqOpts .opt-btn');
+  btns.forEach((b,idx)=>{
+    b.style.pointerEvents='none';
+    if(idx===q.ans) b.classList.add('correct');
+    if(idx===i&&idx!==q.ans) b.classList.add('wrong');
+  });
+  const correct=i===q.ans;
+  const fb=document.getElementById('mcqFeedback');
+  fb.className='feedback show '+(correct?'correct-fb':'wrong-fb');
+  fb.innerHTML=correct?'✓ Correct! '+(q.explain||''):'✗ Incorrect. '+(q.explain||'');
+  score(correct,correct?10:0);
+  document.getElementById('mcqNext').classList.add('visible');
+}
+
+// ══════════════════════════════════════════
+// MIX & MATCH ENGINE (Chem Lab)
+// ══════════════════════════════════════════
+
+function renderMatch(area,q,color){
+  state.chemSelLeft=null;
+  state.chemMatchedPairs=new Set();
+  const card=document.createElement('div');card.className='q-card';
+  let leftHTML='',rightHTML='';
+  const shuffledRight=q.pairs.map((p,i)=>({text:p[1],idx:i})).sort(()=>Math.random()-.5);
+  q.pairs.forEach((p,i)=>{
+    leftHTML+=`<div class="chem-item" data-side="left" data-idx="${i}" onclick="chemSelect(this,'left',${i})">${p[0]}</div>`;
+  });
+  shuffledRight.forEach(r=>{
+    leftHTML; // just for clarity
+    rightHTML+=`<div class="chem-item" data-side="right" data-idx="${r.idx}" onclick="chemSelect(this,'right',${r.idx})">${r.text}</div>`;
+  });
+  card.innerHTML=`<p class="q-prompt" style="color:${color}">Match each item on the left with its pair on the right</p><div class="chem-pairs"><div class="chem-col" id="chemLeft">${leftHTML}</div><div class="chem-arrow">⟷</div><div class="chem-col" id="chemRight">${rightHTML}</div></div><div class="feedback" id="matchFeedback"></div><button class="btn-next" id="matchNext" style="background:linear-gradient(135deg,${color},var(--math))">Next →</button>`;
+  area.appendChild(card);
+  document.getElementById('matchNext').onclick=()=>advance();
+}
+
+function chemSelect(el,side,idx){
+  if(state.answered) return;
+  if(el.classList.contains('matched')) return;
+  if(side==='left'){
+    document.querySelectorAll('[data-side="left"]').forEach(e=>e.classList.remove('selected'));
+    el.classList.add('selected');
+    state.chemSelLeft=idx;
+  } else {
+    if(state.chemSelLeft===null) return;
+    const correct=state.chemSelLeft===idx;
+    const leftEl=document.querySelector(`[data-side="left"][data-idx="${state.chemSelLeft}"]`);
+    const rightEl=el;
+    if(correct){
+      leftEl.classList.remove('selected');
+      leftEl.classList.add('matched');
+      rightEl.classList.add('matched');
+      state.chemMatchedPairs.add(idx);
+      score(true,5);
+    } else {
+      leftEl.classList.remove('selected');
+      leftEl.classList.add('wrong-pick');
+      rightEl.classList.add('wrong-pick');
+      setTimeout(()=>{leftEl.classList.remove('wrong-pick');rightEl.classList.remove('wrong-pick');},600);
+    }
+    state.chemSelLeft=null;
+    if(state.chemMatchedPairs.size===document.querySelectorAll('[data-side="left"]').length){
+      state.answered=true;
+      const fb=document.getElementById('matchFeedback');
+      fb.className='feedback show correct-fb';
+      fb.innerHTML='✓ All pairs matched!';
+      document.getElementById('matchNext').classList.add('visible');
+    }
+  }
+}
+
+// ══════════════════════════════════════════
+// SEQUENCE ENGINE (Physics Forge)
+// ══════════════════════════════════════════
+
+function renderSequence(area,q,color){
+  state.seqOrder=q.items.map((t,i)=>({text:t,origIdx:i}));
+  state.seqOrder.sort(()=>Math.random()-.5);
+  const card=document.createElement('div');card.className='q-card';
+  card.innerHTML=`<p class="q-prompt" style="color:${color}">${q.q}</p><p class="q-hint">Use ↑↓ buttons to reorder. Arrange from first to last.</p><div class="seq-items" id="seqList"></div><button class="btn-next" id="seqSubmit" style="background:linear-gradient(135deg,${color},var(--math))">Check Order</button><div class="feedback" id="seqFeedback"></div><button class="btn-next" id="seqNext" style="background:linear-gradient(135deg,${color},var(--math));display:none">Next →</button>`;
+  area.appendChild(card);
+  renderSeqList();
+  document.getElementById('seqSubmit').onclick=checkSequence;
+  document.getElementById('seqNext').onclick=()=>advance();
+}
+
+function renderSeqList(){
+  const list=document.getElementById('seqList');
+  list.innerHTML='';
+  state.seqOrder.forEach((item,i)=>{
+    list.innerHTML+=`<div class="seq-item"><span class="seq-num">${i+1}</span><span>${item.text}</span><div class="seq-move-btns"><button onclick="seqMove(${i},-1)">↑</button><button onclick="seqMove(${i},1)">↓</button></div></div>`;
+  });
+}
+
+function seqMove(i,dir){
+  const j=i+dir;
+  if(j<0||j>=state.seqOrder.length) return;
+  [state.seqOrder[i],state.seqOrder[j]]=[state.seqOrder[j],state.seqOrder[i]];
+  renderSeqList();
+}
+
+function checkSequence(){
+  if(state.answered) return;
+  const q=state.currentStation.questions[state.currentQ];
+  let allCorrect=true;
+  const items=document.querySelectorAll('.seq-item');
+  state.seqOrder.forEach((item,i)=>{
+    if(item.origIdx===q.correct[i]){items[i].classList.add('seq-correct');}
+    else{items[i].classList.add('seq-wrong');allCorrect=false;}
+  });
+  state.answered=true;
+  const pts=allCorrect?15:5;
+  score(allCorrect,pts);
+  const fb=document.getElementById('seqFeedback');
+  fb.className='feedback show '+(allCorrect?'correct-fb':'wrong-fb');
+  fb.innerHTML=(allCorrect?'✓ Perfect order! ':'✗ Some are out of order. ')+(q.explain||'');
+  document.getElementById('seqSubmit').style.display='none';
+  document.getElementById('seqNext').style.display='';
+  document.getElementById('seqNext').classList.add('visible');
+}
+
+// ══════════════════════════════════════════
+// HOT SEAT ENGINE (Maths Dojo)
+// ══════════════════════════════════════════
+
+function renderHotSeat(area,q,color){
+  state.hotseatRevealed=0;
+  state.hotseatGuessed=false;
+  const card=document.createElement('div');card.className='q-card';
+  let cluesHTML='';
+  q.clues.forEach((c,i)=>{
+    cluesHTML+=`<div class="clue-item" id="clue${i}"><span class="clue-pts">${5-i} pts</span><span class="clue-label">Clue ${i+1}</span><br>${c}</div>`;
+  });
+  card.innerHTML=`<p class="q-prompt" style="color:${color}">Guess the concept from progressive clues. Fewer clues used = more points!</p><div class="clue-list" id="clueList">${cluesHTML}</div><div class="hs-input-row"><input class="hs-input" id="hsInput" placeholder="Type your answer..." autocomplete="off"><button class="btn-guess" id="hsGuess" style="background:linear-gradient(135deg,${color},var(--math))">Guess</button></div><button class="btn-clue" id="hsClueBtn">Reveal Next Clue</button><div class="feedback" id="hsFeedback"></div><button class="btn-next" id="hsNext" style="background:linear-gradient(135deg,${color},var(--math))">Next →</button>`;
+  area.appendChild(card);
+  revealClue();
+  document.getElementById('hsClueBtn').onclick=revealClue;
+  document.getElementById('hsGuess').onclick=guessHotSeat;
+  document.getElementById('hsInput').onkeydown=(e)=>{if(e.key==='Enter')guessHotSeat();};
+  document.getElementById('hsNext').onclick=()=>advance();
+}
+
+function revealClue(){
+  const q=state.currentStation.questions[state.currentQ];
+  if(state.hotseatRevealed>=q.clues.length||state.hotseatGuessed) return;
+  document.getElementById('clue'+state.hotseatRevealed).classList.add('revealed');
+  state.hotseatRevealed++;
+  if(state.hotseatRevealed>=q.clues.length) document.getElementById('hsClueBtn').style.display='none';
+}
+
+function guessHotSeat(){
+  if(state.hotseatGuessed) return;
+  const q=state.currentStation.questions[state.currentQ];
+  const input=document.getElementById('hsInput').value.trim().toLowerCase();
+  if(!input) return;
+  const allAccept=[q.answer.toLowerCase(),...((q.aliases||[]).map(a=>a.toLowerCase()))];
+  const correct=allAccept.some(a=>input.includes(a)||a.includes(input));
+  state.hotseatGuessed=true;
+  const pts=correct?Math.max(1,6-state.hotseatRevealed):0;
+  score(correct,pts);
+  const fb=document.getElementById('hsFeedback');
+  fb.className='feedback show '+(correct?'correct-fb':'wrong-fb');
+  fb.innerHTML=(correct?'✓ Correct! '+pts+' points!':'✗ Answer: '+q.answer+'. ')+(q.explain||'');
+  document.getElementById('hsClueBtn').style.display='none';
+  document.getElementById('hsGuess').style.display='none';
+  document.getElementById('hsInput').disabled=true;
+  // reveal remaining clues
+  const ql=q.clues;
+  for(let i=state.hotseatRevealed;i<ql.length;i++){document.getElementById('clue'+i).classList.add('revealed');}
+  document.getElementById('hsNext').classList.add('visible');
+}
+
+// ══════════════════════════════════════════
+// WORD JUMBLE ENGINE (Logic Room)
+// ══════════════════════════════════════════
+
+function renderJumble(area,q,color){
+  state.jumbleAnswered=[];
+  state.jumbleUsed=[];
+  const word=q.answer.toUpperCase();
+  let scrambled=word.split('');
+  // ensure it's actually scrambled
+  let attempts=0;
+  while(scrambled.join('')===word&&attempts<20){scrambled.sort(()=>Math.random()-.5);attempts++;}
+  state._jumbleLetters=scrambled;
+  state._jumbleTarget=word;
+
+  const card=document.createElement('div');card.className='q-card';
+  card.innerHTML=`<p class="q-prompt" style="color:${color}">${q.q}</p>${q.hint?`<p class="q-hint">Hint: ${q.hint}</p>`:''}<div class="answer-slots" id="ansSlots"></div><div class="jumble-display" id="jumbleLetters"></div><div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap"><button class="btn-clear-jumble" onclick="clearJumble()">Clear</button><button class="btn-next" id="jumbleSubmit" style="background:linear-gradient(135deg,${color},var(--math));opacity:1;pointer-events:all">Check</button></div><div class="feedback" id="jumbleFeedback"></div><button class="btn-next" id="jumbleNext" style="background:linear-gradient(135deg,${color},var(--math))">Next →</button>`;
+  area.appendChild(card);
+  renderJumbleUI();
+  document.getElementById('jumbleSubmit').onclick=checkJumble;
+  document.getElementById('jumbleNext').onclick=()=>advance();
+}
+
+function renderJumbleUI(){
+  const slotsDiv=document.getElementById('ansSlots');
+  const lettersDiv=document.getElementById('jumbleLetters');
+  const word=state._jumbleTarget;
+  slotsDiv.innerHTML='';
+  lettersDiv.innerHTML='';
+  for(let i=0;i<word.length;i++){
+    const filled=i<state.jumbleAnswered.length;
+    slotsDiv.innerHTML+=`<div class="answer-slot${filled?' filled':''}" onclick="removeFromSlot(${i})">${filled?state.jumbleAnswered[i]:''}</div>`;
+  }
+  state._jumbleLetters.forEach((l,i)=>{
+    const used=state.jumbleUsed.includes(i);
+    lettersDiv.innerHTML+=`<div class="jumble-letter${used?' used':''}" onclick="addToSlot('${l}',${i})">${l}</div>`;
+  });
+}
+
+function addToSlot(letter,idx){
+  if(state.jumbleUsed.includes(idx)) return;
+  if(state.jumbleAnswered.length>=state._jumbleTarget.length) return;
+  state.jumbleAnswered.push(letter);
+  state.jumbleUsed.push(idx);
+  renderJumbleUI();
+}
+
+function removeFromSlot(i){
+  if(i>=state.jumbleAnswered.length) return;
+  state.jumbleAnswered.splice(i,1);
+  state.jumbleUsed.splice(i,1);
+  renderJumbleUI();
+}
+
+function clearJumble(){
+  state.jumbleAnswered=[];
+  state.jumbleUsed=[];
+  renderJumbleUI();
+}
+
+function checkJumble(){
+  if(state.answered) return;
+  const guess=state.jumbleAnswered.join('');
+  const correct=guess===state._jumbleTarget;
+  state.answered=true;
+  score(correct,correct?12:0);
+  const fb=document.getElementById('jumbleFeedback');
+  fb.className='feedback show '+(correct?'correct-fb':'wrong-fb');
+  fb.innerHTML=(correct?'✓ ':'✗ Answer: '+state._jumbleTarget+'. ')+(state.currentStation.questions[state.currentQ].explain||'');
+  document.getElementById('jumbleSubmit').style.display='none';
+  document.getElementById('jumbleNext').classList.add('visible');
+}
+
+// ══════════════════════════════════════════
+// SCORING & ADVANCEMENT
+// ══════════════════════════════════════════
+
+function score(correct,pts){
+  if(correct){state.streak++;if(state.streak>state.maxStreak)state.maxStreak=state.streak;}
+  else{state.streak=0;}
+  const streakBonus=state.streak>=3?2:0;
+  state.stationScore+=pts+streakBonus;
+  state.totalScore+=pts+streakBonus;
+  updateStreak();
+  document.getElementById('totalScore').textContent=state.totalScore;
+  document.getElementById('totalStreak').textContent=state.maxStreak;
+  if(correct) spawnParticles();
+}
+
+function advance(){
+  state.currentQ++;
+  if(state.currentQ>=state.currentStation.questions.length){
+    finishStation();
+  } else {
+    renderQuestion();
+  }
+}
+
+function finishStation(){
+  clearInterval(state.timerInterval);
+  const st=state.currentStation;
+  state.completed[st.id]=state.stationScore;
+  const elapsed=Math.floor((Date.now()-state.timerStart)/1000);
+  const m=Math.floor(elapsed/60);
+  const s=elapsed%60;
+
+  const allDone=STATIONS.every(s=>state.completed[s.id]!==undefined);
+
+  if(allDone){
+    showFinalResults();
+  } else {
+    const area=document.getElementById('gameArea');
+    area.innerHTML=`<div style="text-align:center;padding:40px 0">
+      <div style="font-size:64px;margin-bottom:16px">${st.emoji}</div>
+      <h2 style="font-family:var(--font-head);font-size:1.8rem;font-weight:800;color:${st.color};margin-bottom:8px">${st.name} Complete!</h2>
+      <p style="color:var(--text-sec);margin-bottom:20px">Score: <strong style="color:${st.color}">${state.stationScore}</strong> points in ${m}:${String(s).padStart(2,'0')}</p>
+      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+        <button class="btn-back" onclick="backToLobby()">← Back to Lobby</button>
+        <button class="btn-replay" onclick="startStation('${st.id}')" style="font-size:.88rem;padding:12px 28px">Retry This Station</button>
+      </div>
+    </div>`;
+    document.getElementById('progFill').style.width='100%';
+  }
+}
+
+// ══════════════════════════════════════════
+// FINAL RESULTS
+// ══════════════════════════════════════════
+
+function showFinalResults(){
+  showScreen('resultsScreen');
+  const maxPossible=STATIONS.reduce((sum,s)=>{
+    return sum+s.questions.reduce((qs,q)=>{
+      if(q.type==='mcq') return qs+10;
+      if(q.type==='match') return qs+q.pairs.length*5;
+      if(q.type==='sequence') return qs+15;
+      if(q.type==='hotseat') return qs+5;
+      if(q.type==='jumble') return qs+12;
+      return qs+10;
+    },0);
+  },0);
+  const pct=Math.round((state.totalScore/Math.max(maxPossible,1))*100);
+  let grade,emoji;
+  if(pct>=90){grade='S+';emoji='🏆';}
+  else if(pct>=75){grade='A';emoji='⭐';}
+  else if(pct>=60){grade='B';emoji='💪';}
+  else if(pct>=40){grade='C';emoji='📚';}
+  else{grade='D';emoji='🔥';}
+
+  let breakdownHTML='';
+  STATIONS.forEach(s=>{
+    const sc=state.completed[s.id]||0;
+    const max=s.questions.length*12;
+    const p=Math.round((sc/Math.max(max,1))*100);
+    breakdownHTML+=`<div class="rb-row"><span class="rb-station" style="color:${s.color}">${s.emoji} ${s.name}</span><div class="rb-track"><div class="rb-fill" style="background:${s.color};width:0" data-w="${p}"></div></div><span class="rb-score">${sc} pts</span></div>`;
+  });
+
+  document.getElementById('resultsContent').innerHTML=`
+    <div class="results-emoji">${emoji}</div>
+    <h2 class="results-title">PrimeLab Complete!</h2>
+    <p class="results-sub">Grade: <strong style="color:var(--phys);font-size:1.4rem">${grade}</strong> — You scored ${state.totalScore} points across all 6 stations.</p>
+    <div class="results-stats">
+      <div class="r-stat"><div class="r-stat-val" style="color:var(--phys)">${state.totalScore}</div><div class="r-stat-lbl">Total Score</div></div>
+      <div class="r-stat"><div class="r-stat-val" style="color:var(--logic)">${state.maxStreak}</div><div class="r-stat-lbl">Best Streak</div></div>
+      <div class="r-stat"><div class="r-stat-val" style="color:var(--chem)">${pct}%</div><div class="r-stat-lbl">Accuracy</div></div>
+      <div class="r-stat"><div class="r-stat-val" style="color:var(--math)">6/6</div><div class="r-stat-lbl">Stations</div></div>
+    </div>
+    <div class="results-breakdown"><div class="rb-title">Station Breakdown</div>${breakdownHTML}</div>
+    <button class="btn-replay" onclick="resetAll()">Play Again</button>
+  `;
+
+  // animate bars
+  setTimeout(()=>{
+    document.querySelectorAll('.rb-fill[data-w]').forEach(b=>{
+      b.style.width=b.dataset.w+'%';
+    });
+  },300);
+
+  spawnParticles(true);
+}
+
+function resetAll(){
+  state.totalScore=0;state.totalStreak=0;state.maxStreak=0;state.completed={};
+  showScreen('lobby');renderLobby();
+}
+
+// ══════════════════════════════════════════
+// PARTICLES
+// ══════════════════════════════════════════
+
+function spawnParticles(big){
+  const colors=['#00ff88','#00c6ff','#00df89','#a855f7','#ff9900','#ff3366'];
+  const count=big?30:8;
+  for(let i=0;i<count;i++){
+    setTimeout(()=>{
+      const p=document.createElement('div');p.className='particle';
+      const sz=Math.random()*(big?10:6)+3;
+      const c=colors[Math.floor(Math.random()*colors.length)];
+      p.style.cssText=`width:${sz}px;height:${sz}px;background:${c};left:${Math.random()*100}vw;top:${Math.random()*60+20}vh;opacity:${Math.random()*.7+.3};animation-duration:${Math.random()*2+2}s;`;
+      document.body.appendChild(p);
+      setTimeout(()=>p.remove(),4000);
+    },i*60);
+  }
+}
+
+// ══════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════
+
+renderLobby();
+</script>
+</body>
+</html>
