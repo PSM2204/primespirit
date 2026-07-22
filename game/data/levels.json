@@ -1,0 +1,169 @@
+{
+  "worlds": [
+    {
+      "id": "motion", "name": "Motion Valley", "order": 1,
+      "desc": "A serene valley where objects dance with velocity and acceleration.",
+      "color": "#00df89", "icon": "🏃",
+      "boss": { "name": "Sir Isaac Newton", "title": "Master of Motion", "hp": 100,
+        "phrases": ["An object in motion stays in motion!", "Can you solve my equations?","Every action has an equal and opposite reaction!"] },
+      "creature": "momentum_fox",
+      "levels": [
+        { "id": "m1", "name": "Speed & Velocity", "xp": 50, "coins": 20, "count": 5 },
+        { "id": "m2", "name": "Acceleration", "xp": 60, "coins": 25, "count": 5 },
+        { "id": "m3", "name": "Equations of Motion", "xp": 70, "coins": 30, "count": 6 },
+        { "id": "m4", "name": "Graphs of Motion", "xp": 80, "coins": 35, "count": 5 },
+        { "id": "m5", "name": "Free Fall", "xp": 90, "coins": 40, "count": 6 }
+      ]
+    },
+    {
+      "id": "forces", "name": "Force Forest", "order": 2,
+      "desc": "A dense forest where every tree bends to Newton's three laws.",
+      "color": "#a855f7", "icon": "🌲",
+      "boss": { "name": "Galileo Galilei", "title": "Father of Observation", "hp": 110,
+        "phrases": ["E pur si muove!", "Measure what is measurable!", "The universe is written in mathematics!"] },
+      "creature": "vector_hawk",
+      "levels": [
+        { "id": "f1", "name": "Newton's First Law", "xp": 55, "coins": 22, "count": 5 },
+        { "id": "f2", "name": "F = ma", "xp": 65, "coins": 27, "count": 5 },
+        { "id": "f3", "name": "Newton's Third Law", "xp": 75, "coins": 32, "count": 6 },
+        { "id": "f4", "name": "Friction Forces", "xp": 85, "coins": 37, "count": 5 },
+        { "id": "f5", "name": "Free Body Diagrams", "xp": 95, "coins": 42, "count": 6 }
+      ]
+    },
+    {
+      "id": "gravity", "name": "Gravity Mountains", "order": 3,
+      "desc": "Towering peaks where gravity bends space and pulls everything downward.",
+      "color": "#f59e0b", "icon": "⛰️",
+      "boss": { "name": "Albert Einstein", "title": "Architect of Spacetime", "hp": 120,
+        "phrases": ["Imagination is more important than knowledge!", "Gravity is the curvature of spacetime.","God does not play dice!"] },
+      "creature": "gravion",
+      "levels": [
+        { "id": "g1", "name": "Gravitational Force", "xp": 60, "coins": 25, "count": 5 },
+        { "id": "g2", "name": "Acceleration Due to Gravity", "xp": 70, "coins": 30, "count": 5 },
+        { "id": "g3", "name": "Orbital Mechanics", "xp": 80, "coins": 35, "count": 6 },
+        { "id": "g4", "name": "Kepler's Laws", "xp": 90, "coins": 40, "count": 5 },
+        { "id": "g5", "name": "Escape Velocity", "xp": 100, "coins": 45, "count": 6 }
+      ]
+    },
+    {
+      "id": "energy", "name": "Work & Energy Volcano", "order": 4,
+      "desc": "A rumbling volcano converting potential energy into explosive kinetic power.",
+      "color": "#ef4444", "icon": "🌋",
+      "boss": { "name": "James Prescott Joule", "title": "Master of Energy", "hp": 130,
+        "phrases": ["Energy cannot be created or destroyed!", "Heat is a form of energy.","The living body is a heat engine!"] },
+      "creature": "thermix",
+      "levels": [
+        { "id": "e1", "name": "Work Done", "xp": 65, "coins": 28, "count": 5 },
+        { "id": "e2", "name": "Kinetic Energy", "xp": 75, "coins": 32, "count": 5 },
+        { "id": "e3", "name": "Potential Energy", "xp": 85, "coins": 37, "count": 6 },
+        { "id": "e4", "name": "Conservation of Energy", "xp": 95, "coins": 42, "count": 5 },
+        { "id": "e5", "name": "Power", "xp": 105, "coins": 47, "count": 6 }
+      ]
+    },
+    {
+      "id": "momentum", "name": "Momentum Desert", "order": 5,
+      "desc": "A vast desert where objects collide and momentum is conserved.",
+      "color": "#f97316", "icon": "🏜️",
+      "boss": { "name": "Emmy Noether", "title": "Symmetry Guardian", "hp": 140,
+        "phrases": ["Symmetry implies conservation!", "Every symmetry has a conservation law.","Mathematics is the purest form of thought!"] },
+      "creature": "momentum_fox",
+      "levels": [
+        { "id": "mo1", "name": "Linear Momentum", "xp": 70, "coins": 30, "count": 5 },
+        { "id": "mo2", "name": "Impulse", "xp": 80, "coins": 35, "count": 5 },
+        { "id": "mo3", "name": "Conservation of Momentum", "xp": 90, "coins": 40, "count": 6 },
+        { "id": "mo4", "name": "Elastic Collisions", "xp": 100, "coins": 45, "count": 5 },
+        { "id": "mo5", "name": "Inelastic Collisions", "xp": 110, "coins": 50, "count": 6 }
+      ]
+    },
+    {
+      "id": "circular", "name": "Circular Motion Arena", "order": 6,
+      "desc": "A colosseum where objects spin endlessly under centripetal force.",
+      "color": "#06b6d4", "icon": "🏟️",
+      "boss": { "name": "Christiaan Huygens", "title": "Lord of Centripetal Force", "hp": 150,
+        "phrases": ["The center-seeking force governs all!", "Time is the measure of motion.","Pendulums keep the world in rhythm!"] },
+      "creature": "circuit_crab",
+      "levels": [
+        { "id": "c1", "name": "Centripetal Acceleration", "xp": 75, "coins": 32, "count": 5 },
+        { "id": "c2", "name": "Centripetal Force", "xp": 85, "coins": 37, "count": 5 },
+        { "id": "c3", "name": "Angular Velocity", "xp": 95, "coins": 42, "count": 6 },
+        { "id": "c4", "name": "Banking & Vertical Circles", "xp": 105, "coins": 47, "count": 5 },
+        { "id": "c5", "name": "Satellite Orbits", "xp": 115, "coins": 52, "count": 6 }
+      ]
+    },
+    {
+      "id": "electric", "name": "Electric Kingdom", "order": 7,
+      "desc": "A glowing kingdom crackling with charge, current, and electric fields.",
+      "color": "#00C6FF", "icon": "⚡",
+      "boss": { "name": "Michael Faraday", "title": "Wizard of Electromagnetism", "hp": 160,
+        "phrases": ["Nothing is too wonderful to be true!", "Electricity is the soul of matter.","The force of gravity and electricity are linked!"] },
+      "creature": "voltix",
+      "levels": [
+        { "id": "el1", "name": "Coulomb's Law", "xp": 80, "coins": 35, "count": 5 },
+        { "id": "el2", "name": "Electric Field", "xp": 90, "coins": 40, "count": 5 },
+        { "id": "el3", "name": "Ohm's Law & Circuits", "xp": 100, "coins": 45, "count": 6 },
+        { "id": "el4", "name": "Series & Parallel", "xp": 110, "coins": 50, "count": 5 },
+        { "id": "el5", "name": "Kirchhoff's Laws", "xp": 120, "coins": 55, "count": 6 }
+      ]
+    },
+    {
+      "id": "magnetism", "name": "Magnetism Temple", "order": 8,
+      "desc": "An ancient temple where magnetic fields weave invisible forces.",
+      "color": "#8b5cf6", "icon": "🏛️",
+      "boss": { "name": "Nikola Tesla", "title": "Master of Alternating Current", "hp": 170,
+        "phrases": ["The present is theirs; the future is mine!", "Current induces magnetic fields!","Let the future tell the truth!"] },
+      "creature": "hydron",
+      "levels": [
+        { "id": "mg1", "name": "Magnetic Field Lines", "xp": 85, "coins": 37, "count": 5 },
+        { "id": "mg2", "name": "Lorentz Force", "xp": 95, "coins": 42, "count": 5 },
+        { "id": "mg3", "name": "Electromagnetic Induction", "xp": 105, "coins": 47, "count": 6 },
+        { "id": "mg4", "name": "Faraday's & Lenz's Law", "xp": 115, "coins": 52, "count": 5 },
+        { "id": "mg5", "name": "Solenoid & Toroid", "xp": 125, "coins": 57, "count": 6 }
+      ]
+    },
+    {
+      "id": "optics", "name": "Optics City", "order": 9,
+      "desc": "A neon-lit city of lenses, mirrors, and prisms bending light at every corner.",
+      "color": "#ec4899", "icon": "🔮",
+      "boss": { "name": "Christiaan Huygens", "title": "Champion of Light", "hp": 180,
+        "phrases": ["Light travels in waves!", "Every point on a wavefront is a source!","Refraction reveals the medium!"] },
+      "creature": "photonix",
+      "levels": [
+        { "id": "op1", "name": "Reflection", "xp": 90, "coins": 40, "count": 5 },
+        { "id": "op2", "name": "Refraction & Snell's Law", "xp": 100, "coins": 45, "count": 5 },
+        { "id": "op3", "name": "Lenses", "xp": 110, "coins": 50, "count": 6 },
+        { "id": "op4", "name": "Mirrors", "xp": 120, "coins": 55, "count": 5 },
+        { "id": "op5", "name": "Total Internal Reflection", "xp": 130, "coins": 60, "count": 6 }
+      ]
+    },
+    {
+      "id": "waves", "name": "Wave Ocean", "order": 10,
+      "desc": "A vast ocean where transverse and longitudinal waves collide and superpose.",
+      "color": "#3b82f6", "icon": "🌊",
+      "boss": { "name": "Heinrich Hertz", "title": "Prophet of Waves", "hp": 190,
+        "phrases": ["The sparks prove the waves exist!", "Frequency times wavelength equals speed!","One must not despise the day of small experiments!"] },
+      "creature": "wave_dolphin",
+      "levels": [
+        { "id": "w1", "name": "Wave Properties", "xp": 95, "coins": 42, "count": 5 },
+        { "id": "w2", "name": "Sound Waves", "xp": 105, "coins": 47, "count": 5 },
+        { "id": "w3", "name": "Superposition & Beats", "xp": 115, "coins": 52, "count": 6 },
+        { "id": "w4", "name": "Doppler Effect", "xp": 125, "coins": 57, "count": 5 },
+        { "id": "w5", "name": "Standing Waves", "xp": 135, "coins": 62, "count": 6 }
+      ]
+    },
+    {
+      "id": "modern", "name": "Modern Physics Station", "order": 11,
+      "desc": "A space station at the edge of reality, where classical physics breaks down.",
+      "color": "#00C6FF", "icon": "🚀",
+      "boss": { "name": "Marie Curie", "title": "Guardian of Radioactivity", "hp": 200,
+        "phrases": ["Nothing in life is to be feared, only understood!", "Radium glows with atomic energy!","One never notices what has been done; one can only see what remains!"] },
+      "creature": "quark_sprite",
+      "levels": [
+        { "id": "md1", "name": "Photoelectric Effect", "xp": 100, "coins": 45, "count": 5 },
+        { "id": "md2", "name": "de Broglie Wavelength", "xp": 110, "coins": 50, "count": 5 },
+        { "id": "md3", "name": "Atomic Models", "xp": 120, "coins": 55, "count": 6 },
+        { "id": "md4", "name": "Radioactivity", "xp": 130, "coins": 60, "count": 5 },
+        { "id": "md5", "name": "Nuclear Fission & Fusion", "xp": 140, "coins": 65, "count": 6 }
+      ]
+    }
+  ]
+}
