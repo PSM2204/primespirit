@@ -124,6 +124,8 @@
     .vibe-card--hp:hover{border-color:rgba(211,166,37,.4);box-shadow:0 16px 40px rgba(211,166,37,.15)}
     .vibe-card--mbti::before{background:radial-gradient(ellipse at 50% 80%,rgba(0,198,255,.12),transparent 70%)}
     .vibe-card--mbti:hover{border-color:rgba(0,198,255,.4);box-shadow:0 16px 40px rgba(0,198,255,.15)}
+    .vibe-card--prime-lab::before{background:radial-gradient(ellipse at 50% 80%,rgba(0,223,137,.12),transparent 70%)}
+    .vibe-card--prime-lab:hover{border-color:rgba(0,223,137,.4);box-shadow:0 16px 40px rgba(0,223,137,.15)}
     .vibe-icon{font-size:48px;margin-bottom:20px;position:relative;z-index:1}
     .vibe-card h3{font-family:'Syne',sans-serif;font-size:1.15rem;font-weight:800;margin-bottom:6px;position:relative;z-index:1}
     .vibe-card p{font-size:.88rem;color:var(--text-sec);line-height:1.6;margin-bottom:18px;position:relative;z-index:1}
@@ -175,8 +177,6 @@
       0%,100%{opacity:1;box-shadow:0 0 6px var(--accent)}
       50%{opacity:.5;box-shadow:0 0 2px var(--accent)}
     }
-
-    /* Mobile variant */
     .m-primelab{
       display:flex;
       align-items:center;
@@ -189,6 +189,12 @@
       border-bottom:1px solid var(--border);
       text-decoration:none;
       transition:color .2s ease;
+      background:none;
+      border-top:none;
+      border-left:none;
+      border-right:none;
+      cursor:pointer;
+      width:100%;
     }
     .m-primelab:hover{color:#fff}
     .m-primelab .lab-dot{
@@ -277,7 +283,8 @@
         {"@type": "Question", "name": "Is there a free demo class?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Book a free strategy evaluation session through the enquiry form or WhatsApp us at +91 97006 27812."}},
         {"@type": "Question", "name": "What is your refund policy?", "acceptedAnswer": {"@type": "Answer", "text": "We offer a 7-day satisfaction guarantee. If you are not satisfied after the first week of classes, we provide a full refund."}},
         {"@type": "Question", "name": "How do I enrol in a batch?", "acceptedAnswer": {"@type": "Answer", "text": "Fill out the enquiry form on this page or WhatsApp us at +91 97006 27812."}},
-        {"@type": "Question", "name": "What is the GenZ Vibe Hub?", "acceptedAnswer": {"@type": "Answer", "text": "Three free psychometric quizzes — Anime Mind Audit (6 anime archetypes), Harry Potter Sorting Hat (4 houses), and MBTI Type Quiz (16 types) — that match your learning personality. Take them at primespirit.co.in/genz-vibe.html."}}
+        {"@type": "Question", "name": "What is the GenZ Vibe Hub?", "acceptedAnswer": {"@type": "Answer", "text": "Three free psychometric quizzes — Anime Mind Audit (6 anime archetypes), Harry Potter Sorting Hat (4 houses), and MBTI Type Quiz (16 types) — that match your learning personality. Take them at primespirit.co.in/genz-vibe.html."}},
+        {"@type": "Question", "name": "What is PrimeLab Physics Quest?", "acceptedAnswer": {"@type": "Answer", "text": "An immersive RPG-style educational game where students master Physics concepts across 11 worlds by battling scientist bosses, collecting Physics Spirits, and completing missions. Available free at Prime Spirit Mentors."}}
       ]
     }
     </script>
@@ -287,7 +294,7 @@
     </script>
 
     <script type="application/ld+json">
-    {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://primespirit.co.in/"},{"@type":"ListItem","position":2,"name":"Programs","item":"https://primespirit.co.in/#courses"},{"@type":"ListItem","position":3,"name":"Notes Vault","item":"https://primespirit.co.in/#notes-vault"},{"@type":"ListItem","position":4,"name":"Blog","item":"https://primespirit.co.in/#blog-hub"},{"@type":"ListItem","position":5,"name":"GenZ Vibe Hub","item":"https://primespirit.co.in/genz-vibe.html"},{"@type":"ListItem","position":6,"name":"FAQ","item":"https://primespirit.co.in/#faq"}]}
+    {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://primespirit.co.in/"},{"@type":"ListItem","position":2,"name":"Programs","item":"https://primespirit.co.in/#courses"},{"@type":"ListItem","position":3,"name":"Notes Vault","item":"https://primespirit.co.in/#notes-vault"},{"@type":"ListItem","position":4,"name":"Blog","item":"https://primespirit.co.in/#blog-hub"},{"@type":"ListItem","position":5,"name":"GenZ Vibe Hub","item":"https://primespirit.co.in/genz-vibe.html"},{"@type":"ListItem","position":6,"name":"PrimeLab","item":"https://primespirit.co.in/#vibe-hub"},{"@type":"ListItem","position":7,"name":"FAQ","item":"https://primespirit.co.in/#faq"}]}
     </script>
 
     <script type="application/ld+json">
@@ -365,9 +372,11 @@
                 <div class="nav-item">
                     <a href="#contact" class="nav-link">Contact</a>
                 </div>
+                <!-- ▼ PRIMELAB NAV — launches Physics Quest game overlay ▼ -->
                 <div class="nav-item">
-                    <a href="primelab.html" class="nav-link nav-link--primelab" data-track="nav-primelab"><span class="lab-dot" aria-hidden="true"></span> PrimeLab</a>
+                    <button class="nav-link nav-link--primelab" data-track="nav-primelab" onclick="launchPhysicsQuest()"><span class="lab-dot" aria-hidden="true"></span> PrimeLab</button>
                 </div>
+                <!-- ▲ PRIMELAB NAV ▲ -->
             </nav>
 
             <div class="header-actions">
@@ -411,7 +420,9 @@
         </div>
         <a href="https://primespirit.co.in/PrimeBoard/" class="m-cta m-secondary" target="_blank" rel="noopener noreferrer">PrimeBoard</a>
         <a href="#contact" class="m-cta m-secondary">Contact</a>
-        <a href="primelab.html" class="m-primelab" data-track="nav-mobile-primelab"><span class="lab-dot" aria-hidden="true"></span> PrimeLab</a>
+        <!-- ▼ PRIMELAB MOBILE — launches Physics Quest game overlay ▼ -->
+        <button class="m-primelab" data-track="nav-mobile-primelab" onclick="launchPhysicsQuest()"><span class="lab-dot" aria-hidden="true"></span> PrimeLab</button>
+        <!-- ▲ PRIMELAB MOBILE ▲ -->
         <a href="https://wa.me/919700627812?text=Hi%2C%20I%20want%20to%20book%20a%20free%20demo%20class." class="m-cta" target="_blank" rel="noopener noreferrer">Book Free Demo</a>
     </div>
 
@@ -434,6 +445,9 @@
                     <a href="https://wa.me/919700627812?text=Hi%2C%20I%20want%20to%20book%20a%20free%20demo%20class." class="btn btn-whatsapp" target="_blank" rel="noopener noreferrer" data-track="cta-hero-whatsapp"><i class="fab fa-whatsapp" aria-hidden="true"></i> Book Free Demo</a>
                     <a href="primetestq/index.html" class="btn btn-primary" data-track="cta-hero-primeTestQ"><i class="fas fa-space-shuttle" aria-hidden="true"></i> Take Free Assessment Test</a>
                     <a href="genz-vibe.html" class="btn btn-genre" data-track="cta-hero-genziVibe" style="background:linear-gradient(135deg,#a855f7,#0070f3);color:#fff"><i class="fas fa-wand-magic-sparkles" aria-hidden="true"></i> Discover Your Study Type</a>
+                    <!-- ▼ HERO PRIMELAB BUTTON ▼ -->
+                    <a href="#" class="btn btn-whatsapp" data-track="cta-hero-prime-lab" onclick="launchPhysicsQuest();return false;" style="background:linear-gradient(135deg,#00df89,#0070f3);color:#fff"><i class="fas fa-atom" aria-hidden="true"></i> PrimeLab: Physics Quest</a>
+                    <!-- ▲ HERO PRIMELAB BUTTON ▲ -->
                     <a href="#courses" class="btn btn-secondary" data-track="cta-hero-explore">Explore Micro-Batches</a>
                 </div>
             </div>
@@ -594,14 +608,14 @@
             </div>
         </section>
 
-        <!-- ====== GENZ VIBE HUB TEASER SECTION (replaces old inline anime quiz) ====== -->
+        <!-- ====== GENZ VIBE HUB TEASER SECTION ====== -->
         <section id="vibe-hub" class="section-block vibe-section" aria-labelledby="vibe-heading">
             <div class="vibe-stars" aria-hidden="true"></div>
             <div class="container">
                 <span class="section-subtitle">Interactive Free Tools</span>
-                <h2 id="vibe-heading">GenZ Vibe Hub</h2>
+                <h2 id="vibe-heading">GenZ Vibe Hub &amp; PrimeLab</h2>
                 <hr class="title-line" aria-hidden="true">
-                <p class="section-description">Three psychometric quizzes. One mission: discover how you learn, think, and win. Pick your universe and find your type.</p>
+                <p class="section-description">Psychometric quizzes to discover your study type, plus an immersive Physics RPG adventure. Pick your universe and find your type.</p>
                 <div class="vibe-grid" style="margin-bottom:36px">
                     <a href="genz-vibe.html" class="vibe-card vibe-card--anime" data-track="card-anime-quiz">
                         <div class="vibe-icon">&#127914;</div>
@@ -621,14 +635,25 @@
                         <p>16 personality types mapped to learning styles. Get a custom study plan tailored to your INTJ, ENFP, ISTP, or any type.</p>
                         <div class="vibe-meta"><span class="vibe-count">16 types</span><span class="vibe-tag vibe-tag--soon">Coming Soon</span></div>
                     </a>
+                    <!-- ▼ PRIMELAB VIBE CARD ▼ -->
+                    <a href="#" class="vibe-card vibe-card--prime-lab" data-track="card-prime-lab" onclick="launchPhysicsQuest();return false;">
+                        <div class="vibe-icon">&#9883;</div>
+                        <h3 style="color:#00df89">PrimeLab: Physics Quest</h3>
+                        <p>An RPG adventure across 11 worlds. Battle Newton, Einstein, Tesla and more. Collect Physics Spirits. Master every NEET &amp; JEE concept through gameplay.</p>
+                        <div class="vibe-meta"><span class="vibe-count">11 Worlds &middot; 55 Levels</span><span class="vibe-tag vibe-tag--ready">Play Now</span></div>
+                    </a>
+                    <!-- ▲ PRIMELAB VIBE CARD ▲ -->
                 </div>
-                <div style="text-align:center">
+                <div style="display:flex;flex-wrap:wrap;gap:14px;justify-content:center">
                     <a href="genz-vibe.html" class="btn-genz" data-track="cta-vibe-hub-open"><i class="fas fa-wand-magic-sparkles"></i> Open GenZ Vibe Hub</a>
+                    <!-- ▼ PRIMELAB CTA BUTTON ▼ -->
+                    <a href="#" class="btn-genz" data-track="cta-prime-lab-open" onclick="launchPhysicsQuest();return false;" style="background:linear-gradient(135deg,#00df89,#0070f3)"><i class="fas fa-atom"></i> Launch PrimeLab: Physics Quest</a>
+                    <!-- ▲ PRIMELAB CTA BUTTON ▲ -->
                 </div>
             </div>
         </section>
 
-        <!-- FAQ (13 items) -->
+        <!-- FAQ (14 items) -->
         <section id="faq" class="section-block faq-section" aria-labelledby="faq-heading">
             <div class="container">
                 <span class="section-subtitle">Quick Answers</span>
@@ -648,6 +673,9 @@
                     <div class="faq-item" role="listitem"><button class="faq-question" type="button" aria-expanded="false" aria-controls="faq-answer-11" id="faq-btn-11"><span>What is your refund policy?</span><i class="fas fa-chevron-down" aria-hidden="true"></i></button><div class="faq-answer" role="region" id="faq-answer-11" aria-labelledby="faq-btn-11">We offer a 7-day satisfaction guarantee. If you're not satisfied after the first week of classes, we provide a full refund. Contact us for complete terms.</div></div>
                     <div class="faq-item" role="listitem"><button class="faq-question" type="button" aria-expanded="false" aria-controls="faq-answer-12" id="faq-btn-12"><span>How do I enrol in a batch?</span><i class="fas fa-chevron-down" aria-hidden="true"></i></button><div class="faq-answer" role="region" id="faq-answer-12" aria-labelledby="faq-btn-12">Fill out the enquiry form on this page or WhatsApp us at +91 97006 27812. We'll schedule a free consultation to match you with the right batch.</div></div>
                     <div class="faq-item" role="listitem"><button class="faq-question" type="button" aria-expanded="false" aria-controls="faq-answer-13" id="faq-btn-13"><span>What is the GenZ Vibe Hub?</span><i class="fas fa-chevron-down" aria-hidden="true"></i></button><div class="faq-answer" role="region" id="faq-answer-13" aria-labelledby="faq-btn-13">Three free psychometric quizzes &mdash; Anime Mind Audit (6 anime archetypes), Harry Potter Sorting Hat (4 Hogwarts houses), and MBTI Type Quiz (16 personality types) &mdash; that match your learning personality and give you personalized study strategies. <a href="genz-vibe.html">Take the GenZ Vibe Hub quizzes</a>.</div></div>
+                    <!-- ▼ NEW FAQ — PrimeLab ▼ -->
+                    <div class="faq-item" role="listitem"><button class="faq-question" type="button" aria-expanded="false" aria-controls="faq-answer-14" id="faq-btn-14"><span>What is PrimeLab: Physics Quest?</span><i class="fas fa-chevron-down" aria-hidden="true"></i></button><div class="faq-answer" role="region" id="faq-answer-14" aria-labelledby="faq-btn-14">PrimeLab is an immersive RPG-style educational game where students master Physics concepts across 11 themed worlds. You battle scientist bosses like Newton, Einstein, and Tesla, collect Physics Spirits, and unlock gadgets &mdash; all while improving NEET &amp; JEE preparation through active recall and spaced repetition. Click the PrimeLab button in the navigation to start playing for free.</div></div>
+                    <!-- ▲ NEW FAQ ▲ -->
                 </div>
             </div>
         </section>
@@ -761,6 +789,7 @@
                     <li><a href="primescore/">PrimeScore Calculator</a></li>
                     <li><a href="primetestq/index.html">PrimeTestQ&#8482;</a></li>
                     <li><a href="genz-vibe.html">GenZ Vibe Hub</a></li>
+                    <li><a href="#" onclick="launchPhysicsQuest();return false;">PrimeLab: Physics Quest</a></li>
                 </ul>
             </div>
             <div class="footer-col">
@@ -925,6 +954,33 @@
       });
       card.addEventListener('mouseleave', () => { card.style.transform = ''; });
     });
+    </script>
+
+    <!-- ====== PRIMELAB PHYSICS QUEST LAUNCHER (lazy load) ====== -->
+    <script>
+    var _pqLoaded = false;
+    async function launchPhysicsQuest(){
+      if(document.getElementById('pq-overlay')) return;
+      var ov = document.createElement('div');
+      ov.id = 'pq-overlay';
+      ov.style.cssText = 'position:fixed;inset:0;z-index:100000;';
+      document.body.appendChild(ov);
+      document.body.style.overflow = 'hidden';
+      if(!_pqLoaded){
+        var l = document.createElement('link');
+        l.rel = 'stylesheet';
+        l.href = 'game/style.css?v=1.0';
+        document.head.appendChild(l);
+        await new Promise(function(r){
+          var s = document.createElement('script');
+          s.src = 'game/game.js?v=1.0';
+          s.onload = r;
+          document.body.appendChild(s);
+        });
+        _pqLoaded = true;
+      }
+      window.PQGame.launch(ov);
+    }
     </script>
 
 </body>
