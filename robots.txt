@@ -1,0 +1,33 @@
+# ═══════════════════════════════════════
+#  Prime Spirit Mentors — robots.txt
+#  https://primespirit.co.in
+# ═══════════════════════════════════════
+
+User-agent: *
+Allow: /
+
+# Disallow game internals (not useful for search)
+Disallow: /game/data/
+Disallow: /game/style.css
+Disallow: /game/game.js
+
+# Disallow admin/internal tools
+Disallow: /PrimeBoard/
+Disallow: /admin/
+Disallow: /api/
+
+# Disallow auth modal states (not pages)
+Disallow: /*?login=
+Disallow: /*?signup=
+
+# Allow important assets
+Allow: /game/style.css
+Allow: /game/game.js
+Allow: /style.css
+Allow: /script.js
+
+# Crawl-delay (optional — polite to bots)
+Crawl-delay: 1
+
+# ═══ SITEMAP ═══
+Sitemap: https://primespirit.co.in/sitemap.xml
