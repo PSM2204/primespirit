@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+
+  <!-- ═══ HOMEPAGE ═══ -->
+  <url>
+    <loc>https://primespirit.co.in/</loc>
+    <lastmod>2026-07-23</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://primespirit.co.in/og-image.jpg</image:loc>
+      <image:title>Prime Spirit Mentors — Elite Micro-Batch Coaching</image:title>
+    </image:image>
+  </url>
+
+  <!-- ═══ PROGRAMS / PAGES ═══ -->
+  <url>
+    <loc>https://primespirit.co.in/poonam-foundation.html</loc>
+    <lastmod>2026-07-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://primespirit.co.in/genz-vibe.html</loc>
+    <lastmod>2026-07-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- ═══ FREE TOOLS ═══ -->
+  <url>
+    <loc>https://primespirit.co.in/primescore/</loc>
+    <lastmod>2026-07-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://primespirit.co.in/primetestq/index.html</loc>
+    <lastmod>2026-07-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- ═══ CITY LANDING PAGES (Local SEO) ═══ -->
+  <url>
+    <loc>https://primespirit.co.in/city/neet-bengaluru.html</loc>
+    <lastmod>2026-07-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://primespirit.co.in/city/jee-bengaluru.html</loc>
+    <lastmod>2026-07-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://primespirit.co.in/city/neet-hyderabad.html</loc>
+    <lastmod>2026-07-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://primespirit.co.in/city/cuet-hyderabad.html</loc>
+    <lastmod>2026-07-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://primespirit.co.in/city/neet-bhubaneswar.html</loc>
+    <lastmod>2026-07-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://primespirit.co.in/city/neet-cuttack.html</loc>
+    <lastmod>2026-07-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- ═══ BLOG POSTS ═══ -->
+  <!-- Add each blog post URL here as you publish them -->
+  <!-- Example:
+  <url>
+    <loc>https://primespirit.co.in/blog/newtons-laws-neet-guide.html</loc>
+    <lastmod>2026-07-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  -->
+
+</urlset>
