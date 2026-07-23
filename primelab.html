@@ -3,6 +3,25 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- ═══ SEO & SOCIAL META ═══ -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://primespirit.co.in/primelab.html">
+<meta property="og:title" content="PrimeLab — 6-Station Mind Training Game | Prime Spirit Mentors">
+<meta property="og:description" content="6 stations. 5 game mechanics. One brain. Train active recall through Mix &amp; Match, Sequence Puzzles, Memory Cards, Hot Seat Clues, Word Jumbles and Wild Card challenges. Free for NEET, JEE &amp; CUET students.">
+<meta property="og:image" content="https://primespirit.co.in/primelab-og.svg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="PrimeLab — 6-station science quiz game by Prime Spirit Mentors">
+<meta property="og:site_name" content="Prime Spirit Mentors">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="PrimeLab — 6-Station Mind Training Game">
+<meta name="twitter:description" content="6 stations. 5 game mechanics. Chemistry, Physics, Biology, Maths, Reasoning &amp; Wild Card. Free brain training for NEET, JEE &amp; CUET.">
+<meta name="twitter:image" content="https://primespirit.co.in/primelab-og.svg">
+<meta name="keywords" content="PrimeLab, Prime Spirit Mentors, NEET quiz, JEE quiz, science game, biology quiz, physics quiz, chemistry quiz, CUET preparation, brain training, online quiz game">
+<meta name="author" content="Prime Spirit Mentors">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://primespirit.co.in/primelab.html">
+<!-- ═══════════════════════════ -->
 <title>PrimeLab — 6-Station Mind Training Game | Prime Spirit Mentors</title>
 <meta name="description" content="PrimeLab: A 6-station game combining Chemistry, Physics, Biology, Maths, Reasoning and Wild Card challenges. Train active recall, memory, and problem-solving.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -306,8 +325,8 @@ const LOGIC_QUESTIONS = [
   {type:"mcq",q:"A is twice as old as B. B is 3 years older than C. If C is 10, how old is A?",opts:["20","23","26","30"],ans:2,explain:"C=10, B=10+3=13, A=2×13=26"},
   {type:"jumble",q:"Unscramble this chemistry term:",scrambled:"EORTCELLSLYOY",answer:"ELECTROLYSIS",hint:"Decomposition using electricity"},
   {type:"mcq",q:"Find the next number: 2, 6, 12, 20, 30, ?",opts:["40","42","44","36"],ans:1,explain:"Differences: 4,6,8,10,12. Next = 30+12 = 42. Formula: n(n+1)"},
-  {type:"jumble",q:"Unscramble this maths term:",scrambled:"GNIMARBALCEE",answer:"BALANCE",hint:"Nope — the word is in there... it's: BALANCE",answer:"BALANCE"},
-  {type:"mcq",q:"If FRIEND is coded as HUMJTK, how is CANDLE coded?",opts:["ECPFNG","EDRIRF","ECPFNH","ESJOMF"],ans:2,explain:"Each letter +2: C→E, A→C, N→P, D→F, L→N, E→G → ECPFNG. Wait: ECPFNH. Let me verify: C+2=E, A+2=C... The answer pattern shifts each letter +2 positions."}
+  {type:"jumble",q:"Unscramble this biology term:",scrambled:"TOYZGE",answer:"ZYGOTE",hint:"First cell formed after fertilization"},
+  {type:"mcq",q:"If FRIEND is coded as HUMJTK, how is CANDLE coded?",opts:["ECPFNG","EDRIRF","ECPFNH","ESJOMF"],ans:2,explain:"Each letter +2: C→E, A→C, N→P, D→F, L→N, E→G → ECPFNH"}
 ];
 
 const WILD_POOL = [
@@ -315,7 +334,7 @@ const WILD_POOL = [
   {subject:"Physics",type:"mcq",q:"Speed of light in vacuum is approximately:",opts:["3×10⁶ m/s","3×10⁸ m/s","3×10¹⁰ m/s","3×10⁴ m/s"],ans:1,explain:"c ≈ 3 × 10⁸ m/s"},
   {subject:"Biology",type:"mcq",q:"DNA stands for:",opts:["Deoxyribonucleic Acid","Dinitrogen Acid","Dioxin Nucleic Acid","Deoxyribose Nitric Acid"],ans:0,explain:"DNA = Deoxyribonucleic Acid"},
   {subject:"Maths",type:"mcq",q:"What is the value of 0! (zero factorial)?",opts:["0","1","Undefined","Infinity"],ans:1,explain:"0! = 1 by definition (empty product convention)."},
-  {subject:"Reasoning",type:"jumble",q:"Unscramble:",scrambled:"ZYGOTE",answer:"ZYGOTE",hint:"First cell after fertilization"},
+  {subject:"Reasoning",type:"jumble",q:"Unscramble this term:",scrambled:"TOYZGE",answer:"ZYGOTE",hint:"First cell after fertilization"},
   {subject:"Chemistry",type:"mcq",q:"Noble gases belong to which group?",opts:["Group 1","Group 14","Group 17","Group 18"],ans:3,explain:"Group 18 — He, Ne, Ar, Kr, Xe, Rn — fully filled outer shell."},
   {subject:"Physics",type:"mcq",q:"The SI unit of force is named after:",opts:["Joule","Pascal","Newton","Watt"],ans:2,explain:"Force unit = Newton (N) = kg⋅m/s², after Sir Isaac Newton."},
   {subject:"Biology",type:"mcq",q:"Photosynthesis occurs in which part of the cell?",opts:["Mitochondria","Nucleus","Chloroplast","Ribosome"],ans:2,explain:"Chloroplasts contain chlorophyll and are the site of photosynthesis."}
@@ -342,7 +361,7 @@ let state = {
   totalScore:0, totalStreak:0, maxStreak:0,
   currentStation:null, currentQ:0, streak:0, stationScore:0,
   timerStart:0, timerInterval:null, answered:false,
-  completed:{}, matchFlipped:[], matchMatched:new Set(), matchFirst:null,
+  matchFlipped:[], matchMatched:new Set(), matchFirst:null,
   seqOrder:[], chemSelLeft:null, chemMatchedPairs:new Set(),
   hotseatRevealed:0, hotseatGuessed:false,
   jumbleAnswered:[], jumbleUsed:[]
@@ -356,7 +375,7 @@ function renderLobby(){
   const grid=document.getElementById('stationGrid');
   grid.innerHTML='';
   STATIONS.forEach(s=>{
-    const done=state.completed[s.id];
+    const done=state.completed?state.completed[s.id]:null;
     grid.innerHTML+=`<div class="station-card${done?' completed':''}" data-station="${s.id}" onclick="startStation('${s.id}')">
       <span class="sc-emoji">${s.emoji}</span>
       <h3 style="color:${s.color}">${s.name}</h3>
@@ -364,7 +383,7 @@ function renderLobby(){
       <div class="sc-meta">
         <span class="sc-tag sc-tag--type">${s.type}</span>
         <span class="sc-tag sc-tag--q">${s.questions.length} rounds</span>
-        ${done?'<span class="sc-tag" style="color:var(--bio)">'+state.completed[s.id]+' pts</span>':''}
+        ${done?'<span class="sc-tag" style="color:var(--bio)">'+done+' pts</span>':''}
       </div>
     </div>`;
   });
@@ -472,7 +491,6 @@ function renderMCQ(area,q,color){
     optsDiv.appendChild(b);
   });
   document.getElementById('mcqNext').onclick=()=>advance();
-  requestAnimationFrame(()=>card.style.animation='');
 }
 
 function selectMCQ(i,q,color){
@@ -506,7 +524,6 @@ function renderMatch(area,q,color){
     leftHTML+=`<div class="chem-item" data-side="left" data-idx="${i}" onclick="chemSelect(this,'left',${i})">${p[0]}</div>`;
   });
   shuffledRight.forEach(r=>{
-    leftHTML; // just for clarity
     rightHTML+=`<div class="chem-item" data-side="right" data-idx="${r.idx}" onclick="chemSelect(this,'right',${r.idx})">${r.text}</div>`;
   });
   card.innerHTML=`<p class="q-prompt" style="color:${color}">Match each item on the left with its pair on the right</p><div class="chem-pairs"><div class="chem-col" id="chemLeft">${leftHTML}</div><div class="chem-arrow">⟷</div><div class="chem-col" id="chemRight">${rightHTML}</div></div><div class="feedback" id="matchFeedback"></div><button class="btn-next" id="matchNext" style="background:linear-gradient(135deg,${color},var(--math))">Next →</button>`;
@@ -644,7 +661,6 @@ function guessHotSeat(){
   document.getElementById('hsClueBtn').style.display='none';
   document.getElementById('hsGuess').style.display='none';
   document.getElementById('hsInput').disabled=true;
-  // reveal remaining clues
   const ql=q.clues;
   for(let i=state.hotseatRevealed;i<ql.length;i++){document.getElementById('clue'+i).classList.add('revealed');}
   document.getElementById('hsNext').classList.add('visible');
@@ -659,7 +675,6 @@ function renderJumble(area,q,color){
   state.jumbleUsed=[];
   const word=q.answer.toUpperCase();
   let scrambled=word.split('');
-  // ensure it's actually scrambled
   let attempts=0;
   while(scrambled.join('')===word&&attempts<20){scrambled.sort(()=>Math.random()-.5);attempts++;}
   state._jumbleLetters=scrambled;
@@ -751,6 +766,7 @@ function advance(){
 function finishStation(){
   clearInterval(state.timerInterval);
   const st=state.currentStation;
+  if(!state.completed) state.completed={};
   state.completed[st.id]=state.stationScore;
   const elapsed=Math.floor((Date.now()-state.timerStart)/1000);
   const m=Math.floor(elapsed/60);
@@ -821,7 +837,6 @@ function showFinalResults(){
     <button class="btn-replay" onclick="resetAll()">Play Again</button>
   `;
 
-  // animate bars
   setTimeout(()=>{
     document.querySelectorAll('.rb-fill[data-w]').forEach(b=>{
       b.style.width=b.dataset.w+'%';
@@ -859,6 +874,7 @@ function spawnParticles(big){
 // INIT
 // ══════════════════════════════════════════
 
+state.completed={};
 renderLobby();
 </script>
 </body>
