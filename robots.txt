@@ -6,27 +6,19 @@
 User-agent: *
 Allow: /
 
-# Disallow game internals (not useful for search)
+# Block game data (JSON files — not useful for search)
 Disallow: /game/data/
-Disallow: /game/style.css
-Disallow: /game/game.js
 
-# Disallow admin/internal tools
+# Block admin/internal tools
 Disallow: /PrimeBoard/
 Disallow: /admin/
 Disallow: /api/
 
-# Disallow auth modal states (not pages)
+# Block auth modal states
 Disallow: /*?login=
 Disallow: /*?signup=
 
-# Allow important assets
-Allow: /game/style.css
-Allow: /game/game.js
-Allow: /style.css
-Allow: /script.js
-
-# Crawl-delay (optional — polite to bots)
+# Crawl-delay
 Crawl-delay: 1
 
 # ═══ SITEMAP ═══
