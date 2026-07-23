@@ -1,17 +1,13 @@
 {
-  "name": "Prime Spirit Mentors — NEET, JEE, CUET Coaching",
+  "name": "Prime Spirit Mentors | Online Coaching for NEET, JEE, CUET, IAT, NEST & Boards",
   "short_name": "Prime Spirit",
-  "description": "Elite micro-batch online coaching for NEET, JEE, CUET, IAT, NEST and Class 6-12 Boards.",
+  "description": "Elite personalized micro-batch coaching for NEET, JEE, CUET, IAT, NEST and Class 6-12 Boards.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
   "orientation": "portrait-primary",
-  "background_color": "#0a0e27",
-  "theme_color": "#0a0e27",
-  "lang": "en-IN",
-  "dir": "ltr",
-  "categories": ["education"],
-  "id": "https://primespirit.co.in/",
+  "theme_color": "#060a1a",
+  "background_color": "#060a1a",
   "icons": [
     {
       "src": "/favicon.svg",
@@ -20,44 +16,31 @@
       "purpose": "any"
     },
     {
-      "src": "/android-chrome-192x192.png",
-      "sizes": "192x192",
-      "type": "image/png"
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any"
     },
     {
-      "src": "/android-chrome-512x512.png",
-      "sizes": "512x512",
-      "type": "image/png"
+      "src": "/favicon-96x96.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "any"
     },
     {
-      "src": "/android-chrome-512x512.png",
-      "sizes": "512x512",
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/favicon-96x96.png",
+      "sizes": "96x96",
       "type": "image/png",
       "purpose": "maskable"
     }
   ],
-  "screenshots": [],
-  "shortcuts": [
-    {
-      "name": "Book Free Demo",
-      "short_name": "Demo",
-      "description": "Book a free consultation on WhatsApp",
-      "url": "https://wa.me/919700627812?text=Hi%2C%20I%20want%20to%20book%20a%20free%20demo%20class.",
-      "icons": []
-    },
-    {
-      "name": "Free Assessment Test",
-      "short_name": "Test",
-      "description": "Take the PrimeTestQ free assessment",
-      "url": "/primetestq/index.html",
-      "icons": []
-    },
-    {
-      "name": "Physics Quest Game",
-      "short_name": "PrimeLab",
-      "description": "Play the PrimeLab Physics RPG game",
-      "url": "/#vibe-hub",
-      "icons": []
-    }
-  ]
+  "categories": ["education"],
+  "lang": "en",
+  "dir": "ltr"
 }
