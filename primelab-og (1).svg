@@ -1,0 +1,125 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#06080f"/>
+      <stop offset="100%" style="stop-color:#0c1018"/>
+    </linearGradient>
+    <linearGradient id="titleGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#ffffff"/>
+      <stop offset="50%" style="stop-color:#00c6ff"/>
+      <stop offset="100%" style="stop-color:#a855f7"/>
+    </linearGradient>
+    <linearGradient id="btnGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#00c6ff"/>
+      <stop offset="100%" style="stop-color:#a855f7"/>
+    </linearGradient>
+    <linearGradient id="glow1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#00c6ff;stop-opacity:0.08"/>
+      <stop offset="100%" style="stop-color:transparent;stop-opacity:0"/>
+    </linearGradient>
+    <linearGradient id="glow2" x1="100%" y1="100%" x2="0%" y2="0%">
+      <stop offset="0%" style="stop-color:#a855f7;stop-opacity:0.08"/>
+      <stop offset="100%" style="stop-color:transparent;stop-opacity:0"/>
+    </linearGradient>
+    <filter id="blur1">
+      <feGaussianBlur stdDeviation="60"/>
+    </filter>
+    <filter id="blur2">
+      <feGaussianBlur stdDeviation="40"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bg)"/>
+
+  <!-- Ambient glows -->
+  <ellipse cx="200" cy="150" rx="400" ry="300" fill="#00c6ff" opacity="0.05" filter="url(#blur1)"/>
+  <ellipse cx="1000" cy="480" rx="400" ry="300" fill="#a855f7" opacity="0.05" filter="url(#blur1)"/>
+  <ellipse cx="600" cy="300" rx="200" ry="200" fill="#00ff88" opacity="0.02" filter="url(#blur2)"/>
+
+  <!-- Border frame -->
+  <rect x="24" y="24" width="1152" height="582" rx="20" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1.5"/>
+
+  <!-- Top left: Logo pill -->
+  <rect x="56" y="52" width="180" height="40" rx="10" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+  <text x="76" y="78" font-family="sans-serif" font-size="22" fill="white">🧪</text>
+  <text x="106" y="78" font-family="'Syne', Arial Black, sans-serif" font-size="16" font-weight="800" fill="white" letter-spacing="0.5">PrimeLab</text>
+
+  <!-- Top right: Station dots -->
+  <g transform="translate(900, 58)">
+    <rect x="0" y="0" width="244" height="28" rx="8" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+    <!-- 6 station dots -->
+    <circle cx="22" cy="14" r="7" fill="#00ff88" opacity="0.9"/>
+    <circle cx="62" cy="14" r="7" fill="#00c6ff" opacity="0.9"/>
+    <circle cx="102" cy="14" r="7" fill="#00df89" opacity="0.9"/>
+    <circle cx="142" cy="14" r="7" fill="#a855f7" opacity="0.9"/>
+    <circle cx="182" cy="14" r="7" fill="#ff9900" opacity="0.9"/>
+    <circle cx="222" cy="14" r="7" fill="#ff3366" opacity="0.9"/>
+  </g>
+
+  <!-- Main atom illustration (right side) -->
+  <g transform="translate(820, 315)">
+    <!-- Orbit rings -->
+    <ellipse cx="0" cy="0" rx="155" ry="55" fill="none" stroke="rgba(0,198,255,0.2)" stroke-width="1.5"/>
+    <ellipse cx="0" cy="0" rx="155" ry="55" fill="none" stroke="rgba(0,198,255,0.2)" stroke-width="1.5" transform="rotate(60)"/>
+    <ellipse cx="0" cy="0" rx="155" ry="55" fill="none" stroke="rgba(0,198,255,0.2)" stroke-width="1.5" transform="rotate(120)"/>
+    <!-- Nucleus -->
+    <circle cx="0" cy="0" r="28" fill="rgba(0,198,255,0.15)" stroke="rgba(0,198,255,0.5)" stroke-width="2"/>
+    <circle cx="0" cy="0" r="18" fill="rgba(0,198,255,0.2)"/>
+    <circle cx="0" cy="0" r="10" fill="rgba(0,198,255,0.4)"/>
+    <!-- Electrons -->
+    <circle cx="155" cy="0" r="7" fill="#00c6ff"/>
+    <circle cx="-77" cy="134" r="7" fill="#a855f7"/>
+    <circle cx="-77" cy="-134" r="7" fill="#00ff88"/>
+  </g>
+
+  <!-- Main title -->
+  <text x="80" y="230" font-family="'Syne', Arial Black, sans-serif" font-size="96" font-weight="800" fill="url(#titleGrad)" letter-spacing="2">PrimeLab</text>
+
+  <!-- Tagline -->
+  <text x="82" y="290" font-family="'Space Grotesk', Arial, sans-serif" font-size="26" fill="rgba(255,255,255,0.55)" letter-spacing="0.5">6 Stations · 5 Game Mechanics · One Brain</text>
+
+  <!-- Station chips -->
+  <g transform="translate(80, 330)">
+    <!-- Chem Lab -->
+    <rect x="0" y="0" width="130" height="36" rx="18" fill="rgba(0,255,136,0.1)" stroke="rgba(0,255,136,0.3)" stroke-width="1"/>
+    <text x="16" y="24" font-family="sans-serif" font-size="16">🔬</text>
+    <text x="42" y="24" font-family="'Space Grotesk', Arial, sans-serif" font-size="13" font-weight="600" fill="#00ff88">Chem Lab</text>
+
+    <!-- Physics Forge -->
+    <rect x="142" y="0" width="152" height="36" rx="18" fill="rgba(0,198,255,0.1)" stroke="rgba(0,198,255,0.3)" stroke-width="1"/>
+    <text x="158" y="24" font-family="sans-serif" font-size="16">⚡</text>
+    <text x="184" y="24" font-family="'Space Grotesk', Arial, sans-serif" font-size="13" font-weight="600" fill="#00c6ff">Physics Forge</text>
+
+    <!-- Bio Garden -->
+    <rect x="306" y="0" width="130" height="36" rx="18" fill="rgba(0,223,137,0.1)" stroke="rgba(0,223,137,0.3)" stroke-width="1"/>
+    <text x="322" y="24" font-family="sans-serif" font-size="16">🌿</text>
+    <text x="348" y="24" font-family="'Space Grotesk', Arial, sans-serif" font-size="13" font-weight="600" fill="#00df89">Bio Garden</text>
+
+    <!-- Maths Dojo -->
+    <rect x="0" y="50" width="130" height="36" rx="18" fill="rgba(168,85,247,0.1)" stroke="rgba(168,85,247,0.3)" stroke-width="1"/>
+    <text x="16" y="74" font-family="sans-serif" font-size="16">🔢</text>
+    <text x="42" y="74" font-family="'Space Grotesk', Arial, sans-serif" font-size="13" font-weight="600" fill="#a855f7">Maths Dojo</text>
+
+    <!-- Logic Room -->
+    <rect x="142" y="50" width="130" height="36" rx="18" fill="rgba(255,153,0,0.1)" stroke="rgba(255,153,0,0.3)" stroke-width="1"/>
+    <text x="158" y="74" font-family="sans-serif" font-size="16">🗺️</text>
+    <text x="184" y="74" font-family="'Space Grotesk', Arial, sans-serif" font-size="13" font-weight="600" fill="#ff9900">Logic Room</text>
+
+    <!-- Wild Card -->
+    <rect x="284" y="50" width="130" height="36" rx="18" fill="rgba(255,51,102,0.1)" stroke="rgba(255,51,102,0.3)" stroke-width="1"/>
+    <text x="300" y="74" font-family="sans-serif" font-size="16">🎭</text>
+    <text x="326" y="74" font-family="'Space Grotesk', Arial, sans-serif" font-size="13" font-weight="600" fill="#ff3366">Wild Card</text>
+  </g>
+
+  <!-- CTA Button -->
+  <rect x="80" y="478" width="220" height="52" rx="26" fill="url(#btnGrad)"/>
+  <text x="190" y="511" font-family="'Syne', Arial Black, sans-serif" font-size="17" font-weight="800" fill="white" text-anchor="middle" letter-spacing="0.5">▶ Play Free Now</text>
+
+  <!-- Bottom left: URL -->
+  <text x="80" y="580" font-family="'DM Mono', Courier New, monospace" font-size="14" fill="rgba(255,255,255,0.3)" letter-spacing="0.5">primespirit.co.in/primelab.html</text>
+
+  <!-- Bottom right: Badge -->
+  <rect x="980" y="554" width="166" height="36" rx="8" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+  <text x="1063" y="577" font-family="'Space Grotesk', Arial, sans-serif" font-size="13" font-weight="600" fill="rgba(255,255,255,0.4)" text-anchor="middle">Prime Spirit Mentors</text>
+</svg>
