@@ -1,0 +1,801 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simon Says Sequence — Biology | PrimeLab</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
+            color: #e0e0e0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            width: 100%;
+            background: rgba(15, 20, 40, 0.95);
+            border: 2px solid #00d4ff;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 0 40px rgba(0, 212, 255, 0.2);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #00d4ff, #0099ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header p {
+            font-size: 13px;
+            color: #888;
+        }
+
+        .difficulty-selector {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 30px;
+        }
+
+        .difficulty-btn {
+            padding: 12px;
+            border: 2px solid #444;
+            background: rgba(255, 255, 255, 0.05);
+            color: #00d4ff;
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .difficulty-btn:hover {
+            border-color: #00d4ff;
+            box-shadow: 0 0 15px rgba(0, 212, 255, 0.3);
+        }
+
+        .difficulty-btn.active {
+            background: linear-gradient(135deg, #00d4ff, #0099ff);
+            border-color: #00d4ff;
+            color: #0a0e27;
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+        }
+
+        .game-area {
+            display: none;
+            text-align: center;
+        }
+
+        .game-area.active {
+            display: block;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 25px;
+            background: rgba(0, 212, 255, 0.05);
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid rgba(0, 212, 255, 0.2);
+        }
+
+        .stat {
+            text-align: left;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 5px;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            color: #00d4ff;
+            font-weight: bold;
+        }
+
+        .question-box {
+            background: rgba(0, 212, 255, 0.08);
+            border: 2px solid rgba(0, 212, 255, 0.3);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 25px;
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .question-box p {
+            font-size: 16px;
+            color: #e0e0e0;
+            line-height: 1.6;
+        }
+
+        .sequence-display {
+            background: rgba(0, 153, 255, 0.08);
+            border: 1px solid rgba(0, 153, 255, 0.2);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #0099ff;
+            font-family: monospace;
+            min-height: 40px;
+            word-wrap: break-word;
+        }
+
+        .answer-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .answer-btn {
+            padding: 14px;
+            border: 2px solid #444;
+            background: rgba(255, 255, 255, 0.05);
+            color: #00d4ff;
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+        }
+
+        .answer-btn:hover:not(:disabled) {
+            border-color: #00d4ff;
+            box-shadow: 0 0 15px rgba(0, 212, 255, 0.3);
+        }
+
+        .answer-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .answer-btn.correct {
+            background: rgba(0, 255, 100, 0.2);
+            border-color: #00ff64;
+            color: #00ff64;
+            box-shadow: 0 0 15px rgba(0, 255, 100, 0.4);
+        }
+
+        .answer-btn.incorrect {
+            background: rgba(255, 50, 50, 0.2);
+            border-color: #ff3232;
+            color: #ff3232;
+            box-shadow: 0 0 15px rgba(255, 50, 50, 0.4);
+        }
+
+        .action-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .btn {
+            padding: 12px;
+            border: 2px solid #00d4ff;
+            background: rgba(0, 212, 255, 0.1);
+            color: #00d4ff;
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn:hover {
+            background: rgba(0, 212, 255, 0.2);
+            box-shadow: 0 0 15px rgba(0, 212, 255, 0.3);
+        }
+
+        .btn.primary {
+            grid-column: 1 / -1;
+            background: linear-gradient(135deg, #00d4ff, #0099ff);
+            border-color: #00d4ff;
+            color: #0a0e27;
+        }
+
+        .btn.primary:hover {
+            box-shadow: 0 0 25px rgba(0, 212, 255, 0.5);
+        }
+
+        .feedback {
+            font-size: 14px;
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .feedback.show {
+            display: block;
+        }
+
+        .feedback.correct {
+            background: rgba(0, 255, 100, 0.15);
+            color: #00ff64;
+            border: 1px solid rgba(0, 255, 100, 0.3);
+        }
+
+        .feedback.incorrect {
+            background: rgba(255, 50, 50, 0.15);
+            color: #ff3232;
+            border: 1px solid rgba(255, 50, 50, 0.3);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: rgba(15, 20, 40, 0.98);
+            border: 2px solid #00d4ff;
+            border-radius: 12px;
+            padding: 40px;
+            max-width: 500px;
+            text-align: center;
+            box-shadow: 0 0 40px rgba(0, 212, 255, 0.3);
+        }
+
+        .modal-content h2 {
+            font-size: 24px;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, #00d4ff, #0099ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .modal-content p {
+            font-size: 16px;
+            color: #e0e0e0;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .modal-stats {
+            background: rgba(0, 212, 255, 0.08);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .modal-stat {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .modal-stat:last-child {
+            margin-bottom: 0;
+        }
+
+        .modal-stat span:first-child {
+            color: #888;
+        }
+
+        .modal-stat span:last-child {
+            color: #00d4ff;
+            font-weight: bold;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 25px;
+            }
+
+            .header h1 {
+                font-size: 22px;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .question-box p {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Simon Says Sequence</h1>
+            <p>Biology • CBSE Classes 9–12</p>
+        </div>
+
+        <!-- Difficulty Selector -->
+        <div id="difficultySelector">
+            <div class="difficulty-selector">
+                <button class="difficulty-btn" data-difficulty="easy">Easy</button>
+                <button class="difficulty-btn" data-difficulty="medium">Medium</button>
+                <button class="difficulty-btn" data-difficulty="hard">Hard</button>
+            </div>
+        </div>
+
+        <!-- Game Area -->
+        <div id="gameArea" class="game-area">
+            <div class="stats">
+                <div class="stat">
+                    <div class="stat-label">Sequence Level</div>
+                    <div class="stat-value" id="sequenceLevel">1</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-label">Score</div>
+                    <div class="stat-value" id="score">0</div>
+                </div>
+            </div>
+
+            <div class="question-box" id="questionBox">
+                <p>Press "Start Game" to begin</p>
+            </div>
+
+            <div class="sequence-display" id="sequenceDisplay">Waiting for game start...</div>
+
+            <div class="answer-buttons" id="answerButtons"></div>
+
+            <div class="feedback" id="feedback"></div>
+
+            <div class="action-buttons">
+                <button class="btn" id="startBtn">Start Game</button>
+                <button class="btn" id="resetBtn">Reset</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Game Over Modal -->
+    <div id="gameOverModal" class="modal">
+        <div class="modal-content">
+            <h2>Game Over!</h2>
+            <p id="gameOverMessage"></p>
+            <div class="modal-stats">
+                <div class="modal-stat">
+                    <span>Levels Completed:</span>
+                    <span id="finalLevel">0</span>
+                </div>
+                <div class="modal-stat">
+                    <span>Final Score:</span>
+                    <span id="finalScore">0</span>
+                </div>
+                <div class="modal-stat">
+                    <span>Accuracy:</span>
+                    <span id="finalAccuracy">0%</span>
+                </div>
+            </div>
+            <button class="btn primary" id="playAgainBtn">Play Again</button>
+        </div>
+    </div>
+
+    <script>
+        // Biology Questions Database
+        const biologyQuestions = {
+            easy: [
+                // Class 9
+                "Photosynthesis occurs in the _______ (chloroplast/mitochondria)",
+                "The basic unit of life is the _______",
+                "Mitochondria is called the _______ of the cell",
+                "_______ are responsible for protein synthesis",
+                "The process by which plants make food is called _______",
+                "Cells are divided into _______ (prokaryotic/eukaryotic)",
+                "The cell membrane is _______ permeable",
+                "Vacuoles store _______ in plant cells",
+                "Cilia help in _______ of organisms",
+                "Diffusion occurs from _______ to lower concentration",
+                "Osmosis is the movement of _______",
+                "Tissues are made of similar _______",
+                "The simplest tissue is _______",
+                "Xylem transports _______",
+                "Phloem transports _______",
+                // Class 10
+                "Reproduction can be _______ or sexual",
+                "Buds are an example of _______ reproduction",
+                "The male reproductive part of a flower is _______",
+                "The female reproductive part is the _______",
+                "Pollination can be _______ or cross",
+                "The testes produce _______",
+                "The ovaries produce _______",
+                "Fertilization is the fusion of _______ and egg",
+                "Genes are made of _______",
+                "Heredity is passed through _______",
+                "Dominant traits _______ recessive traits",
+                "Evolution happens through _______",
+                "Fossils provide evidence of _______",
+                "Natural selection favors _______ traits"
+            ],
+            medium: [
+                // Class 9 & 10 Mixed (Longer/Harder content)
+                "In photosynthesis, _______ is a reactant and _______ is a product",
+                "The light reaction occurs in the _______ while dark reaction occurs in the _______",
+                "Heterotrophic nutrition requires _______ matter for energy",
+                "Autotrophic organisms synthesize food using _______, _______, and _______",
+                "The heart has _______ chambers with _______ and _______ valves",
+                "Blood circulation has _______ circulation and _______ circulation",
+                "Hemoglobin carries _______ through blood",
+                "White blood cells help in _______",
+                "Platelets are responsible for _______",
+                "The nervous system has _______ and _______ divisions",
+                "Neurons transmit messages through _______",
+                "Hormones are secreted by _______ glands",
+                "The kidney filters waste to produce _______",
+                "The small intestine absorbs _______",
+                "Enzymes are biological _______",
+                "pH affects enzyme _______",
+                "Respiration releases _______ from glucose",
+                "Anaerobic respiration produces _______",
+                "Eye lens focuses light on the _______",
+                "Deaf individuals lack functioning _______"
+            ],
+            hard: [
+                // Class 11 & 12
+                "The citric acid cycle occurs in the _______ matrix",
+                "Glycolysis produces _______ ATP molecules and forms _______",
+                "Electron transport chain generates approximately _______ ATP per NADH",
+                "Photosystem II absorbs light at _______ nm wavelength",
+                "Stroma contains _______ and enzymes for Calvin cycle",
+                "C3 compounds in Calvin cycle are _______ carbon molecules",
+                "CAM photosynthesis occurs in plants like _______",
+                "The equation for photosynthesis is: _______ + _______ → _______ + _______",
+                "Stomata regulation involves _______ ions and osmotic balance",
+                "Tropisms are growth responses toward _______",
+                "Auxins promote cell _______ in shoots",
+                "Gibberellins promote _______ of plants",
+                "Abscisic acid triggers _______",
+                "Cytokinins promote _______ division",
+                "Ethylene causes fruit _______",
+                "The protein structure has _______ levels of organization",
+                "DNA replication is _______ directional",
+                "mRNA carries genetic information from _______ to _______",
+                "tRNA has an _______ loop recognizing codons",
+                "Transcription factors bind to _______",
+                "Restriction endonucleases cut DNA at _______ sites",
+                "Plasmids are _______ chromosomal DNA in bacteria",
+                "Gene therapy aims to replace _______ genes",
+                "PCR amplifies _______ directly",
+                "Homologous chromosomes pair during _______",
+                "Crossing over increases _______",
+                "Nondisjunction causes chromosomal _______",
+                "Amniocentesis detects _______ abnormalities",
+                "Evolution is driven by _______",
+                "Genetic drift affects _______ populations"
+            ]
+        };
+
+        // Answer Options for Questions
+        const answerOptions = {
+            easy: [
+                ["Chloroplast", "Mitochondria"],
+                ["Cell", "Organ"],
+                ["Powerhouse", "Brain"],
+                ["Mitochondria", "Ribosomes"],
+                ["Photosynthesis", "Respiration"],
+                ["Prokaryotic", "Eukaryotic"],
+                ["Selectively", "Fully"],
+                ["Water", "Nutrients"],
+                ["Movement", "Digestion"],
+                ["Higher", "Lower"],
+                ["Water", "Salt"],
+                ["Cells", "Organs"],
+                ["Epithelial", "Nervous"],
+                ["Water", "Minerals"],
+                ["Sugars", "Water"],
+                ["Asexual", "Sexual"],
+                ["Vegetative", "Sexual"],
+                ["Stamen", "Pistil"],
+                ["Flower", "Stigma"],
+                ["Self", "Cross"],
+                ["Sperm", "Eggs"],
+                ["Pollen", "Ovules"],
+                ["Sperm", "Egg"],
+                ["DNA", "RNA"],
+                ["Genes", "Chromosomes"],
+                ["Mask", "Enhance"],
+                ["Mutations", "Adaptation"],
+                ["Past Life", "Ancient Rocks"],
+                ["Adaptive", "Maladaptive"]
+            ],
+            medium: [
+                ["CO2, O2", "O2, CO2"],
+                ["Thylakoid, Stroma", "Stroma, Thylakoid"],
+                ["Organic", "Inorganic"],
+                ["Sunlight, Water, CO2", "Heat, Salt, Oxygen"],
+                ["4, Tricuspid, Mitral", "2, Bicuspid, Aortic"],
+                ["Systemic, Pulmonary", "Arterial, Venous"],
+                ["Oxygen", "Carbon Dioxide"],
+                ["Defense", "Clotting"],
+                ["Blood Clotting", "Immunity"],
+                ["Central, Peripheral", "Sympathetic, Parasympathetic"],
+                ["Neurotransmitters", "Hormones"],
+                ["Endocrine", "Exocrine"],
+                ["Urine", "Sweat"],
+                ["Nutrients", "Water"],
+                ["Catalyst", "Enzyme"],
+                ["Activity", "Structure"],
+                ["Energy", "Heat"],
+                ["Ethanol and CO2", "Lactic Acid"],
+                ["Retina", "Cornea"],
+                ["Cochlear Nerve", "Hair Cells"]
+            ],
+            hard: [
+                ["Mitochondrial", "Cytoplasmic"],
+                ["2, Pyruvate", "32, Acetyl-CoA"],
+                ["36-38", "24-26"],
+                ["680", "700"],
+                ["Grana, RuBP", "Thylakoid, ATP"],
+                ["3", "6"],
+                ["Cacti", "Grass"],
+                ["6CO2, 6H2O, C6H12O6, 6O2", "C6H12O6, 6O2, 6CO2, 6H2O"],
+                ["Guard, Osmotic", "Photosynthetic, Hormonal"],
+                ["Light", "Gravity"],
+                ["Elongation", "Division"],
+                ["Stem Elongation", "Seed Germination"],
+                ["Stomatal Closure", "Seed Germination"],
+                ["Cell", "Protein"],
+                ["5'→3'", "3'→5'"],
+                ["Nucleus, Ribosome", "DNA, Protein"],
+                ["Anticodon", "Codon"],
+                ["Promoters", "Enhancers"],
+                ["Palindromic", "Specific"],
+                ["Extra-chromosomal", "Circular"],
+                ["Defective", "Faulty"],
+                ["DNA", "RNA"],
+                ["Prophase I", "Metaphase I"],
+                ["Genetic Variation", "Population Size"],
+                ["Large", "Small"]
+            ]
+        };
+
+        let gameState = {
+            difficulty: null,
+            sequence: [],
+            userSequence: [],
+            level: 0,
+            score: 0,
+            totalAnswers: 0,
+            correctAnswers: 0,
+            gameActive: false,
+            currentQuestionIndex: 0,
+            sequenceSpeed: 0
+        };
+
+        // Helper Functions
+        function playSound(frequency, duration) {
+            try {
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioContext.createOscillator();
+                const gain = audioContext.createGain();
+
+                oscillator.connect(gain);
+                gain.connect(audioContext.destination);
+
+                oscillator.frequency.value = frequency;
+                oscillator.type = 'sine';
+
+                gain.gain.setValueAtTime(0.3, audioContext.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + duration);
+
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + duration);
+            } catch (error) {
+                console.log("Audio context not available");
+            }
+        }
+
+        function getRandomQuestion() {
+            const questions = biologyQuestions[gameState.difficulty];
+            return questions[Math.floor(Math.random() * questions.length)];
+        }
+
+        function displayQuestion(question) {
+            document.getElementById('questionBox').innerHTML = `<p>${question}</p>`;
+        }
+
+        function startGame() {
+            if (!gameState.difficulty) {
+                alert("Please select a difficulty level");
+                return;
+            }
+
+            gameState.gameActive = true;
+            gameState.level = 0;
+            gameState.score = 0;
+            gameState.totalAnswers = 0;
+            gameState.correctAnswers = 0;
+            gameState.sequence = [];
+            gameState.userSequence = [];
+
+            document.getElementById('startBtn').disabled = true;
+            document.getElementById('startBtn').textContent = "Game Started...";
+
+            nextLevel();
+        }
+
+        function nextLevel() {
+            gameState.level++;
+            gameState.userSequence = [];
+            updateStats();
+
+            // Add new question to sequence
+            const newQuestion = getRandomQuestion();
+            gameState.sequence.push(newQuestion);
+
+            // Display sequence
+            displaySequence();
+        }
+
+        function displaySequence() {
+            const sequenceText = gameState.sequence.map((q, i) => `${i + 1}. ${q.substring(0, 40)}...`).join(" | ");
+            document.getElementById('sequenceDisplay').textContent = `Memorize: ${sequenceText}`;
+
+            playSound(400, 0.2);
+            setTimeout(() => playSound(600, 0.2), 200);
+        }
+
+        function showAnswerButtons() {
+            const container = document.getElementById('answerButtons');
+            const options = answerOptions[gameState.difficulty];
+            const currentQuestion = gameState.sequence[gameState.userSequence.length];
+            const questionIndex = biologyQuestions[gameState.difficulty].indexOf(currentQuestion);
+            const correctOptions = options[questionIndex];
+
+            container.innerHTML = '';
+
+            const shuffled = correctOptions.sort(() => Math.random() - 0.5);
+
+            shuffled.forEach(option => {
+                const btn = document.createElement('button');
+                btn.className = 'answer-btn';
+                btn.textContent = option;
+                btn.onclick = () => checkAnswer(option, correctOptions[0]);
+                container.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(selected, correct) {
+            gameState.totalAnswers++;
+            const isCorrect = selected === correct;
+
+            if (isCorrect) {
+                gameState.correctAnswers++;
+                gameState.score += (gameState.difficulty === 'easy' ? 10 : gameState.difficulty === 'medium' ? 20 : 30);
+                playSound(800, 0.3);
+                showFeedback("✓ Correct!", "correct");
+            } else {
+                playSound(200, 0.3);
+                showFeedback("✗ Incorrect. Game Over!", "incorrect");
+                endGame();
+                return;
+            }
+
+            gameState.userSequence.push(gameState.sequence[gameState.userSequence.length]);
+
+            if (gameState.userSequence.length === gameState.sequence.length) {
+                setTimeout(nextLevel, 1500);
+            } else {
+                setTimeout(showAnswerButtons, 1000);
+            }
+
+            updateStats();
+        }
+
+        function showFeedback(message, type) {
+            const fb = document.getElementById('feedback');
+            fb.textContent = message;
+            fb.className = `feedback show ${type}`;
+            setTimeout(() => fb.classList.remove('show'), 1500);
+        }
+
+        function updateStats() {
+            document.getElementById('sequenceLevel').textContent = gameState.level;
+            document.getElementById('score').textContent = gameState.score;
+        }
+
+        function endGame() {
+            gameState.gameActive = false;
+            const accuracy = gameState.totalAnswers > 0 ? Math.round((gameState.correctAnswers / gameState.totalAnswers) * 100) : 0;
+
+            document.getElementById('gameOverMessage').textContent = `You reached level ${gameState.level}! Well played, biologist!`;
+            document.getElementById('finalLevel').textContent = gameState.level;
+            document.getElementById('finalScore').textContent = gameState.score;
+            document.getElementById('finalAccuracy').textContent = `${accuracy}%`;
+            document.getElementById('gameOverModal').classList.add('active');
+
+            document.getElementById('startBtn').disabled = false;
+            document.getElementById('startBtn').textContent = "Start Game";
+        }
+
+        function resetGame() {
+            gameState = {
+                difficulty: null,
+                sequence: [],
+                userSequence: [],
+                level: 0,
+                score: 0,
+                totalAnswers: 0,
+                correctAnswers: 0,
+                gameActive: false,
+                currentQuestionIndex: 0
+            };
+
+            document.querySelectorAll('.difficulty-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById('gameArea').classList.remove('active');
+            document.getElementById('difficultySelector').style.display = 'block';
+            document.getElementById('startBtn').textContent = "Start Game";
+            document.getElementById('startBtn').disabled = false;
+            document.getElementById('answerButtons').innerHTML = '';
+            document.getElementById('sequenceDisplay').textContent = 'Waiting for game start...';
+            document.getElementById('questionBox').innerHTML = '<p>Press "Start Game" to begin</p>';
+            document.getElementById('gameOverModal').classList.remove('active');
+        }
+
+        // Event Listeners
+        document.querySelectorAll('.difficulty-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                document.querySelectorAll('.difficulty-btn').forEach(b => b.classList.remove('active'));
+                e.target.classList.add('active');
+                gameState.difficulty = e.target.dataset.difficulty;
+                document.getElementById('difficultySelector').style.display = 'none';
+                document.getElementById('gameArea').classList.add('active');
+            });
+        });
+
+        document.getElementById('startBtn').addEventListener('click', startGame);
+        document.getElementById('resetBtn').addEventListener('click', resetGame);
+        document.getElementById('playAgainBtn').addEventListener('click', resetGame);
+
+        // Show initial state
+        document.getElementById('gameArea').classList.add('active');
+    </script>
+</body>
+</html>
+
