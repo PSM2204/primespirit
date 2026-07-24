@@ -186,7 +186,7 @@
   
   .message.show { display: block; }
   .message h2 { color: #f5576c; font-size: 1.8em; margin-bottom: 10px; }
-  .message p { margin-bottom: 15px; }
+  .message p { margin-bottom: 15px; white-space: pre-line; }
   
   .overlay-bg {
     position: fixed;
@@ -200,12 +200,20 @@
   
   .lives { display: flex; gap: 4px; justify-content: center; }
   .heart { font-size: 1.3em; }
+  
+  .progress-bar {
+    background: rgba(255,255,255,0.2);
+    border-radius: 10px;
+    padding: 4px 12px;
+    margin-top: 8px;
+    font-size: 0.75em;
+  }
 </style>
 </head>
 <body>
   <div class="game-container">
     <header>
-      <h1> Gone Fishing</h1>
+      <h1>🎣 Gone Fishing</h1>
       <p>Test your selective attention!</p>
     </header>
 
@@ -230,18 +238,19 @@
 
     <div class="category-display">
       <h2>🎯 Catch only: <span id="currentCategory">Physics Terms</span></h2>
+      <div class="progress-bar">Words remaining: <span id="wordsRemaining">15</span>/15</div>
     </div>
 
     <div class="river" id="river"></div>
 
     <div class="controls">
       <button class="start-btn" onclick="startGame()">🎮 Start</button>
-      <button onclick="changeCategory()">🔄 Category</button>
+      <button onclick="changeCategory()"> Category</button>
       <button onclick="pauseGame()">⏸️</button>
     </div>
   </div>
 
-  <div class="combo" id="combo">🔥 x<span id="comboCount">0</span></div>
+  <div class="combo" id="combo"> x<span id="comboCount">0</span></div>
   <div class="overlay-bg" id="overlayBg"></div>
   <div class="message" id="message">
     <h2 id="messageTitle">Game Over!</h2>
@@ -250,7 +259,7 @@
   </div>
 
 <script>
-const categories = {
+const allCategories = {
   "Physics Terms": {
     correct: ["Velocity","Acceleration","Momentum","Energy","Force","Gravity","Friction","Mass","Power","Work","Inertia","Torque","Pressure","Density","Frequency"],
     wrong: ["Cell","Molecule","Equation","Novel","Painting","Democracy","Algorithm","Revenue","Sonnet","Volcano"]
@@ -282,7 +291,11 @@ let gameState = {
   currentCategory: "Physics Terms",
   fishInterval: null,
   spawnRate: 2000,
-  speed: 8
+  speed: 8,
+  // Word pools (shuffled, no repeats)
+  correctPool: [],
+  wrongPool: [],
+  usedWords: new Set()
 };
 
 const river = document.getElementById('river');
@@ -294,6 +307,81 @@ const comboCountEl = document.getElementById('comboCount');
 const messageEl = document.getElementById('message');
 const overlayBg = document.getElementById('overlayBg');
 const categoryEl = document.getElementById('currentCategory');
+const wordsRemainingEl = document.getElementById('wordsRemaining');
+
+// Shuffle array using Fisher-Yates algorithm
+function shuffleArray(array) {
+  const shuffled = [...array];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+}
+
+// Initialize word pools for current category
+function initWordPools() {
+  const category = allCategories[gameState.currentCategory];
+  // Shuffle and create pools
+  gameState.correctPool = shuffleArray(category.correct);
+  gameState.wrongPool = shuffleArray(category.wrong);
+  gameState.usedWords.clear();
+  updateWordsRemaining();
+}
+
+// Get next word from pool (no repeats)
+function getNextWord(isCorrect) {
+  const pool = isCorrect ? gameState.correctPool : gameState.wrongPool;
+  
+  // Find unused word from pool
+  for (let word of pool) {
+    const key = gameState.currentCategory + '_' + word;
+    if (!gameState.usedWords.has(key)) {
+      gameState.usedWords.add(key);
+      updateWordsRemaining();
+      return word;
+    }
+  }
+  
+  // If all words used, reshuffle and start over
+  if (isCorrect) {
+    gameState.correctPool = shuffleArray(allCategories[gameState.currentCategory].correct);
+  } else {
+    gameState.wrongPool = shuffleArray(allCategories[gameState.currentCategory].wrong);
+  }
+  
+  // Return first word from reshuffled pool
+  const word = pool[0];
+  const key = gameState.currentCategory + '_' + word;
+  gameState.usedWords.add(key);
+  updateWordsRemaining();
+  return word;
+}
+
+function updateWordsRemaining() {
+  const category = allCategories[gameState.currentCategory];
+  const totalWords = category.correct.length;
+  let usedCount = 0;
+  
+  for (let word of category.correct) {
+    const key = gameState.currentCategory + '_' + word;
+    if (gameState.usedWords.has(key)) usedCount++;
+  }
+  
+  const remaining = totalWords - usedCount;
+  wordsRemainingEl.textContent = remaining;
+  
+  // Show message when all words caught
+  if (remaining === 0 && gameState.isPlaying) {
+    setTimeout(() => {
+      if (gameState.isPlaying) {
+        gameState.isPlaying = false;
+        clearInterval(gameState.fishInterval);
+        showMessage('🎉 Category Complete!', `You caught all ${totalWords} ${gameState.currentCategory}!\nFinal Score: ${gameState.score}`);
+      }
+    }, 2000);
+  }
+}
 
 function startGame() {
   if (gameState.isPlaying) return;
@@ -304,6 +392,7 @@ function startGame() {
   gameState.combo = 0;
   gameState.spawnRate = 2000;
   gameState.speed = 8;
+  initWordPools();
   updateStats();
   river.innerHTML = '';
   spawnFish();
@@ -324,11 +413,10 @@ function spawnFish() {
   const fish = document.createElement('div');
   fish.className = 'fish';
   const isCorrect = Math.random() > 0.5;
-  const category = categories[gameState.currentCategory];
-  const words = isCorrect ? category.correct : category.wrong;
-  const word = words[Math.floor(Math.random() * words.length)];
+  const word = getNextWord(isCorrect);
   fish.textContent = word;
   fish.dataset.correct = isCorrect;
+  fish.dataset.word = word;
   const maxY = river.offsetHeight - 50;
   fish.style.top = Math.random() * maxY + 'px';
   fish.style.left = '-150px';
@@ -389,10 +477,14 @@ function updateStats() {
 }
 
 function changeCategory() {
-  const cats = Object.keys(categories);
+  const cats = Object.keys(allCategories);
   const idx = cats.indexOf(gameState.currentCategory);
   gameState.currentCategory = cats[(idx + 1) % cats.length];
   categoryEl.textContent = gameState.currentCategory;
+  // Reset pools for new category
+  if (gameState.isPlaying) {
+    initWordPools();
+  }
 }
 
 function pauseGame() {
