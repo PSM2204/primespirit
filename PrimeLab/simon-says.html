@@ -1,15 +1,15 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Simon Says Sequence — Biology | PrimeLab</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
@@ -20,7 +20,8 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 20px;
+            padding: 15px;
+            overflow-y: auto;
         }
 
         .container {
@@ -29,18 +30,18 @@
             background: rgba(15, 20, 40, 0.95);
             border: 2px solid #00d4ff;
             border-radius: 12px;
-            padding: 40px;
+            padding: 25px;
             box-shadow: 0 0 40px rgba(0, 212, 255, 0.2);
         }
 
         .header {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
         }
 
         .header h1 {
-            font-size: 28px;
-            margin-bottom: 8px;
+            font-size: 22px;
+            margin-bottom: 5px;
             background: linear-gradient(135deg, #00d4ff, #0099ff);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -48,23 +49,23 @@
         }
 
         .header p {
-            font-size: 13px;
+            font-size: 12px;
             color: #888;
         }
 
         .difficulty-selector {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
-            gap: 12px;
-            margin-bottom: 30px;
+            gap: 10px;
+            margin-bottom: 20px;
         }
 
         .difficulty-btn {
-            padding: 12px;
+            padding: 10px;
             border: 2px solid #444;
             background: rgba(255, 255, 255, 0.05);
             color: #00d4ff;
-            font-size: 14px;
+            font-size: 12px;
             font-weight: 600;
             border-radius: 8px;
             cursor: pointer;
@@ -87,7 +88,6 @@
 
         .game-area {
             display: none;
-            text-align: center;
         }
 
         .game-area.active {
@@ -97,10 +97,10 @@
         .stats {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-bottom: 25px;
+            gap: 10px;
+            margin-bottom: 15px;
             background: rgba(0, 212, 255, 0.05);
-            padding: 20px;
+            padding: 15px;
             border-radius: 8px;
             border: 1px solid rgba(0, 212, 255, 0.2);
         }
@@ -110,15 +110,15 @@
         }
 
         .stat-label {
-            font-size: 12px;
+            font-size: 10px;
             color: #888;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            margin-bottom: 5px;
+            margin-bottom: 3px;
         }
 
         .stat-value {
-            font-size: 24px;
+            font-size: 20px;
             color: #00d4ff;
             font-weight: bold;
         }
@@ -127,27 +127,27 @@
             background: rgba(0, 212, 255, 0.08);
             border: 2px solid rgba(0, 212, 255, 0.3);
             border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 25px;
-            min-height: 80px;
+            padding: 15px;
+            margin-bottom: 15px;
+            min-height: 60px;
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
         .question-box p {
-            font-size: 16px;
+            font-size: 14px;
             color: #e0e0e0;
-            line-height: 1.6;
+            line-height: 1.5;
         }
 
         .sequence-display {
             background: rgba(0, 153, 255, 0.08);
             border: 1px solid rgba(0, 153, 255, 0.2);
             border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 20px;
-            font-size: 14px;
+            padding: 12px;
+            margin-bottom: 15px;
+            font-size: 12px;
             color: #0099ff;
             font-family: monospace;
             min-height: 40px;
@@ -157,16 +157,16 @@
         .answer-buttons {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-bottom: 20px;
+            gap: 10px;
+            margin-bottom: 15px;
         }
 
         .answer-btn {
-            padding: 14px;
+            padding: 12px;
             border: 2px solid #444;
             background: rgba(255, 255, 255, 0.05);
             color: #00d4ff;
-            font-size: 14px;
+            font-size: 12px;
             font-weight: 600;
             border-radius: 8px;
             cursor: pointer;
@@ -201,15 +201,15 @@
         .action-buttons {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 12px;
+            gap: 10px;
         }
 
         .btn {
-            padding: 12px;
+            padding: 10px;
             border: 2px solid #00d4ff;
             background: rgba(0, 212, 255, 0.1);
             color: #00d4ff;
-            font-size: 14px;
+            font-size: 12px;
             font-weight: 600;
             border-radius: 8px;
             cursor: pointer;
@@ -234,10 +234,15 @@
             box-shadow: 0 0 25px rgba(0, 212, 255, 0.5);
         }
 
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
         .feedback {
-            font-size: 14px;
-            margin-top: 15px;
-            padding: 12px;
+            font-size: 12px;
+            margin-top: 10px;
+            padding: 10px;
             border-radius: 8px;
             display: none;
         }
@@ -279,15 +284,16 @@
             background: rgba(15, 20, 40, 0.98);
             border: 2px solid #00d4ff;
             border-radius: 12px;
-            padding: 40px;
+            padding: 30px;
             max-width: 500px;
             text-align: center;
             box-shadow: 0 0 40px rgba(0, 212, 255, 0.3);
+            margin: 20px;
         }
 
         .modal-content h2 {
-            font-size: 24px;
-            margin-bottom: 15px;
+            font-size: 20px;
+            margin-bottom: 12px;
             background: linear-gradient(135deg, #00d4ff, #0099ff);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -295,25 +301,25 @@
         }
 
         .modal-content p {
-            font-size: 16px;
+            font-size: 14px;
             color: #e0e0e0;
-            margin-bottom: 20px;
-            line-height: 1.6;
+            margin-bottom: 15px;
+            line-height: 1.5;
         }
 
         .modal-stats {
             background: rgba(0, 212, 255, 0.08);
             border: 1px solid rgba(0, 212, 255, 0.2);
             border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 20px;
+            padding: 15px;
+            margin-bottom: 15px;
         }
 
         .modal-stat {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 10px;
-            font-size: 14px;
+            margin-bottom: 8px;
+            font-size: 12px;
         }
 
         .modal-stat:last-child {
@@ -331,11 +337,11 @@
 
         @media (max-width: 480px) {
             .container {
-                padding: 25px;
+                padding: 20px;
             }
 
             .header h1 {
-                font-size: 22px;
+                font-size: 18px;
             }
 
             .stats {
@@ -343,7 +349,11 @@
             }
 
             .question-box p {
-                font-size: 14px;
+                font-size: 12px;
+            }
+            
+            .answer-buttons {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -388,7 +398,7 @@
             <div class="feedback" id="feedback"></div>
 
             <div class="action-buttons">
-                <button class="btn" id="startBtn">Start Game</button>
+                <button class="btn primary" id="startBtn">Start Game</button>
                 <button class="btn" id="resetBtn">Reset</button>
             </div>
         </div>
@@ -421,7 +431,6 @@
         // Biology Questions Database
         const biologyQuestions = {
             easy: [
-                // Class 9
                 "Photosynthesis occurs in the _______ (chloroplast/mitochondria)",
                 "The basic unit of life is the _______",
                 "Mitochondria is called the _______ of the cell",
@@ -437,7 +446,6 @@
                 "The simplest tissue is _______",
                 "Xylem transports _______",
                 "Phloem transports _______",
-                // Class 10
                 "Reproduction can be _______ or sexual",
                 "Buds are an example of _______ reproduction",
                 "The male reproductive part of a flower is _______",
@@ -454,7 +462,6 @@
                 "Natural selection favors _______ traits"
             ],
             medium: [
-                // Class 9 & 10 Mixed (Longer/Harder content)
                 "In photosynthesis, _______ is a reactant and _______ is a product",
                 "The light reaction occurs in the _______ while dark reaction occurs in the _______",
                 "Heterotrophic nutrition requires _______ matter for energy",
@@ -477,7 +484,6 @@
                 "Deaf individuals lack functioning _______"
             ],
             hard: [
-                // Class 11 & 12
                 "The citric acid cycle occurs in the _______ matrix",
                 "Glycolysis produces _______ ATP molecules and forms _______",
                 "Electron transport chain generates approximately _______ ATP per NADH",
@@ -671,61 +677,94 @@
 
             // Display sequence
             displaySequence();
+            
+            // Show answer buttons after a brief delay
+            setTimeout(() => {
+                showAnswerButtons();
+            }, 1500);
         }
 
         function displaySequence() {
             const sequenceText = gameState.sequence.map((q, i) => `${i + 1}. ${q.substring(0, 40)}...`).join(" | ");
             document.getElementById('sequenceDisplay').textContent = `Memorize: ${sequenceText}`;
+            document.getElementById('questionBox').innerHTML = `<p>Level ${gameState.level}: Memorize the sequence above!</p>`;
 
             playSound(400, 0.2);
             setTimeout(() => playSound(600, 0.2), 200);
         }
 
         function showAnswerButtons() {
+            if (!gameState.gameActive) return;
+            
             const container = document.getElementById('answerButtons');
-            const options = answerOptions[gameState.difficulty];
             const currentQuestion = gameState.sequence[gameState.userSequence.length];
             const questionIndex = biologyQuestions[gameState.difficulty].indexOf(currentQuestion);
+            const options = answerOptions[gameState.difficulty];
             const correctOptions = options[questionIndex];
 
             container.innerHTML = '';
 
-            const shuffled = correctOptions.sort(() => Math.random() - 0.5);
+            const shuffled = [...correctOptions].sort(() => Math.random() - 0.5);
 
             shuffled.forEach(option => {
                 const btn = document.createElement('button');
                 btn.className = 'answer-btn';
                 btn.textContent = option;
-                btn.onclick = () => checkAnswer(option, correctOptions[0]);
+                btn.onclick = () => checkAnswer(option, correctOptions[0], btn);
                 container.appendChild(btn);
             });
+            
+            document.getElementById('questionBox').innerHTML = `<p>${currentQuestion}</p>`;
         }
 
-        function checkAnswer(selected, correct) {
+        function checkAnswer(selected, correct, btnElement) {
+            if (!gameState.gameActive) return;
+            
             gameState.totalAnswers++;
             const isCorrect = selected === correct;
+
+            // Disable all buttons
+            const buttons = document.querySelectorAll('.answer-btn');
+            buttons.forEach(btn => btn.disabled = true);
 
             if (isCorrect) {
                 gameState.correctAnswers++;
                 gameState.score += (gameState.difficulty === 'easy' ? 10 : gameState.difficulty === 'medium' ? 20 : 30);
+                btnElement.classList.add('correct');
                 playSound(800, 0.3);
                 showFeedback("✓ Correct!", "correct");
             } else {
+                btnElement.classList.add('incorrect');
+                // Highlight correct answer
+                buttons.forEach(btn => {
+                    if (btn.textContent === correct) {
+                        btn.classList.add('correct');
+                    }
+                });
                 playSound(200, 0.3);
                 showFeedback("✗ Incorrect. Game Over!", "incorrect");
-                endGame();
+                setTimeout(() => endGame(), 1500);
                 return;
             }
 
             gameState.userSequence.push(gameState.sequence[gameState.userSequence.length]);
+            updateStats();
 
             if (gameState.userSequence.length === gameState.sequence.length) {
-                setTimeout(nextLevel, 1500);
+                // Completed the sequence, move to next level
+                setTimeout(() => {
+                    document.getElementById('answerButtons').innerHTML = '';
+                    document.getElementById('feedback').classList.remove('show');
+                    nextLevel();
+                }, 1500);
             } else {
-                setTimeout(showAnswerButtons, 1000);
+                // Show next question in sequence
+                setTimeout(() => {
+                    document.getElementById('answerButtons').innerHTML = '';
+                    document.getElementById('feedback').classList.remove('show');
+                    showAnswerButtons();
+                }, 1000);
             }
-
-            updateStats();
         }
 
         function showFeedback(message, type) {
@@ -776,6 +815,7 @@
             document.getElementById('sequenceDisplay').textContent = 'Waiting for game start...';
             document.getElementById('questionBox').innerHTML = '<p>Press "Start Game" to begin</p>';
             document.getElementById('gameOverModal').classList.remove('active');
+            document.getElementById('feedback').classList.remove('show');
         }
 
         // Event Listeners
@@ -798,4 +838,3 @@
     </script>
 </body>
 </html>
-
