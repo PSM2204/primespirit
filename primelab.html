@@ -7,8 +7,8 @@
 <meta name="color-scheme" content="dark">
 
 <title>PrimeLab — All Games &amp; Quizzes | Prime Spirit Mentors</title>
-<meta name="description" content="Your unified game hub. 6-station brain trainer, Class 7 Science RPG, Neural Nexus brain training, Anime &amp; Harry Potter study quizzes, and MBTI. All free from Prime Spirit Mentors.">
-<meta name="keywords" content="PrimeLab, science game, anime quiz, Harry Potter sorting, MBTI, Class 7 science RPG, brain training, neural nexus, working memory, free quiz India, Prime Spirit Mentors">
+<meta name="description" content="Your unified game hub. 6-station brain trainer, Class 7 Science RPG, Neural Nexus, Simon Says Biology, Anime &amp; Harry Potter study quizzes. All free.">
+<meta name="keywords" content="PrimeLab, science game, anime quiz, Harry Potter sorting, MBTI, Class 7 science RPG, brain training, neural nexus, simon says biology, working memory, free quiz India, Prime Spirit Mentors">
 <meta name="author" content="Prime Spirit Mentors">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://primespirit.co.in/primelab.html">
@@ -16,7 +16,7 @@
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://primespirit.co.in/primelab.html">
 <meta property="og:title" content="PrimeLab — All Games &amp; Quizzes">
-<meta property="og:description" content="6-station brain trainer, Neural Nexus, Science RPG, Anime &amp; Harry Potter quizzes. All free.">
+<meta property="og:description" content="6-station brain trainer, Neural Nexus, Science RPG, Simon Says Biology, Anime &amp; Harry Potter quizzes. All free.">
 <meta property="og:image" content="https://primespirit.co.in/primelab-og.svg">
 <meta property="og:site_name" content="Prime Spirit Mentors">
 <meta name="twitter:card" content="summary_large_image">
@@ -49,6 +49,7 @@
     {"@type": "LearningResource", "name": "PrimeLab 6-Station Game", "url": "https://primespirit.co.in/primelab-stations.html"},
     {"@type": "LearningResource", "name": "Neural Nexus Brain Trainer", "url": "https://primespirit.co.in/PrimeLab/neural-nexus.html"},
     {"@type": "LearningResource", "name": "Gone Fishing Attention Game", "url": "https://primespirit.co.in/PrimeLab/gone-fishing.html"},
+    {"@type": "LearningResource", "name": "Simon Says Sequence Biology", "url": "https://primespirit.co.in/PrimeLab/simon-says.html"},
     {"@type": "LearningResource", "name": "Anime Mind Audit Quiz", "url": "https://primespirit.co.in/genz-vibe.html"},
     {"@type": "LearningResource", "name": "Harry Potter Sorting Quiz", "url": "https://primespirit.co.in/genz-vibe.html"}
   ]
@@ -109,7 +110,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);min-hei
 .game-card{background:var(--card);border:1.5px solid var(--border);border-radius:20px;padding:28px 24px;cursor:pointer;transition:transform .3s cubic-bezier(.4,0,.2,1),border-color .3s,box-shadow .3s;position:relative;overflow:hidden;text-decoration:none;color:var(--text);display:flex;flex-direction:column;opacity:0;animation:card-rise .5s cubic-bezier(.4,0,.2,1) forwards}
 .game-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:20px 20px 0 0;transition:opacity .3s}
 .game-card:hover{transform:translateY(-6px)}
-.game-card:nth-child(1){animation-delay:.05s}.game-card:nth-child(2){animation-delay:.1s}.game-card:nth-child(3){animation-delay:.15s}.game-card:nth-child(4){animation-delay:.2s}
+.game-card:nth-child(1){animation-delay:.05s}.game-card:nth-child(2){animation-delay:.1s}.game-card:nth-child(3){animation-delay:.15s}.game-card:nth-child(4){animation-delay:.2s}.game-card:nth-child(5){animation-delay:.25s}
 @keyframes card-rise{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
 
 .gc-emoji{font-size:42px;margin-bottom:16px}
@@ -204,7 +205,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);min-hei
     <h1>PrimeLab</h1>
     <p class="hero-sub">Every game and quiz we've built — in one place. Science RPGs, brain trainers, and personality quizzes. Pick your world and play.</p>
     <div class="hero-stats">
-      <div class="hero-stat"><span class="hero-stat-num">3</span><span class="hero-stat-lbl">Game Worlds</span></div>
+      <div class="hero-stat"><span class="hero-stat-num">4</span><span class="hero-stat-lbl">Game Worlds</span></div>
       <div class="hero-stat"><span class="hero-stat-num">66+</span><span class="hero-stat-lbl">Rounds</span></div>
       <div class="hero-stat"><span class="hero-stat-num">3</span><span class="hero-stat-lbl">Quizzes</span></div>
       <div class="hero-stat"><span class="hero-stat-num">Free</span><span class="hero-stat-lbl">Forever</span></div>
@@ -271,19 +272,14 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);min-hei
           <span class="gc-tag gc-tag--free">Free</span>
         </div>
         <span class="gc-btn">Train Now <i class="fas fa-arrow-right"></i></span>
-        <!-- decorative pulsing nodes -->
         <div class="nn-nodes">
-          <div class="nn-node"></div>
-          <div class="nn-node"></div>
-          <div class="nn-node"></div>
-          <div class="nn-node"></div>
-          <div class="nn-node"></div>
+          <div class="nn-node"></div><div class="nn-node"></div><div class="nn-node"></div><div class="nn-node"></div><div class="nn-node"></div>
         </div>
       </a>
 
       <!-- 🎣 GONE FISHING — NEW ★ -->
       <a class="game-card" data-accent="cyan" href="PrimeLab/gone-fishing.html" target="_blank" rel="noopener noreferrer" onclick="openGame('PrimeLab/gone-fishing.html','Gone Fishing','#00c6ff');return false;">
-        <div class="gc-emoji"></div>
+        <div class="gc-emoji">🎣</div>
         <div class="gc-top">
           <div><h3 style="color:var(--accent)">Gone Fishing</h3></div>
           <span class="gc-tag gc-tag--new">New</span>
@@ -298,8 +294,25 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);min-hei
         <span class="gc-btn">Play Now <i class="fas fa-arrow-right"></i></span>
       </a>
 
+      <!-- 🧬 SIMON SAYS SEQUENCE — NEW ★ -->
+      <a class="game-card" data-accent="violet" href="PrimeLab/simon-says.html" target="_blank" rel="noopener noreferrer" onclick="openGame('PrimeLab/simon-says.html','Simon Says Biology','#a855f7');return false;">
+        <div class="gc-emoji">🧬</div>
+        <div class="gc-top">
+          <div><h3 style="color:var(--violet)">Simon Says Sequence</h3></div>
+          <span class="gc-tag gc-tag--new">New</span>
+        </div>
+        <p>Memorize and answer expanding sequences of CBSE Biology questions (Classes 9–12). Tests working memory, active recall, and N-back retention. How long can you keep the chain going?</p>
+        <div class="gc-meta">
+          <span class="gc-tag gc-tag--type">Working Memory</span>
+          <span class="gc-tag gc-tag--type">CBSE Biology</span>
+          <span class="gc-tag gc-tag--type">Active Recall</span>
+          <span class="gc-tag gc-tag--free">Free</span>
+        </div>
+        <span class="gc-btn">Play Now <i class="fas fa-arrow-right"></i></span>
+      </a>
+
     </div>
-  </section>
+    </section>
 
   <!-- PERSONALITY QUIZZES -->
   <section class="category">
