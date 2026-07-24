@@ -7,8 +7,8 @@
 <meta name="color-scheme" content="dark">
 
 <title>PrimeLab — All Games &amp; Quizzes | Prime Spirit Mentors</title>
-<meta name="description" content="Your unified game hub. 6-station brain trainer, Class 7 Science RPG, Anime &amp; Harry Potter study quizzes, and MBTI. All free from Prime Spirit Mentors.">
-<meta name="keywords" content="PrimeLab, science game, anime quiz, Harry Potter sorting, MBTI, Class 7 science RPG, brain training, free quiz India, Prime Spirit Mentors">
+<meta name="description" content="Your unified game hub. 6-station brain trainer, Class 7 Science RPG, Neural Nexus brain training, Anime &amp; Harry Potter study quizzes, and MBTI. All free from Prime Spirit Mentors.">
+<meta name="keywords" content="PrimeLab, science game, anime quiz, Harry Potter sorting, MBTI, Class 7 science RPG, brain training, neural nexus, working memory, free quiz India, Prime Spirit Mentors">
 <meta name="author" content="Prime Spirit Mentors">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://primespirit.co.in/primelab.html">
@@ -16,7 +16,7 @@
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://primespirit.co.in/primelab.html">
 <meta property="og:title" content="PrimeLab — All Games &amp; Quizzes">
-<meta property="og:description" content="6-station brain trainer, Science RPG, Anime &amp; Harry Potter quizzes. All free.">
+<meta property="og:description" content="6-station brain trainer, Neural Nexus, Science RPG, Anime &amp; Harry Potter quizzes. All free.">
 <meta property="og:image" content="https://primespirit.co.in/primelab-og.svg">
 <meta property="og:site_name" content="Prime Spirit Mentors">
 <meta name="twitter:card" content="summary_large_image">
@@ -47,6 +47,7 @@
   "hasPart": [
     {"@type": "LearningResource", "name": "PrimeQuest Class 7 Science RPG", "url": "https://primespirit.co.in/PrimeLab/class7/"},
     {"@type": "LearningResource", "name": "PrimeLab 6-Station Game", "url": "https://primespirit.co.in/primelab-stations.html"},
+    {"@type": "LearningResource", "name": "Neural Nexus Brain Trainer", "url": "https://primespirit.co.in/PrimeLab/neural-nexus.html"},
     {"@type": "LearningResource", "name": "Anime Mind Audit Quiz", "url": "https://primespirit.co.in/genz-vibe.html"},
     {"@type": "LearningResource", "name": "Harry Potter Sorting Quiz", "url": "https://primespirit.co.in/genz-vibe.html"}
   ]
@@ -58,7 +59,7 @@
   --bg:#060a1a;--surface:#0d1128;--elevated:#131829;--card:#0f1420;
   --border:rgba(255,255,255,.06);--text:#e8ecf4;--text-sec:#8b95ad;--muted:#5c6478;
   --accent:#00c6ff;--blue:#0070f3;--green:#00df89;--violet:#a855f7;
-  --gold:#d3a625;--orange:#ff9900;--rose:#ff3366;
+  --gold:#d3a625;--orange:#ff9900;--rose:#ff3366;--neural:#00f5ff;
   --font-head:'Syne',sans-serif;--font-body:'Space Grotesk',sans-serif;--font-mono:'DM Mono',monospace;
 }
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
@@ -123,6 +124,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);min-hei
 .gc-btn{display:inline-flex;align-items:center;gap:8px;padding:10px 22px;border-radius:40px;border:none;font-family:var(--font-head);font-weight:800;font-size:.85rem;color:#000;cursor:pointer;transition:transform .2s,box-shadow .2s;align-self:flex-start}
 .gc-btn:hover{transform:translateY(-2px)}
 
+/* accent variants */
 .game-card[data-accent="cyan"]::before{background:var(--accent)}
 .game-card[data-accent="cyan"]:hover{border-color:rgba(0,198,255,.3);box-shadow:0 12px 40px rgba(0,198,255,.1)}
 .game-card[data-accent="cyan"] .gc-btn{background:var(--accent)}
@@ -132,11 +134,22 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);min-hei
 .game-card[data-accent="gold"]::before{background:var(--gold)}
 .game-card[data-accent="gold"]:hover{border-color:rgba(211,166,37,.3);box-shadow:0 12px 40px rgba(211,166,37,.1)}
 .game-card[data-accent="gold"] .gc-btn{background:linear-gradient(135deg,#ae0001,var(--gold));color:#fff}
+/* neural nexus accent */
+.game-card[data-accent="neural"]::before{background:linear-gradient(90deg,var(--neural),var(--violet))}
+.game-card[data-accent="neural"]:hover{border-color:rgba(0,245,255,.3);box-shadow:0 12px 40px rgba(0,245,255,.12)}
+.game-card[data-accent="neural"] .gc-btn{background:linear-gradient(135deg,#7c3aed,var(--neural));color:#fff}
 
 .game-card.featured{grid-column:1/-1;flex-direction:row;gap:32px;padding:36px 32px}
 .game-card.featured .gc-left{flex:1}
 .game-card.featured .gc-right{display:flex;flex-direction:column;gap:8px;min-width:200px;align-items:flex-start;justify-content:center}
 @media(max-width:700px){.game-card.featured{flex-direction:column;gap:20px}.game-card.featured .gc-right{min-width:auto}}
+
+/* neural nexus node pulse decoration */
+.nn-nodes{position:absolute;bottom:16px;right:16px;display:flex;gap:5px;align-items:center;opacity:.35;pointer-events:none}
+.nn-node{width:10px;height:10px;border-radius:50%;border:1px solid var(--neural)}
+.nn-node:nth-child(2){background:var(--neural);animation:nn-pulse 2s ease-in-out infinite}
+.nn-node:nth-child(4){background:var(--violet);animation:nn-pulse 2s ease-in-out .7s infinite}
+@keyframes nn-pulse{0%,100%{box-shadow:0 0 0 0 rgba(0,245,255,.4)}50%{box-shadow:0 0 0 5px rgba(0,245,255,0)}}
 
 .overlay{position:fixed;inset:0;z-index:10000;background:var(--bg);display:none;flex-direction:column}
 .overlay.active{display:flex}
@@ -190,8 +203,8 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);min-hei
     <h1>PrimeLab</h1>
     <p class="hero-sub">Every game and quiz we've built — in one place. Science RPGs, brain trainers, and personality quizzes. Pick your world and play.</p>
     <div class="hero-stats">
-      <div class="hero-stat"><span class="hero-stat-num">2</span><span class="hero-stat-lbl">Game Worlds</span></div>
-      <div class="hero-stat"><span class="hero-stat-num">66</span><span class="hero-stat-lbl">Rounds</span></div>
+      <div class="hero-stat"><span class="hero-stat-num">3</span><span class="hero-stat-lbl">Game Worlds</span></div>
+      <div class="hero-stat"><span class="hero-stat-num">66+</span><span class="hero-stat-lbl">Rounds</span></div>
       <div class="hero-stat"><span class="hero-stat-num">3</span><span class="hero-stat-lbl">Quizzes</span></div>
       <div class="hero-stat"><span class="hero-stat-num">Free</span><span class="hero-stat-lbl">Forever</span></div>
     </div>
@@ -208,6 +221,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);min-hei
     </div>
     <div class="games-grid">
 
+      <!-- PrimeQuest featured -->
       <a class="game-card featured" data-accent="violet" href="PrimeLab/class7/" target="_blank" rel="noopener noreferrer" onclick="openGame('PrimeLab/class7/','PrimeQuest','#a855f7');return false;">
         <div class="gc-left">
           <div class="gc-emoji">&#128300;</div>
@@ -227,6 +241,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);min-hei
         </div>
       </a>
 
+      <!-- 6-Station Trainer -->
       <a class="game-card" data-accent="cyan" href="primelab-stations.html" target="_blank" rel="noopener noreferrer" onclick="openGame('primelab-stations.html','6-Station Trainer','#00c6ff');return false;">
         <div class="gc-emoji">&#129514;</div>
         <div class="gc-top"><div><h3 style="color:var(--accent)">6-Station Mind Trainer</h3></div></div>
@@ -238,6 +253,31 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);min-hei
           <span class="gc-tag gc-tag--free">Free</span>
         </div>
         <span class="gc-btn">Play Now <i class="fas fa-arrow-right"></i></span>
+      </a>
+
+      <!-- ★ NEURAL NEXUS — NEW ★ -->
+      <a class="game-card" data-accent="neural" href="PrimeLab/neural-nexus.html" target="_blank" rel="noopener noreferrer" onclick="openGame('PrimeLab/neural-nexus.html','Neural Nexus','#00f5ff');return false;">
+        <div class="gc-emoji">🧠</div>
+        <div class="gc-top">
+          <div><h3 style="color:var(--neural)">Neural Nexus</h3></div>
+          <span class="gc-tag gc-tag--new">New</span>
+        </div>
+        <p>A sci-fi brain trainer built for NEET &amp; JEE aspirants. Memorise node sequences, filter noise distractors, and chain Synapse Links under time pressure. Trains working memory, N-back recall, and attention control &mdash; the exact cognitive muscles long MCQ papers demand.</p>
+        <div class="gc-meta">
+          <span class="gc-tag gc-tag--type">Brain Training</span>
+          <span class="gc-tag gc-tag--type">N-Back Recall</span>
+          <span class="gc-tag gc-tag--type">3 Difficulty Modes</span>
+          <span class="gc-tag gc-tag--free">Free</span>
+        </div>
+        <span class="gc-btn">Train Now <i class="fas fa-arrow-right"></i></span>
+        <!-- decorative pulsing nodes -->
+        <div class="nn-nodes">
+          <div class="nn-node"></div>
+          <div class="nn-node"></div>
+          <div class="nn-node"></div>
+          <div class="nn-node"></div>
+          <div class="nn-node"></div>
+        </div>
       </a>
 
     </div>
