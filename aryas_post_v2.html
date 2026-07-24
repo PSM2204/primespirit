@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#1a0f08">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Arya's Post - Cozy Lighthouse Post Office</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Pacifico&display=swap');
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  :root{--primary:#7a5c1a;--primary-dark:#5a4208;--primary-light:#c9a96e;--bg:#f7ede0;--panel:#ede0d0;--text:#3d2b00;--text-light:#7a5c1a;--success:#4a9c3a;--danger:#b03030;--gold:#b8860b}
+  html,body{font-family:'Nunito',sans-serif;background:#1a0f08;min-height:100vh;min-height:100dvh;display:flex;justify-content:center;align-items:center;overflow:hidden;touch-action:manipulation}
+  #game-container{width:min(1100px,100vw);height:min(750px,100vh);height:min(750px,100dvh);background:var(--bg);border-radius:0;box-shadow:0 25px 80px rgba(0,0,0,0.6);display:flex;flex-direction:column;overflow:hidden;position:relative}
+  @media(min-width:1101px){#game-container{border-radius:24px}}
+  .header{background:var(--primary);color:#fff8e7;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;border-bottom:3px solid var(--primary-dark);position:relative;flex-shrink:0;gap:8px}
+  .header h1{font-family:'Pacifico',cursive;font-size:clamp(18px,3vw,28px);font-weight:400;text-shadow:2px 2px 0 var(--primary-dark);white-space:nowrap}
+  .stats{display:flex;gap:8px;font-size:clamp(11px,1.5vw,14px);font-weight:700;flex-wrap:wrap;justify-content:flex-end}
+  .stat{background:rgba(90,66,8,0.6);padding:5px 10px;border-radius:10px;display:flex;align-items:center;gap:4px;backdrop-filter:blur(4px);border:1px solid rgba(255,248,231,0.1);transition:transform 0.2s;white-space:nowrap}
+  .stat:hover{transform:translateY(-2px)}.stat-icon{font-size:clamp(14px,2vw,18px)}
+  .main-area{flex:1;display:flex;padding:12px;gap:12px;overflow:hidden;min-height:0}
+  .left-panel{width:260px;display:flex;flex-direction:column;gap:10px;min-width:0}
+  .center-panel{flex:1;display:flex;flex-direction:column;gap:10px;min-width:0}
+  .right-panel{width:200px;display:flex;flex-direction:column;gap:10px;min-width:0}
+  .panel{background:var(--panel);border-radius:14px;padding:12px;border:2px solid var(--primary-light);box-shadow:0 4px 12px rgba(90,66,8,0.08);display:flex;flex-direction:column;transition:box-shadow 0.3s;min-height:0}
+  .panel:hover{box-shadow:0 6px 20px rgba(90,66,8,0.12)}
+  .panel-title{font-size:12px;font-weight:800;color:var(--primary-dark);margin-bottom:10px;text-transform:uppercase;letter-spacing:1px;display:flex;align-items:center;gap:6px;flex-shrink:0}
+  .panel-title::after{content:'';flex:1;height:2px;background:var(--primary-light);border-radius:1px;opacity:0.5}
+  .customer-area{flex:1;overflow:hidden}
+  .customer-slot{background:var(--bg);border:2px dashed var(--primary-light);border-radius:12px;padding:10px;margin-bottom:8px;min-height:80px;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:all 0.3s cubic-bezier(0.34,1.56,0.64,1);cursor:pointer;position:relative}
+  .customer-slot:hover,.customer-slot:active{border-color:var(--primary);background:#fff8e7;transform:translateY(-2px)}
+  .customer-slot.active{border-style:solid;border-color:var(--primary);background:#fff8e7;box-shadow:0 4px 16px rgba(122,92,26,0.15);animation:gentlePulse 2s ease-in-out infinite}
+  @keyframes gentlePulse{0%,100%{box-shadow:0 4px 16px rgba(122,92,26,0.15)}50%{box-shadow:0 4px 24px rgba(122,92,26,0.25)}}
+  .customer-avatar{font-size:clamp(28px,4vw,36px);margin-bottom:2px;filter:drop-shadow(0 2px 4px rgba(0,0,0,0.1));transition:transform 0.3s}
+  .customer-slot:active .customer-avatar{transform:scale(1.1) rotate(-3deg)}
+  .customer-name{font-size:11px;font-weight:800;color:var(--text)}
+  .customer-request{font-size:10px;color:var(--text-light);text-align:center;margin-top:2px;font-weight:600}
+  .customer-patience{width:100%;height:4px;background:#ddd;border-radius:2px;margin-top:6px;overflow:hidden}
+  .customer-patience-bar{height:100%;background:var(--success);border-radius:2px;transition:width 0.5s,background 0.5s}
+  .customer-patience-bar.warning{background:#c9a000}.customer-patience-bar.danger{background:var(--danger)}
+  .empty-slot{color:var(--primary-light);font-size:11px;font-style:italic;font-weight:600}
+  .counter-area{min-height:120px;flex-shrink:0}
+  .counter-slots{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+  .counter-slot{width:56px;height:56px;background:var(--bg);border:2px solid var(--primary-light);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:26px;cursor:pointer;transition:all 0.25s cubic-bezier(0.34,1.56,0.64,1);position:relative;box-shadow:0 2px 6px rgba(90,66,8,0.08);user-select:none}
+  .counter-slot:hover,.counter-slot:active{transform:scale(1.12) translateY(-3px);border-color:var(--primary);box-shadow:0 6px 16px rgba(122,92,26,0.2)}
+  .counter-slot.selected{border-color:var(--primary);box-shadow:0 0 0 3px rgba(122,92,26,0.25),0 6px 16px rgba(122,92,26,0.2)}
+  .counter-slot .stamp-indicator{position:absolute;bottom:2px;right:2px;font-size:14px;filter:drop-shadow(0 1px 2px rgba(0,0,0,0.2))}
+  .counter-slot .route-indicator{position:absolute;top:2px;left:2px;font-size:12px}
+  .sorting-table{flex:1;overflow:hidden}
+  .mail-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:8px;flex:1;overflow-y:auto;padding-right:2px}
+  .mail-item{background:#fff;border:2px solid #d4c4a8;border-radius:10px;padding:8px 4px;display:flex;flex-direction:column;align-items:center;cursor:pointer;transition:all 0.25s cubic-bezier(0.34,1.56,0.64,1);position:relative;min-height:80px;box-shadow:0 2px 8px rgba(90,66,8,0.06);user-select:none}
+  .mail-item:hover,.mail-item:active{transform:translateY(-3px) rotate(-1deg);box-shadow:0 8px 24px rgba(90,66,8,0.15);border-color:var(--primary)}
+  .mail-item.selected{border-color:var(--primary);box-shadow:0 0 0 3px rgba(122,92,26,0.2),0 8px 24px rgba(122,92,26,0.15);transform:translateY(-2px)}
+  .mail-item.processed{opacity:0.4;pointer-events:none;filter:grayscale(0.6)}
+  .mail-item.rare{border-color:#b8860b;background:#fffbf0}.mail-item.epic{border-color:#6b3fa0;background:#f5f0ff}
+  .mail-item.legendary{border-color:#d4af37;background:#fffbe6;animation:legendaryGlow 2s ease-in-out infinite}
+  @keyframes legendaryGlow{0%,100%{box-shadow:0 0 8px rgba(212,175,55,0.3)}50%{box-shadow:0 0 20px rgba(212,175,55,0.6)}}
+  .mail-icon{font-size:clamp(24px,3vw,32px);margin-bottom:4px;filter:drop-shadow(0 2px 3px rgba(0,0,0,0.08));transition:transform 0.3s}
+  .mail-item:active .mail-icon{transform:scale(1.15)}
+  .mail-label{font-size:10px;font-weight:800;color:var(--text);text-align:center}
+  .mail-value{font-size:9px;color:var(--text-light);font-weight:700;margin-top:1px}
+  .mail-stamp{position:absolute;top:3px;right:3px;font-size:15px;transform:rotate(-12deg);filter:drop-shadow(0 1px 2px rgba(0,0,0,0.15))}
+  .mail-route{position:absolute;top:3px;left:3px;font-size:12px}
+  .rarity-badge{position:absolute;bottom:2px;left:50%;transform:translateX(-50%);font-size:8px;font-weight:900;padding:1px 5px;border-radius:4px;text-transform:uppercase;letter-spacing:0.5px}
+  .rarity-common{color:#888}.rarity-rare{color:#b8860b;background:rgba(184,134,11,0.12)}.rarity-epic{color:#6b3fa0;background:rgba(107,63,160,0.12)}.rarity-legendary{color:#d4af37;background:rgba(212,175,55,0.15)}
+  .stamp-panel{min-height:90px;flex-shrink:0}
+  .stamp-grid{display:flex;gap:8px;margin-top:6px;flex-wrap:wrap;justify-content:center}
+  .stamp{width:52px;height:52px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:24px;cursor:pointer;border:2px solid transparent;transition:all 0.25s cubic-bezier(0.34,1.56,0.64,1);position:relative;box-shadow:0 3px 10px rgba(0,0,0,0.1);user-select:none}
+  .stamp:hover,.stamp:active{transform:scale(1.18) translateY(-4px);box-shadow:0 8px 20px rgba(0,0,0,0.15)}
+  .stamp.selected{border-color:var(--primary-dark);box-shadow:0 0 0 3px rgba(90,66,8,0.3),0 8px 20px rgba(0,0,0,0.15);transform:scale(1.1)}
+  .stamp-cost{position:absolute;bottom:-16px;font-size:10px;font-weight:800;color:var(--primary-dark);background:var(--bg);padding:1px 6px;border-radius:6px;border:1px solid var(--primary-light)}
+  .stamp-red{background:#ffcccc}.stamp-blue{background:#cce5ff}.stamp-green{background:#ccffcc}.stamp-gold{background:#fff2cc}.stamp-purple{background:#e5ccff}
+  .shipping-area{flex:1;overflow:hidden}
+  .route-list{margin-top:8px;display:flex;flex-direction:column;gap:6px;overflow-y:auto}
+  .route{background:var(--bg);border:2px solid var(--primary-light);border-radius:10px;padding:8px 10px;cursor:pointer;transition:all 0.25s cubic-bezier(0.34,1.56,0.64,1);display:flex;align-items:center;gap:8px;box-shadow:0 2px 6px rgba(90,66,8,0.06);user-select:none}
+  .route:hover,.route:active{border-color:var(--primary);background:#fff8e7;transform:translateX(4px);box-shadow:0 4px 12px rgba(122,92,26,0.12)}
+  .route.selected{border-color:var(--primary);background:#fff8e7;box-shadow:0 4px 16px rgba(122,92,26,0.18);transform:translateX(6px)}
+  .route.locked{opacity:0.5;pointer-events:none;filter:grayscale(0.7)}
+  .route-icon{font-size:22px;filter:drop-shadow(0 1px 2px rgba(0,0,0,0.1))}
+  .route-info{flex:1;min-width:0}.route-name{font-size:11px;font-weight:800;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .route-desc{font-size:9px;color:var(--text-light);font-weight:600}
+  .route-reward{font-size:10px;font-weight:800;color:var(--success);background:rgba(74,156,58,0.12);padding:2px 6px;border-radius:6px;white-space:nowrap}
+  .actions{display:flex;flex-direction:column;gap:8px;flex-shrink:0}
+  .btn{padding:12px 14px;border:none;border-radius:12px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;cursor:pointer;transition:all 0.2s;text-transform:uppercase;letter-spacing:0.5px;position:relative;overflow:hidden;user-select:none;-webkit-user-select:none}
+  .btn::after{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:rgba(255,255,255,0.15);transition:left 0.3s}
+  .btn:hover::after,.btn:active::after{left:100%}
+  .btn-primary{background:var(--primary);color:#fff8e7;border:2px solid var(--primary-dark);box-shadow:0 4px 12px rgba(122,92,26,0.3)}
+  .btn-primary:hover,.btn-primary:active{background:#8f6d20;transform:translateY(-2px);box-shadow:0 6px 20px rgba(122,92,26,0.4)}
+  .btn-primary:active{transform:translateY(0)}
+  .btn-secondary{background:var(--primary-light);color:var(--text);border:2px solid #a08040;box-shadow:0 4px 12px rgba(90,66,8,0.15)}
+  .btn-secondary:hover,.btn-secondary:active{background:#d4b87e;transform:translateY(-2px)}
+  .btn:disabled{opacity:0.45;cursor:not-allowed;transform:none!important;box-shadow:none}
+  .notification{position:absolute;top:64px;left:50%;transform:translateX(-50%) translateY(-30px);padding:10px 22px;border-radius:12px;font-weight:800;font-size:13px;opacity:0;transition:all 0.4s cubic-bezier(0.34,1.56,0.64,1);pointer-events:none;z-index:100;white-space:nowrap;box-shadow:0 6px 20px rgba(0,0,0,0.2);border:2px solid rgba(255,255,255,0.2)}
+  .notification.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  .notification.success{background:var(--success);color:#fff}.notification.error{background:var(--danger);color:#fff}.notification.info{background:#2a6b9c;color:#fff}.notification.gold{background:var(--gold);color:#fff}
+  .modal-overlay{position:absolute;top:0;left:0;right:0;bottom:0;background:rgba(26,15,8,0.88);display:flex;align-items:center;justify-content:center;z-index:200;opacity:0;pointer-events:none;transition:opacity 0.4s;backdrop-filter:blur(6px);padding:16px}
+  .modal-overlay.show{opacity:1;pointer-events:all}
+  .modal{background:var(--bg);border-radius:20px;padding:28px;max-width:440px;width:100%;text-align:center;border:3px solid var(--primary);box-shadow:0 24px 80px rgba(0,0,0,0.5);transform:scale(0.85) translateY(20px);transition:transform 0.4s cubic-bezier(0.34,1.56,0.64,1);max-height:90vh;overflow-y:auto}
+  .modal-overlay.show .modal{transform:scale(1) translateY(0)}
+  .modal h2{color:var(--text);font-size:clamp(22px,4vw,28px);margin-bottom:6px;font-family:'Pacifico',cursive;font-weight:400}
+  .modal .subtitle{color:var(--text-light);font-size:14px;margin-bottom:16px;font-weight:600}
+  .modal-stats{background:var(--panel);border-radius:14px;padding:16px;margin:16px 0;display:grid;grid-template-columns:1fr 1fr;gap:10px;border:2px solid var(--primary-light)}
+  .modal-stat{font-size:12px;font-weight:700;color:var(--primary-dark)}.modal-stat span{display:block;font-size:20px;color:var(--text-light);margin-top:4px;font-weight:900}
+  .modal-stat.negative span{color:var(--danger)}.modal-stat.positive span{color:var(--success)}
+  .start-screen{position:absolute;top:0;left:0;right:0;bottom:0;background:#1a0f08;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:300;transition:opacity 0.6s;padding:20px;text-align:center}
+  .start-screen.hidden{opacity:0;pointer-events:none}
+  .start-screen h1{font-family:'Pacifico',cursive;font-size:clamp(36px,8vw,56px);color:var(--bg);margin-bottom:6px;text-shadow:3px 3px 0 var(--primary);animation:titleFloat 3s ease-in-out infinite}
+  @keyframes titleFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+  .start-screen .tagline{font-size:clamp(13px,3vw,16px);color:var(--primary-light);margin-bottom:30px;font-weight:600;letter-spacing:1px}
+  .start-screen .lighthouse{font-size:clamp(60px,12vw,90px);margin-bottom:24px;filter:drop-shadow(0 8px 20px rgba(122,92,26,0.4));animation:lighthouseGlow 3s ease-in-out infinite}
+  @keyframes lighthouseGlow{0%,100%{filter:drop-shadow(0 8px 20px rgba(122,92,26,0.4))}50%{filter:drop-shadow(0 8px 40px rgba(255,200,80,0.6))}}
+  .start-btn{padding:16px 48px;font-size:clamp(16px,3vw,20px);background:var(--primary);color:#fff8e7;border:3px solid var(--primary-light);border-radius:16px;font-family:'Nunito',sans-serif;font-weight:900;cursor:pointer;transition:all 0.3s;text-transform:uppercase;letter-spacing:1px;box-shadow:0 8px 24px rgba(122,92,26,0.4);user-select:none}
+  .start-btn:hover,.start-btn:active{background:#8f6d20;transform:scale(1.08);box-shadow:0 12px 36px rgba(122,92,26,0.5)}
+  .start-btn:active{transform:scale(1.02)}
+  .start-credits{margin-top:24px;font-size:11px;color:var(--text-light);opacity:0.7}
+  .start-highscore{margin-top:16px;background:rgba(122,92,26,0.3);padding:10px 20px;border-radius:12px;font-size:13px;color:var(--primary-light);font-weight:700}
+  .particle{position:absolute;pointer-events:none;font-size:18px;animation:particleFloat 1.2s ease-out forwards;z-index:150}
+  @keyframes particleFloat{0%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-50px) scale(1.5)}}
+  .day-progress{width:100%;height:5px;background:#d4c4a8;border-radius:3px;margin-top:8px;overflow:hidden;flex-shrink:0}
+  .day-progress-bar{height:100%;background:var(--primary);border-radius:3px;transition:width 0.5s;position:relative}
+  .day-progress-bar::after{content:'';position:absolute;top:0;right:0;bottom:0;width:20px;background:rgba(255,255,255,0.3);border-radius:3px}
+  ::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--panel);border-radius:3px}::-webkit-scrollbar-thumb{background:var(--primary-light);border-radius:3px}
+  .float-text{position:absolute;font-weight:900;font-size:16px;pointer-events:none;z-index:150;animation:floatUp 1s ease-out forwards;text-shadow:0 2px 4px rgba(0,0,0,0.2)}
+  @keyframes floatUp{0%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-45px)}}
+  .combo-display{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:42px;font-weight:900;color:var(--gold);text-shadow:0 4px 12px rgba(0,0,0,0.3);pointer-events:none;z-index:160;opacity:0;transition:opacity 0.3s;white-space:nowrap}
+  .combo-display.show{opacity:1;animation:comboPop 0.6s cubic-bezier(0.34,1.56,0.64,1)}
+  @keyframes comboPop{0%{transform:translate(-50%,-50%) scale(0.5)}50%{transform:translate(-50%,-50%) scale(1.3)}100%{transform:translate(-50%,-50%) scale(1)}}
+  .achievement-popup{position:absolute;bottom:20px;right:20px;background:var(--panel);border:2px solid var(--gold);border-radius:14px;padding:14px 18px;display:flex;align-items:center;gap:12px;box-shadow:0 8px 24px rgba(0,0,0,0.3);z-index:180;transform:translateX(120%);transition:transform 0.5s cubic-bezier(0.34,1.56,0.64,1);max-width:280px}
+  .achievement-popup.show{transform:translateX(0)}.achievement-icon{font-size:32px}.achievement-text{text-align:left}.achievement-title{font-size:13px;font-weight:800;color:var(--gold)}.achievement-desc{font-size:11px;color:var(--text-light);font-weight:600}
+  .mute-btn{position:absolute;top:10px;right:10px;background:rgba(90,66,8,0.5);border:1px solid rgba(255,248,231,0.2);border-radius:8px;padding:5px 8px;color:#fff8e7;font-size:14px;cursor:pointer;z-index:10;transition:all 0.2s;user-select:none}
+  .mute-btn:hover,.mute-btn:active{background:rgba(90,66,8,0.7);transform:scale(1.1)}
+  .tutorial-overlay{position:absolute;top:0;left:0;right:0;bottom:0;background:rgba(26,15,8,0.85);z-index:250;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity 0.4s}
+  .tutorial-overlay.show{opacity:1;pointer-events:all}
+  .tutorial-card{background:var(--bg);border-radius:20px;padding:28px;max-width:400px;width:100%;border:3px solid var(--primary);text-align:center}
+  .tutorial-card h3{font-family:'Pacifico',cursive;font-size:24px;color:var(--text);margin-bottom:12px}
+  .tutorial-card p{color:var(--text-light);font-size:14px;line-height:1.7;margin-bottom:8px;font-weight:600}
+  .tutorial-step{display:none}.tutorial-step.active{display:block}
+  .tutorial-dots{display:flex;gap:8px;justify-content:center;margin:16px 0}
+  .tutorial-dot{width:10px;height:10px;border-radius:50%;background:var(--primary-light);transition:all 0.3s}.tutorial-dot.active{background:var(--primary);transform:scale(1.3)}
+  .upgrade-item{background:var(--bg);border:2px solid var(--primary-light);border-radius:10px;padding:10px;margin-bottom:8px;display:flex;align-items:center;gap:10px;cursor:pointer;transition:all 0.2s}
+  .upgrade-item:hover{border-color:var(--primary);transform:translateX(4px)}.upgrade-item.owned{opacity:0.5;pointer-events:none}
+  .upgrade-icon{font-size:28px}.upgrade-info{flex:1;text-align:left}.upgrade-name{font-size:12px;font-weight:800;color:var(--text)}.upgrade-desc{font-size:10px;color:var(--text-light)}.upgrade-cost{font-size:13px;font-weight:900;color:var(--success)}
+  .streak-bar{display:flex;align-items:center;gap:6px;margin-top:6px;justify-content:center}
+  .streak-flame{font-size:16px;transition:transform 0.3s}.streak-flame.lit{animation:flameFlicker 0.5s ease-in-out infinite alternate}
+  @keyframes flameFlicker{0%{transform:scale(1)}100%{transform:scale(1.2)}}
+  .streak-text{font-size:11px;font-weight:800;color:var(--gold)}
+  .dialogue-bubble{position:absolute;background:#fff;border:2px solid var(--primary-light);border-radius:12px;padding:8px 12px;font-size:11px;font-weight:700;color:var(--text);z-index:50;box-shadow:0 4px 12px rgba(0,0,0,0.15);animation:bubblePop 0.3s cubic-bezier(0.34,1.56,0.64,1);max-width:150px;text-align:center;pointer-events:none}
+  .dialogue-bubble::after{content:'';position:absolute;bottom:-8px;left:50%;transform:translateX(-50%);border-width:8px 6px 0;border-style:solid;border-color:var(--primary-light) transparent transparent}
+  @keyframes bubblePop{0%{transform:scale(0);opacity:0}100%{transform:scale(1);opacity:1}}
+  .theme-spring .header{background:#5a8c3a;border-color:#3d6b22}.theme-summer .header{background:#c9a000;border-color:#a08000}.theme-autumn .header{background:#a0522d;border-color:#7a3a1a}.theme-winter .header{background:#4a6b8c;border-color:#2d4a6b}
+  .shimmer{position:relative;overflow:hidden}.shimmer::after{content:'';position:absolute;top:0;left:-100%;width:50%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.3),transparent);animation:shimmer 2s infinite}
+  @keyframes shimmer{0%{left:-100%}100%{left:200%}}
+  @media(max-width:900px){.left-panel{width:220px}.right-panel{width:170px}.mail-grid{grid-template-columns:repeat(3,1fr)}}
+  @media(max-width:768px){.main-area{flex-direction:column;padding:8px;gap:8px;overflow-y:auto}.left-panel,.center-panel,.right-panel{width:100%;flex:none}.left-panel{flex-direction:row;gap:8px}.customer-area{flex:1}.counter-area{flex:1;min-height:auto}.counter-slots{justify-content:center}.mail-grid{grid-template-columns:repeat(4,1fr)}.stamp-grid{justify-content:center}.route-list{flex-direction:row;flex-wrap:wrap}.route{flex:1;min-width:120px}.actions{flex-direction:row}.btn{flex:1}}
+  @media(max-width:480px){.header{padding:8px 10px}.stats{gap:4px}.stat{padding:4px 6px;font-size:10px}.mail-grid{grid-template-columns:repeat(3,1fr);gap:6px}.mail-item{min-height:70px;padding:6px 2px}.stamp{width:44px;height:44px;font-size:20px}.counter-slot{width:48px;height:48px;font-size:22px}.panel{padding:8px}.panel-title{font-size:11px;margin-bottom:6px}.customer-slot{min-height:70px;padding:8px}.route{padding:6px 8px}.btn{padding:10px 12px;font-size:12px}}
+  @media(max-height:600px){.start-screen .lighthouse{font-size:50px;margin-bottom:12px}.start-screen h1{font-size:32px}.start-btn{padding:12px 32px;font-size:16px}.header{padding:6px 12px}.main-area{padding:6px;gap:6px}}
+</style>
+</head>
+<body>
+<div id="game-container">
+
+  <!-- Start Screen -->
+  <div class="start-screen" id="startScreen">
+    <div class="lighthouse">🗼</div>
+    <h1>Arya's Post</h1>
+    <p class="tagline">A cozy lighthouse post office experience</p>
+    <div class="start-highscore" id="startHighscore" style="display:none;">
+      🏆 Best: Day <span id="hsDay">0</span> · $<span id="hsMoney">0</span> · <span id="hsRep">0</span> Rep
+    </div>
+    <button class="start-btn" onclick="startGame()">Open the Post Office</button>
+    <button class="start-btn" style="margin-top:12px;padding:10px 32px;font-size:14px;background:#5a4208;" onclick="showTutorial()">📖 How to Play</button>
+    <p class="start-credits">Made with ❤️ for cozy game lovers · v2.0</p>
+  </div>
+
+  <!-- Header -->
+  <div class="header" id="gameHeader">
+    <h1>📮 Arya's Post</h1>
+    <div class="stats">
+      <div class="stat"><span class="stat-icon">📅</span> Day <span id="dayDisplay">1</span></div>
+      <div class="stat"><span class="stat-icon">💰</span> $<span id="moneyDisplay">50</span></div>
+      <div class="stat"><span class="stat-icon">⭐</span> Rep <span id="repDisplay">0</span></div>
+      <div class="stat"><span class="stat-icon">🔥</span> <span id="streakDisplay">0</span></div>
+      <div class="stat"><span class="stat-icon">🏆</span> <span id="achDisplay">0</span></div>
+    </div>
+    <button class="mute-btn" id="muteBtn" onclick="toggleMute()">🔊</button>
+  </div>
+
+  <!-- Main Area -->
+  <div class="main-area">
+    <div class="left-panel">
+      <div class="panel customer-area">
+        <div class="panel-title">👥 Customers</div>
+        <div id="customerList"></div>
+        <div class="day-progress"><div class="day-progress-bar" id="dayProgress" style="width:0%"></div></div>
+      </div>
+      <div class="panel counter-area">
+        <div class="panel-title">🛒 Counter</div>
+        <div class="counter-slots" id="counterSlots"></div>
+      </div>
+    </div>
+    <div class="center-panel">
+      <div class="panel sorting-table">
+        <div class="panel-title">📬 Sorting Table</div>
+        <div class="mail-grid" id="mailGrid"></div>
+      </div>
+      <div class="panel stamp-panel">
+        <div class="panel-title">🏷️ Stamps</div>
+        <div class="stamp-grid" id="stampGrid"></div>
+        <div class="streak-bar" id="streakBar">
+          <span class="streak-flame" id="streakFlame">🔥</span>
+          <span class="streak-text" id="streakText">Combo: 0</span>
+        </div>
+      </div>
+    </div>
+    <div class="right-panel">
+      <div class="panel shipping-area">
+        <div class="panel-title">🚢 Routes</div>
+        <div class="route-list" id="routeList"></div>
+      </div>
+      <div class="actions">
+        <button class="btn btn-primary" id="processBtn" onclick="processMail()" disabled>📤 Ship</button>
+        <button class="btn btn-secondary" onclick="openShop()">🏪 Shop</button>
+        <button class="btn btn-secondary" onclick="endDay()">🌙 End Day</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="combo-display" id="comboDisplay">🔥 x3 COMBO!</div>
+
+  <div class="achievement-popup" id="achPopup">
+    <div class="achievement-icon" id="achIcon">🏆</div>
+    <div class="achievement-text">
+      <div class="achievement-title" id="achTitle">Achievement!</div>
+      <div class="achievement-desc" id="achDesc">Description</div>
+    </div>
+  </div>
+
+  <div class="notification" id="notification"></div>
+
+  <div class="modal-overlay" id="dayModal">
+    <div class="modal">
+      <h2>🌅 Day <span id="modalDay">1</span> Complete!</h2>
+      <p class="subtitle" id="modalSubtitle">Well done, postmaster!</p>
+      <div class="modal-stats">
+        <div class="modal-stat">Processed<span id="modalProcessed">0</span></div>
+        <div class="modal-stat">Mistakes<span id="modalMistakes">0</span></div>
+        <div class="modal-stat positive">Earnings<span id="modalEarnings">$0</span></div>
+        <div class="modal-stat positive">Reputation<span id="modalRep">+0</span></div>
+        <div class="modal-stat positive">Combo Best<span id="modalCombo">0</span></div>
+        <div class="modal-stat positive">Achievements<span id="modalAch">0</span></div>
+      </div>
+      <p id="modalMessage" style="color:var(--text-light);font-weight:700;font-size:13px;">Keep up the great work!</p>
+      <button class="btn btn-primary" onclick="nextDay()" style="margin-top:16px;">Start Next Day</button>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="gameOverModal">
+    <div class="modal">
+      <h2>🏆 Game Over!</h2>
+      <p class="subtitle">Your post office journey ends here</p>
+      <div class="modal-stats">
+        <div class="modal-stat">Total Days<span id="goDays">0</span></div>
+        <div class="modal-stat">Total Mail<span id="goMail">0</span></div>
+        <div class="modal-stat positive">Final Money<span id="goMoney">$0</span></div>
+        <div class="modal-stat positive">Final Rep<span id="goRep">0</span></div>
+        <div class="modal-stat positive">Best Combo<span id="goCombo">0</span></div>
+        <div class="modal-stat positive">Achievements<span id="goAch">0</span></div>
+      </div>
+      <p id="goMessage" style="color:var(--text-light);font-weight:700;font-size:13px;"></p>
+      <button class="btn btn-primary" onclick="restartGame()" style="margin-top:16px;">🔄 Play Again</button>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="shopModal">
+    <div class="modal">
+      <h2>🏪 Upgrade Shop</h2>
+      <p class="subtitle">Spend your earnings to improve the post office</p>
+      <div id="shopItems" style="margin:12px 0;text-align:left;"></div>
+      <button class="btn btn-secondary" onclick="closeShop()" style="margin-top:8px;">Close</button>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="achModal">
+    <div class="modal">
+      <h2>🏆 Achievements</h2>
+      <p class="subtitle">Your accomplishments as postmaster</p>
+      <div id="achList" style="margin:12px 0;text-align:left;max-height:300px;overflow-y:auto;"></div>
+      <button class="btn btn-secondary" onclick="closeAchievements()" style="margin-top:8px;">Close</button>
+    </div>
+  </div>
+
+  <div class="tutorial-overlay" id="tutorialOverlay">
+    <div class="tutorial-card">
+      <div class="tutorial-step active" data-step="0">
+        <h3>📮 Welcome to Arya's Post!</h3>
+        <p>You are the new postmaster of a cozy lighthouse post office.</p>
+        <p>Sort mail, serve customers, and ship packages to build your reputation!</p>
+      </div>
+      <div class="tutorial-step" data-step="1">
+        <h3>📬 Sorting Mail</h3>
+        <p>Click mail on the <b>Sorting Table</b> to select it.</p>
+        <p>Then click a <b>Stamp</b> to apply postage. Different stamps cost different amounts!</p>
+      </div>
+      <div class="tutorial-step" data-step="2">
+        <h3>🚢 Shipping</h3>
+        <p>Choose a <b>Shipping Route</b> that matches your stamp type.</p>
+        <p>Click <b>Ship Mail</b> to send packages and earn money!</p>
+        <p>Wrong stamps = penalties. Right stamps = bonuses!</p>
+      </div>
+      <div class="tutorial-step" data-step="3">
+        <h3>👥 Customers</h3>
+        <p>Customers arrive with requests. Serve them from your <b>Counter</b> before they lose patience!</p>
+        <p>Happy customers boost your reputation.</p>
+      </div>
+      <div class="tutorial-step" data-step="4">
+        <h3>🔥 Combos & Achievements</h3>
+        <p>Ship multiple correct packages in a row to build a <b>Combo</b> for bonus money!</p>
+        <p>Unlock <b>Achievements</b> by reaching milestones.</p>
+        <p>Buy <b>Upgrades</b> in the Shop to improve your post office!</p>
+      </div>
+      <div class="tutorial-dots" id="tutorialDots"></div>
+      <button class="btn btn-primary" onclick="nextTutorialStep()" id="tutorialBtn">Next</button>
+    </div>
+  </div>
+
+<script>
+
+const AudioEngine={
+  ctx:null,muted:false,
+  init(){if(!this.ctx){this.ctx=new(window.AudioContext||window.webkitAudioContext)()}if(this.ctx.state==='suspended'){this.ctx.resume()}},
+  playTone(freq,duration,type='sine',volume=0.12,detune=0){
+    if(this.muted||!this.ctx)return;
+    try{const osc=this.ctx.createOscillator();const gain=this.ctx.createGain();osc.type=type;osc.frequency.setValueAtTime(freq,this.ctx.currentTime);if(detune)osc.detune.setValueAtTime(detune,this.ctx.currentTime);gain.gain.setValueAtTime(volume,this.ctx.currentTime);gain.gain.exponentialRampToValueAtTime(0.001,this.ctx.currentTime+duration);osc.connect(gain);gain.connect(this.ctx.destination);osc.start();osc.stop(this.ctx.currentTime+duration)}catch(e){}
+  },
+  playChord(freqs,duration,volume=0.1){freqs.forEach((f,i)=>{setTimeout(()=>this.playTone(f,duration,'sine',volume,(i%2)*5),i*40)})},
+  click(){this.playTone(600,0.08,'sine',0.1)},select(){this.playTone(800,0.1,'sine',0.12)},
+  stamp(){this.playTone(500,0.15,'square',0.08);setTimeout(()=>this.playTone(700,0.1,'square',0.06),80)},
+  ship(){this.playChord([330,392,523],0.4,0.1)},success(){this.playChord([523,659,784],0.5,0.12)},
+  error(){this.playTone(200,0.3,'sawtooth',0.08);setTimeout(()=>this.playTone(150,0.3,'sawtooth',0.08),150)},
+  customerArrive(){this.playTone(440,0.2,'sine',0.1);setTimeout(()=>this.playTone(554,0.2,'sine',0.1),100)},
+  money(){this.playTone(880,0.1,'sine',0.1);setTimeout(()=>this.playTone(1100,0.15,'sine',0.1),80)},
+  dayEnd(){this.playChord([392,494,587,784],1.2,0.1)},gameOver(){this.playChord([262,220,196],1.5,0.1)},
+  combo(){this.playChord([523,659,784,1047],0.4,0.12)},achievement(){this.playChord([440,554,659,880],0.8,0.12)},
+  upgrade(){this.playChord([330,440,550,660],0.5,0.1)},hover(){this.playTone(1200,0.04,'sine',0.03)}
+};
+
+function toggleMute(){AudioEngine.muted=!AudioEngine.muted;localStorage.setItem('aryasPost_muted',AudioEngine.muted);document.getElementById('muteBtn').textContent=AudioEngine.muted?'🔇':'🔊'}
+if(localStorage.getItem('aryasPost_muted')==='true'){AudioEngine.muted=true}
+
+const CUSTOMERS=[
+  {name:"Elderly Martha",avatar:"👵",requests:["letter","parcel"],dialogues:["Could you send this to my grandson?","I baked cookies for the village!","The lighthouse looks lovely today."]},
+  {name:"Young Tim",avatar:"👦",requests:["postcard","letter"],dialogues:["I want to send a postcard!","Is there mail for me?","I love watching the ships!"]},
+  {name:"Captain Salty",avatar:"⚓",requests:["parcel","package"],dialogues:["Arr, need this shipped fast!","The seas are rough today.","Have ye seen me compass?"]},
+  {name:"Ms. Baker",avatar:"👩‍🍳",requests:["letter","parcel"],dialogues:["Fresh bread recipe enclosed!","Deliver these to the city, please.","The oven's still warm!"]},
+  {name:"Professor Owl",avatar:"🦉",requests:["package","letter"],dialogues:["A most urgent delivery!","My research must reach the capital.","Fascinating postal system!"]},
+  {name:"Farmer Joe",avatar:"👨‍🌾",requests:["parcel","postcard"],dialogues:["Seeds for the island folks!","Harvest season is here.","The cows say moo to you!"]},
+  {name:"Little Lily",avatar:"👧",requests:["postcard","letter"],dialogues:["I drew a picture!","Can you send this to mommy?","I want to be a postmaster too!"]},
+  {name:"Mayor Brown",avatar:"🎩",requests:["package","parcel"],dialogues:["Official business, urgent!","The town depends on you.","Excellent service, as always."]},
+  {name:"Sailor Jack",avatar:"⛵",requests:["package","parcel"],dialogues:["Ship this before the tide!","The north wind calls.","Fair winds to you, postmaster!"]},
+  {name:"Nurse Amy",avatar:"👩‍⚕️",requests:["letter","postcard"],dialogues:["Medical supplies needed!","Thank you for your hard work.","Stay healthy, postmaster!"]},
+  {name:"Witch Hazel",avatar:"🧙‍♀️",requests:["package","letter"],dialogues:["A potion for Mystic Isle...","The stars favor your post office.","Beware of wrong stamps!"]},
+  {name:"Knight Arthur",avatar:"⚔️",requests:["parcel","package"],dialogues:["For the Royal Capital!","Honor and duty guide me.","Your service is commendable."]}
+];
+
+const MAIL_TYPES=[
+  {type:"letter",icon:"✉️",label:"Letter",baseValue:5},
+  {type:"postcard",icon:"🖼️",label:"Postcard",baseValue:3},
+  {type:"parcel",icon:"📦",label:"Parcel",baseValue:10},
+  {type:"package",icon:"🎁",label:"Package",baseValue:15}
+];
+
+const RARITIES=[
+  {name:"common",chance:0.7,multiplier:1,color:"rarity-common"},
+  {name:"rare",chance:0.2,multiplier:1.5,color:"rarity-rare"},
+  {name:"epic",chance:0.08,multiplier:2.5,color:"rarity-epic"},
+  {name:"legendary",chance:0.02,multiplier:5,color:"rarity-legendary"}
+];
+
+const STAMPS=[
+  {type:"local",icon:"🔴",color:"stamp-red",cost:1,label:"Local",routes:["village","nearby"]},
+  {type:"national",icon:"🔵",color:"stamp-blue",cost:2,label:"National",routes:["city","capital"]},
+  {type:"express",icon:"🟢",color:"stamp-green",cost:3,label:"Express",routes:["express"]},
+  {type:"priority",icon:"🟡",color:"stamp-gold",cost:5,label:"Priority",routes:["all"]},
+  {type:"special",icon:"🟣",color:"stamp-purple",cost:4,label:"Special",routes:["island","lighthouse"]}
+];
+
+const ROUTES=[
+  {id:"village",name:"Village Lane",icon:"🏘️",desc:"Nearby village",stamp:"local",reward:1.2,unlockDay:1},
+  {id:"nearby",name:"Coastal Road",icon:"🌊",desc:"Coastal towns",stamp:"local",reward:1.3,unlockDay:1},
+  {id:"city",name:"Harbor City",icon:"🏙️",desc:"Main city port",stamp:"national",reward:1.5,unlockDay:2},
+  {id:"capital",name:"Royal Capital",icon:"🏰",desc:"The capital",stamp:"national",reward:1.8,unlockDay:3},
+  {id:"express",name:"Express Air",icon:"✈️",desc:"Fast delivery",stamp:"express",reward:2.0,unlockDay:4},
+  {id:"island",name:"Mystic Isle",icon:"🏝️",desc:"Remote island",stamp:"special",reward:2.2,unlockDay:5},
+  {id:"lighthouse",name:"North Point",icon:"🗼",desc:"Northern lighthouse",stamp:"special",reward:2.5,unlockDay:6}
+];
+
+const UPGRADES=[
+  {id:"faster_mail",name:"Conveyor Belt",icon:"⚙️",desc:"Mail spawns 25% faster",cost:30,owned:false},
+  {id:"more_slots",name:"Extra Counter",icon:"🪑",desc:"+2 counter slots",cost:50,owned:false},
+  {id:"patient_customers",name:"Free Cookies",icon:"🍪",desc:"Customers wait 50% longer",cost:40,owned:false},
+  {id:"better_stamps",name:"Premium Ink",icon:"🖋️",desc:"Stamp costs reduced by $1",cost:60,owned:false},
+  {id:"lucky_charm",name:"Lucky Charm",icon:"🍀",desc:"+10% rare mail chance",cost:80,owned:false},
+  {id:"auto_sort",name:"Sorting Robot",icon:"🤖",desc:"Auto-apply cheapest stamp",cost:100,owned:false}
+];
+
+const ACHIEVEMENTS=[
+  {id:"first_day",name:"First Day",desc:"Complete Day 1",icon:"🌅",condition:s=>s.day>=2},
+  {id:"rich",name:"Money Bags",desc:"Reach $100",icon:"💰",condition:s=>s.money>=100},
+  {id:"popular",name:"Town Favorite",desc:"Reach 50 Reputation",icon:"⭐",condition:s=>s.reputation>=50},
+  {id:"shipper",name:"Busy Bee",desc:"Ship 20 packages",icon:"📦",condition:s=>s.totalProcessed>=20},
+  {id:"combo5",name:"On Fire",desc:"Reach a 5x combo",icon:"🔥",condition:s=>s.bestCombo>=5},
+  {id:"combo10",name:"Unstoppable",desc:"Reach a 10x combo",icon:"⚡",condition:s=>s.bestCombo>=10},
+  {id:"perfect_day",name:"Perfect Day",desc:"Zero mistakes in a day",icon:"✨",condition:s=>s.perfectDay},
+  {id:"legendary",name:"Legendary Find",desc:"Process a legendary mail",icon:"👑",condition:s=>s.legendaryFound},
+  {id:"week",name:"Week Complete",desc:"Reach Day 7",icon:"📅",condition:s=>s.day>=7},
+  {id:"master",name:"Postmaster",desc:"Reach Day 14",icon:"🗼",condition:s=>s.day>=14},
+  {id:"all_routes",name:"World Traveler",desc:"Unlock all routes",icon:"🌍",condition:s=>s.day>=6},
+  {id:"shopaholic",name:"Shopaholic",desc:"Buy 3 upgrades",icon:"🏪",condition:s=>s.upgradesBought>=3}
+];
+
+let state={
+  day:1,money:50,reputation:0,customers:[],mail:[],counter:[],
+  selectedMail:null,selectedStamp:null,selectedRoute:null,
+  dayProcessed:0,dayMistakes:0,dayEarnings:0,totalProcessed:0,
+  gameActive:false,customerTimer:null,dayTimer:null,dayTimeLeft:120,
+  customerPatienceTimer:null,combo:0,bestCombo:0,perfectDay:true,
+  legendaryFound:false,upgradesBought:0,achievementsUnlocked:[],
+  tutorialStep:0,firstTime:true
+};
+
+let upgrades=JSON.parse(JSON.stringify(UPGRADES));
+
+function loadHighscore(){
+  const hs=localStorage.getItem('aryasPost_highscore');
+  if(hs){const data=JSON.parse(hs);document.getElementById('startHighscore').style.display='block';document.getElementById('hsDay').textContent=data.day;document.getElementById('hsMoney').textContent=data.money;document.getElementById('hsRep').textContent=data.rep}
+}
+loadHighscore();
+
+function saveHighscore(){
+  const hs=localStorage.getItem('aryasPost_highscore');
+  const current={day:state.day,money:state.money,rep:state.reputation};
+  if(!hs){localStorage.setItem('aryasPost_highscore',JSON.stringify(current))}
+  else{const old=JSON.parse(hs);if(state.day>old.day||(state.day===old.day&&state.money>old.money)){localStorage.setItem('aryasPost_highscore',JSON.stringify(current))}}
+}
+
+function startGame(){
+  AudioEngine.init();AudioEngine.success();
+  document.getElementById('startScreen').classList.add('hidden');
+  state.gameActive=true;
+  if(state.firstTime){state.firstTime=false;setTimeout(()=>showTutorial(),800)}
+  initDay();
+}
+
+function restartGame(){
+  document.getElementById('gameOverModal').classList.remove('show');
+  state={day:1,money:50,reputation:0,customers:[],mail:[],counter:[],selectedMail:null,selectedStamp:null,selectedRoute:null,dayProcessed:0,dayMistakes:0,dayEarnings:0,totalProcessed:0,gameActive:true,customerTimer:null,dayTimer:null,dayTimeLeft:120,customerPatienceTimer:null,combo:0,bestCombo:0,perfectDay:true,legendaryFound:false,upgradesBought:0,achievementsUnlocked:[],tutorialStep:0,firstTime:false};
+  upgrades=JSON.parse(JSON.stringify(UPGRADES));
+  initDay();
+}
+
+function initDay(){
+  state.customers=[];state.mail=[];state.counter=[];state.selectedMail=null;state.selectedStamp=null;state.selectedRoute=null;
+  state.dayProcessed=0;state.dayMistakes=0;state.dayEarnings=0;state.dayTimeLeft=120;state.perfectDay=true;
+  updateUI();renderStamps();renderRoutes();renderCounter();
+  for(let i=0;i<4;i++)addMailToTable();
+  spawnCustomer();
+  state.customerTimer=setInterval(()=>{if(state.customers.length<3&&Math.random()>0.35)spawnCustomer()},5000*(upgrades.find(u=>u.id==='faster_mail')?.owned?0.75:1));
+  state.customerPatienceTimer=setInterval(()=>{
+    state.customers.forEach(c=>{
+      if(!c.served){
+        c.patience=Math.max(0,c.patience-(upgrades.find(u=>u.id==='patient_customers')?.owned?3.3:5));
+        if(c.patience<=0){state.reputation=Math.max(0,state.reputation-3);showNotification(`😞 ${c.name} left unhappy!`,'error');AudioEngine.error();state.customers=state.customers.filter(x=>x!==c);renderCustomers();updateUI()}else{renderCustomers()}
+      }
+    });
+  },2000);
+  state.dayTimer=setInterval(()=>{state.dayTimeLeft--;const pct=((120-state.dayTimeLeft)/120)*100;document.getElementById('dayProgress').style.width=pct+'%';if(state.dayTimeLeft<=0)endDay()},1000);
+}
+
+function spawnCustomer(){
+  if(state.customers.length>=3)return;
+  const template=CUSTOMERS[Math.floor(Math.random()*CUSTOMERS.length)];
+  const requestType=template.requests[Math.floor(Math.random()*template.requests.length)];
+  const customer={id:Date.now()+Math.random(),name:template.name,avatar:template.avatar,request:requestType,patience:100,served:false,dialogue:template.dialogues[Math.floor(Math.random()*template.dialogues.length)]};
+  state.customers.push(customer);AudioEngine.customerArrive();showNotification(`👋 ${customer.name} arrived!`,'info');renderCustomers();
+  setTimeout(()=>showDialogue(customer),500);
+}
+
+function showDialogue(customer){
+  const container=document.getElementById('customerList');
+  const slots=container.querySelectorAll('.customer-slot');
+  const idx=state.customers.indexOf(customer);
+  if(idx>=0&&slots[idx]){
+    const bubble=document.createElement('div');
+    bubble.className='dialogue-bubble';
+    bubble.textContent=customer.dialogue;
+    bubble.style.top='-40px';
+    bubble.style.left='50%';
+    bubble.style.transform='translateX(-50%)';
+    slots[idx].style.position='relative';
+    slots[idx].appendChild(bubble);
+    setTimeout(()=>bubble.remove(),3000);
+  }
+}
+
+function renderCustomers(){
+  const container=document.getElementById('customerList');
+  container.innerHTML='';
+  state.customers.forEach(c=>{
+    const div=document.createElement('div');
+    div.className='customer-slot'+(c.served?'':' active');
+    const patienceClass=c.patience>60?'':(c.patience>30?'warning':'danger');
+    div.innerHTML=`<div class="customer-avatar">${c.avatar}</div><div class="customer-name">${c.name}</div><div class="customer-request">Wants: ${c.request}</div>${!c.served?`<div class="customer-patience"><div class="customer-patience-bar ${patienceClass}" style="width:${c.patience}%"></div></div>`:''}`;
+    if(!c.served){div.onclick=()=>serveCustomer(c);div.onmouseenter=()=>AudioEngine.hover()}
+    container.appendChild(div);
+  });
+  for(let i=state.customers.length;i<3;i++){const div=document.createElement('div');div.className='customer-slot';div.innerHTML='<span class="empty-slot">Waiting for customer...</span>';container.appendChild(div)}
+}
+
+function serveCustomer(customer){
+  if(customer.served)return;AudioEngine.click();
+  const matchingMail=state.counter.find(m=>m.type===customer.request&&!m.customer);
+  if(matchingMail){
+    matchingMail.customer=customer.name;matchingMail.served=true;customer.served=true;
+    state.reputation+=3;state.money+=2;showNotification(`✅ ${customer.name} is delighted! +$2`,'success');AudioEngine.success();
+    spawnParticles(customer.avatar);spawnFloatText('+$2','4a9c3a');renderCustomers();renderCounter();updateUI();checkAchievements();
+  }else{showNotification(`❌ No ${customer.request} on counter!`,'error');AudioEngine.error()}
+}
+
+function getRarity(){
+  const lucky=upgrades.find(u=>u.id==='lucky_charm')?.owned;
+  const roll=Math.random();
+  if(lucky&&roll<0.12)return RARITIES[1];
+  if(lucky&&roll<0.18)return RARITIES[2];
+  let cum=0;
+  for(const r of RARITIES){cum+=r.chance;if(roll<cum)return r}
+  return RARITIES[0];
+}
+
+function generateMail(){
+  const type=MAIL_TYPES[Math.floor(Math.random()*MAIL_TYPES.length)];
+  const rarity=getRarity();
+  if(rarity.name==='legendary')state.legendaryFound=true;
+  return{id:Date.now()+Math.random(),type:type.type,icon:type.icon,label:type.label,value:Math.round(type.baseValue*rarity.multiplier),rarity:rarity,stamp:null,route:null,processed:false,customer:null,served:false};
+}
+
+function addMailToTable(){if(state.mail.length>=12)return;const mail=generateMail();state.mail.push(mail);renderMail();updateUI()}
+
+function renderMail(){
+  const container=document.getElementById('mailGrid');
+  container.innerHTML='';
+  state.mail.forEach(m=>{
+    const div=document.createElement('div');
+    div.className='mail-item'+(m.processed?' processed':'')+(state.selectedMail===m?' selected':'')+' '+m.rarity.color;
+    div.innerHTML=`<div class="mail-icon">${m.icon}</div><div class="mail-label">${m.label}</div><div class="mail-value">$${m.value}</div>${m.stamp?`<div class="mail-stamp">${m.stamp.icon}</div>`:''}${m.route?`<div class="mail-route">${m.route.icon}</div>`:''}<div class="rarity-badge ${m.rarity.color}">${m.rarity.name}</div>`;
+    if(!m.processed){div.onclick=()=>selectMail(m);div.onmouseenter=()=>AudioEngine.hover()}
+    container.appendChild(div);
+  });
+}
+
+function selectMail(mail){if(mail.processed)return;AudioEngine.select();state.selectedMail=mail;renderMail();if(state.selectedStamp)applyStamp()}
+
+function renderStamps(){
+  const container=document.getElementById('stampGrid');
+  container.innerHTML='';
+  const discount=upgrades.find(u=>u.id==='better_stamps')?.owned?1:0;
+  STAMPS.forEach(s=>{
+    const div=document.createElement('div');
+    div.className='stamp '+s.color+(state.selectedStamp===s?' selected':'');
+    div.innerHTML=`${s.icon}<div class="stamp-cost">$${Math.max(1,s.cost-discount)}</div>`;
+    div.onclick=()=>selectStamp(s);div.onmouseenter=()=>AudioEngine.hover();
+    container.appendChild(div);
+  });
+}
+
+function selectStamp(stamp){AudioEngine.select();state.selectedStamp=stamp;renderStamps();if(state.selectedMail)applyStamp()}
+
+function applyStamp(){
+  if(!state.selectedMail||!state.selectedStamp)return;
+  if(state.selectedMail.processed)return;
+  const discount=upgrades.find(u=>u.id==='better_stamps')?.owned?1:0;
+  const cost=Math.max(1,state.selectedStamp.cost-discount);
+  if(state.money<cost){showNotification('❌ Not enough money for stamp!','error');AudioEngine.error();return}
+  state.money-=cost;state.selectedMail.stamp=state.selectedStamp;AudioEngine.stamp();
+  showNotification(`🏷️ ${state.selectedStamp.label} stamp applied! -$${cost}`,'success');
+  spawnFloatText(`-$${cost}`,'b03030');renderMail();updateUI();
+  if(!state.counter.includes(state.selectedMail))moveToCounter(state.selectedMail);
+}
+
+function moveToCounter(mail){
+  const maxSlots=6+(upgrades.find(u=>u.id==='more_slots')?.owned?2:0);
+  if(state.counter.length>=maxSlots){showNotification('❌ Counter is full!','error');AudioEngine.error();return}
+  state.counter.push(mail);state.mail=state.mail.filter(m=>m!==mail);state.selectedMail=null;renderMail();renderCounter();updateUI();
+}
+
+function renderCounter(){
+  const container=document.getElementById('counterSlots');
+  container.innerHTML='';
+  state.counter.forEach(m=>{
+    const div=document.createElement('div');
+    div.className='counter-slot'+(state.selectedMail===m?' selected':'');
+    div.innerHTML=`${m.icon}${m.stamp?`<div class="stamp-indicator">${m.stamp.icon}</div>`:''}${m.route?`<div class="route-indicator">${m.route.icon}</div>`:''}`;
+    div.onclick=()=>{AudioEngine.select();state.selectedMail=m;renderCounter()};
+    div.onmouseenter=()=>AudioEngine.hover();
+    container.appendChild(div);
+  });
+}
+
+function renderRoutes(){
+  const container=document.getElementById('routeList');
+  container.innerHTML='';
+  ROUTES.forEach(r=>{
+    const locked=state.day<r.unlockDay;
+    const div=document.createElement('div');
+    div.className='route'+(state.selectedRoute===r?' selected':'')+(locked?' locked':'');
+    div.innerHTML=`<div class="route-icon">${r.icon}</div><div class="route-info"><div class="route-name">${r.name} ${locked?'🔒':''}</div><div class="route-desc">${locked?`Unlocks Day ${r.unlockDay}`:r.desc}</div></div>${!locked?`<div class="route-reward">${r.reward}x</div>`:''}`;
+    if(!locked){div.onclick=()=>{AudioEngine.select();selectRoute(r)};div.onmouseenter=()=>AudioEngine.hover()}
+    container.appendChild(div);
+  });
+}
+
+function selectRoute(route){state.selectedRoute=route;renderRoutes();checkCanShip()}
+
+function checkCanShip(){const hasStampedMail=state.counter.some(m=>m.stamp&&!m.processed);document.getElementById('processBtn').disabled=!(hasStampedMail&&state.selectedRoute)}
+
+function processMail(){
+  if(!state.selectedRoute)return;AudioEngine.click();
+  let processed=0,earnings=0,mistakes=0,correctInRow=0;
+  state.counter.forEach(m=>{
+    if(m.processed||!m.stamp)return;
+    const isValid=m.stamp.routes.includes('all')||m.stamp.routes.includes(state.selectedRoute.stamp)||m.stamp.type==='priority';
+    if(isValid){const reward=Math.round(m.value*state.selectedRoute.reward);earnings+=reward;m.processed=true;processed++;state.totalProcessed++;correctInRow++}else{mistakes++;state.dayMistakes++;state.combo=0;earnings-=3;state.perfectDay=false}
+  });
+  if(correctInRow>0){state.combo+=correctInRow;if(state.combo>state.bestCombo)state.bestCombo=state.combo;const comboBonus=Math.floor(state.combo*0.5);earnings+=comboBonus;if(state.combo>=3){AudioEngine.combo();showCombo(state.combo);spawnFloatText(`+${comboBonus} combo bonus!`,'b8860b')}}
+  state.money+=earnings;state.dayEarnings+=earnings;state.dayProcessed+=processed;
+  if(processed>0){AudioEngine.ship();showNotification(`📤 Shipped ${processed} items! +$${earnings}`,'success');spawnFloatText(`+$${earnings}`,'4a9c3a');spawnParticles('📦')}
+  if(mistakes>0){AudioEngine.error();showNotification(`⚠️ ${mistakes} wrong stamps! Penalty applied`,'error');spawnFloatText(`-$${mistakes*3}`,'b03030')}
+  setTimeout(()=>{state.counter=state.counter.filter(m=>!m.processed);renderCounter();updateUI()},700);
+  renderCounter();updateUI();checkCanShip();checkAchievements();
+}
+
+function showCombo(n){
+  const el=document.getElementById('comboDisplay');
+  el.textContent=`🔥 x${n} COMBO!`;
+  el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'),1200);
+}
+
+function endDay(){
+  clearInterval(state.customerTimer);clearInterval(state.dayTimer);clearInterval(state.customerPatienceTimer);AudioEngine.dayEnd();
+  const repGain=state.dayProcessed*2-state.dayMistakes*2;
+  state.reputation=Math.max(0,state.reputation+repGain);saveHighscore();
+  document.getElementById('modalDay').textContent=state.day;
+  document.getElementById('modalProcessed').textContent=state.dayProcessed;
+  document.getElementById('modalMistakes').textContent=state.dayMistakes;
+  document.getElementById('modalEarnings').textContent='$'+state.dayEarnings;
+  document.getElementById('modalRep').textContent=(repGain>=0?'+':'')+repGain;
+  document.getElementById('modalCombo').textContent=state.bestCombo;
+  document.getElementById('modalAch').textContent=state.achievementsUnlocked.length;
+  let msg='Well done, postmaster!';
+  if(state.dayProcessed===0)msg='A quiet day at the office...';
+  else if(state.dayMistakes===0&&state.dayProcessed>=5)msg='Perfect delivery record! The town is impressed.';
+  else if(state.dayMistakes>3)msg='Some packages went astray... be more careful tomorrow.';
+  else if(state.dayEarnings>30)msg='Excellent business today! Profits are soaring.';
+  document.getElementById('modalMessage').textContent=msg;
+  document.getElementById('dayModal').classList.add('show');
+}
+
+function nextDay(){
+  document.getElementById('dayModal').classList.remove('show');
+  if(state.money<0){showGameOver();return}
+  state.day++;state.combo=0;
+  const themes=['','theme-spring','theme-summer','theme-autumn','theme-winter'];
+  const header=document.getElementById('gameHeader');
+  header.className='header '+themes[state.day%themes.length];
+  initDay();
+}
+
+function showGameOver(){
+  AudioEngine.gameOver();saveHighscore();
+  document.getElementById('goDays').textContent=state.day;
+  document.getElementById('goMail').textContent=state.totalProcessed;
+  document.getElementById('goMoney').textContent='$'+state.money;
+  document.getElementById('goRep').textContent=state.reputation;
+  document.getElementById('goCombo').textContent=state.bestCombo;
+  document.getElementById('goAch').textContent=state.achievementsUnlocked.length;
+  let msg='';
+  if(state.totalProcessed>50)msg='You built a legendary post office! 🏆';
+  else if(state.totalProcessed>20)msg='A respectable post office career!';
+  else msg='Every journey starts with a single letter...';
+  document.getElementById('goMessage').textContent=msg;
+  document.getElementById('gameOverModal').classList.add('show');
+}
+
+function updateUI(){
+  document.getElementById('dayDisplay').textContent=state.day;
+  document.getElementById('moneyDisplay').textContent=state.money;
+  document.getElementById('repDisplay').textContent=state.reputation;
+  document.getElementById('mailDisplay').textContent=state.mail.length+state.counter.length;
+  document.getElementById('streakDisplay').textContent=state.combo;
+  document.getElementById('achDisplay').textContent=state.achievementsUnlocked.length;
+  const flame=document.getElementById('streakFlame');
+  if(state.combo>=3){flame.classList.add('lit')}else{flame.classList.remove('lit')}
+  document.getElementById('streakText').textContent=`Combo: ${state.combo}`;
+  checkCanShip();
+}
+
+function showNotification(text,type){
+  const notif=document.getElementById('notification');
+  notif.textContent=text;notif.className='notification show '+type;
+  setTimeout(()=>notif.classList.remove('show'),2800);
+}
+
+function spawnParticles(emoji){
+  const container=document.getElementById('game-container');
+  for(let i=0;i<6;i++){
+    const p=document.createElement('div');p.className='particle';p.textContent=emoji;
+    p.style.left=(40+Math.random()*20)+'%';p.style.top=(40+Math.random()*10)+'%';
+    p.style.animationDelay=(i*0.1)+'s';container.appendChild(p);setTimeout(()=>p.remove(),1500);
+  }
+}
+
+function spawnFloatText(text,color){
+  const container=document.getElementById('game-container');
+  const el=document.createElement('div');el.className='float-text';el.textContent=text;
+  el.style.color='#'+color;el.style.left=(45+Math.random()*10)+'%';el.style.top='45%';
+  container.appendChild(el);setTimeout(()=>el.remove(),1200);
+}
+
+function checkAchievements(){
+  ACHIEVEMENTS.forEach(ach=>{
+    if(!state.achievementsUnlocked.includes(ach.id)&&ach.condition(state)){
+      state.achievementsUnlocked.push(ach.id);
+      AudioEngine.achievement();
+      showAchievement(ach);
+    }
+  });
+}
+
+function showAchievement(ach){
+  const popup=document.getElementById('achPopup');
+  document.getElementById('achIcon').textContent=ach.icon;
+  document.getElementById('achTitle').textContent=ach.name;
+  document.getElementById('achDesc').textContent=ach.desc;
+  popup.classList.add('show');
+  setTimeout(()=>popup.classList.remove('show'),3500);
+}
+
+function openShop(){
+  AudioEngine.click();
+  const container=document.getElementById('shopItems');
+  container.innerHTML='';
+  upgrades.forEach(u=>{
+    const div=document.createElement('div');
+    div.className='upgrade-item'+(u.owned?' owned':'');
+    div.innerHTML=`<div class="upgrade-icon">${u.icon}</div><div class="upgrade-info"><div class="upgrade-name">${u.name}</div><div class="upgrade-desc">${u.desc}</div></div><div class="upgrade-cost">${u.owned?'✅ Owned':`$${u.cost}`}</div>`;
+    if(!u.owned)div.onclick=()=>buyUpgrade(u);
+    container.appendChild(div);
+  });
+  document.getElementById('shopModal').classList.add('show');
+}
+
+function buyUpgrade(upgrade){
+  if(state.money<upgrade.cost){showNotification('❌ Not enough money!','error');AudioEngine.error();return}
+  state.money-=upgrade.cost;upgrade.owned=true;state.upgradesBought++;
+  AudioEngine.upgrade();showNotification(`✅ Bought ${upgrade.name}!`,'success');
+  spawnFloatText(`-$${upgrade.cost}`,'b03030');spawnParticles(upgrade.icon);
+  updateUI();openShop();checkAchievements();
+}
+
+function closeShop(){document.getElementById('shopModal').classList.remove('show')}
+
+function showAchievementsList(){
+  AudioEngine.click();
+  const container=document.getElementById('achList');
+  container.innerHTML='';
+  ACHIEVEMENTS.forEach(ach=>{
+    const unlocked=state.achievementsUnlocked.includes(ach.id);
+    const div=document.createElement('div');
+    div.style.cssText='display:flex;align-items:center;gap:10px;padding:8px;background:'+(unlocked?'#fff8e7':'var(--bg)')+';border-radius:10px;margin-bottom:6px;border:2px solid '+(unlocked?'var(--gold)':'#ddd')+';';
+    div.innerHTML=`<div style="font-size:28px;opacity:${unlocked?1:0.4}">${ach.icon}</div><div style="flex:1;text-align:left;"><div style="font-size:12px;font-weight:800;color:${unlocked?var(--text):'#999'}">${ach.name}</div><div style="font-size:10px;color:${unlocked?var(--text-light):'#bbb'}">${ach.desc}</div></div>${unlocked?'<div style="font-size:18px">✅</div>':''}`;
+    container.appendChild(div);
+  });
+  document.getElementById('achModal').classList.add('show');
+}
+
+function closeAchievements(){document.getElementById('achModal').classList.remove('show')}
+
+function showTutorial(){
+  state.tutorialStep=0;
+  const dots=document.getElementById('tutorialDots');
+  dots.innerHTML='';
+  for(let i=0;i<5;i++){const d=document.createElement('div');d.className='tutorial-dot'+(i===0?' active':'');dots.appendChild(d)}
+  document.querySelectorAll('.tutorial-step').forEach((s,idx)=>s.classList.toggle('active',idx===0));
+  document.getElementById('tutorialBtn').textContent='Next';
+  document.getElementById('tutorialOverlay').classList.add('show');
+}
+
+function nextTutorialStep(){
+  AudioEngine.click();
+  const steps=document.querySelectorAll('.tutorial-step');
+  const dots=document.querySelectorAll('.tutorial-dot');
+  steps[state.tutorialStep].classList.remove('active');
+  dots[state.tutorialStep].classList.remove('active');
+  state.tutorialStep++;
+  if(state.tutorialStep>=steps.length){document.getElementById('tutorialOverlay').classList.remove('show');return}
+  steps[state.tutorialStep].classList.add('active');
+  dots[state.tutorialStep].classList.add('active');
+  if(state.tutorialStep===steps.length-1)document.getElementById('tutorialBtn').textContent='Start Playing!';
+}
+
+setInterval(()=>{if(state.gameActive&&state.mail.length<8)addMailToTable()},3500*(upgrades.find(u=>u.id==='faster_mail')?.owned?0.75:1));
+
+document.addEventListener('keydown',e=>{
+  if(e.key==='m'||e.key==='M')toggleMute();
+  if(e.key==='h'||e.key==='H')showTutorial();
+  if(e.key==='s'||e.key==='S'){if(state.gameActive)openShop()}
+  if(e.key==='a'||e.key==='A'){if(state.gameActive)showAchievementsList()}
+});
+
+if('ontouchstart' in window){
+  document.body.addEventListener('touchstart',function(){},false);
+}
+</script>
+</body>
+</html>
