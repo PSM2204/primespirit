@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Neural Nexus — PrimeLab | Prime Spirit Mentors</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:     #060a1a;
+  --bg2:    #0d1530;
+  --bg3:    #111b35;
+  --cyan:   #00f5ff;
+  --purple: #7c3aed;
+  --green:  #22c55e;
+  --gold:   #f59e0b;
+  --red:    #ef4444;
+  --text:   #c8d8ff;
+  --muted:  #4a5a80;
+  --border: rgba(0,245,255,0.12);
+}
+
+html, body {
+  min-height: 100%; background: var(--bg);
+  color: var(--text); font-family: 'Inter', sans-serif;
+  overflow-x: hidden;
+}
+
+/* ── TOP NAV (matches primespirit.co.in feel) ──────────── */
+.site-nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  background: rgba(6,10,26,0.92); backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 24px; height: 56px;
+}
+.nav-brand {
+  font-family: 'Orbitron', sans-serif; font-size: 1rem; font-weight: 700;
+  color: var(--text); text-decoration: none; letter-spacing: 1px;
+}
+.nav-brand span { color: var(--cyan); }
+.nav-right { display: flex; align-items: center; gap: 10px; }
+.nav-tag {
+  font-family: 'Orbitron', sans-serif; font-size: 0.55rem; letter-spacing: 3px;
+  color: var(--cyan); border: 1px solid var(--cyan); border-radius: 4px;
+  padding: 3px 8px; text-transform: uppercase;
+}
+.nav-back {
+  font-size: 0.75rem; color: var(--muted); text-decoration: none;
+  transition: color .15s;
+}
+.nav-back:hover { color: var(--text); }
+
+/* ── STAR CANVAS ────────────────────────────────────────── */
+#starsBg { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+
+/* ── PAGE WRAPPER ───────────────────────────────────────── */
+.page { position: relative; z-index: 1; padding-top: 56px; min-height: 100vh; display: flex; flex-direction: column; }
+
+/* ── SCREENS ────────────────────────────────────────────── */
+.screen { display: none; flex-direction: column; align-items: center; justify-content: flex-start; flex: 1; padding: 32px 16px 40px; }
+.screen.active { display: flex; }
+
+/* ── LANDING ────────────────────────────────────────────── */
+#landing { justify-content: center; min-height: calc(100vh - 56px); }
+
+.hero { text-align: center; margin-bottom: 36px; }
+.hero-eyebrow {
+  font-family: 'Orbitron', sans-serif; font-size: 0.6rem; letter-spacing: 5px;
+  color: var(--cyan); text-transform: uppercase; margin-bottom: 14px;
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+}
+.hero-eyebrow::before, .hero-eyebrow::after {
+  content: ''; width: 40px; height: 1px; background: var(--cyan); opacity: .4;
+}
+.hero-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: clamp(2.4rem, 7vw, 5rem); font-weight: 900;
+  line-height: .95; letter-spacing: 3px;
+  background: linear-gradient(135deg, #00f5ff 0%, #7c3aed 55%, #22c55e 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text; filter: drop-shadow(0 0 40px rgba(0,245,255,.3));
+  margin-bottom: 12px;
+}
+.hero-desc {
+  font-size: 0.9rem; color: var(--muted); max-width: 440px; margin: 0 auto 8px;
+  line-height: 1.7;
+}
+.hero-sub-tag {
+  font-size: 0.7rem; color: var(--cyan); opacity: .7; letter-spacing: 1px;
+}
+
+/* ── CARD ───────────────────────────────────────────────── */
+.card {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 18px; padding: 28px; width: min(480px, 100%);
+}
+
+/* ── STATS ROW ──────────────────────────────────────────── */
+.stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+.stat-cell {
+  background: var(--bg3); border-radius: 10px; padding: 12px 16px;
+  display: flex; flex-direction: column; gap: 3px;
+}
+.stat-cell label { font-size: 0.6rem; letter-spacing: 2px; color: var(--muted); font-family: 'Orbitron', sans-serif; }
+.stat-cell span { font-family: 'Orbitron', sans-serif; font-size: 1.1rem; font-weight: 700; color: var(--cyan); }
+
+/* ── DIFF BUTTONS ───────────────────────────────────────── */
+.section-label { font-size: 0.6rem; letter-spacing: 3px; color: var(--muted); font-family: 'Orbitron', sans-serif; margin-bottom: 8px; }
+.diff-row { display: flex; gap: 8px; margin-bottom: 20px; }
+.diff-btn {
+  flex: 1; background: var(--bg3); border: 1px solid var(--muted);
+  border-radius: 10px; padding: 12px 6px;
+  font-family: 'Orbitron', sans-serif; font-size: 0.58rem; font-weight: 700;
+  letter-spacing: 2px; color: var(--muted); cursor: pointer; transition: all .15s;
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+}
+.diff-btn .diff-icon { font-size: 1.1rem; }
+.diff-btn .diff-sub { font-size: 0.5rem; color: var(--muted); font-family: 'Inter', sans-serif; letter-spacing: 1px; margin-top: 2px; }
+.diff-btn.active { border-color: var(--cyan); color: var(--cyan); background: rgba(0,245,255,0.07); }
+.diff-btn.active .diff-sub { color: rgba(0,245,255,.6); }
+
+/* ── PRIMARY BTN ────────────────────────────────────────── */
+.btn-primary {
+  width: 100%; background: linear-gradient(135deg, var(--purple), var(--cyan));
+  border: none; border-radius: 12px; padding: 16px;
+  font-family: 'Orbitron', sans-serif; font-size: 0.85rem; font-weight: 700;
+  letter-spacing: 3px; color: #fff; cursor: pointer; transition: all .15s;
+  text-shadow: 0 1px 4px rgba(0,0,0,.4);
+}
+.btn-primary:hover { transform: translateY(-2px); filter: brightness(1.1); }
+
+/* ── HOW TO ─────────────────────────────────────────────── */
+.how-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 16px; }
+.how-cell {
+  background: var(--bg3); border-radius: 10px; padding: 14px;
+  display: flex; gap: 10px; align-items: flex-start;
+}
+.how-cell .ic { font-size: 1.3rem; flex-shrink: 0; }
+.how-cell strong { display: block; font-size: 0.72rem; color: var(--text); margin-bottom: 3px; }
+.how-cell p { font-size: 0.65rem; color: var(--muted); line-height: 1.5; }
+
+/* ── BENEFIT BAR ────────────────────────────────────────── */
+.benefit-bar {
+  margin-top: 24px; background: rgba(124,58,237,0.1);
+  border: 1px solid rgba(124,58,237,0.25); border-radius: 10px; padding: 12px 16px;
+  font-size: 0.7rem; color: var(--text); text-align: center; line-height: 1.6;
+}
+.benefit-bar strong { color: var(--cyan); }
+
+/* ── GAME SCREEN ────────────────────────────────────────── */
+#game { padding: 8px 12px 20px; gap: 0; }
+
+/* HUD */
+.hud {
+  width: 100%; max-width: 540px;
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 4px 6px;
+}
+.hud-block { display: flex; flex-direction: column; align-items: center; min-width: 64px; }
+.hud-lbl { font-size: 0.5rem; letter-spacing: 3px; color: var(--muted); font-family: 'Orbitron', sans-serif; margin-bottom: 2px; }
+.hud-val { font-family: 'Orbitron', sans-serif; font-size: 1.15rem; font-weight: 700; color: var(--cyan); line-height: 1; }
+.hud-val.g { color: var(--green); }
+.hud-val.gold { color: var(--gold); font-size: 0.95rem; }
+.hud-center { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.phase-lbl { font-family: 'Orbitron', sans-serif; font-size: 0.6rem; letter-spacing: 3px; color: var(--purple); }
+.prog-bar { width: 180px; height: 3px; background: var(--bg3); border-radius: 99px; overflow: hidden; }
+.prog-fill { height: 100%; background: linear-gradient(90deg, var(--purple), var(--cyan)); border-radius: 99px; transition: width .3s; }
+
+/* SYNAPSE BAR */
+.syn-row {
+  width: 100%; max-width: 540px;
+  display: flex; align-items: center; gap: 8px; padding: 2px 4px 6px;
+}
+.syn-lbl { font-family: 'Orbitron', sans-serif; font-size: 0.5rem; letter-spacing: 2px; color: var(--gold); flex-shrink: 0; }
+.syn-bar { flex: 1; height: 3px; background: var(--bg3); border-radius: 99px; overflow: hidden; }
+.syn-fill { height: 100%; background: linear-gradient(90deg, var(--gold), var(--green)); border-radius: 99px; transition: width .3s; }
+.combo-lbl { font-family: 'Orbitron', sans-serif; font-size: 0.55rem; color: var(--cyan); min-width: 24px; text-align: right; }
+
+/* CANVAS */
+#gc {
+  display: block; border: 1px solid var(--border); border-radius: 14px;
+  background: var(--bg2); cursor: pointer; touch-action: manipulation;
+  max-width: 100%;
+}
+
+/* ── OVERLAY ────────────────────────────────────────────── */
+#overlay {
+  position: fixed; inset: 0; z-index: 200;
+  background: rgba(6,10,26,0.8); backdrop-filter: blur(8px);
+  display: flex; align-items: center; justify-content: center; padding: 16px;
+}
+#overlay.off { display: none; }
+.ov-box {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 20px; padding: 36px 40px;
+  max-width: 360px; width: 100%; text-align: center;
+  display: flex; flex-direction: column; gap: 14px;
+}
+.ov-title { font-family: 'Orbitron', sans-serif; font-size: 1.3rem; font-weight: 900; letter-spacing: 2px; }
+.ov-score { font-family: 'Orbitron', sans-serif; font-size: 2.4rem; font-weight: 700; color: var(--cyan); }
+.ov-body { font-size: 0.8rem; color: var(--muted); line-height: 1.6; }
+.ov-stat { display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--muted); }
+.ov-stat span:last-child { color: var(--text); font-weight: 600; }
+.ov-btns { display: flex; gap: 10px; margin-top: 4px; }
+.btn-sec {
+  flex: 1; background: var(--bg3); border: 1px solid var(--muted);
+  border-radius: 10px; padding: 12px;
+  font-family: 'Orbitron', sans-serif; font-size: 0.58rem; letter-spacing: 2px;
+  color: var(--muted); cursor: pointer; transition: all .15s;
+}
+.btn-sec:hover { border-color: var(--text); color: var(--text); }
+.btn-prim {
+  flex: 2; background: linear-gradient(135deg, var(--purple), var(--cyan));
+  border: none; border-radius: 10px; padding: 12px;
+  font-family: 'Orbitron', sans-serif; font-size: 0.65rem; font-weight: 700;
+  letter-spacing: 2px; color: #fff; cursor: pointer; transition: all .15s;
+}
+.btn-prim:hover { filter: brightness(1.1); }
+
+/* COMBO FLASH */
+#cf {
+  position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%);
+  font-family: 'Orbitron', sans-serif; font-size: 2rem; font-weight: 900;
+  pointer-events: none; opacity: 0; z-index: 300; text-shadow: 0 0 30px currentColor;
+}
+
+@media (max-width: 480px) {
+  .how-grid { grid-template-columns: 1fr; }
+  .ov-box { padding: 28px 20px; }
+  .hud-val { font-size: 1rem; }
+}
+</style>
+</head>
+<body>
+
+<canvas id="starsBg"></canvas>
+
+<!-- NAV -->
+<nav class="site-nav">
+  <a class="nav-brand" href="https://primespirit.co.in">Prime<span>Spirit</span></a>
+  <div class="nav-right">
+    <div class="nav-tag">PrimeLab</div>
+    <a class="nav-back" href="https://primespirit.co.in">← Back to Site</a>
+  </div>
+</nav>
+
+<div class="page">
+
+  <!-- ── LANDING ──────────────────────────────────────── -->
+  <div class="screen active" id="landing">
+    <div class="hero">
+      <div class="hero-eyebrow">PrimeLab · Brain Training</div>
+      <h1 class="hero-title">NEURAL<br>NEXUS</h1>
+      <p class="hero-desc">Train the cognitive skills that separate average students from toppers — working memory, attention control, and mental flexibility.</p>
+      <p class="hero-sub-tag">Designed for NEET · JEE · CUET aspirants</p>
+    </div>
+
+    <div class="card">
+      <div class="stats-grid">
+        <div class="stat-cell">
+          <label>Best Score</label>
+          <span id="bestDisp">—</span>
+        </div>
+        <div class="stat-cell">
+          <label>Sessions</label>
+          <span id="sessDisp">0</span>
+        </div>
+      </div>
+
+      <div class="section-label">Select Difficulty</div>
+      <div class="diff-row">
+        <button class="diff-btn active" data-d="1">
+          <span class="diff-icon">🟢</span>ROOKIE
+          <span class="diff-sub">Foundation</span>
+        </button>
+        <button class="diff-btn" data-d="2">
+          <span class="diff-icon">🔵</span>NEURAL
+          <span class="diff-sub">Aspirant</span>
+        </button>
+        <button class="diff-btn" data-d="3">
+          <span class="diff-icon">🟣</span>NEXUS
+          <span class="diff-sub">Elite</span>
+        </button>
+      </div>
+
+      <button class="btn-primary" id="startBtn">⚡ ACTIVATE NEURAL NEXUS</button>
+
+      <div class="how-grid" style="margin-top:20px">
+        <div class="how-cell"><span class="ic">👁️</span><div><strong>Watch</strong><p>Nodes light up in sequence. Memorise the pattern.</p></div></div>
+        <div class="how-cell"><span class="ic">🧠</span><div><strong>Recall</strong><p>Tap the nodes in order. Avoid red noise nodes!</p></div></div>
+        <div class="how-cell"><span class="ic">⚡</span><div><strong>Synapse Link</strong><p>Connect glowing gold nodes fast for a bonus.</p></div></div>
+        <div class="how-cell"><span class="ic">🔥</span><div><strong>Combo</strong><p>Perfect rounds build your multiplier up to ×8.</p></div></div>
+      </div>
+
+      <div class="benefit-bar">
+        🧬 Trains <strong>working memory</strong>, <strong>N-back recall</strong> and <strong>noise filtering</strong> —<br>
+        the exact mental muscles needed for long MCQ papers.
+      </div>
+    </div>
+  </div>
+
+  <!-- ── GAME ──────────────────────────────────────────── -->
+  <div class="screen" id="game">
+    <div class="hud">
+      <div class="hud-block">
+        <div class="hud-lbl">Score</div>
+        <div class="hud-val" id="scoreV">0</div>
+      </div>
+      <div class="hud-center">
+        <div class="phase-lbl" id="phaseV">GET READY</div>
+        <div class="prog-bar"><div class="prog-fill" id="progF" style="width:0%"></div></div>
+      </div>
+      <div class="hud-block">
+        <div class="hud-lbl">Level</div>
+        <div class="hud-val g" id="levelV">1</div>
+      </div>
+      <div class="hud-block">
+        <div class="hud-lbl">Lives</div>
+        <div class="hud-val gold" id="livesV">❤️❤️❤️</div>
+      </div>
+    </div>
+    <div class="syn-row">
+      <div class="syn-lbl">SYNAPSE</div>
+      <div class="syn-bar"><div class="syn-fill" id="synF" style="width:0%"></div></div>
+      <div class="combo-lbl" id="comboV">×1</div>
+    </div>
+    <canvas id="gc"></canvas>
+  </div>
+
+</div><!-- .page -->
+
+<!-- OVERLAY -->
+<div id="overlay" class="off">
+  <div class="ov-box">
+    <div class="ov-title" id="ovTitle">LEVEL CLEAR</div>
+    <div class="ov-score" id="ovScore">+0</div>
+    <div class="ov-body" id="ovBody"></div>
+    <div class="ov-stat" id="ovS1" style="display:none"></div>
+    <div class="ov-stat" id="ovS2" style="display:none"></div>
+    <div class="ov-btns">
+      <button class="btn-sec" id="ovMenu">MENU</button>
+      <button class="btn-prim" id="ovNext">NEXT LEVEL ▶</button>
+    </div>
+  </div>
+</div>
+
+<div id="cf"></div>
+
+<script>
+/* ── STARS ─────────────────────────────────────────────── */
+(()=>{
+  const c=document.getElementById('starsBg'), ctx=c.getContext('2d');
+  let w,h,S=[];
+  const resize=()=>{ w=c.width=innerWidth; h=c.height=innerHeight; };
+  const init=()=>{ resize(); S=Array.from({length:120},()=>({x:Math.random()*w,y:Math.random()*h,r:.2+Math.random()*1.1,a:Math.random(),da:(.002+Math.random()*.003)*(Math.random()<.5?1:-1)})); };
+  const draw=()=>{ ctx.clearRect(0,0,w,h); S.forEach(s=>{ s.a=Math.max(.05,Math.min(1,s.a+s.da)); ctx.beginPath(); ctx.arc(s.x,s.y,s.r,0,Math.PI*2); ctx.fillStyle=`rgba(200,216,255,${s.a})`; ctx.fill(); }); requestAnimationFrame(draw); };
+  window.addEventListener('resize',init); init(); draw();
+})();
+
+/* ── CONSTANTS ─────────────────────────────────────────── */
+const COLS=5,ROWS=5,TOTAL=25,NODE_R=26;
+let diff=1, gs={}, CW, CH, SPACING, PAD;
+const GC=document.getElementById('gc'), CTX=GC.getContext('2d');
+
+function resizeCanvas(){
+  const vw=Math.min(innerWidth-24, 540);
+  const vh=Math.min(innerHeight-190, 540);
+  const sz=Math.min(vw,vh);
+  GC.width=sz; GC.height=sz; CW=CH=sz;
+  SPACING=sz/COLS; PAD=SPACING/2;
+}
+function np(i){ if(!SPACING) return {x:0,y:0}; return { x:PAD+(i%COLS)*SPACING, y:PAD+Math.floor(i/COLS)*SPACING }; }
+
+/* ── MENU ──────────────────────────────────────────────── */
+let best=parseInt(localStorage.getItem('nn_best')||'0');
+document.getElementById('bestDisp').textContent = best||'—';
+document.getElementById('sessDisp').textContent = localStorage.getItem('nn_sess')||'0';
+
+document.querySelectorAll('.diff-btn').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('.diff-btn').forEach(x=>x.classList.remove('active'));
+  b.classList.add('active'); diff=parseInt(b.dataset.d);
+}));
+document.getElementById('startBtn').addEventListener('click', startGame);
+
+/* ── DIFF CONFIG ───────────────────────────────────────── */
+function cfg(lv){
+  const base={1:3,2:4,3:5}[diff]||3;
+  return {
+    seqLen: Math.min(base+Math.floor(lv*.7),10),
+    noise:  Math.min(diff+Math.floor(lv/3),5),
+    ms:     Math.max(700-lv*30,280),
+  };
+}
+
+/* ── GAME START ────────────────────────────────────────── */
+function startGame(){
+  show('game');
+  gs={ lv:1, sc:0, lives:3, combo:1, syn:0,
+       phase:'idle', seq:[], noise:[], input:[],
+       nst:Array(TOTAL).fill('idle'),
+       synNodes:[], synSel:[], synBonus:0, rndSc:0 };
+  window.addEventListener('resize', onR);
+  GC.addEventListener('click', onClick);
+  GC.addEventListener('touchstart', onTouch, {passive:true});
+  updateHUD();
+  // Resize first, then start — ensures canvas is sized before drawing
+  setTimeout(function(){ resizeCanvas(); startRound(); }, 50);
+}
+
+function onR(){ resizeCanvas(); draw(); }
+
+/* ── ROUND ─────────────────────────────────────────────── */
+function startRound(){
+  const c=cfg(gs.lv), all=shuffle([...Array(TOTAL).keys()]);
+  gs.noise=all.slice(0,c.noise); gs.seq=all.slice(c.noise,c.noise+c.seqLen);
+  gs.input=[]; gs.nst=Array(TOTAL).fill('idle');
+  gs.noise.forEach(n=>gs.nst[n]='noise');
+  gs.synBonus=0; gs.phase='show';
+  setPhase('MEMORISE'); setProg(0);
+  showSeq(c);
+}
+
+function showSeq(c){
+  let i=0;
+  const step=()=>{
+    if(i>0) gs.nst[gs.seq[i-1]]= gs.noise.includes(gs.seq[i-1])?'noise':'idle';
+    if(i>=gs.seq.length){ draw(); setTimeout(()=>{ gs.nst=Array(TOTAL).fill('idle'); gs.noise.forEach(n=>gs.nst[n]='noise'); draw(); beginInput(); },c.ms); return; }
+    gs.nst[gs.seq[i]]='lit'; draw(); setProg((i+1)/gs.seq.length*50); i++;
+    setTimeout(step, c.ms+80);
+  };
+  step();
+}
+
+function beginInput(){ gs.phase='input'; setPhase('RECALL'); setProg(50); }
+
+/* ── CLICK / TOUCH ─────────────────────────────────────── */
+function getHit(mx,my){
+  for(let i=0;i<TOTAL;i++){ const {x,y}=np(i); if(Math.hypot(mx-x,my-y)<NODE_R+8) return i; }
+  return -1;
+}
+function onTouch(e){ const r=GC.getBoundingClientRect(),t=e.touches[0]; handleHit(t.clientX-r.left,t.clientY-r.top); }
+function onClick(e){ const r=GC.getBoundingClientRect(); handleHit(e.clientX-r.left,e.clientY-r.top); }
+
+function handleHit(mx,my){
+  if(gs.phase==='syn'){ synHit(mx,my); return; }
+  if(gs.phase!=='input') return;
+  const hit=getHit(mx,my); if(hit<0) return;
+  if(gs.noise.includes(hit)){ flashN(hit,'wrong'); loseLife(); return; }
+  if(hit===gs.seq[gs.input.length]){
+    gs.input.push(hit); gs.nst[hit]='correct'; draw();
+    setProg(50+gs.input.length/gs.seq.length*50);
+    if(gs.input.length===gs.seq.length) roundDone();
+  } else { flashN(hit,'wrong'); loseLife(); }
+}
+
+function flashN(i,s){ gs.nst[i]=s; draw(); setTimeout(()=>{ gs.nst[i]=gs.noise.includes(i)?'noise':'idle'; draw(); },500); }
+
+function loseLife(){
+  gs.lives--; gs.combo=1; gs.syn=Math.max(0,gs.syn-20);
+  updateHUD(); if(gs.lives<=0){ gameOver(); return; }
+  setTimeout(startRound,650);
+}
+
+function roundDone(){
+  gs.phase='done';
+  const base=gs.seq.length*100*gs.combo;
+  gs.rndSc=base; gs.sc+=base; gs.syn=Math.min(100,gs.syn+25);
+  gs.combo=Math.min(gs.combo+1,8); updateHUD();
+  setPhase('CLEAR ✓');
+  gs.syn>=100 ? setTimeout(startSyn,500) : showOv('round');
+}
+
+/* ── SYNAPSE ───────────────────────────────────────────── */
+function startSyn(){
+  gs.syn=0; gs.phase='syn'; gs.synNodes=[]; gs.synSel=[];
+  const pool=shuffle([...Array(TOTAL).keys()].filter(i=>!gs.noise.includes(i)));
+  gs.synNodes=pool.slice(0,2+(diff>=3?1:0));
+  gs.nst=Array(TOTAL).fill('idle'); gs.noise.forEach(n=>gs.nst[n]='noise');
+  gs.synNodes.forEach(n=>gs.nst[n]='syn'); draw();
+  setPhase('⚡ SYNAPSE LINK!');
+  gs._synT=setTimeout(()=>{ if(gs.phase==='syn'){ gs.phase='done'; showOv('round'); } }, 4200-diff*400);
+}
+
+function synHit(mx,my){
+  const hit=getHit(mx,my); if(hit<0||!gs.synNodes.includes(hit)||gs.synSel.includes(hit)) return;
+  gs.synSel.push(hit); gs.nst[hit]='correct'; draw();
+  if(gs.synSel.length===gs.synNodes.length){
+    clearTimeout(gs._synT);
+    const bon=500*gs.combo; gs.synBonus=bon; gs.sc+=bon;
+    updateHUD(); flash(`⚡ +${bon}`, '#f59e0b');
+    setTimeout(()=>showOv('round'),600);
+  }
+}
+
+/* ── OVERLAY ───────────────────────────────────────────── */
+function showOv(type){
+  const s1=document.getElementById('ovS1'), s2=document.getElementById('ovS2');
+  if(type==='round'){
+    set('ovTitle',`LEVEL ${gs.lv} CLEAR`,'#22c55e');
+    set('ovScore',`+${gs.rndSc+gs.synBonus}`);
+    document.getElementById('ovBody').textContent = gs.synBonus?`Base +${gs.rndSc} · Synapse +${gs.synBonus}`:`Sequence: ${gs.seq.length} nodes`;
+    s1.style.display='flex'; s1.innerHTML=`<span>Combo</span><span>×${gs.combo}</span>`;
+    s2.style.display='flex'; s2.innerHTML=`<span>Total Score</span><span>${gs.sc}</span>`;
+    document.getElementById('ovNext').textContent='NEXT LEVEL ▶';
+    document.getElementById('ovNext').onclick=nextLevel;
+  } else {
+    if(gs.sc>best){ best=gs.sc; localStorage.setItem('nn_best',best); }
+    localStorage.setItem('nn_sess',(parseInt(localStorage.getItem('nn_sess')||'0')+1));
+    set('ovTitle','DISCONNECTED','#ef4444');
+    set('ovScore',gs.sc);
+    document.getElementById('ovBody').textContent='Your neural pattern has been logged. Train again?';
+    s1.style.display='flex'; s1.innerHTML=`<span>Level Reached</span><span>${gs.lv}</span>`;
+    s2.style.display='flex'; s2.innerHTML=`<span>Best Score</span><span>${best}</span>`;
+    document.getElementById('ovNext').textContent='TRY AGAIN ↺';
+    document.getElementById('ovNext').onclick=()=>{ hideOv(); startGame(); };
+  }
+  document.getElementById('ovMenu').onclick=goMenu;
+  document.getElementById('overlay').classList.remove('off');
+}
+function hideOv(){ document.getElementById('overlay').classList.add('off'); }
+function set(id,v,c){ const el=document.getElementById(id); el.textContent=v; if(c) el.style.color=c; }
+function goMenu(){
+  hideOv(); show('landing'); cleanup();
+  document.getElementById('bestDisp').textContent=best||'—';
+  document.getElementById('sessDisp').textContent=localStorage.getItem('nn_sess')||'0';
+}
+function nextLevel(){ hideOv(); gs.lv++; updateHUD(); startRound(); }
+function gameOver(){ gs.phase='over'; draw(); setTimeout(()=>showOv('over'),400); }
+function cleanup(){ window.removeEventListener('resize',onR); GC.removeEventListener('click',onClick); GC.removeEventListener('touchstart',onTouch); }
+
+/* ── DRAW ──────────────────────────────────────────────── */
+const COL={
+  idle:  {f:'#0d1530',s:'#1e2f55',g:null},
+  lit:   {f:'#002540',s:'#00f5ff',g:'rgba(0,245,255,.55)'},
+  noise: {f:'#1f0a0a',s:'#ef4444',g:null},
+  correct:{f:'#0a1f0a',s:'#22c55e',g:'rgba(34,197,94,.5)'},
+  wrong: {f:'#1f0a0a',s:'#ef4444',g:'rgba(239,68,68,.5)'},
+  syn:   {f:'#1a1000',s:'#f59e0b',g:'rgba(245,158,11,.7)'},
+};
+
+function draw(){
+  if(!CW||!SPACING) return;  // guard: canvas not sized yet
+  CTX.clearRect(0,0,CW,CH);
+  // grid lines
+  CTX.strokeStyle='rgba(30,47,85,0.35)'; CTX.lineWidth=1;
+  for(let r=0;r<ROWS;r++) for(let c=0;c<COLS;c++){
+    const i=r*COLS+c, {x,y}=np(i);
+    if(c<COLS-1){ const b=np(i+1); CTX.beginPath(); CTX.moveTo(x,y); CTX.lineTo(b.x,b.y); CTX.stroke(); }
+    if(r<ROWS-1){ const b=np(i+COLS); CTX.beginPath(); CTX.moveTo(x,y); CTX.lineTo(b.x,b.y); CTX.stroke(); }
+  }
+  for(let i=0;i<TOTAL;i++) drawNode(i);
+  // input trail
+  if(gs.phase==='input'&&gs.input&&gs.input.length>1){
+    CTX.setLineDash([4,5]); CTX.strokeStyle='rgba(0,245,255,.2)'; CTX.lineWidth=1.5;
+    CTX.beginPath(); gs.input.forEach((idx,k)=>{ const {x,y}=np(idx); k?CTX.lineTo(x,y):CTX.moveTo(x,y); }); CTX.stroke(); CTX.setLineDash([]);
+  }
+  // synapse arc
+  if(gs.phase==='syn'&&gs.synSel&&gs.synSel.length>=2){
+    const a=np(gs.synSel[0]),b=np(gs.synSel[1]);
+    CTX.shadowBlur=18; CTX.shadowColor='rgba(245,158,11,.8)';
+    CTX.strokeStyle='#f59e0b'; CTX.lineWidth=3; CTX.beginPath(); CTX.moveTo(a.x,a.y); CTX.lineTo(b.x,b.y); CTX.stroke(); CTX.shadowBlur=0;
+  }
+}
+
+function drawNode(i){
+  const {x,y}=np(i);
+  const st=(gs.nst&&gs.nst[i])||'idle', c=COL[st]||COL.idle;
+  if(c.g){ CTX.shadowBlur=22; CTX.shadowColor=c.g; } else CTX.shadowBlur=0;
+  CTX.beginPath(); CTX.arc(x,y,NODE_R,0,Math.PI*2);
+  CTX.fillStyle=c.f; CTX.fill();
+  CTX.strokeStyle=c.s; CTX.lineWidth=st==='lit'||st==='syn'?2.5:1.5; CTX.stroke();
+  CTX.shadowBlur=0;
+  if(st==='lit'||st==='syn'||st==='correct'){
+    CTX.beginPath(); CTX.arc(x,y,7,0,Math.PI*2);
+    CTX.fillStyle=c.s; CTX.fill();
+  } else if(st==='noise'){
+    CTX.strokeStyle='#ef4444'; CTX.lineWidth=2;
+    CTX.beginPath(); CTX.moveTo(x-8,y-8); CTX.lineTo(x+8,y+8); CTX.stroke();
+    CTX.beginPath(); CTX.moveTo(x+8,y-8); CTX.lineTo(x-8,y+8); CTX.stroke();
+  } else {
+    CTX.beginPath(); CTX.arc(x,y,3.5,0,Math.PI*2);
+    CTX.fillStyle='#1e2f55'; CTX.fill();
+  }
+  CTX.fillStyle='rgba(74,90,128,.5)'; CTX.font='8px Inter'; CTX.textAlign='center'; CTX.textBaseline='middle';
+  CTX.fillText(i+1, x, y+17);
+}
+
+/* ── HUD ───────────────────────────────────────────────── */
+function updateHUD(){
+  document.getElementById('scoreV').textContent=gs.sc;
+  document.getElementById('levelV').textContent=gs.lv;
+  document.getElementById('livesV').textContent=['💀','❤️','❤️❤️','❤️❤️❤️'][Math.max(0,gs.lives)]||'💀';
+  document.getElementById('synF').style.width=gs.syn+'%';
+  document.getElementById('comboV').textContent='×'+gs.combo;
+}
+function setPhase(t){ document.getElementById('phaseV').textContent=t; }
+function setProg(p){ document.getElementById('progF').style.width=p+'%'; }
+
+/* ── FLASH ─────────────────────────────────────────────── */
+function flash(txt,col){
+  const el=document.getElementById('cf'); el.textContent=txt; el.style.color=col;
+  el.style.transition='none'; el.style.opacity='1'; el.style.transform='translate(-50%,-50%) scale(1.4)';
+  requestAnimationFrame(()=>{ el.style.transition='opacity .9s, transform .9s'; el.style.opacity='0'; el.style.transform='translate(-50%,-62%) scale(1)'; });
+}
+
+/* ── SCREEN ────────────────────────────────────────────── */
+function show(id){ document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active')); document.getElementById(id).classList.add('active'); }
+
+/* ── UTIL ──────────────────────────────────────────────── */
+function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]; } return a; }
+
+// Defer init until page fully loaded
+window.addEventListener('load', function(){ resizeCanvas(); draw(); });
+</script>
+</body>
+</html>
