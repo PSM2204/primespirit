@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+    <title>Happy Jula — Train Your Brain Every Day</title>
+    <meta name="description" content="Happy Jula: a beautiful brain training platform with 60+ cognitive games to sharpen memory, attention, speed, logic, and more.">
+    <meta name="theme-color" content="#7c3aed">
+    <link rel="manifest" href="manifest.json">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&family=Nunito:wght@300;400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Background Particles -->
+    <canvas id="bg-canvas"></canvas>
+
+    <!-- Confetti Layer -->
+    <div id="confetti-container"></div>
+
+    <!-- Toast Notifications -->
+    <div id="toast-container"></div>
+
+    <!-- Jula Coach Bubble -->
+    <div id="jula-bubble" class="jula-bubble hidden">
+        <div class="jula-avatar-coach">🧠</div>
+        <div class="jula-speech"></div>
+        <button class="jula-close" onclick="HappyJula.app.hideCoachBubble()">×</button>
+    </div>
+
+    <div id="app">
+        <!-- ===== LOADING SCREEN ===== -->
+        <section id="screen-loading" class="screen active">
+            <div class="loading-content">
+                <div class="loading-logo">
+                    <div class="logo-orb"></div>
+                    <div class="logo-ring"></div>
+                    <div class="logo-text">Happy Jula</div>
+                </div>
+                <div class="loading-bar-wrap">
+                    <div class="loading-bar"></div>
+                </div>
+                <p class="loading-sub">Preparing your brain gym...</p>
+            </div>
+        </section>
+
+        <!-- ===== ONBOARDING ===== -->
+        <section id="screen-onboarding" class="screen">
+            <div class="onboard-container">
+                <div class="onboard-step" data-step="1">
+                    <div class="onboard-emoji">🧠</div>
+                    <h1>Welcome to <span class="accent">Happy Jula</span></h1>
+                    <p>A beautiful brain training universe designed to sharpen your cognitive skills through fun, science-informed games.</p>
+                    <button class="btn btn-primary btn-lg" onclick="HappyJula.app.nextOnboard()">Let's Go!</button>
+                </div>
+                <div class="onboard-step hidden" data-step="2">
+                    <h2>Choose Your Avatar</h2>
+                    <div class="avatar-grid" id="avatar-grid"></div>
+                    <input type="text" id="nickname-input" class="input-field" placeholder="Enter your nickname..." maxlength="20">
+                    <button class="btn btn-primary btn-lg" onclick="HappyJula.app.finishOnboard()">Start Training!</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== HOME DASHBOARD ===== -->
+        <section id="screen-home" class="screen">
+            <div class="page-scroll">
+                <header class="home-header">
+                    <div class="home-greeting">
+                        <div class="user-avatar-lg" id="home-avatar"></div>
+                        <div>
+                            <div class="greeting-text" id="greeting-text"></div>
+                            <div class="greeting-name" id="greeting-name"></div>
+                        </div>
+                    </div>
+                    <div class="home-stats-row">
+                        <div class="stat-chip"><span class="stat-icon">⚡</span><span id="stat-xp">0</span> XP</div>
+                        <div class="stat-chip"><span class="stat-icon">🪙</span><span id="stat-coins">0</span></div>
+                        <div class="stat-chip"><span class="stat-icon">💎</span><span id="stat-diamonds">0</span></div>
+                    </div>
+                </header>
+
+                <div class="xp-bar-section">
+                    <div class="xp-label">Level <span id="xp-level">1</span></div>
+                    <div class="xp-bar-track">
+                        <div class="xp-bar-fill" id="xp-bar-fill"></div>
+                    </div>
+                    <div class="xp-amount"><span id="xp-current">0</span>/<span id="xp-max">100</span></div>
+                </div>
+
+                <div class="streak-card glass">
+                    <div class="streak-flame">🔥</div>
+                    <div class="streak-info">
+                        <div class="streak-count" id="streak-count">0</div>
+                        <div class="streak-label">Day Streak</div>
+                    </div>
+                    <div class="streak-best">Best: <span id="streak-best">0</span></div>
+                </div>
+
+                <div class="section-title">Today's Challenge</div>
+                <div class="daily-card glass" id="daily-card">
+                    <div class="daily-badge">🌟 Daily</div>
+                    <div class="daily-games" id="daily-games-list"></div>
+                    <button class="btn btn-accent" onclick="HappyJula.app.startDailyChallenge()">Start Challenge</button>
+                    <div class="daily-progress-bar">
+                        <div class="daily-progress-fill" id="daily-progress-fill"></div>
+                    </div>
+                </div>
+
+                <div class="section-title">Brain Overview</div>
+                <div class="brain-radar-card glass">
+                    <canvas id="radar-chart" width="280" height="280"></canvas>
+                </div>
+
+                <div class="section-title">Quick Actions</div>
+                <div class="quick-grid">
+                    <button class="quick-btn glass" onclick="HappyJula.app.randomGame()">
+                        <span class="quick-icon">🎲</span>
+                        <span>Quick Play</span>
+                    </button>
+                    <button class="quick-btn glass" onclick="HappyJula.app.navigate('games-hub')">
+                        <span class="quick-icon">🎮</span>
+                        <span>All Games</span>
+                    </button>
+                    <button class="quick-btn glass" onclick="HappyJula.app.navigate('statistics')">
+                        <span class="quick-icon">📊</span>
+                        <span>Statistics</span>
+                    </button>
+                    <button class="quick-btn glass" onclick="HappyJula.app.navigate('coach')">
+                        <span class="quick-icon">🧠</span>
+                        <span>AI Coach</span>
+                    </button>
+                </div>
+
+                <div class="section-title">Worlds</div>
+                <div class="worlds-scroll" id="worlds-container"></div>
+
+                <div style="height:100px"></div>
+            </div>
+        </section>
+
+        <!-- ===== GAMES HUB ===== -->
+        <section id="screen-games-hub" class="screen">
+            <div class="page-scroll">
+                <div class="page-header">
+                    <button class="back-btn" onclick="HappyJula.app.navigate('home')">←</button>
+                    <h1>Games</h1>
+                    <div></div>
+                </div>
+                <div class="category-pills" id="category-pills"></div>
+                <div class="games-grid" id="games-grid"></div>
+                <div style="height:100px"></div>
+            </div>
+        </section>
+
+        <!-- ===== GAME PLAY ===== -->
+        <section id="screen-game" class="screen">
+            <div class="game-header">
+                <button class="back-btn" onclick="HappyJula.app.exitGame()">←</button>
+                <div class="game-title" id="game-title"></div>
+                <div class="game-meta">
+                    <span class="game-timer" id="game-timer">0:00</span>
+                    <span class="game-score-display">Score: <span id="game-score">0</span></span>
+                </div>
+            </div>
+            <div id="game-area"></div>
+        </section>
+
+        <!-- ===== RESULTS ===== -->
+        <section id="screen-results" class="screen">
+            <div class="results-container">
+                <div class="results-stars" id="results-stars"></div>
+                <h1 class="results-title">Great Job!</h1>
+                <div class="results-score-big" id="results-score">0</div>
+                <div class="results-label">points</div>
+                <div class="results-stats">
+                    <div class="result-stat">
+                        <span class="result-stat-val" id="result-accuracy">0%</span>
+                        <span class="result-stat-label">Accuracy</span>
+                    </div>
+                    <div class="result-stat">
+                        <span class="result-stat-val" id="result-time">0s</span>
+                        <span class="result-stat-label">Time</span>
+                    </div>
+                    <div class="result-stat">
+                        <span class="result-stat-val" id="result-streak">0</span>
+                        <span class="result-stat-label">Best Streak</span>
+                    </div>
+                </div>
+                <div class="results-rewards glass">
+                    <div class="reward-item">⚡ +<span id="reward-xp">0</span> XP</div>
+                    <div class="reward-item">🪙 +<span id="reward-coins">0</span> Coins</div>
+                </div>
+                <div class="results-new-best hidden" id="results-new-best">🏆 New High Score!</div>
+                <div class="results-coach-msg glass" id="results-coach-msg"></div>
+                <div class="results-buttons">
+                    <button class="btn btn-primary btn-lg" id="btn-play-again">Play Again</button>
+                    <button class="btn btn-secondary btn-lg" onclick="HappyJula.app.navigate('home')">Home</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== PROFILE ===== -->
+        <section id="screen-profile" class="screen">
+            <div class="page-scroll">
+                <div class="page-header">
+                    <button class="back-btn" onclick="HappyJula.app.navigate('home')">←</button>
+                    <h1>Profile</h1>
+                    <div></div>
+                </div>
+                <div class="profile-hero glass">
+                    <div class="profile-avatar" id="profile-avatar"></div>
+                    <div class="profile-name" id="profile-name">Player</div>
+                    <div class="profile-title" id="profile-title">Beginner Brain</div>
+                    <div class="profile-level">Level <span id="profile-level">1</span></div>
+                </div>
+                <div class="section-title">Brain Scores</div>
+                <div class="brain-scores" id="brain-scores"></div>
+                <div class="section-title">Achievements</div>
+                <div class="achievements-grid" id="achievements-grid"></div>
+                <div class="section-title">Badges</div>
+                <div class="badges-row" id="badges-row"></div>
+                <div style="height:100px"></div>
+            </div>
+        </section>
+
+        <!-- ===== STATISTICS ===== -->
+        <section id="screen-statistics" class="screen">
+            <div class="page-scroll">
+                <div class="page-header">
+                    <button class="back-btn" onclick="HappyJula.app.navigate('home')">←</button>
+                    <h1>Statistics</h1>
+                    <div></div>
+                </div>
+                <div class="stats-overview">
+                    <div class="stat-card glass">
+                        <div class="stat-card-val" id="stat-total-games">0</div>
+                        <div class="stat-card-label">Games Played</div>
+                    </div>
+                    <div class="stat-card glass">
+                        <div class="stat-card-val" id="stat-total-time">0m</div>
+                        <div class="stat-card-label">Total Time</div>
+                    </div>
+                    <div class="stat-card glass">
+                        <div class="stat-card-val" id="stat-avg-accuracy">0%</div>
+                        <div class="stat-card-label">Avg Accuracy</div>
+                    </div>
+                    <div class="stat-card glass">
+                        <div class="stat-card-val" id="stat-brain-age">--</div>
+                        <div class="stat-card-label">Brain Age</div>
+                    </div>
+                </div>
+                <div class="section-title">Cognitive Radar</div>
+                <div class="brain-radar-card glass">
+                    <canvas id="stats-radar" width="300" height="300"></canvas>
+                </div>
+                <div class="section-title">Activity Heatmap</div>
+                <div class="heatmap-card glass">
+                    <div id="heatmap-grid"></div>
+                </div>
+                <div class="section-title">Weekly Activity</div>
+                <div class="chart-card glass">
+                    <canvas id="weekly-chart" width="340" height="180"></canvas>
+                </div>
+                <div class="section-title">Skill Progress</div>
+                <div id="skill-bars"></div>
+                <div style="height:100px"></div>
+            </div>
+        </section>
+
+        <!-- ===== ACHIEVEMENTS ===== -->
+        <section id="screen-achievements" class="screen">
+            <div class="page-scroll">
+                <div class="page-header">
+                    <button class="back-btn" onclick="HappyJula.app.navigate('profile')">←</button>
+                    <h1>Achievements</h1>
+                    <div></div>
+                </div>
+                <div class="achievement-list" id="achievement-list-full"></div>
+                <div style="height:100px"></div>
+            </div>
+        </section>
+
+        <!-- ===== SETTINGS ===== -->
+        <section id="screen-settings" class="screen">
+            <div class="page-scroll">
+                <div class="page-header">
+                    <button class="back-btn" onclick="HappyJula.app.navigate('home')">←</button>
+                    <h1>Settings</h1>
+                    <div></div>
+                </div>
+                <div class="settings-group">
+                    <div class="setting-item glass">
+                        <span>🌙 Dark Mode</span>
+                        <label class="toggle"><input type="checkbox" id="set-dark" checked><span class="toggle-slider"></span></label>
+                    </div>
+                    <div class="setting-item glass">
+                        <span>🔊 Sound Effects</span>
+                        <label class="toggle"><input type="checkbox" id="set-sound" checked><span class="toggle-slider"></span></label>
+                    </div>
+                    <div class="setting-item glass">
+                        <span>🎵 Background Music</span>
+                        <label class="toggle"><input type="checkbox" id="set-music"><span class="toggle-slider"></span></label>
+                    </div>
+                    <div class="setting-item glass">
+                        <span>📳 Haptic Feedback</span>
+                        <label class="toggle"><input type="checkbox" id="set-haptic" checked><span class="toggle-slider"></span></label>
+                    </div>
+                    <div class="setting-item glass">
+                        <span>🎨 Color Blind Mode</span>
+                        <label class="toggle"><input type="checkbox" id="set-colorblind"><span class="toggle-slider"></span></label>
+                    </div>
+                    <div class="setting-item glass">
+                        <span>📖 Dyslexia Font</span>
+                        <label class="toggle"><input type="checkbox" id="set-dyslexia"><span class="toggle-slider"></span></label>
+                    </div>
+                    <div class="setting-item glass">
+                        <span>🔤 Large Text</span>
+                        <label class="toggle"><input type="checkbox" id="set-largetext"><span class="toggle-slider"></span></label>
+                    </div>
+                </div>
+                <div class="section-title">Profile</div>
+                <div class="settings-group">
+                    <button class="setting-item glass setting-btn" onclick="HappyJula.app.changeAvatar()">
+                        <span>Change Avatar</span><span>→</span>
+                    </button>
+                    <button class="setting-item glass setting-btn" onclick="HappyJula.app.changeName()">
+                        <span>Change Nickname</span><span>→</span>
+                    </button>
+                </div>
+                <div class="section-title">Data</div>
+                <div class="settings-group">
+                    <button class="setting-item glass setting-btn" onclick="HappyJula.app.exportData()">
+                        <span>Export Data</span><span>→</span>
+                    </button>
+                    <button class="setting-item glass setting-btn danger-text" onclick="HappyJula.app.resetData()">
+                        <span>Reset All Data</span><span>⚠️</span>
+                    </button>
+                </div>
+                <p class="app-version">Happy Jula v1.0 — Made with 💜</p>
+                <div style="height:100px"></div>
+            </div>
+        </section>
+
+        <!-- ===== COACH ===== -->
+        <section id="screen-coach" class="screen">
+            <div class="page-scroll">
+                <div class="page-header">
+                    <button class="back-btn" onclick="HappyJula.app.navigate('home')">←</button>
+                    <h1>Jula Coach</h1>
+                    <div></div>
+                </div>
+                <div class="coach-hero glass">
+                    <div class="coach-avatar">🧠</div>
+                    <h2>Hi, I'm <span class="accent">Jula</span>!</h2>
+                    <p>Your personal brain coach. I'll help you train smarter and track your progress.</p>
+                </div>
+                <div class="section-title">Chat with Jula</div>
+                <div class="coach-chat glass" id="coach-chat">
+                    <div class="chat-messages" id="chat-messages"></div>
+                    <div class="chat-input-row">
+                        <input type="text" id="chat-input" class="input-field" placeholder="Ask Jula something...">
+                        <button class="btn btn-primary" onclick="HappyJula.app.coachReply()">Send</button>
+                    </div>
+                </div>
+                <div class="section-title">Recommendations</div>
+                <div id="coach-recommendations"></div>
+                <div class="section-title">Motivational Quote</div>
+                <div class="quote-card glass" id="quote-card">
+                    <p id="quote-text"></p>
+                    <span id="quote-author"></span>
+                </div>
+                <div style="height:100px"></div>
+            </div>
+        </section>
+
+        <!-- ===== DAILY CHALLENGE ===== -->
+        <section id="screen-daily" class="screen">
+            <div class="page-scroll">
+                <div class="page-header">
+                    <button class="back-btn" onclick="HappyJula.app.navigate('home')">←</button>
+                    <h1>Daily Challenge</h1>
+                    <div></div>
+                </div>
+                <div class="daily-hero glass">
+                    <div class="daily-hero-icon">🌟</div>
+                    <h2>Today's Brain Workout</h2>
+                    <p>Complete all 5 games to earn the daily badge and bonus XP!</p>
+                </div>
+                <div id="daily-challenge-list"></div>
+                <div class="daily-rewards-preview glass">
+                    <h3>Completion Rewards</h3>
+                    <div class="reward-row">
+                        <span>⚡ 200 Bonus XP</span>
+                        <span>🪙 100 Coins</span>
+                        <span>🏅 Daily Badge</span>
+                    </div>
+                </div>
+                <div style="height:100px"></div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <nav id="bottom-nav" class="bottom-nav hidden">
+        <button class="nav-btn active" data-screen="home" onclick="HappyJula.app.navigate('home')">
+            <span class="nav-icon">🏠</span><span class="nav-label">Home</span>
+        </button>
+        <button class="nav-btn" data-screen="games-hub" onclick="HappyJula.app.navigate('games-hub')">
+            <span class="nav-icon">🎮</span><span class="nav-label">Games</span>
+        </button>
+        <button class="nav-btn" data-screen="statistics" onclick="HappyJula.app.navigate('statistics')">
+            <span class="nav-icon">📊</span><span class="nav-label">Stats</span>
+        </button>
+        <button class="nav-btn" data-screen="coach" onclick="HappyJula.app.navigate('coach')">
+            <span class="nav-icon">🧠</span><span class="nav-label">Coach</span>
+        </button>
+        <button class="nav-btn" data-screen="profile" onclick="HappyJula.app.navigate('profile')">
+            <span class="nav-icon">👤</span><span class="nav-label">Profile</span>
+        </button>
+    </nav>
+
+    <!-- Modal Overlay -->
+    <div id="modal-overlay" class="modal-overlay hidden">
+        <div class="modal-box glass" id="modal-box"></div>
+    </div>
+
+    <script src="js/engine.js"></script>
+    <script src="js/games.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
