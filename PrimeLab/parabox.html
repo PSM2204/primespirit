@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pranika's Parabox — PrimeLab</title>
+<style>
+  :root {
+    --bg: #0d0f14;
+    --panel: #13161e;
+    --border: #1e2330;
+    --cyan: #00d4ff;
+    --cyan-dim: #0099cc;
+    --purple: #7c5cbf;
+    --gold: #f0b429;
+    --pink: #e85d9b;
+    --green: #3ecf8e;
+    --red: #ff5c5c;
+    --text: #e2e8f0;
+    --muted: #6b7a99;
+    --player: #00d4ff;
+    --box: #f0b429;
+    --box-meta: #7c5cbf;   /* box-inside-box */
+    --goal: #3ecf8e;
+    --wall: #2a2f3e;
+    --enter: #e85d9b;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* ── Header ── */
+  header {
+    width: 100%;
+    max-width: 900px;
+    padding: 18px 24px 0;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .logo-badge {
+    background: linear-gradient(135deg, var(--purple), var(--cyan));
+    border-radius: 12px;
+    width: 44px; height: 44px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; font-weight: 900; color: #fff;
+    flex-shrink: 0;
+  }
+  .logo-text h1 {
+    font-size: 1.35rem; font-weight: 800;
+    background: linear-gradient(90deg, var(--cyan), var(--purple));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.1;
+  }
+  .logo-text p {
+    font-size: 0.7rem; color: var(--muted); letter-spacing: .08em;
+    text-transform: uppercase;
+  }
+  .primelab-tag {
+    margin-left: auto;
+    font-size: 0.65rem; font-weight: 700; letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--cyan);
+    border: 1px solid var(--cyan-dim);
+    border-radius: 6px; padding: 3px 8px;
+  }
+
+  /* ── Main layout ── */
+  main {
+    width: 100%;
+    max-width: 900px;
+    padding: 16px 16px 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  /* ── Level info bar ── */
+  .info-bar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .level-name {
+    font-size: 1.05rem; font-weight: 700; color: var(--gold);
+  }
+  .level-num {
+    font-size: 0.8rem; color: var(--muted);
+  }
+  .moves-counter {
+    margin-left: auto;
+    font-size: 0.85rem; color: var(--muted);
+  }
+  .moves-counter span { color: var(--cyan); font-weight: 700; }
+
+  /* ── Buttons ── */
+  .btn-row {
+    display: flex; gap: 8px; flex-wrap: wrap;
+  }
+  button {
+    cursor: pointer; border: none; border-radius: 8px;
+    font-size: 0.8rem; font-weight: 700; padding: 7px 14px;
+    transition: transform .1s, opacity .15s;
+  }
+  button:active { transform: scale(.95); }
+  .btn-primary { background: var(--cyan); color: #0d0f14; }
+  .btn-secondary { background: var(--border); color: var(--text); }
+  .btn-danger { background: var(--red); color: #fff; }
+  .btn-gold { background: var(--gold); color: #0d0f14; }
+  button:disabled { opacity: .4; cursor: not-allowed; }
+
+  /* ── Canvas wrapper ── */
+  .canvas-wrap {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 12px;
+    position: relative;
+    overflow: hidden;
+  }
+  canvas {
+    display: block;
+    image-rendering: pixelated;
+    border-radius: 8px;
+    max-width: 100%;
+  }
+
+  /* ── Legend ── */
+  .legend {
+    display: flex; gap: 16px; flex-wrap: wrap;
+    padding: 10px 14px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    font-size: 0.75rem;
+  }
+  .legend-item { display: flex; align-items: center; gap: 6px; color: var(--muted); }
+  .legend-dot {
+    width: 14px; height: 14px; border-radius: 3px; flex-shrink: 0;
+  }
+
+  /* ── Controls help ── */
+  .controls {
+    font-size: 0.72rem; color: var(--muted);
+    padding: 8px 14px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    line-height: 1.8;
+  }
+  .controls kbd {
+    background: var(--border);
+    border: 1px solid #2e3545;
+    border-radius: 4px;
+    padding: 1px 5px;
+    font-size: 0.7rem; color: var(--text);
+  }
+
+  /* ── Level select ── */
+  .level-select { display: flex; gap: 6px; flex-wrap: wrap; }
+  .lvl-btn {
+    background: var(--border); color: var(--muted);
+    border-radius: 6px; padding: 5px 11px; font-size: 0.75rem;
+  }
+  .lvl-btn.active { background: var(--cyan); color: #0d0f14; }
+  .lvl-btn.solved { background: var(--green); color: #0d0f14; }
+
+  /* ── Win overlay ── */
+  #win-overlay {
+    display: none;
+    position: absolute; inset: 0;
+    background: rgba(13,15,20,.9);
+    border-radius: 14px;
+    flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 14px;
+    z-index: 10;
+  }
+  #win-overlay.show { display: flex; }
+  #win-overlay h2 { font-size: 2rem; color: var(--gold); text-align: center; }
+  #win-overlay p { color: var(--muted); font-size: 0.85rem; }
+
+  /* depth indicator */
+  .depth-bar {
+    display: flex; gap: 6px; align-items: center;
+    font-size: 0.72rem; color: var(--muted);
+  }
+  .depth-crumb {
+    background: var(--border); border-radius: 4px; padding: 2px 8px;
+    color: var(--pink);
+  }
+  .depth-crumb.root { color: var(--cyan); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo-badge">Ρ</div>
+  <div class="logo-text">
+    <h1>Pranika's Parabox</h1>
+    <p>Recursive Box Puzzles · PrimeLab</p>
+  </div>
+  <div class="primelab-tag">PrimeLab</div>
+</header>
+
+<main>
+
+  <div class="info-bar">
+    <div>
+      <div class="level-name" id="level-name">Tutorial</div>
+      <div class="level-num" id="level-num">Level 1 / 10</div>
+    </div>
+    <div class="depth-bar" id="depth-bar">
+      <span class="depth-crumb root" id="depth-root">World</span>
+    </div>
+    <div class="moves-counter">Moves: <span id="moves">0</span></div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn-secondary" id="btn-undo">↩ Undo</button>
+    <button class="btn-secondary" id="btn-restart">↺ Restart</button>
+    <button class="btn-primary" id="btn-next" disabled>Next Level →</button>
+    <button class="btn-gold" id="btn-hint">💡 Hint</button>
+  </div>
+
+  <div class="canvas-wrap" id="canvas-wrap">
+    <canvas id="game" width="560" height="560"></canvas>
+    <div id="win-overlay">
+      <h2>✨ Level Solved!</h2>
+      <p id="win-msg">You pushed all boxes onto goals!</p>
+      <button class="btn-primary" id="btn-win-next">Next Level →</button>
+      <button class="btn-secondary" id="btn-win-restart">Play Again</button>
+    </div>
+  </div>
+
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:#00d4ff"></div>You (Player)</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#f0b429"></div>Box</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#7c5cbf"></div>Meta-Box (enter with Z)</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#3ecf8e"></div>Goal</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#e85d9b"></div>Box on Goal ✓</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#2a2f3e;border:1px solid #3a4050"></div>Wall</div>
+  </div>
+
+  <div class="controls">
+    <kbd>↑↓←→</kbd> or <kbd>W A S D</kbd> Move &nbsp;|&nbsp;
+    <kbd>Z</kbd> Enter highlighted box &nbsp;|&nbsp;
+    <kbd>X</kbd> Exit box (go up) &nbsp;|&nbsp;
+    <kbd>Ctrl+Z</kbd> Undo &nbsp;|&nbsp;
+    <kbd>R</kbd> Restart
+  </div>
+
+  <div style="font-size:.8rem;color:var(--muted);">Jump to level:</div>
+  <div class="level-select" id="level-select"></div>
+
+</main>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+//  PRANIKA'S PARABOX — Game Engine
+//  Recursive "box-within-box" puzzle game
+// ═══════════════════════════════════════════════════════════════
+
+// Cell types
+const T = { EMPTY:0, WALL:1, GOAL:2 };
+// Entity types
+const E = { PLAYER:'P', BOX:'B', METABOX:'M' };
+
+// ── Level definitions ──────────────────────────────────────────
+//   grid: rows of strings, '#'=wall, '.'=empty, 'G'=goal
+//   entities: [{type, x, y}]  (METABOX has inner grid)
+const LEVELS = [
+{
+  name: "Baby Steps",
+  hint: "Push the box onto the goal. Arrow keys move you.",
+  grid: [
+    "#######",
+    "#.....#",
+    "#.P.B.#",
+    "#...G.#",
+    "#.....#",
+    "#######",
+  ],
+  entities: []
+},
+{
+  name: "Two of a Kind",
+  hint: "Push both boxes onto both goals.",
+  grid: [
+    "########",
+    "#......#",
+    "#.P....#",
+    "#.BB...#",
+    "#..GG..#",
+    "#......#",
+    "########",
+  ],
+  entities: []
+},
+{
+  name: "The Squeeze",
+  hint: "Walls are tight — plan your route first.",
+  grid: [
+    "#########",
+    "#.......#",
+    "#.#.#.#.#",
+    "#.P.B...#",
+    "#.#.#.#.#",
+    "#.....G.#",
+    "#########",
+  ],
+  entities: []
+},
+{
+  name: "Mirror Push",
+  hint: "Two goals, two boxes — they mirror each other.",
+  grid: [
+    "##########",
+    "#........#",
+    "#.G....G.#",
+    "#.......##",
+    "##.......#",
+    "#.B....B.#",
+    "#....P...#",
+    "##########",
+  ],
+  entities: []
+},
+{
+  name: "Enter the Box",
+  hint: "Press Z to enter the purple meta-box. Push the inner box onto the inner goal!",
+  grid: [
+    "#########",
+    "#.......#",
+    "#...P...#",
+    "#.......#",
+    "#.......#",
+    "#########",
+  ],
+  entities: [
+    { type: E.METABOX, x: 4, y: 3,
+      inner: {
+        grid: [
+          "#####",
+          "#.G.#",
+          "#.B.#",
+          "#...#",
+          "#####",
+        ],
+        playerX: 2, playerY: 3
+      }
+    }
+  ]
+},
+{
+  name: "Box in Box",
+  hint: "Solve the puzzle inside the meta-box, then push the meta-box to the outer goal.",
+  grid: [
+    "##########",
+    "#........#",
+    "#.P......#",
+    "#........#",
+    "#....G...#",
+    "#........#",
+    "##########",
+  ],
+  entities: [
+    { type: E.METABOX, x: 5, y: 2,
+      inner: {
+        grid: [
+          "######",
+          "#.G..#",
+          "#....#",
+          "#.B..#",
+          "#....#",
+          "######",
+        ],
+        playerX: 1, playerY: 1
+      }
+    }
+  ]
+},
+{
+  name: "Nested Reality",
+  hint: "Two meta-boxes, one outer goal. Enter each, solve the inner puzzle, then align.",
+  grid: [
+    "############",
+    "#..........#",
+    "#.P........#",
+    "#..........#",
+    "#.....GG...#",
+    "#..........#",
+    "############",
+  ],
+  entities: [
+    { type: E.METABOX, x: 4, y: 3,
+      inner: {
+        grid: ["#####","#.G.#","#.B.#","#...#","#####"],
+        playerX: 2, playerY: 3
+      }
+    },
+    { type: E.METABOX, x: 7, y: 3,
+      inner: {
+        grid: ["#####","#G..#","#B..#","#...#","#####"],
+        playerX: 3, playerY: 3
+      }
+    }
+  ]
+},
+{
+  name: "The Gauntlet",
+  hint: "Many walls. Stay calm, trace the path.",
+  grid: [
+    "###########",
+    "#.........#",
+    "#.###.###.#",
+    "#.#G....#.#",
+    "#.#.####..#",
+    "#...#..B..#",
+    "#.###..###.#",
+    "#....P.....#",
+    "###########",
+  ],
+  entities: []
+},
+{
+  name: "Deep Dive",
+  hint: "A meta-box that holds another meta-box. Go two levels deep!",
+  grid: [
+    "#########",
+    "#.......#",
+    "#...P...#",
+    "#.......#",
+    "#...G...#",
+    "#########",
+  ],
+  entities: [
+    { type: E.METABOX, x: 4, y: 2,
+      inner: {
+        grid: ["#######","#.....#","#..G..#","#.....#","#######"],
+        playerX: 1, playerY: 2,
+        entities: [
+          { type: E.METABOX, x: 3, y: 2,
+            inner: {
+              grid: ["#####","#.G.#","#.B.#","#...#","#####"],
+              playerX: 2, playerY: 3
+            }
+          }
+        ]
+      }
+    }
+  ]
+},
+{
+  name: "Pranika's Final",
+  hint: "The ultimate challenge — solve inner puzzles, then push meta-boxes to outer goals.",
+  grid: [
+    "##############",
+    "#............#",
+    "#.P..........#",
+    "#............#",
+    "#....GG......#",
+    "#............#",
+    "#............#",
+    "##############",
+  ],
+  entities: [
+    { type: E.METABOX, x: 5, y: 2,
+      inner: {
+        grid: ["######","#....#","#.BG.#","#....#","######"],
+        playerX: 1, playerY: 2
+      }
+    },
+    { type: E.METABOX, x: 8, y: 3,
+      inner: {
+        grid: ["######","#....#","#GB..#","#....#","######"],
+        playerX: 4, playerY: 3
+      }
+    }
+  ]
+}
+];
+
+// ── State management ───────────────────────────────────────────
+let levelIndex = 0;
+let moveCount = 0;
+let history = [];   // stack of snapshots
+let solved = new Array(LEVELS.length).fill(false);
+let levelState = null;   // current live state
+
+// ── Parse level into state ─────────────────────────────────────
+function parseGrid(gridLines) {
+  return gridLines.map(row => row.split('').map(ch => {
+    if (ch === '#') return T.WALL;
+    if (ch === 'G') return T.GOAL;
+    return T.EMPTY;
+  }));
+}
+
+function parseEntitiesFromGrid(gridLines) {
+  const ents = [];
+  gridLines.forEach((row, y) => {
+    row.split('').forEach((ch, x) => {
+      if (ch === 'P') ents.push({ type: E.PLAYER, x, y });
+      if (ch === 'B') ents.push({ type: E.BOX, x, y });
+    });
+  });
+  return ents;
+}
+
+function buildState(level) {
+  const grid = parseGrid(level.grid);
+  const gridEnts = parseEntitiesFromGrid(level.grid);
+  const metaEnts = (level.entities||[]).map(me => ({
+    ...me,
+    innerSolved: false,
+    innerState: me.inner ? buildInnerState(me.inner) : null
+  }));
+  const player = gridEnts.find(e => e.type === E.PLAYER);
+  const boxes = gridEnts.filter(e => e.type === E.BOX);
+
+  return {
+    grid,
+    rows: grid.length,
+    cols: grid[0].length,
+    px: player.x, py: player.y,
+    boxes: boxes.map(b => ({x:b.x,y:b.y})),
+    metas: metaEnts,
+    // context: null means top level
+    context: null
+  };
+}
+
+function buildInnerState(inner) {
+  const grid = parseGrid(inner.grid);
+  const gridEnts = parseEntitiesFromGrid(inner.grid);
+  const boxes = gridEnts.filter(e => e.type === E.BOX);
+  const metas = (inner.entities||[]).map(me => ({
+    ...me,
+    innerSolved: false,
+    innerState: me.inner ? buildInnerState(me.inner) : null
+  }));
+  return {
+    grid,
+    rows: grid.length,
+    cols: grid[0].length,
+    px: inner.playerX, py: inner.playerY,
+    boxes: boxes.map(b=>({x:b.x,y:b.y})),
+    metas,
+    context: null
+  };
+}
+
+// current "active" scope (may be nested inside a meta)
+let activeScope = null;       // ref to the state object being played
+let scopeStack  = [];         // trail of parent states + meta indices
+
+function initLevel(idx) {
+  levelIndex = idx;
+  const lv = LEVELS[idx];
+  levelState = buildState(lv);
+  activeScope = levelState;
+  scopeStack = [];
+  moveCount = 0;
+  history = [];
+  updateUI();
+  render();
+}
+
+// ── Snapshot / Undo ───────────────────────────────────────────
+function snapshot() {
+  history.push(JSON.stringify({ levelState, scopeStack: scopeStack.map(s=>s.metaIdx), moveCount }));
+}
+
+function undo() {
+  if (!history.length) return;
+  const snap = JSON.parse(history.pop());
+  levelState = snap.levelState;
+  // Rebuild activeScope from stack
+  activeScope = levelState;
+  scopeStack = [];
+  for (const idx of snap.scopeStack) {
+    const meta = activeScope.metas[idx];
+    scopeStack.push({ state: activeScope, metaIdx: idx });
+    activeScope = meta.innerState;
+  }
+  moveCount = snap.moveCount;
+  updateUI();
+  render();
+}
+
+// ── Movement logic ─────────────────────────────────────────────
+function cellAt(state, x, y) {
+  if (y < 0 || y >= state.rows || x < 0 || x >= state.cols) return T.WALL;
+  return state.grid[y][x];
+}
+
+function entityAt(state, x, y) {
+  for (const b of state.boxes) if (b.x===x && b.y===y) return {kind:'box', ref:b};
+  for (let i=0;i<state.metas.length;i++) {
+    const m = state.metas[i];
+    if (m.x===x && m.y===y) return {kind:'meta', ref:m, idx:i};
+  }
+  return null;
+}
+
+function canMove(state, x, y, dx, dy) {
+  const nx=x+dx, ny=y+dy;
+  if (cellAt(state,nx,ny)===T.WALL) return false;
+  const ent = entityAt(state,nx,ny);
+  if (!ent) return true;
+  if (ent.kind==='box') return canMove(state,nx,ny,dx,dy);
+  if (ent.kind==='meta') return canMove(state,nx,ny,dx,dy);
+  return false;
+}
+
+function doMove(state, x, y, dx, dy) {
+  const nx=x+dx, ny=y+dy;
+  const ent = entityAt(state,nx,ny);
+  if (ent) {
+    if (ent.kind==='box') { ent.ref.x+=dx; ent.ref.y+=dy; }
+    if (ent.kind==='meta') { ent.ref.x+=dx; ent.ref.y+=dy; }
+  }
+}
+
+function move(dx, dy) {
+  snapshot();
+  const s = activeScope;
+  const nx = s.px+dx, ny = s.py+dy;
+  if (!canMove(s, s.px, s.py, dx, dy)) { history.pop(); return; }
+  doMove(s, s.px, s.py, dx, dy);
+  s.px = nx; s.py = ny;
+  moveCount++;
+  checkWin();
+  updateUI();
+  render();
+}
+
+// ── Enter / Exit meta-box ──────────────────────────────────────
+function enterMeta() {
+  const s = activeScope;
+  // find a meta adjacent or under player
+  let target = null, tIdx = -1;
+  for (let i=0; i<s.metas.length; i++) {
+    const m = s.metas[i];
+    if (m.x===s.px && m.y===s.py) { target=m; tIdx=i; break; }
+    // also allow entering if standing next to it (player faces it)
+    const dirs = [[1,0],[-1,0],[0,1],[0,-1]];
+    for (const [dx,dy] of dirs) {
+      if (m.x===s.px+dx && m.y===s.py+dy) { target=m; tIdx=i; break; }
+    }
+    if (target) break;
+  }
+  if (!target) return;
+  if (!target.innerState) return;
+  snapshot();
+  scopeStack.push({ state: s, metaIdx: tIdx });
+  activeScope = target.innerState;
+  updateUI();
+  render();
+}
+
+function exitMeta() {
+  if (!scopeStack.length) return;
+  snapshot();
+  const { state } = scopeStack.pop();
+  activeScope = state;
+  updateUI();
+  render();
+}
+
+// ── Win detection ──────────────────────────────────────────────
+function isGoalSatisfied(state) {
+  for (let y=0; y<state.rows; y++) {
+    for (let x=0; x<state.cols; x++) {
+      if (state.grid[y][x] === T.GOAL) {
+        const ent = entityAt(state, x, y);
+        if (!ent) return false;
+        // a meta must also have its inner solved
+        if (ent.kind==='meta' && !isGoalSatisfied(ent.ref.innerState)) return false;
+      }
+    }
+  }
+  // also check all inner metas are solved
+  for (const m of state.metas) {
+    if (m.innerState && !isGoalSatisfied(m.innerState)) return false;
+  }
+  return true;
+}
+
+function checkWin() {
+  if (isGoalSatisfied(levelState)) {
+    solved[levelIndex] = true;
+    document.getElementById('win-overlay').classList.add('show');
+    document.getElementById('btn-next').disabled = (levelIndex >= LEVELS.length-1);
+    buildLevelSelect();
+  }
+}
+
+// ── Renderer ───────────────────────────────────────────────────
+const CELL = 56;
+const canvas = document.getElementById('game');
+const ctx = canvas.getContext('2d');
+
+function stateToRender() { return activeScope; }
+
+function render() {
+  const s = stateToRender();
+  const W = s.cols * CELL, H = s.rows * CELL;
+  canvas.width = W; canvas.height = H;
+  ctx.clearRect(0,0,W,H);
+
+  // Grid
+  for (let y=0; y<s.rows; y++) {
+    for (let x=0; x<s.cols; x++) {
+      const cell = s.grid[y][x];
+      const px = x*CELL, py = y*CELL;
+      if (cell === T.WALL) {
+        ctx.fillStyle = '#1a1f2e';
+        ctx.fillRect(px,py,CELL,CELL);
+        ctx.strokeStyle = '#2a3045';
+        ctx.lineWidth = 1;
+        ctx.strokeRect(px+.5,py+.5,CELL-1,CELL-1);
+        // brick texture
+        ctx.fillStyle = '#222840';
+        ctx.fillRect(px+2,py+2,CELL-4,CELL-4);
+      } else {
+        ctx.fillStyle = '#0d1018';
+        ctx.fillRect(px,py,CELL,CELL);
+        if (cell === T.GOAL) {
+          // goal ring
+          ctx.strokeStyle = '#3ecf8e';
+          ctx.lineWidth = 3;
+          ctx.beginPath();
+          ctx.arc(px+CELL/2, py+CELL/2, CELL/2-8, 0, Math.PI*2);
+          ctx.stroke();
+          ctx.strokeStyle = '#1a6640';
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.arc(px+CELL/2, py+CELL/2, CELL/2-13, 0, Math.PI*2);
+          ctx.stroke();
+        }
+      }
+    }
+  }
+
+  // Boxes
+  for (const b of s.boxes) {
+    const px = b.x*CELL+4, py = b.y*CELL+4;
+    const sz = CELL-8;
+    // check if on goal
+    const onGoal = s.grid[b.y][b.x] === T.GOAL;
+    ctx.fillStyle = onGoal ? '#2a1a00' : '#1a1200';
+    roundRect(ctx, px, py, sz, sz, 8);
+    ctx.fill();
+    ctx.strokeStyle = onGoal ? '#e85d9b' : '#f0b429';
+    ctx.lineWidth = 3;
+    roundRect(ctx, px, py, sz, sz, 8);
+    ctx.stroke();
+    // icon
+    ctx.fillStyle = onGoal ? '#e85d9b' : '#f0b429';
+    ctx.font = `bold ${Math.floor(sz*.45)}px monospace`;
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(onGoal ? '✓' : '□', b.x*CELL+CELL/2, b.y*CELL+CELL/2+1);
+  }
+
+  // Meta-boxes
+  for (const m of s.metas) {
+    const px = m.x*CELL+3, py = m.y*CELL+3;
+    const sz = CELL-6;
+    const solved = m.innerState && isGoalSatisfied(m.innerState);
+    const onGoal = s.grid[m.y][m.x] === T.GOAL;
+    const baseColor = solved ? '#2a1050' : '#130d2a';
+    ctx.fillStyle = baseColor;
+    roundRect(ctx, px, py, sz, sz, 10);
+    ctx.fill();
+    // glowing border
+    const grd = ctx.createLinearGradient(px,py,px+sz,py+sz);
+    grd.addColorStop(0, solved ? '#e85d9b' : '#7c5cbf');
+    grd.addColorStop(1, '#00d4ff');
+    ctx.strokeStyle = grd;
+    ctx.lineWidth = 3;
+    roundRect(ctx, px, py, sz, sz, 10);
+    ctx.stroke();
+    // draw mini inner grid
+    if (m.innerState) {
+      drawMiniInner(m.innerState, px+8, py+8, sz-16, sz-16);
+    }
+    // solved badge
+    if (solved) {
+      ctx.fillStyle = '#e85d9b';
+      ctx.font = `bold 11px sans-serif`;
+      ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+      ctx.fillText('✓', m.x*CELL+CELL-12, m.y*CELL+4);
+    }
+    if (onGoal) {
+      ctx.strokeStyle = '#e85d9b';
+      ctx.lineWidth = 2;
+      ctx.setLineDash([4,3]);
+      roundRect(ctx, px-2, py-2, sz+4, sz+4, 12);
+      ctx.stroke();
+      ctx.setLineDash([]);
+    }
+  }
+
+  // Player
+  {
+    const px = s.px*CELL, py = s.py*CELL;
+    const cx = px+CELL/2, cy = py+CELL/2;
+    // glow
+    const grd = ctx.createRadialGradient(cx,cy,4, cx,cy,CELL/2-4);
+    grd.addColorStop(0,'rgba(0,212,255,.25)');
+    grd.addColorStop(1,'rgba(0,212,255,0)');
+    ctx.fillStyle = grd;
+    ctx.fillRect(px+4,py+4,CELL-8,CELL-8);
+    // body
+    ctx.fillStyle = '#002933';
+    ctx.beginPath();
+    ctx.arc(cx, cy+6, CELL/2-12, 0, Math.PI, false);
+    ctx.fill();
+    // head
+    ctx.fillStyle = '#004455';
+    ctx.beginPath();
+    ctx.arc(cx, cy-6, CELL/2-16, 0, Math.PI*2);
+    ctx.fill();
+    ctx.strokeStyle = '#00d4ff';
+    ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    ctx.arc(cx, cy-6, CELL/2-16, 0, Math.PI*2);
+    ctx.stroke();
+    // eyes
+    ctx.fillStyle = '#00d4ff';
+    ctx.beginPath(); ctx.arc(cx-5, cy-8, 2.5, 0, Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.arc(cx+5, cy-8, 2.5, 0, Math.PI*2); ctx.fill();
+  }
+}
+
+function drawMiniInner(state, ox, oy, w, h) {
+  const cw = w/state.cols, ch = h/state.rows;
+  for (let y=0; y<state.rows; y++) {
+    for (let x=0; x<state.cols; x++) {
+      const c = state.grid[y][x];
+      if (c===T.WALL) {
+        ctx.fillStyle='#2a3045';
+        ctx.fillRect(ox+x*cw, oy+y*ch, cw-1, ch-1);
+      } else {
+        ctx.fillStyle='#0a0d14';
+        ctx.fillRect(ox+x*cw, oy+y*ch, cw-1, ch-1);
+        if (c===T.GOAL) {
+          ctx.fillStyle='#3ecf8e';
+          ctx.fillRect(ox+x*cw+1, oy+y*ch+1, cw-3, ch-3);
+        }
+      }
+    }
+  }
+  for (const b of state.boxes) {
+    const onGoal = state.grid[b.y][b.x]===T.GOAL;
+    ctx.fillStyle = onGoal ? '#e85d9b' : '#f0b429';
+    ctx.fillRect(ox+b.x*cw+1, oy+b.y*ch+1, cw-3, ch-3);
+  }
+  ctx.fillStyle='#00d4ff';
+  ctx.fillRect(ox+state.px*cw+1, oy+state.py*ch+1, cw-3, ch-3);
+}
+
+function roundRect(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x+r, y);
+  ctx.lineTo(x+w-r, y); ctx.arcTo(x+w,y, x+w,y+r, r);
+  ctx.lineTo(x+w, y+h-r); ctx.arcTo(x+w,y+h, x+w-r,y+h, r);
+  ctx.lineTo(x+r, y+h); ctx.arcTo(x,y+h, x,y+h-r, r);
+  ctx.lineTo(x, y+r); ctx.arcTo(x,y, x+r,y, r);
+  ctx.closePath();
+}
+
+// ── UI updates ─────────────────────────────────────────────────
+function updateUI() {
+  const lv = LEVELS[levelIndex];
+  document.getElementById('level-name').textContent = lv.name;
+  document.getElementById('level-num').textContent = `Level ${levelIndex+1} / ${LEVELS.length}`;
+  document.getElementById('moves').textContent = moveCount;
+  document.getElementById('btn-next').disabled = !solved[levelIndex] || levelIndex>=LEVELS.length-1;
+
+  // depth breadcrumb
+  const bar = document.getElementById('depth-bar');
+  bar.innerHTML = `<span class="depth-crumb root" id="depth-root">World</span>`;
+  for (let i=0; i<scopeStack.length; i++) {
+    bar.innerHTML += ` <span style="color:var(--muted)">›</span> <span class="depth-crumb">Box ${i+1}</span>`;
+  }
+}
+
+function buildLevelSelect() {
+  const el = document.getElementById('level-select');
+  el.innerHTML = '';
+  LEVELS.forEach((lv,i) => {
+    const btn = document.createElement('button');
+    btn.className = 'lvl-btn' + (i===levelIndex?' active':'') + (solved[i]?' solved':'');
+    btn.textContent = `${i+1}. ${lv.name}`;
+    btn.onclick = () => {
+      document.getElementById('win-overlay').classList.remove('show');
+      initLevel(i);
+      buildLevelSelect();
+    };
+    el.appendChild(btn);
+  });
+}
+
+// ── Input handling ─────────────────────────────────────────────
+document.addEventListener('keydown', e => {
+  if (e.ctrlKey && e.key==='z') { undo(); return; }
+  switch(e.key) {
+    case 'ArrowUp': case 'w': case 'W': e.preventDefault(); move(0,-1); break;
+    case 'ArrowDown': case 's': case 'S': e.preventDefault(); move(0,1); break;
+    case 'ArrowLeft': case 'a': case 'A': e.preventDefault(); move(-1,0); break;
+    case 'ArrowRight': case 'd': case 'D': e.preventDefault(); move(1,0); break;
+    case 'z': case 'Z': if (!e.ctrlKey) { enterMeta(); } break;
+    case 'x': case 'X': exitMeta(); break;
+    case 'r': case 'R': restartLevel(); break;
+  }
+});
+
+// Touch / swipe
+let tx0=0, ty0=0;
+canvas.addEventListener('touchstart', e=>{ tx0=e.touches[0].clientX; ty0=e.touches[0].clientY; }, {passive:true});
+canvas.addEventListener('touchend', e=>{
+  const dx=e.changedTouches[0].clientX-tx0, dy=e.changedTouches[0].clientY-ty0;
+  const adx=Math.abs(dx), ady=Math.abs(dy);
+  if (adx<10&&ady<10) return;
+  if (adx>ady) move(dx>0?1:-1, 0);
+  else move(0, dy>0?1:-1);
+}, {passive:true});
+
+function restartLevel() {
+  document.getElementById('win-overlay').classList.remove('show');
+  initLevel(levelIndex);
+}
+
+document.getElementById('btn-restart').onclick = restartLevel;
+document.getElementById('btn-undo').onclick = undo;
+document.getElementById('btn-next').onclick = () => {
+  document.getElementById('win-overlay').classList.remove('show');
+  initLevel(levelIndex+1);
+  buildLevelSelect();
+};
+document.getElementById('btn-win-next').onclick = () => {
+  document.getElementById('win-overlay').classList.remove('show');
+  if (levelIndex < LEVELS.length-1) { initLevel(levelIndex+1); buildLevelSelect(); }
+};
+document.getElementById('btn-win-restart').onclick = restartLevel;
+document.getElementById('btn-hint').onclick = () => {
+  alert('💡 Hint: ' + LEVELS[levelIndex].hint);
+};
+
+// ── Boot ───────────────────────────────────────────────────────
+buildLevelSelect();
+initLevel(0);
+</script>
+</body>
+</html>
