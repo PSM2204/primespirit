@@ -26,63 +26,104 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <style>
-    :root{--ink:#1a1a2e;--ink-soft:#4a4a6a;--parchment:#f8f6f1;--card:#ffffff;--accent:#1b4f72;--accent-2:#c0392b;--accent-3:#117a65;--border:#e0ddd6;--tag-bg:#eaf0f6;--yellow:#fef9e7;--progress-h:3px;--radius:10px;--shadow:0 2px 16px rgba(27,79,114,.09);--transition:0.3s ease;}
+    :root{--ink:#1a1a2e;--ink-soft:#4a4a6a;--parchment:#f8f6f1;--card:#ffffff;--accent:#1b4f72;--accent-2:#c0392b;--accent-3:#117a65;--border:#e0ddd6;--tag-bg:#eaf0f6;--yellow:#fef9e7;--progress-h:3px;--radius:10px;--shadow:0 2px 16px rgba(27,79,114,.09);--transition:0.3s ease;--safe-bottom:env(safe-area-inset-bottom, 0px);--safe-left:env(safe-area-inset-left, 0px);--safe-right:env(safe-area-inset-right, 0px);}
     [data-theme="dark"]{--ink:#e8e6e0;--ink-soft:#a0a0c0;--parchment:#12121e;--card:#1c1c2e;--accent:#5dade2;--accent-2:#ec7063;--accent-3:#52be80;--border:#2a2a3e;--tag-bg:#1e2f3e;--yellow:#1e1e10;--shadow:0 2px 16px rgba(0,0,0,.4);}
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-    html{scroll-behavior:smooth;font-size:16px;-webkit-text-size-adjust:100%;}
-    body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--parchment);color:var(--ink);line-height:1.75;transition:background var(--transition),color var(--transition);overflow-x:hidden;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;}
+    html{scroll-behavior:smooth;font-size:16px;-webkit-text-size-adjust:100%;scroll-padding-top:70px;}
+    body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--parchment);color:var(--ink);line-height:1.75;transition:background var(--transition),color var(--transition);overflow-x:hidden;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;min-height:100dvh;}
     img{max-width:100%;height:auto;display:block;border-radius:var(--radius);}
     a{color:var(--accent);text-decoration:none;transition:color var(--transition);}
     a:hover{text-decoration:underline;}
-    :focus-visible{outline:2px solid var(--accent);outline-offset:3px;}
+    :focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px;}
     button{font-family:inherit;cursor:pointer;border:none;background:none;}
-    #progress-bar{position:fixed;top:0;left:0;height:var(--progress-h);width:0%;background:linear-gradient(90deg,var(--accent),var(--accent-2));z-index:1000;transition:width .1s linear;}
-    header{position:sticky;top:0;z-index:900;background:var(--card);border-bottom:1px solid var(--border);padding:.8rem 1.5rem;display:flex;align-items:center;justify-content:space-between;box-shadow:var(--shadow);gap:1rem;}
-    .site-brand{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:700;color:var(--accent);letter-spacing:-.3px;white-space:nowrap;}
+    input,select,textarea{font-family:inherit;}
+
+    /* PROGRESS BAR */
+    #progress-bar{position:fixed;top:0;left:0;height:var(--progress-h);width:0%;background:linear-gradient(90deg,var(--accent),var(--accent-2));z-index:1000;transition:width .1s linear;will-change:width;}
+
+    /* ── HEADER ── */
+    header{position:sticky;top:0;z-index:900;background:var(--card);border-bottom:1px solid var(--border);padding:.75rem 1.25rem;display:flex;align-items:center;justify-content:space-between;box-shadow:var(--shadow);gap:.75rem;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);}
+    .site-brand{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;color:var(--accent);letter-spacing:-.3px;white-space:nowrap;flex-shrink:0;}
     .site-brand span{color:var(--accent-2);}
-    nav{display:flex;gap:1.4rem;font-size:.82rem;font-weight:500;}
-    nav a{color:var(--ink-soft);white-space:nowrap;}
+    nav{display:flex;gap:1.2rem;font-size:.82rem;font-weight:500;}
+    nav a{color:var(--ink-soft);white-space:nowrap;padding:.25rem 0;position:relative;}
     nav a:hover{color:var(--accent);}
-    .header-actions{display:flex;gap:.6rem;align-items:center;}
-    .btn-icon{background:none;border:1px solid var(--border);border-radius:50%;width:40px;height:40px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;color:var(--ink-soft);transition:background .2s,transform .15s;flex-shrink:0;}
+    nav a::after{content:'';position:absolute;bottom:0;left:0;width:0;height:2px;background:var(--accent);transition:width .2s ease;}
+    nav a:hover::after{width:100%;}
+    .header-actions{display:flex;gap:.5rem;align-items:center;flex-shrink:0;}
+    .btn-icon{background:none;border:1px solid var(--border);border-radius:50%;width:40px;height:40px;min-width:44px;min-height:44px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;color:var(--ink-soft);transition:background .2s,transform .15s;}
     .btn-icon:hover{background:var(--tag-bg);transform:scale(1.05);}
     .btn-icon:active{transform:scale(0.95);}
-    .menu-toggle{display:none;flex-direction:column;gap:4px;padding:8px;cursor:pointer;z-index:901;}
-    .menu-toggle span{display:block;width:22px;height:2px;background:var(--ink);transition:0.3s;border-radius:2px;}
-    .breadcrumb{background:var(--card);border-bottom:1px solid var(--border);padding:.55rem 1.5rem;font-size:.78rem;color:var(--ink-soft);display:flex;gap:.4rem;flex-wrap:wrap;align-items:center;}
-    .breadcrumb a{color:var(--ink-soft);}
-    .breadcrumb span{color:var(--ink);font-weight:500;}
-    .container{max-width:860px;margin:0 auto;padding:0 1.3rem;}
-    .layout{max-width:1140px;margin:0 auto;padding:0 1.3rem;display:grid;grid-template-columns:1fr 280px;gap:2.5rem;align-items:start;}
-    .hero{background:linear-gradient(135deg,#0d2137 0%,#1b4f72 55%,#1a5276 100%);color:white;padding:4.5rem 1.5rem 3.5rem;position:relative;overflow:hidden;}
+
+    /* HAMBURGER */
+    .menu-toggle{display:none;flex-direction:column;gap:5px;padding:10px;cursor:pointer;z-index:901;width:44px;height:44px;justify-content:center;align-items:center;}
+    .menu-toggle span{display:block;width:22px;height:2px;background:var(--ink);transition:0.3s ease;border-radius:2px;transform-origin:center;}
+    .menu-toggle.active span:nth-child(1){transform:rotate(45deg) translate(4px, 5px);}
+    .menu-toggle.active span:nth-child(2){opacity:0;transform:scaleX(0);}
+    .menu-toggle.active span:nth-child(3){transform:rotate(-45deg) translate(4px, -5px);}
+
+    /* NAV OVERLAY */
+    .nav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:898;opacity:0;transition:opacity .3s ease;}
+    .nav-overlay.show{display:block;opacity:1;}
+
+    /* BREADCRUMB */
+    .breadcrumb{background:var(--card);border-bottom:1px solid var(--border);padding:.5rem 1.25rem;font-size:.78rem;color:var(--ink-soft);display:flex;gap:.3rem;flex-wrap:nowrap;align-items:center;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;-ms-overflow-style:none;}
+    .breadcrumb::-webkit-scrollbar{display:none;}
+    .breadcrumb a{color:var(--ink-soft);white-space:nowrap;flex-shrink:0;}
+    .breadcrumb span{color:var(--ink);font-weight:500;white-space:nowrap;}
+
+    /* LAYOUT */
+    .container{max-width:860px;margin:0 auto;padding:0 1.25rem;}
+    .layout{max-width:1140px;margin:0 auto;padding:0 1.25rem;display:grid;grid-template-columns:1fr 280px;gap:2.5rem;align-items:start;}
+
+    /* ── HERO ── */
+    .hero{background:linear-gradient(135deg,#0d2137 0%,#1b4f72 55%,#1a5276 100%);color:white;padding:4rem 1.25rem 3rem;position:relative;overflow:hidden;}
     .hero::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Ccircle cx='30' cy='30' r='1.5'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");pointer-events:none;}
+    .hero::after{content:'';position:absolute;bottom:0;left:0;right:0;height:80px;background:linear-gradient(to top,rgba(13,33,55,.5),transparent);pointer-events:none;}
     .hero-inner{max-width:800px;margin:0 auto;position:relative;}
-    .hero-tag{display:inline-block;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);border-radius:20px;padding:.25rem .9rem;font-size:.78rem;font-weight:600;letter-spacing:.5px;text-transform:uppercase;margin-bottom:1.1rem;}
-    .hero h1{font-family:'Playfair Display',serif;font-size:clamp(1.9rem,4vw,2.9rem);line-height:1.2;font-weight:700;margin-bottom:.9rem;}
+    .hero-tag{display:inline-block;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);border-radius:20px;padding:.3rem .9rem;font-size:.75rem;font-weight:600;letter-spacing:.5px;text-transform:uppercase;margin-bottom:1rem;backdrop-filter:blur(4px);}
+    .hero h1{font-family:'Playfair Display',serif;font-size:clamp(1.75rem,5vw,2.9rem);line-height:1.18;font-weight:700;margin-bottom:.9rem;}
     .hero h1 em{font-style:italic;color:#f1c40f;}
-    .hero-desc{font-size:clamp(0.95rem,2vw,1.05rem);line-height:1.7;opacity:.88;max-width:660px;margin-bottom:1.6rem;}
-    .hero-meta{display:flex;flex-wrap:wrap;gap:.9rem;font-size:.8rem;opacity:.75;}
-    .hero-meta span{display:flex;align-items:center;gap:.3rem;}
-    .article-meta{background:var(--card);border-bottom:1px solid var(--border);padding:.9rem 1.5rem;display:flex;flex-wrap:wrap;gap:.8rem;align-items:center;font-size:.82rem;color:var(--ink-soft);}
-    .meta-chip{background:var(--tag-bg);border-radius:20px;padding:.25rem .8rem;font-weight:500;color:var(--accent);font-size:.78rem;white-space:nowrap;}
-    .summary-box{background:var(--accent);color:white;border-radius:var(--radius);padding:1.5rem 1.8rem;margin:2.2rem 0;}
-    .summary-box h2{font-family:'Playfair Display',serif;font-size:1.1rem;margin-bottom:.9rem;opacity:.9;}
+    .hero-desc{font-size:clamp(0.9rem,2.5vw,1.05rem);line-height:1.65;opacity:.88;max-width:660px;margin-bottom:1.4rem;}
+    .hero-meta{display:flex;flex-wrap:wrap;gap:.6rem .9rem;font-size:.78rem;opacity:.75;}
+    .hero-meta span{display:flex;align-items:center;gap:.3rem;white-space:nowrap;}
+
+    /* ARTICLE META */
+    .article-meta{background:var(--card);border-bottom:1px solid var(--border);padding:.6rem 1.25rem;display:flex;gap:.5rem;align-items:center;font-size:.82rem;color:var(--ink-soft);overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;-ms-overflow-style:none;}
+    .article-meta::-webkit-scrollbar{display:none;}
+    .meta-chip{background:var(--tag-bg);border-radius:20px;padding:.25rem .75rem;font-weight:500;color:var(--accent);font-size:.75rem;white-space:nowrap;flex-shrink:0;}
+
+    /* SUMMARY BOX */
+    .summary-box{background:var(--accent);color:white;border-radius:var(--radius);padding:1.4rem 1.6rem;margin:1.8rem 0;}
+    .summary-box h2{font-family:'Playfair Display',serif;font-size:1.05rem;margin-bottom:.8rem;opacity:.9;}
     .summary-box ul{padding-left:1.1rem;}
-    .summary-box li{margin-bottom:.4rem;font-size:.93rem;opacity:.93;}
-    .toc{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.4rem 1.6rem;margin:2rem 0;}
-    .toc h2{font-size:.85rem;text-transform:uppercase;letter-spacing:.8px;color:var(--ink-soft);margin-bottom:.9rem;font-weight:600;}
+    .summary-box li{margin-bottom:.35rem;font-size:.9rem;opacity:.93;line-height:1.6;}
+
+    /* TOC */
+    .toc{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);margin:1.8rem 0;overflow:hidden;}
+    .toc-toggle{width:100%;display:flex;justify-content:space-between;align-items:center;padding:1rem 1.4rem;background:none;border:none;cursor:pointer;font-weight:600;color:var(--ink);min-height:48px;}
+    .toc-toggle h2{font-size:.82rem;text-transform:uppercase;letter-spacing:.8px;color:var(--ink-soft);margin:0;font-weight:600;}
+    .toc-toggle .toc-chevron{font-size:1.1rem;color:var(--accent);transition:transform .25s;flex-shrink:0;}
+    .toc-list{padding:0 1.4rem 1.2rem;max-height:0;overflow:hidden;transition:max-height .35s ease,padding .35s ease;}
+    .toc-list.open{max-height:800px;padding:0 1.4rem 1.2rem;}
     .toc ol{padding-left:1.2rem;counter-reset:toc;list-style:none;}
-    .toc li{counter-increment:toc;margin-bottom:.35rem;}
+    .toc li{counter-increment:toc;margin-bottom:.3rem;}
     .toc li::before{counter(toc) ". ";font-weight:600;color:var(--accent);}
-    .toc a{color:var(--ink);font-size:.9rem;}
+    .toc a{color:var(--ink);font-size:.88rem;padding:.2rem 0;display:inline-block;min-height:32px;line-height:32px;}
     .toc a:hover{color:var(--accent);}
-    .article-body{padding:2rem 0;}
-    .article-body h2{font-family:'Playfair Display',serif;font-size:clamp(1.4rem,3vw,1.7rem);font-weight:700;color:var(--ink);margin:2.5rem 0 .9rem;border-left:4px solid var(--accent);padding-left:1rem;line-height:1.25;}
-    .article-body h3{font-size:clamp(1.05rem,2.5vw,1.15rem);font-weight:600;color:var(--ink);margin:1.8rem 0 .6rem;}
-    .article-body h4{font-size:1rem;font-weight:600;color:var(--ink-soft);margin:1.4rem 0 .4rem;}
-    .article-body p{margin-bottom:1.1rem;color:var(--ink);font-size:clamp(0.9rem,1.5vw,1rem);}
+
+    /* ARTICLE BODY */
+    .article-body{padding:1.5rem 0;}
+    .article-body h2{font-family:'Playfair Display',serif;font-size:clamp(1.3rem,3.5vw,1.7rem);font-weight:700;color:var(--ink);margin:2rem 0 .8rem;border-left:4px solid var(--accent);padding-left:.9rem;line-height:1.25;}
+    .article-body h3{font-size:clamp(1rem,2.5vw,1.15rem);font-weight:600;color:var(--ink);margin:1.5rem 0 .5rem;}
+    .article-body h4{font-size:.95rem;font-weight:600;color:var(--ink-soft);margin:1.2rem 0 .4rem;}
+    .article-body p{margin-bottom:1rem;color:var(--ink);font-size:clamp(0.88rem,2.5vw,1rem);line-height:1.75;}
     .article-body strong{color:var(--accent);}
-    .callout{border-radius:var(--radius);padding:1.1rem 1.4rem;margin:1.8rem 0;border-left:4px solid;}
+
+    /* CALLOUTS */
+    .callout{border-radius:var(--radius);padding:1rem 1.2rem;margin:1.5rem 0;border-left:4px solid;}
+    .callout-title{font-weight:700;font-size:.82rem;text-transform:uppercase;letter-spacing:.5px;margin-bottom:.3rem;}
+    .callout p,.callout div:not(.callout-title){font-size:.88rem;line-height:1.65;}
     .callout-info{background:#eaf4fb;border-color:#2e86c1;}
     .callout-warn{background:var(--yellow);border-color:#f39c12;}
     .callout-success{background:#eafaf1;border-color:var(--accent-3);}
@@ -91,65 +132,101 @@
     [data-theme="dark"] .callout-warn{background:#1e1a0d;}
     [data-theme="dark"] .callout-success{background:#0d1f16;}
     [data-theme="dark"] .callout-danger{background:#1f0d0d;}
-    .callout-title{font-weight:700;font-size:.88rem;text-transform:uppercase;letter-spacing:.6px;margin-bottom:.4rem;}
     .callout-info .callout-title{color:#1a5276;}
     .callout-warn .callout-title{color:#935116;}
     .callout-success .callout-title{color:#117a65;}
     .callout-danger .callout-title{color:#922b21;}
-    .table-wrap{overflow-x:auto;margin:1.8rem 0;border-radius:var(--radius);box-shadow:var(--shadow);-webkit-overflow-scrolling:touch;}
-    table{width:100%;border-collapse:collapse;font-size:clamp(0.8rem,1.5vw,.88rem);min-width:600px;}
-    th{background:var(--accent);color:white;text-align:left;padding:.75rem 1rem;font-weight:600;white-space:nowrap;}
-    td{padding:.65rem 1rem;border-bottom:1px solid var(--border);vertical-align:top;}
+
+    /* ── TABLES — Desktop ── */
+    .table-wrap{overflow-x:auto;margin:1.5rem 0;border-radius:var(--radius);box-shadow:var(--shadow);-webkit-overflow-scrolling:touch;position:relative;scrollbar-width:thin;}
+    .table-wrap::after{content:'Swipe →';position:absolute;right:0;top:0;bottom:0;width:70px;display:flex;align-items:center;justify-content:flex-end;padding-right:12px;font-size:.7rem;color:var(--ink-soft);background:linear-gradient(to right,transparent,var(--parchment));pointer-events:none;opacity:0;transition:opacity .3s;}
+    .table-wrap.scrolled::after{opacity:1;}
+    .table-wrap.no-scroll-hint::after{opacity:0!important;}
+    table{width:100%;border-collapse:collapse;font-size:.85rem;min-width:580px;}
+    th{background:var(--accent);color:white;text-align:left;padding:.65rem .9rem;font-weight:600;white-space:nowrap;font-size:.8rem;}
+    td{padding:.55rem .9rem;border-bottom:1px solid var(--border);vertical-align:top;font-size:.85rem;line-height:1.55;}
     tr:nth-child(even) td{background:var(--parchment);}
     tr:last-child td{border-bottom:none;}
-    .salary-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1.1rem;margin:1.5rem 0;}
-    .salary-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.2rem;text-align:center;box-shadow:var(--shadow);transition:transform .2s;}
+
+    /* ── TABLES — Mobile Card Layout ── */
+    @media(max-width:767px){
+      .table-wrap{box-shadow:none;margin:1.2rem 0;overflow:visible;}
+      .table-wrap::after{display:none!important;}
+      table{min-width:0;width:100%;}
+      table,.table-wrap table{display:block;}
+      thead{display:none!important;}
+      tbody{display:block;}
+      tbody tr{display:block;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:.7rem;margin-bottom:.7rem;box-shadow:var(--shadow);}
+      tbody tr:nth-child(even) td{background:transparent;}
+      tbody td{display:flex;justify-content:space-between;align-items:flex-start;padding:.45rem .6rem;border-bottom:1px solid rgba(0,0,0,.05);font-size:.82rem;gap:.5rem;text-align:right;}
+      tbody td:last-child{border-bottom:none;}
+      tbody td::before{content:attr(data-label);font-weight:600;font-size:.78rem;text-align:left;flex-shrink:0;max-width:45%;color:var(--ink-soft);}
+    }
+
+    /* SALARY CARDS */
+    .salary-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem;margin:1.2rem 0;}
+    .salary-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.1rem;text-align:center;box-shadow:var(--shadow);transition:transform .2s;}
     .salary-card:hover{transform:translateY(-3px);}
-    .salary-card .role{font-size:.78rem;text-transform:uppercase;letter-spacing:.5px;color:var(--ink-soft);margin-bottom:.4rem;}
-    .salary-card .amount{font-family:'Playfair Display',serif;font-size:clamp(1.3rem,3vw,1.5rem);font-weight:700;color:var(--accent);}
-    .salary-card .period{font-size:.78rem;color:var(--ink-soft);}
-    .salary-card .country{display:inline-block;background:var(--tag-bg);border-radius:12px;padding:.15rem .6rem;font-size:.72rem;margin-top:.5rem;font-weight:500;}
-    .image-block{margin:2rem 0;}
+    .salary-card .role{font-size:.75rem;text-transform:uppercase;letter-spacing:.4px;color:var(--ink-soft);margin-bottom:.3rem;line-height:1.4;}
+    .salary-card .amount{font-family:'Playfair Display',serif;font-size:clamp(1.2rem,3vw,1.5rem);font-weight:700;color:var(--accent);}
+    .salary-card .period{font-size:.75rem;color:var(--ink-soft);line-height:1.4;}
+    .salary-card .country{display:inline-block;background:var(--tag-bg);border-radius:12px;padding:.15rem .55rem;font-size:.7rem;margin-top:.4rem;font-weight:500;}
+
+    /* IMAGE BLOCK */
+    .image-block{margin:1.5rem 0;}
     .image-block figure{border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);}
     .image-block img{width:100%;object-fit:cover;max-height:420px;transition:transform .4s ease;}
     .image-block figure:hover img{transform:scale(1.02);}
-    .image-block figcaption{background:var(--card);border:1px solid var(--border);border-top:none;padding:.6rem 1rem;font-size:.8rem;color:var(--ink-soft);font-style:italic;}
-    .timeline{position:relative;margin:2rem 0;}
-    .timeline::before{content:'';position:absolute;left:18px;top:0;bottom:0;width:2px;background:var(--border);}
-    .tl-item{display:flex;gap:1.2rem;margin-bottom:1.4rem;position:relative;}
-    .tl-dot{flex-shrink:0;width:38px;height:38px;border-radius:50%;background:var(--accent);color:white;font-weight:700;font-size:.78rem;display:flex;align-items:center;justify-content:center;z-index:1;box-shadow:0 2px 8px rgba(27,79,114,.3);}
-    .tl-content{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:.9rem 1.1rem;flex:1;box-shadow:var(--shadow);}
-    .tl-content h4{font-weight:600;margin-bottom:.3rem;font-size:.95rem;}
-    .tl-content p{font-size:.88rem;color:var(--ink-soft);margin:0;}
-    .pull-quote{border:none;margin:2rem 0;padding:1.6rem 2rem;background:var(--card);border-radius:var(--radius);border-left:6px solid var(--accent-2);box-shadow:var(--shadow);font-family:'Playfair Display',serif;font-size:clamp(1rem,2vw,1.15rem);font-style:italic;color:var(--ink);}
-    .pull-quote cite{display:block;font-size:.8rem;font-style:normal;font-family:'Inter',sans-serif;color:var(--ink-soft);margin-top:.7rem;}
-    .mvf-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1.5rem 0;}
-    .mvf-card{border-radius:var(--radius);padding:1.1rem 1.3rem;}
+    .image-block figcaption{background:var(--card);border:1px solid var(--border);border-top:none;padding:.5rem .9rem;font-size:.78rem;color:var(--ink-soft);font-style:italic;line-height:1.5;}
+
+    /* TIMELINE */
+    .timeline{position:relative;margin:1.8rem 0;padding-left:0;}
+    .timeline::before{content:'';position:absolute;left:17px;top:0;bottom:0;width:2px;background:var(--border);}
+    .tl-item{display:flex;gap:1rem;margin-bottom:1.2rem;position:relative;}
+    .tl-dot{flex-shrink:0;width:36px;height:36px;border-radius:50%;background:var(--accent);color:white;font-weight:700;font-size:.75rem;display:flex;align-items:center;justify-content:center;z-index:1;box-shadow:0 2px 8px rgba(27,79,114,.3);}
+    .tl-content{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:.8rem 1rem;flex:1;box-shadow:var(--shadow);}
+    .tl-content h4{font-weight:600;margin-bottom:.25rem;font-size:.92rem;}
+    .tl-content p{font-size:.85rem;color:var(--ink-soft);margin:0;line-height:1.6;}
+
+    /* PULL QUOTE */
+    .pull-quote{border:none;margin:1.8rem 0;padding:1.3rem 1.5rem;background:var(--card);border-radius:var(--radius);border-left:6px solid var(--accent-2);box-shadow:var(--shadow);font-family:'Playfair Display',serif;font-size:clamp(0.95rem,2.5vw,1.15rem);font-style:italic;color:var(--ink);line-height:1.6;}
+    .pull-quote cite{display:block;font-size:.78rem;font-style:normal;font-family:'Inter',sans-serif;color:var(--ink-soft);margin-top:.6rem;}
+
+    /* MYTH vs FACT */
+    .mvf-grid{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin:1.2rem 0;}
+    .mvf-card{border-radius:var(--radius);padding:1rem 1.1rem;}
     .mvf-myth{background:#fdedec;border:1px solid #e74c3c;}
     .mvf-fact{background:#eafaf1;border:1px solid #27ae60;}
     [data-theme="dark"] .mvf-myth{background:#1f0d0d;}
     [data-theme="dark"] .mvf-fact{background:#0d1f16;}
-    .mvf-label{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.8px;margin-bottom:.4rem;}
+    .mvf-label{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.7px;margin-bottom:.3rem;}
     .mvf-myth .mvf-label{color:#c0392b;}
     .mvf-fact .mvf-label{color:#117a65;}
-    .faq-section{margin:2.5rem 0;}
-    .faq-item{border:1px solid var(--border);border-radius:var(--radius);margin-bottom:.8rem;overflow:hidden;transition:box-shadow .2s;}
+    .mvf-card p{font-size:.85rem;line-height:1.6;margin:0;}
+
+    /* FAQ */
+    .faq-section{margin:2rem 0;}
+    .faq-item{border:1px solid var(--border);border-radius:var(--radius);margin-bottom:.65rem;overflow:hidden;transition:box-shadow .2s;}
     .faq-item:hover{box-shadow:var(--shadow);}
-    .faq-q{width:100%;text-align:left;background:var(--card);border:none;cursor:pointer;padding:1rem 1.3rem;font-size:clamp(0.88rem,2vw,.95rem);font-weight:600;color:var(--ink);display:flex;justify-content:space-between;align-items:center;gap:1rem;min-height:48px;}
+    .faq-q{width:100%;text-align:left;background:var(--card);border:none;cursor:pointer;padding:.9rem 1.1rem;font-size:clamp(0.85rem,2.5vw,.93rem);font-weight:600;color:var(--ink);display:flex;justify-content:space-between;align-items:center;gap:.75rem;min-height:52px;line-height:1.45;}
     .faq-q:hover{background:var(--tag-bg);}
-    .faq-icon{font-size:1.4rem;color:var(--accent);transition:transform .25s;flex-shrink:0;min-width:24px;text-align:center;}
-    .faq-a{display:none;padding:0 1.3rem 1.1rem;font-size:clamp(0.85rem,1.5vw,.91rem);color:var(--ink-soft);line-height:1.7;}
-    .faq-item.open .faq-a{display:block;}
+    .faq-icon{font-size:1.3rem;color:var(--accent);transition:transform .25s;flex-shrink:0;min-width:28px;height:28px;display:flex;align-items:center;justify-content:center;}
+    .faq-a{max-height:0;overflow:hidden;padding:0 1.1rem;font-size:clamp(0.82rem,2vw,.9rem);color:var(--ink-soft);line-height:1.7;transition:max-height .35s ease,padding .35s ease;}
+    .faq-item.open .faq-a{max-height:1200px;padding:0 1.1rem 1rem;}
     .faq-item.open .faq-icon{transform:rotate(45deg);}
+
+    /* SIDEBAR */
     .sidebar{position:sticky;top:70px;}
-    .sidebar-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.3rem;margin-bottom:1.3rem;box-shadow:var(--shadow);}
-    .sidebar-card h3{font-size:.85rem;text-transform:uppercase;letter-spacing:.7px;color:var(--ink-soft);margin-bottom:.9rem;}
-    .sidebar-card ul{padding-left:1rem;font-size:.88rem;}
-    .sidebar-card li{margin-bottom:.5rem;}
-    .share-bar{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.3rem 1.5rem;margin:2.5rem 0;display:flex;flex-wrap:wrap;gap:.7rem;align-items:center;}
-    .share-label{font-weight:600;font-size:.88rem;margin-right:.3rem;}
-    .share-btn{display:inline-flex;align-items:center;gap:.4rem;padding:.5rem 1rem;border-radius:20px;font-size:.82rem;font-weight:600;cursor:pointer;border:none;transition:opacity .2s,transform .15s;text-decoration:none;min-height:40px;}
-    .share-btn:hover{opacity:.88;transform:translateY(-2px);}
+    .sidebar-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.2rem;margin-bottom:1.2rem;box-shadow:var(--shadow);}
+    .sidebar-card h3{font-size:.82rem;text-transform:uppercase;letter-spacing:.6px;color:var(--ink-soft);margin-bottom:.8rem;}
+    .sidebar-card ul{padding-left:1rem;font-size:.85rem;}
+    .sidebar-card li{margin-bottom:.45rem;}
+
+    /* SHARE BAR */
+    .share-bar{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.1rem 1.3rem;margin:2rem 0;display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;}
+    .share-label{font-weight:600;font-size:.85rem;margin-right:.2rem;flex-shrink:0;}
+    .share-btn{display:inline-flex;align-items:center;gap:.35rem;padding:.45rem .85rem;border-radius:20px;font-size:.78rem;font-weight:600;cursor:pointer;border:none;transition:opacity .2s,transform .15s;text-decoration:none;min-height:44px;white-space:nowrap;}
+    .share-btn:hover{opacity:.88;transform:translateY(-2px);text-decoration:none;}
     .share-btn:active{transform:translateY(0);}
     .share-wa{background:#25d366;color:white;}
     .share-fb{background:#1877f2;color:white;}
@@ -159,70 +236,245 @@
     .share-rd{background:#FF4500;color:white;}
     .share-copy{background:var(--tag-bg);color:var(--ink);border:1px solid var(--border);}
     .share-print{background:var(--tag-bg);color:var(--ink);border:1px solid var(--border);}
-    .cta-block{background:linear-gradient(135deg,var(--accent) 0%,#1a5276 100%);color:white;border-radius:var(--radius);padding:2rem 2.2rem;margin:2.5rem 0;}
-    .cta-block h2{font-family:'Playfair Display',serif;font-size:clamp(1.2rem,3vw,1.5rem);margin-bottom:.6rem;}
-    .cta-block p{opacity:.88;font-size:.93rem;margin-bottom:1.2rem;}
-    .cta-btn{display:inline-block;background:white;color:var(--accent);padding:.65rem 1.5rem;border-radius:25px;font-weight:700;font-size:.9rem;transition:transform .2s,box-shadow .2s;box-shadow:0 4px 12px rgba(0,0,0,.15);}
+
+    /* CTA */
+    .cta-block{background:linear-gradient(135deg,var(--accent) 0%,#1a5276 100%);color:white;border-radius:var(--radius);padding:1.8rem 1.5rem;margin:2rem 0;}
+    .cta-block h2{font-family:'Playfair Display',serif;font-size:clamp(1.1rem,3vw,1.5rem);margin-bottom:.5rem;}
+    .cta-block p{opacity:.88;font-size:.9rem;margin-bottom:1rem;line-height:1.6;}
+    .cta-btn{display:inline-block;background:white;color:var(--accent);padding:.6rem 1.3rem;border-radius:25px;font-weight:700;font-size:.88rem;transition:transform .2s,box-shadow .2s;box-shadow:0 4px 12px rgba(0,0,0,.15);min-height:44px;line-height:1.4;}
     .cta-btn:hover{transform:translateY(-2px);text-decoration:none;box-shadow:0 6px 16px rgba(0,0,0,.2);}
-    .newsletter{background:var(--card);border:2px solid var(--accent);border-radius:var(--radius);padding:1.8rem;margin:2.5rem 0;text-align:center;}
-    .newsletter h3{font-family:'Playfair Display',serif;font-size:clamp(1.1rem,2.5vw,1.2rem);margin-bottom:.5rem;}
-    .newsletter p{font-size:.88rem;color:var(--ink-soft);margin-bottom:1rem;}
-    .nl-form{display:flex;gap:.6rem;flex-wrap:wrap;justify-content:center;}
-    .nl-input{flex:1;min-width:220px;padding:.6rem 1rem;border:1px solid var(--border);border-radius:25px;background:var(--parchment);color:var(--ink);font-size:.9rem;font-family:inherit;}
-    .nl-btn{background:var(--accent);color:white;border:none;padding:.6rem 1.4rem;border-radius:25px;font-weight:600;cursor:pointer;font-size:.9rem;transition:background .2s;min-height:44px;}
+
+    /* NEWSLETTER */
+    .newsletter{background:var(--card);border:2px solid var(--accent);border-radius:var(--radius);padding:1.5rem;margin:2rem 0;text-align:center;}
+    .newsletter h3{font-family:'Playfair Display',serif;font-size:clamp(1.05rem,2.5vw,1.2rem);margin-bottom:.4rem;}
+    .newsletter p{font-size:.85rem;color:var(--ink-soft);margin-bottom:.9rem;line-height:1.5;}
+    .nl-form{display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center;}
+    .nl-input{flex:1;min-width:0;padding:.6rem .9rem;border:1px solid var(--border);border-radius:25px;background:var(--parchment);color:var(--ink);font-size:16px;font-family:inherit;min-height:44px;/* 16px prevents iOS zoom */}
+    .nl-btn{background:var(--accent);color:white;border:none;padding:.6rem 1.2rem;border-radius:25px;font-weight:600;cursor:pointer;font-size:.88rem;transition:background .2s;min-height:44px;white-space:nowrap;}
     .nl-btn:hover{background:#154360;}
-    .references{margin:2.5rem 0;}
-    .references h2{font-family:'Playfair Display',serif;font-size:1.3rem;margin-bottom:1rem;}
-    .ref-list{list-style:decimal;padding-left:1.4rem;font-size:.85rem;}
-    .ref-list li{margin-bottom:.6rem;line-height:1.6;}
-    .related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:1rem;margin:1.5rem 0;}
-    .related-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.1rem;box-shadow:var(--shadow);transition:transform .2s,box-shadow .2s;}
+
+    /* REFERENCES */
+    .references{margin:2rem 0;}
+    .references h2{font-family:'Playfair Display',serif;font-size:1.2rem;margin-bottom:.9rem;}
+    .ref-list{list-style:decimal;padding-left:1.3rem;font-size:.82rem;}
+    .ref-list li{margin-bottom:.5rem;line-height:1.55;}
+
+    /* RELATED CARDS */
+    .related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:1rem;margin:1.2rem 0;}
+    .related-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1rem;box-shadow:var(--shadow);transition:transform .2s,box-shadow .2s;}
     .related-card:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(27,79,114,.12);}
-    .related-card .tag{font-size:.72rem;text-transform:uppercase;letter-spacing:.5px;color:var(--accent);font-weight:600;}
-    .related-card h4{font-size:.93rem;margin:.4rem 0;}
-    .related-card p{font-size:.82rem;color:var(--ink-soft);}
-    #back-top{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--accent);color:white;border:none;border-radius:50%;width:48px;height:48px;font-size:1.2rem;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,.25);opacity:0;transition:opacity .3s,transform .2s;display:flex;align-items:center;justify-content:center;z-index:800;}
-    #back-top.show{opacity:1;}
+    .related-card .tag{font-size:.7rem;text-transform:uppercase;letter-spacing:.4px;color:var(--accent);font-weight:600;}
+    .related-card h4{font-size:.9rem;margin:.35rem 0;line-height:1.4;}
+    .related-card p{font-size:.8rem;color:var(--ink-soft);line-height:1.5;}
+
+    /* BACK TO TOP */
+    #back-top{position:fixed;bottom:calc(1.25rem + var(--safe-bottom));right:calc(1.25rem + var(--safe-right));background:var(--accent);color:white;border:none;border-radius:50%;width:48px;height:48px;font-size:1.2rem;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,.25);opacity:0;transition:opacity .3s,transform .2s;display:flex;align-items:center;justify-content:center;z-index:800;pointer-events:none;}
+    #back-top.show{opacity:1;pointer-events:auto;}
     #back-top:hover{transform:translateY(-3px);}
-    .did-you-know{background:linear-gradient(135deg,#f8f3e8,#fef9e7);border:1px solid #f0d060;border-radius:var(--radius);padding:1.1rem 1.4rem;margin:1.8rem 0;}
+
+    /* DID YOU KNOW / EXAM TIP */
+    .did-you-know{background:linear-gradient(135deg,#f8f3e8,#fef9e7);border:1px solid #f0d060;border-radius:var(--radius);padding:1rem 1.2rem;margin:1.5rem 0;}
     [data-theme="dark"] .did-you-know{background:#1e1a0d;border-color:#5a4a00;}
-    .did-you-know .label{font-size:.72rem;text-transform:uppercase;letter-spacing:.8px;font-weight:700;color:#b7950b;margin-bottom:.4rem;}
-    .exam-tip{background:#eaf0f6;border:1px solid #2e86c1;border-radius:var(--radius);padding:1.1rem 1.4rem;margin:1.8rem 0;}
+    .did-you-know .label{font-size:.7rem;text-transform:uppercase;letter-spacing:.7px;font-weight:700;color:#b7950b;margin-bottom:.3rem;}
+    .exam-tip{background:#eaf0f6;border:1px solid #2e86c1;border-radius:var(--radius);padding:1rem 1.2rem;margin:1.5rem 0;}
     [data-theme="dark"] .exam-tip{background:#0d2137;}
-    .exam-tip .label{font-size:.72rem;text-transform:uppercase;font-weight:700;letter-spacing:.6px;color:#1a5276;margin-bottom:.4rem;}
-    .career-path-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.3rem;margin:.8rem 0;box-shadow:var(--shadow);transition:transform .2s;}
+    .exam-tip .label{font-size:.7rem;text-transform:uppercase;font-weight:700;letter-spacing:.5px;color:#1a5276;margin-bottom:.3rem;}
+
+    /* CAREER PATH CARD */
+    .career-path-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.1rem;margin:.7rem 0;box-shadow:var(--shadow);transition:transform .2s;}
     .career-path-card:hover{transform:translateX(4px);}
-    .career-path-card h4{margin-bottom:.35rem;font-size:1rem;}
-    .career-path-card .tags{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.6rem;}
-    .tag-pill{background:var(--tag-bg);border-radius:12px;padding:.15rem .65rem;font-size:.75rem;color:var(--accent);font-weight:500;}
+    .career-path-card h4{margin-bottom:.3rem;font-size:.95rem;}
+    .career-path-card p{font-size:.85rem;line-height:1.6;}
+    .career-path-card .tags{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.5rem;}
+    .tag-pill{background:var(--tag-bg);border-radius:12px;padding:.12rem .6rem;font-size:.72rem;color:var(--accent);font-weight:500;white-space:nowrap;}
     .tag-pill.red{background:#fdedec;color:var(--accent-2);}
     .tag-pill.green{background:#eafaf1;color:var(--accent-3);}
-    .section-divider{border:none;border-top:2px solid var(--border);margin:2.8rem 0;}
-    footer{background:var(--ink);color:#aaa;padding:2.5rem 1.5rem;text-align:center;font-size:.82rem;margin-top:3rem;}
+
+    .section-divider{border:none;border-top:2px solid var(--border);margin:2.2rem 0;}
+
+    footer{background:var(--ink);color:#aaa;padding:2rem 1.25rem;text-align:center;font-size:.8rem;margin-top:2.5rem;}
     footer a{color:#aaa;}
     .mono{font-family:'JetBrains Mono',monospace;font-size:.88em;}
 
-    /* TABLET */
-    @media(max-width:1023px){.layout{grid-template-columns:1fr;gap:1.5rem;}.sidebar{display:none;}.hero{padding:3.5rem 1.5rem 2.5rem;}.salary-grid{grid-template-columns:repeat(auto-fill,minmax(180px,1fr));}}
-    /* MOBILE */
-    @media(max-width:767px){html{font-size:15px;}header{padding:.6rem 1rem;flex-wrap:wrap;}.site-brand{font-size:1rem;}nav{display:none;position:absolute;top:100%;left:0;right:0;background:var(--card);flex-direction:column;padding:1rem;border-bottom:1px solid var(--border);box-shadow:var(--shadow);gap:.8rem;z-index:899;}nav.open{display:flex;}nav a{padding:.5rem 0;font-size:.9rem;border-bottom:1px solid var(--border);}.menu-toggle{display:flex;}.hero{padding:2.5rem 1rem 2rem;}.hero h1{font-size:clamp(1.6rem,6vw,2.2rem);}.hero-meta{gap:.5rem;font-size:.75rem;}.article-meta{padding:.7rem 1rem;gap:.5rem;}.meta-chip{font-size:.72rem;padding:.2rem .6rem;}.summary-box{padding:1.2rem;margin:1.5rem 0;}.toc{padding:1.2rem;}.article-body{padding:1.5rem 0;}.article-body h2{padding-left:.75rem;margin:2rem 0 .7rem;}.callout{padding:.9rem 1rem;margin:1.4rem 0;}.table-wrap{margin:1.4rem 0;border-radius:8px;}table{font-size:.8rem;}th,td{padding:.5rem .7rem;}.salary-grid{grid-template-columns:1fr 1fr;gap:.8rem;}.salary-card{padding:1rem;}.timeline::before{left:14px;}.tl-item{gap:.8rem;margin-bottom:1rem;}.tl-dot{width:32px;height:32px;font-size:.7rem;}.tl-content{padding:.7rem .9rem;}.mvf-grid{grid-template-columns:1fr;gap:.8rem;}.mvf-card{padding:.9rem 1rem;}.pull-quote{padding:1.2rem 1.4rem;}.share-bar{padding:1rem;gap:.5rem;}.share-btn{padding:.4rem .8rem;font-size:.78rem;min-height:36px;}.share-label{width:100%;margin-bottom:.3rem;}.cta-block{padding:1.5rem 1.2rem;margin:2rem 0;}.newsletter{padding:1.4rem 1rem;}.nl-input{min-width:100%;}.related-grid{grid-template-columns:1fr;}.career-path-card{padding:1rem;}.faq-q{padding:.8rem 1rem;min-height:44px;}.faq-a{padding:0 1rem 1rem;}.breadcrumb{padding:.5rem 1rem;font-size:.75rem;}.ref-list{padding-left:1.2rem;font-size:.8rem;}.image-block img{max-height:280px;}}
-    /* SMALL MOBILE */
-    @media(max-width:479px){html{font-size:14px;}.hero h1{font-size:1.5rem;}.hero-desc{font-size:.9rem;}.salary-grid{grid-template-columns:1fr;}.article-body p{font-size:.9rem;}.share-btn{font-size:.75rem;padding:.35rem .7rem;}#back-top{width:42px;height:42px;bottom:1rem;right:1rem;}}
-    /* LARGE DESKTOP */
-    @media(min-width:1440px){.layout{max-width:1280px;grid-template-columns:1fr 320px;gap:3rem;}.container{max-width:900px;}html{font-size:17px;}}
-    /* PRINT */
-    @media print{header,.breadcrumb,.sidebar,.share-bar,.newsletter,#back-top,#progress-bar,.header-actions,.menu-toggle{display:none!important;}.layout{grid-template-columns:1fr;}body{font-size:12pt;background:white;color:black;}.hero{background:#1a1a2e!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}a{text-decoration:underline;color:#000;}.callout,.career-path-card,.tl-content{break-inside:avoid;}}
+    /* ════════════════════════════════════════
+       TABLET (≤1023px)
+       ════════════════════════════════════════ */
+    @media(max-width:1023px){
+      .layout{grid-template-columns:1fr;gap:1.5rem;}
+      .sidebar{display:none;}
+      .hero{padding:3rem 1.25rem 2.5rem;}
+      .salary-grid{grid-template-columns:repeat(auto-fill,minmax(175px,1fr));}
+    }
+
+    /* ════════════════════════════════════════
+       MOBILE (≤767px)
+       ════════════════════════════════════════ */
+    @media(max-width:767px){
+      :root{--progress-h:4px;--radius:8px;}
+
+      html{font-size:15px;scroll-padding-top:60px;}
+
+      /* Header */
+      header{padding:.55rem .9rem;gap:.5rem;}
+      .site-brand{font-size:.95rem;}
+      nav{display:none;position:fixed;top:0;right:0;bottom:0;width:min(300px,85vw);background:var(--card);flex-direction:column;padding:5rem 1.5rem 1.5rem;border-left:1px solid var(--border);box-shadow:-4px 0 24px rgba(0,0,0,.15);gap:0;z-index:900;transform:translateX(100%);transition:transform .3s ease;overflow-y:auto;}
+      nav.open{display:flex;transform:translateX(0);}
+      nav a{padding:.8rem 0;font-size:.95rem;border-bottom:1px solid var(--border);min-height:48px;display:flex;align-items:center;}
+      nav a::after{display:none;}
+      .menu-toggle{display:flex;}
+
+      /* Hero */
+      .hero{padding:2.5rem .9rem 2rem;}
+      .hero h1{font-size:clamp(1.5rem,7vw,2.1rem);}
+      .hero-desc{font-size:.9rem;margin-bottom:1.2rem;}
+      .hero-meta{gap:.4rem .7rem;font-size:.72rem;}
+      .hero-tag{font-size:.7rem;padding:.25rem .7rem;}
+
+      /* Article meta */
+      .article-meta{padding:.5rem .9rem;gap:.4rem;}
+      .meta-chip{font-size:.7rem;padding:.2rem .55rem;}
+
+      /* Article body */
+      .article-body{padding:1rem 0;}
+      .article-body h2{padding-left:.7rem;margin:1.8rem 0 .6rem;}
+      .article-body h3{margin:1.3rem 0 .4rem;}
+      .article-body p{margin-bottom:.85rem;}
+
+      /* Summary */
+      .summary-box{padding:1.1rem 1.2rem;margin:1.3rem 0;}
+      .summary-box li{font-size:.85rem;margin-bottom:.25rem;}
+
+      /* Callouts */
+      .callout{padding:.8rem 1rem;margin:1.2rem 0;}
+
+      /* Images */
+      .image-block{margin:1.2rem 0;}
+      .image-block img{max-height:250px;}
+      .image-block figcaption{padding:.4rem .7rem;font-size:.72rem;}
+
+      /* Timeline */
+      .timeline::before{left:15px;}
+      .tl-item{gap:.7rem;margin-bottom:.9rem;}
+      .tl-dot{width:32px;height:32px;font-size:.68rem;}
+      .tl-content{padding:.65rem .8rem;}
+      .tl-content h4{font-size:.85rem;}
+      .tl-content p{font-size:.8rem;}
+
+      /* Salary cards */
+      .salary-grid{grid-template-columns:1fr 1fr;gap:.65rem;}
+      .salary-card{padding:.85rem .65rem;}
+      .salary-card .amount{font-size:1.15rem;}
+
+      /* MVF */
+      .mvf-grid{grid-template-columns:1fr;gap:.65rem;}
+      .mvf-card{padding:.85rem .9rem;}
+
+      /* Pull quote */
+      .pull-quote{padding:1.1rem 1.2rem;font-size:.95rem;}
+
+      /* Career path cards */
+      .career-path-card{padding:.85rem .9rem;}
+      .career-path-card:hover{transform:none;}
+
+      /* Share bar */
+      .share-bar{padding:.85rem;gap:.4rem;}
+      .share-label{width:100%;margin-bottom:.2rem;font-size:.82rem;}
+      .share-btn{padding:.4rem .65rem;font-size:.72rem;min-height:40px;border-radius:16px;}
+      .share-btn .share-text{display:none;}
+
+      /* CTA */
+      .cta-block{padding:1.3rem 1.1rem;margin:1.5rem 0;}
+
+      /* Newsletter */
+      .newsletter{padding:1.2rem .9rem;}
+      .nl-input{min-width:100%;font-size:16px;flex:none;}
+
+      /* Related */
+      .related-grid{grid-template-columns:1fr;}
+      .related-card:hover{transform:none;}
+
+      /* FAQ */
+      .faq-q{padding:.75rem .9rem;font-size:.85rem;min-height:52px;}
+      .faq-a{padding:0 .9rem;font-size:.82rem;}
+      .faq-item.open .faq-a{padding:0 .9rem .85rem;}
+
+      /* Breadcrumb */
+      .breadcrumb{padding:.4rem .9rem;font-size:.72rem;}
+
+      /* References */
+      .ref-list{padding-left:1.1rem;font-size:.78rem;}
+
+      /* Did you know / exam tip */
+      .did-you-know,.exam-tip{padding:.8rem 1rem;margin:1.2rem 0;}
+
+      /* Career path card hover reset */
+      .salary-card:hover{transform:none;}
+
+      /* Back to top */
+      #back-top{width:44px;height:44px;font-size:1.1rem;}
+
+      /* Footer */
+      footer{padding:1.5rem .9rem;font-size:.75rem;}
+
+      /* Section dividers */
+      .section-divider{margin:1.8rem 0;}
+    }
+
+    /* ════════════════════════════════════════
+       SMALL MOBILE (≤479px)
+       ════════════════════════════════════════ */
+    @media(max-width:479px){
+      html{font-size:14px;}
+      .hero h1{font-size:1.45rem;}
+      .hero-desc{font-size:.85rem;}
+      .salary-grid{grid-template-columns:1fr;}
+      .share-btn{font-size:.7rem;padding:.35rem .55rem;min-height:38px;}
+      .share-fb .share-icon-letter,.share-tw .share-icon-letter{display:none;}
+      #back-top{width:42px;height:42px;bottom:calc(.9rem + var(--safe-bottom));right:calc(.9rem + var(--safe-right));}
+    }
+
+    /* ════════════════════════════════════════
+       LARGE DESKTOP (≥1440px)
+       ════════════════════════════════════════ */
+    @media(min-width:1440px){
+      .layout{max-width:1280px;grid-template-columns:1fr 320px;gap:3rem;}
+      .container{max-width:900px;}
+      html{font-size:17px;}
+    }
+
+    /* ════════════════════════════════════════
+       PRINT
+       ════════════════════════════════════════ */
+    @media print{
+      header,.breadcrumb,.sidebar,.share-bar,.newsletter,#back-top,#progress-bar,.header-actions,.menu-toggle,.nav-overlay,.toc-toggle{display:none!important;}
+      .toc-list{max-height:none!important;padding:0 1.4rem 1.2rem!important;}
+      .layout{grid-template-columns:1fr;}
+      body{font-size:12pt;background:white;color:black;}
+      .hero{background:#1a1a2e!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+      a{text-decoration:underline;color:#000;}
+      .callout,.career-path-card,.tl-content{break-inside:avoid;}
+      .faq-a{max-height:none!important;padding:0 1.1rem 1rem!important;}
+    }
+
     /* REDUCED MOTION */
-    @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;}html{scroll-behavior:auto;}}
+    @media(prefers-reduced-motion:reduce){
+      *{transition:none!important;animation:none!important;}
+      html{scroll-behavior:auto;}
+    }
+
     /* HIGH CONTRAST */
     @media(prefers-contrast:high){:root{--border:#000;--ink-soft:#000;}.callout{border-width:3px;}}
   </style>
 </head>
 <body>
   <div id="progress-bar" role="progressbar" aria-label="Reading progress"></div>
+
+  <!-- NAV OVERLAY (mobile) -->
+  <div class="nav-overlay" id="nav-overlay"></div>
+
   <header>
     <a href="https://primespirit.co.in" class="site-brand" aria-label="Prime Spirit Mentors Home">Prime<span>Spirit</span> Mentors</a>
-    <div class="menu-toggle" id="menu-toggle" aria-label="Toggle navigation" aria-expanded="false"><span></span><span></span><span></span></div>
+    <div class="menu-toggle" id="menu-toggle" aria-label="Toggle navigation" aria-expanded="false" role="button" tabindex="0"><span></span><span></span><span></span></div>
     <nav aria-label="Main navigation" id="main-nav">
       <a href="https://primespirit.co.in/careers">Careers</a>
       <a href="https://primespirit.co.in/courses">Courses</a>
@@ -233,24 +485,27 @@
       <button class="btn-icon" id="dark-toggle" aria-label="Toggle dark mode" title="Dark mode">🌙</button>
     </div>
   </header>
+
   <nav class="breadcrumb" aria-label="Breadcrumb">
     <a href="https://primespirit.co.in">Home</a> ›
     <a href="https://primespirit.co.in/careers">Career Guides</a> ›
     <span>BSc Forensic Science Careers</span>
   </nav>
+
   <section class="hero" aria-label="Article Hero">
     <div class="hero-inner">
       <div class="hero-tag">📋 Career Guide · Science Stream</div>
       <h1>BSc Forensic Science:<br><em>Real Jobs, Real Salaries,</em><br>Real Paths Forward</h1>
       <p class="hero-desc">The complete, research-backed guide to what actually happens after you earn that degree — from government labs in Delhi to federal agencies in Washington. No myths. No filler.</p>
       <div class="hero-meta">
-        <span>🕐 Reading time: ~22 min</span>
-        <span>📅 Last updated: July 2025</span>
-        <span>✍️ Prime Spirit Mentors Editorial</span>
-        <span>📊 Sources: DFSS, Bureau of Police R&D, BLS, SEEK</span>
+        <span>🕐 ~22 min read</span>
+        <span>📅 July 2025</span>
+        <span>✍️ Prime Spirit Editorial</span>
+        <span>📊 DFSS, BLS, SEEK</span>
       </div>
     </div>
   </section>
+
   <div class="article-meta" role="complementary" aria-label="Article categories">
     <span class="meta-chip">BSc Forensic Science</span>
     <span class="meta-chip">Government Jobs</span>
@@ -258,9 +513,11 @@
     <span class="meta-chip">Career Abroad</span>
     <span class="meta-chip">Salary Data 2025</span>
   </div>
+
   <div class="layout">
     <main id="main-content" aria-label="Article content">
       <div class="article-body">
+
         <div class="summary-box" role="note" aria-label="Article Quick Summary">
           <h2>⚡ Quick Summary</h2>
           <ul>
@@ -272,27 +529,34 @@
             <li>An MSc or PG Diploma in Cyber Forensics dramatically expands both salary and opportunities in every sector.</li>
           </ul>
         </div>
+
+        <!-- COLLAPSIBLE TOC (mobile-friendly) -->
         <nav class="toc" aria-label="Table of contents">
-          <h2>Table of Contents</h2>
-          <ol>
-            <li><a href="#what-is-bsc-forensics">What BSc Forensic Science Actually Covers</a></li>
-            <li><a href="#india-govt-jobs">Government Jobs in India — The Big Picture</a></li>
-            <li><a href="#cfsl-dfss">CFSL, DFSS & State FSLs — Your Core Government Path</a></li>
-            <li><a href="#cbi-nia-ib">CBI, NIA, IB, RAW — The Intelligence Route</a></li>
-            <li><a href="#private-sector">Private Sector Opportunities in India</a></li>
-            <li><a href="#cyber-forensics">Cyber & Digital Forensics — The Fastest-Growing Track</a></li>
-            <li><a href="#specialisations">Specialisation Breakdown — Which Branch is Right for You?</a></li>
-            <li><a href="#careers-abroad">Careers Abroad — USA, UK, Canada, Australia</a></li>
-            <li><a href="#salary-data">Salary Data: India & Abroad, Entry to Senior</a></li>
-            <li><a href="#higher-studies">Higher Studies After BSc Forensic Science</a></li>
-            <li><a href="#roadmap">Your Step-by-Step Career Roadmap</a></li>
-            <li><a href="#myths">Myths vs. Facts About Forensic Careers</a></li>
-            <li><a href="#faq">Frequently Asked Questions</a></li>
-            <li><a href="#references">References</a></li>
-          </ol>
+          <button class="toc-toggle" id="toc-toggle" aria-expanded="false" onclick="toggleToc()">
+            <h2>Table of Contents</h2>
+            <span class="toc-chevron" aria-hidden="true">▸</span>
+          </button>
+          <div class="toc-list" id="toc-list">
+            <ol>
+              <li><a href="#what-is-bsc-forensics">What BSc Forensic Science Actually Covers</a></li>
+              <li><a href="#india-govt-jobs">Government Jobs in India — The Big Picture</a></li>
+              <li><a href="#cfsl-dfss">CFSL, DFSS & State FSLs — Your Core Government Path</a></li>
+              <li><a href="#cbi-nia-ib">CBI, NIA, IB, RAW — The Intelligence Route</a></li>
+              <li><a href="#private-sector">Private Sector Opportunities in India</a></li>
+              <li><a href="#cyber-forensics">Cyber & Digital Forensics — The Fastest-Growing Track</a></li>
+              <li><a href="#specialisations">Specialisation Breakdown — Which Branch is Right for You?</a></li>
+              <li><a href="#careers-abroad">Careers Abroad — USA, UK, Canada, Australia</a></li>
+              <li><a href="#salary-data">Salary Data: India & Abroad, Entry to Senior</a></li>
+              <li><a href="#higher-studies">Higher Studies After BSc Forensic Science</a></li>
+              <li><a href="#roadmap">Your Step-by-Step Career Roadmap</a></li>
+              <li><a href="#myths">Myths vs. Facts About Forensic Careers</a></li>
+              <li><a href="#faq">Frequently Asked Questions</a></li>
+              <li><a href="#references">References</a></li>
+            </ol>
+          </div>
         </nav>
 
-        <!-- IMAGE 1: Forensic Lab UV -->
+        <!-- IMAGE 1 -->
         <section class="image-block" aria-label="Forensic lab image">
           <figure>
             <img src="https://kimi-web-img.moonshot.cn/img/c8.alamy.com/6eb7b1ef8b318f9feedcff8cf9674b6c645fe906.jpg" alt="Forensic scientists examining evidence under UV light in a government laboratory" loading="lazy" width="1300" height="956" />
@@ -300,23 +564,24 @@
           </figure>
         </section>
 
+        <!-- SECTION 1 -->
         <section id="what-is-bsc-forensics" aria-labelledby="h-what">
           <h2 id="h-what">1. What BSc Forensic Science Actually Covers</h2>
           <p>Most students who apply for BSc Forensic Science have seen one too many episodes of <em>CID</em> or <em>Crime Patrol</em>. The reality of the degree is both more interesting and more demanding than television suggests — and the career paths it opens are genuinely diverse.</p>
           <p>At its core, forensic science is the application of natural sciences — primarily biology, chemistry, and physics — to legal questions. The BSc programme (typically three years, with a four-year Honours variant now available at several universities) trains you to collect, preserve, and interpret physical evidence so that it holds up not just in a laboratory but in a court of law.</p>
           <h3>Core subjects you will study</h3>
-          <div class="table-wrap">
+          <div class="table-wrap" role="region" aria-label="Core subjects table" tabindex="0">
             <table>
               <thead><tr><th>Subject Area</th><th>What It Involves</th><th>Career Relevance</th></tr></thead>
               <tbody>
-                <tr><td>Forensic Biology</td><td>DNA profiling, blood pattern analysis, entomology</td><td>FSL Biology divisions, CBI labs, hospitals</td></tr>
-                <tr><td>Forensic Chemistry</td><td>Drug analysis, toxicology, arson investigation, poison detection</td><td>Narcotics, chemical labs, CFSL Chemistry</td></tr>
-                <tr><td>Forensic Physics</td><td>Ballistics, tool mark examination, accident reconstruction</td><td>Ballistics divisions, traffic police, defence</td></tr>
-                <tr><td>Document Examination</td><td>Handwriting analysis, ink dating, currency forgery detection</td><td>Banks, courts, NIA, CBI</td></tr>
-                <tr><td>Digital / Cyber Forensics</td><td>Data recovery, mobile forensics, network investigation</td><td>Cybercrime cells, IT companies, law firms</td></tr>
-                <tr><td>Fingerprint Science</td><td>Latent fingerprint development, AFIS databases</td><td>Police departments, immigration, airports</td></tr>
-                <tr><td>Forensic Toxicology</td><td>Blood alcohol, drug screening, autopsy toxicology</td><td>Medico-legal cases, hospitals, drug labs</td></tr>
-                <tr><td>Crime Scene Investigation</td><td>Evidence collection, chain of custody, photography</td><td>All law enforcement agencies</td></tr>
+                <tr><td data-label="Subject Area">Forensic Biology</td><td data-label="What It Involves">DNA profiling, blood pattern analysis, entomology</td><td data-label="Career Relevance">FSL Biology divisions, CBI labs, hospitals</td></tr>
+                <tr><td data-label="Subject Area">Forensic Chemistry</td><td data-label="What It Involves">Drug analysis, toxicology, arson investigation, poison detection</td><td data-label="Career Relevance">Narcotics, chemical labs, CFSL Chemistry</td></tr>
+                <tr><td data-label="Subject Area">Forensic Physics</td><td data-label="What It Involves">Ballistics, tool mark examination, accident reconstruction</td><td data-label="Career Relevance">Ballistics divisions, traffic police, defence</td></tr>
+                <tr><td data-label="Subject Area">Document Examination</td><td data-label="What It Involves">Handwriting analysis, ink dating, currency forgery detection</td><td data-label="Career Relevance">Banks, courts, NIA, CBI</td></tr>
+                <tr><td data-label="Subject Area">Digital / Cyber Forensics</td><td data-label="What It Involves">Data recovery, mobile forensics, network investigation</td><td data-label="Career Relevance">Cybercrime cells, IT companies, law firms</td></tr>
+                <tr><td data-label="Subject Area">Fingerprint Science</td><td data-label="What It Involves">Latent fingerprint development, AFIS databases</td><td data-label="Career Relevance">Police departments, immigration, airports</td></tr>
+                <tr><td data-label="Subject Area">Forensic Toxicology</td><td data-label="What It Involves">Blood alcohol, drug screening, autopsy toxicology</td><td data-label="Career Relevance">Medico-legal cases, hospitals, drug labs</td></tr>
+                <tr><td data-label="Subject Area">Crime Scene Investigation</td><td data-label="What It Involves">Evidence collection, chain of custody, photography</td><td data-label="Career Relevance">All law enforcement agencies</td></tr>
               </tbody>
             </table>
           </div>
@@ -328,6 +593,7 @@
 
         <hr class="section-divider" />
 
+        <!-- SECTION 2 -->
         <section id="india-govt-jobs" aria-labelledby="h-india-govt">
           <h2 id="h-india-govt">2. Government Jobs in India — The Big Picture</h2>
           <p>The government sector is the largest and most stable employer for forensic science graduates in India. This is not a minor detail — it fundamentally shapes how you should plan your career from Day 1 of your BSc.</p>
@@ -358,7 +624,6 @@
             <div class="tags"><span class="tag-pill">Academic + Research Roles</span><span class="tag-pill">PhD Preferred</span></div>
           </div>
 
-          <!-- IMAGE 2: Evidence Collection -->
           <div class="image-block" aria-label="Crime scene evidence collection">
             <figure>
               <img src="https://kimi-web-img.moonshot.cn/img/superiorbag.com/c94d19575fa3103c0823cf23b55880be6d2c14fb.jpg" alt="Police officer documenting evidence in chain of custody bag at crime scene" loading="lazy" width="1000" height="667" />
@@ -369,6 +634,7 @@
 
         <hr class="section-divider" />
 
+        <!-- SECTION 3 -->
         <section id="cfsl-dfss" aria-labelledby="h-cfsl">
           <h2 id="h-cfsl">3. CFSL, DFSS & State FSLs — The Career Ladder in Detail</h2>
           <p>Understanding the promotion hierarchy matters enormously when planning a government forensic career. These are not dead-end positions — they are structured ladders with clear progression.</p>
@@ -390,6 +656,7 @@
 
         <hr class="section-divider" />
 
+        <!-- SECTION 4 -->
         <section id="cbi-nia-ib" aria-labelledby="h-intelligence">
           <h2 id="h-intelligence">4. CBI, NIA, IB, RAW — The Intelligence & Investigation Route</h2>
           <p>This is where forensic science meets national security — and where the work genuinely becomes as intense as any crime drama suggests, though far more methodical and less dramatic on a daily basis.</p>
@@ -409,21 +676,22 @@
 
         <hr class="section-divider" />
 
+        <!-- SECTION 5 -->
         <section id="private-sector" aria-labelledby="h-private">
           <h2 id="h-private">5. Private Sector Opportunities in India</h2>
           <p>The private sector conversation around forensic science has changed substantially in the last five years. It is no longer just private detective agencies and security firms. Banks, fintech companies, law firms, pharmaceutical companies, and multinational corporations all now maintain in-house forensic capabilities or outsource them to specialist firms.</p>
-          <div class="table-wrap">
+          <div class="table-wrap" role="region" aria-label="Private sector roles table" tabindex="0">
             <table>
               <thead><tr><th>Industry</th><th>Role</th><th>What You'd Do</th><th>Approx. Entry Salary</th></tr></thead>
               <tbody>
-                <tr><td>Banks & NBFC</td><td>Forensic Auditor / Fraud Investigator</td><td>Investigate internal fraud, document forgery, KYC violations</td><td>₹4–7 LPA</td></tr>
-                <tr><td>Cybersecurity Firms</td><td>Digital Forensic Analyst</td><td>Incident response, malware analysis, data recovery</td><td>₹5–9 LPA</td></tr>
-                <tr><td>Law Firms</td><td>Forensic Consultant / Expert Witness</td><td>Prepare forensic reports for civil litigation, provide court testimony</td><td>₹4–8 LPA</td></tr>
-                <tr><td>Pharmaceutical / QC Labs</td><td>Forensic Chemist / QA Analyst</td><td>Drug authentication, counterfeit detection, trace analysis</td><td>₹3.5–6 LPA</td></tr>
-                <tr><td>Insurance Companies</td><td>Claims Investigator</td><td>Investigate suspect accident or fire claims using forensic methods</td><td>₹3.5–5.5 LPA</td></tr>
-                <tr><td>Private Investigation Firms</td><td>Crime Scene Analyst / Investigator</td><td>Work on civil/commercial cases: IP theft, corporate espionage</td><td>₹3–5 LPA</td></tr>
-                <tr><td>Consulting (Big 4)</td><td>Forensic Advisory Associate</td><td>Financial crime investigations, e-discovery, due diligence</td><td>₹6–10 LPA (after MSc + certification)</td></tr>
-                <tr><td>Academic Institutions</td><td>Lab Assistant / Junior Lecturer</td><td>Teaching, research, lab management</td><td>₹3–5 LPA</td></tr>
+                <tr><td data-label="Industry">Banks & NBFC</td><td data-label="Role">Forensic Auditor / Fraud Investigator</td><td data-label="What You'd Do">Investigate internal fraud, document forgery, KYC violations</td><td data-label="Entry Salary">₹4–7 LPA</td></tr>
+                <tr><td data-label="Industry">Cybersecurity Firms</td><td data-label="Role">Digital Forensic Analyst</td><td data-label="What You'd Do">Incident response, malware analysis, data recovery</td><td data-label="Entry Salary">₹5–9 LPA</td></tr>
+                <tr><td data-label="Industry">Law Firms</td><td data-label="Role">Forensic Consultant / Expert Witness</td><td data-label="What You'd Do">Prepare forensic reports for civil litigation, provide court testimony</td><td data-label="Entry Salary">₹4–8 LPA</td></tr>
+                <tr><td data-label="Industry">Pharmaceutical / QC Labs</td><td data-label="Role">Forensic Chemist / QA Analyst</td><td data-label="What You'd Do">Drug authentication, counterfeit detection, trace analysis</td><td data-label="Entry Salary">₹3.5–6 LPA</td></tr>
+                <tr><td data-label="Industry">Insurance Companies</td><td data-label="Role">Claims Investigator</td><td data-label="What You'd Do">Investigate suspect accident or fire claims using forensic methods</td><td data-label="Entry Salary">₹3.5–5.5 LPA</td></tr>
+                <tr><td data-label="Industry">Private Investigation Firms</td><td data-label="Role">Crime Scene Analyst / Investigator</td><td data-label="What You'd Do">Work on civil/commercial cases: IP theft, corporate espionage</td><td data-label="Entry Salary">₹3–5 LPA</td></tr>
+                <tr><td data-label="Industry">Consulting (Big 4)</td><td data-label="Role">Forensic Advisory Associate</td><td data-label="What You'd Do">Financial crime investigations, e-discovery, due diligence</td><td data-label="Entry Salary">₹6–10 LPA (MSc + cert)</td></tr>
+                <tr><td data-label="Industry">Academic Institutions</td><td data-label="Role">Lab Assistant / Junior Lecturer</td><td data-label="What You'd Do">Teaching, research, lab management</td><td data-label="Entry Salary">₹3–5 LPA</td></tr>
               </tbody>
             </table>
           </div>
@@ -436,12 +704,12 @@
 
         <hr class="section-divider" />
 
+        <!-- SECTION 6 -->
         <section id="cyber-forensics" aria-labelledby="h-cyber">
           <h2 id="h-cyber">6. Cyber & Digital Forensics — The Fastest-Growing Track</h2>
           <p>If there is one specialisation within forensic science that every student should understand thoroughly before choosing their path, it is digital forensics. The global cyber forensics market is projected to grow at <strong>15.95% CAGR between 2023 and 2028</strong>, reaching USD 20.29 billion by 2027. India alone reports approximately 1.7 lakh cybercrime incidents annually — each of which generates potential forensic investigation work.</p>
           <p>Digital forensic specialists consistently earn 30–40% more than traditional lab roles, and employment is growing at a projected 32% between 2022 and 2032 — significantly faster than the average for all occupations.</p>
 
-          <!-- IMAGE 3: Digital Forensics -->
           <div class="image-block" aria-label="Digital forensics analyst">
             <figure>
               <img src="https://kimi-web-img.moonshot.cn/img/www.excelsior.edu/7c180f7947cd70f9559bae34f0fecb079c7bf41c.jpg" alt="Digital forensics analyst analyzing cyber threat data on multiple screens" loading="lazy" width="1000" height="568" />
@@ -451,16 +719,16 @@
 
           <h3>What digital forensic scientists actually do</h3>
           <p>The work varies considerably by employer, but a typical day might involve recovering deleted files from a seized laptop in an economic offence case, analysing WhatsApp metadata to establish the timeline of a crime, mapping network traffic logs to identify the origin of a ransomware attack, or preparing a forensic report that will be presented in a court of law. The last part — making technical findings comprehensible to lawyers, judges, and juries — is where many technically excellent forensic scientists struggle.</p>
-          <div class="table-wrap">
+          <div class="table-wrap" role="region" aria-label="Digital forensics roles table" tabindex="0">
             <table>
               <thead><tr><th>Digital Forensics Role</th><th>Key Skills Required</th><th>India Salary Range</th></tr></thead>
               <tbody>
-                <tr><td>Digital Forensic Analyst (Private)</td><td>EnCase, FTK, Cellebrite, Python scripting</td><td>₹5–7 LPA entry, ₹12+ LPA senior</td></tr>
-                <tr><td>Junior Digital Expert (NCFL/DFSS)</td><td>Mobile forensics, network analysis, OS-level investigation</td><td>Pay Level 6–7 (govt contract initially)</td></tr>
-                <tr><td>Malware Analyst</td><td>Reverse engineering, x86 assembly, sandbox analysis</td><td>₹6–15 LPA (high specialist premium)</td></tr>
-                <tr><td>Incident Response Analyst</td><td>SIEM tools, log analysis, threat intelligence</td><td>₹7–18 LPA</td></tr>
-                <tr><td>Mobile Forensic Expert</td><td>iOS/Android extraction, Cellebrite, UFED tools</td><td>₹5–10 LPA</td></tr>
-                <tr><td>E-Discovery Consultant</td><td>Relativity, Nuix, legal holds, data processing</td><td>₹6–12 LPA (law firm context)</td></tr>
+                <tr><td data-label="Role">Digital Forensic Analyst (Private)</td><td data-label="Key Skills">EnCase, FTK, Cellebrite, Python scripting</td><td data-label="Salary Range">₹5–7 LPA entry, ₹12+ LPA senior</td></tr>
+                <tr><td data-label="Role">Junior Digital Expert (NCFL/DFSS)</td><td data-label="Key Skills">Mobile forensics, network analysis, OS-level investigation</td><td data-label="Salary Range">Pay Level 6–7 (govt contract initially)</td></tr>
+                <tr><td data-label="Role">Malware Analyst</td><td data-label="Key Skills">Reverse engineering, x86 assembly, sandbox analysis</td><td data-label="Salary Range">₹6–15 LPA (high specialist premium)</td></tr>
+                <tr><td data-label="Role">Incident Response Analyst</td><td data-label="Key Skills">SIEM tools, log analysis, threat intelligence</td><td data-label="Salary Range">₹7–18 LPA</td></tr>
+                <tr><td data-label="Role">Mobile Forensic Expert</td><td data-label="Key Skills">iOS/Android extraction, Cellebrite, UFED tools</td><td data-label="Salary Range">₹5–10 LPA</td></tr>
+                <tr><td data-label="Role">E-Discovery Consultant</td><td data-label="Key Skills">Relativity, Nuix, legal holds, data processing</td><td data-label="Salary Range">₹6–12 LPA (law firm context)</td></tr>
               </tbody>
             </table>
           </div>
@@ -472,21 +740,22 @@
 
         <hr class="section-divider" />
 
+        <!-- SECTION 7 -->
         <section id="specialisations" aria-labelledby="h-spec">
           <h2 id="h-spec">7. Specialisation Breakdown — Which Branch is Right for You?</h2>
           <p>One of the most common errors students make is treating forensic science as a monolithic field. In practice, a forensic toxicologist and a forensic document examiner share a broad scientific training but inhabit almost entirely different professional worlds. Choosing the right specialisation during your BSc — or certainly during postgraduate study — determines which doors open for you.</p>
-          <div class="table-wrap">
+          <div class="table-wrap" role="region" aria-label="Specialisation comparison table" tabindex="0">
             <table>
-              <thead><tr><th>Specialisation</th><th>Ideal Background</th><th>Best Government Employer</th><th>Best Private Employer</th><th>Future Demand</th></tr></thead>
+              <thead><tr><th>Specialisation</th><th>Ideal Background</th><th>Best Govt Employer</th><th>Best Private Employer</th><th>Future Demand</th></tr></thead>
               <tbody>
-                <tr><td>DNA Analysis / Forensic Biology</td><td>Biology / Biotechnology</td><td>CFSL Biology, CBI Lab</td><td>DNA diagnostic labs, hospitals</td><td>Very High ⬆️</td></tr>
-                <tr><td>Forensic Toxicology</td><td>Chemistry / Biochemistry</td><td>FSL, Narcotics labs, Medico-legal</td><td>Pharma QC, hospitals, doping labs</td><td>High ⬆️</td></tr>
-                <tr><td>Cyber / Digital Forensics</td><td>CS / Electronics / Forensic Science</td><td>NCFL, CBI Cyber, NIA Cyber</td><td>Cybersecurity firms, banks, law firms</td><td>Highest ⬆️⬆️</td></tr>
-                <tr><td>Forensic Chemistry</td><td>Chemistry / Analytical Chemistry</td><td>CFSL Chemistry, NCB</td><td>Pharmaceutical, food testing, paint labs</td><td>Moderate ➡️</td></tr>
-                <tr><td>Ballistics & Firearms</td><td>Physics / Mechanical Engineering</td><td>CFSL Ballistics, Police, Military</td><td>Defence R&D, security consulting</td><td>Moderate ➡️</td></tr>
-                <tr><td>Document Examination</td><td>Any forensic science</td><td>CBI, NIA, Banks, Courts</td><td>Banks, insurance, law firms</td><td>Moderate ➡️</td></tr>
-                <tr><td>Forensic Psychology</td><td>Psychology + Forensic Science</td><td>Police training institutes, prisons</td><td>Legal consulting, victim support NGOs</td><td>Growing ⬆️</td></tr>
-                <tr><td>Forensic Accounting</td><td>Commerce + Forensic Science / CA/CFE</td><td>CBI, ED, SFIO</td><td>Big 4, law firms, banks</td><td>Very High ⬆️</td></tr>
+                <tr><td data-label="Specialisation">DNA Analysis / Forensic Biology</td><td data-label="Background">Biology / Biotechnology</td><td data-label="Govt Employer">CFSL Biology, CBI Lab</td><td data-label="Private Employer">DNA diagnostic labs, hospitals</td><td data-label="Demand">Very High ⬆️</td></tr>
+                <tr><td data-label="Specialisation">Forensic Toxicology</td><td data-label="Background">Chemistry / Biochemistry</td><td data-label="Govt Employer">FSL, Narcotics labs, Medico-legal</td><td data-label="Private Employer">Pharma QC, hospitals, doping labs</td><td data-label="Demand">High ⬆️</td></tr>
+                <tr><td data-label="Specialisation">Cyber / Digital Forensics</td><td data-label="Background">CS / Electronics / Forensic Sci</td><td data-label="Govt Employer">NCFL, CBI Cyber, NIA Cyber</td><td data-label="Private Employer">Cybersecurity firms, banks, law firms</td><td data-label="Demand">Highest ⬆️⬆️</td></tr>
+                <tr><td data-label="Specialisation">Forensic Chemistry</td><td data-label="Background">Chemistry / Analytical Chemistry</td><td data-label="Govt Employer">CFSL Chemistry, NCB</td><td data-label="Private Employer">Pharmaceutical, food testing, paint labs</td><td data-label="Demand">Moderate ➡️</td></tr>
+                <tr><td data-label="Specialisation">Ballistics & Firearms</td><td data-label="Background">Physics / Mech. Engineering</td><td data-label="Govt Employer">CFSL Ballistics, Police, Military</td><td data-label="Private Employer">Defence R&D, security consulting</td><td data-label="Demand">Moderate ➡️</td></tr>
+                <tr><td data-label="Specialisation">Document Examination</td><td data-label="Background">Any forensic science</td><td data-label="Govt Employer">CBI, NIA, Banks, Courts</td><td data-label="Private Employer">Banks, insurance, law firms</td><td data-label="Demand">Moderate ➡️</td></tr>
+                <tr><td data-label="Specialisation">Forensic Psychology</td><td data-label="Background">Psychology + Forensic Sci</td><td data-label="Govt Employer">Police training institutes, prisons</td><td data-label="Private Employer">Legal consulting, victim support NGOs</td><td data-label="Demand">Growing ⬆️</td></tr>
+                <tr><td data-label="Specialisation">Forensic Accounting</td><td data-label="Background">Commerce + Forensic Sci / CA</td><td data-label="Govt Employer">CBI, ED, SFIO</td><td data-label="Private Employer">Big 4, law firms, banks</td><td data-label="Demand">Very High ⬆️</td></tr>
               </tbody>
             </table>
           </div>
@@ -498,11 +767,11 @@
 
         <hr class="section-divider" />
 
+        <!-- SECTION 8 -->
         <section id="careers-abroad" aria-labelledby="h-abroad">
           <h2 id="h-abroad">8. Careers Abroad — USA, UK, Canada, Australia</h2>
           <p>The international forensic science market is real and accessible — but it requires realistic planning. An Indian BSc is not automatically equivalent to a UK BSc or an American BS in the eyes of international employers. You will need credential evaluation, possibly a bridging MSc, and in most countries, relevant certifications aligned to local standards.</p>
 
-          <!-- IMAGE 4: DNA Forensic Testing -->
           <div class="image-block" aria-label="DNA forensic testing laboratory">
             <figure>
               <img src="https://kimi-web-img.moonshot.cn/img/c8.alamy.com/1b3f3596cdabf88cb986339508fcd589df19f6ad.jpg" alt="Forensic technician pipetting DNA samples for forensic testing in laboratory" loading="lazy" width="1300" height="957" />
@@ -514,9 +783,6 @@
           <p>The USA has the world's most developed forensic science infrastructure — FBI, DEA, ATF, the NIJ (National Institute of Justice) and state crime labs collectively employ thousands of forensic professionals. Entry-level salaries range from <strong>USD 50,000–70,000/year</strong>, with mid-career professionals earning USD 70,000–110,000, and senior/federal examiner roles reaching USD 150,000–220,000+ including overtime and locality pay.</p>
           <p>The FBI's Laboratory Division is the pinnacle employer — competitive to an extreme degree, requiring a US degree or NIST-accredited equivalency, FBI background clearance, and usually 5+ years of specialised experience. Realistic entry for Indian graduates involves: <strong>MSc in the USA → state crime lab position → federal application</strong> after 5–8 years.</p>
           <h3>United Kingdom</h3>
-          <p>The UK has undergone significant restructuring since the Forensic Science Service (FSS) was closed in 2012. Forensic services are now contracted out to private providers — Key Forensic Services, Eurofins Forensics, LGC Forensics
-
-         <h3>United Kingdom</h3>
           <p>The UK has undergone significant restructuring since the Forensic Science Service (FSS) was closed in 2012. Forensic services are now contracted out to private providers — Key Forensic Services, Eurofins Forensics, LGC Forensics, and others. The Home Office, Metropolitan Police, and National Crime Agency (NCA) also maintain in-house forensic capabilities. Entry salaries range from GBP 22,000–35,000, rising to GBP 45,000–65,000 mid-career. UK visa pathways for forensic scientists typically use the Skilled Worker route, and the occupation appears on the shortage occupation list for specialised roles.</p>
           <h3>Canada</h3>
           <p>The Royal Canadian Mounted Police (RCMP) National Forensic Laboratory Services and provincial forensic labs are the primary government employers. Entry salaries run CAD 55,000–75,000. Canada's Express Entry and Provincial Nominee Programs (PNP) are viable immigration pathways for qualified forensic science graduates, especially those with specialisations in digital forensics or toxicology, where demand exceeds domestic supply.</p>
@@ -524,16 +790,16 @@
           <p>Australian state forensic services (NSW Forensic & Analytical Science Service, Victoria Police Forensic Services, AFP Forensic) actively recruit. Entry-level forensic scientists earn <strong>AUD 65,000–80,000/year</strong>; experienced professionals with 10+ years reach AUD 108,000–156,000. The Australian Federal Police (AFP) forensic support roles include Pay Level 5 positions at AUD 108,000–118,000 for digital forensics specialists. Australia's skills shortage list includes forensic scientists in several categories, making the pathway via the General Skilled Migration (GSM) stream viable.</p>
           <h3>Middle East & UAE</h3>
           <p>Dubai Police, Abu Dhabi Police, and various UAE federal agencies are expanding their forensic capabilities significantly. The Dubai Forensic Lab has established itself as a regional centre of excellence, and several Indian forensic science graduates have built successful careers here. Tax-free salaries range from AED 8,000–25,000/month (approximately INR 1.8–5.5 lakh/month) depending on specialisation and experience.</p>
-          <div class="table-wrap">
+          <div class="table-wrap" role="region" aria-label="International career comparison table" tabindex="0">
             <table>
               <thead><tr><th>Country</th><th>Entry Salary</th><th>Mid-Career</th><th>Top Employers</th><th>Visa Pathway</th></tr></thead>
               <tbody>
-                <tr><td>🇺🇸 USA</td><td>USD 50,000–70,000</td><td>USD 70,000–110,000</td><td>FBI, DEA, State Crime Labs</td><td>H-1B (MSc + employer sponsorship)</td></tr>
-                <tr><td>🇬🇧 UK</td><td>GBP 22,000–35,000</td><td>GBP 45,000–65,000</td><td>Eurofins, LGC, Met Police, NCA</td><td>Skilled Worker Visa</td></tr>
-                <tr><td>🇨🇦 Canada</td><td>CAD 55,000–75,000</td><td>CAD 75,000–100,000</td><td>RCMP, Provincial Labs</td><td>Express Entry, PNP</td></tr>
-                <tr><td>🇦🇺 Australia</td><td>AUD 65,000–80,000</td><td>AUD 88,000–118,000</td><td>NSW FASS, AFP, Victoria Police</td><td>GSM, Employer Sponsorship</td></tr>
-                <tr><td>🇦🇪 UAE</td><td>AED 8,000–15,000/mo</td><td>AED 15,000–25,000/mo</td><td>Dubai Police, Abu Dhabi Police</td><td>Employment Visa (employer-sponsored)</td></tr>
-                <tr><td>🇩🇪 Germany</td><td>EUR 35,000–50,000</td><td>EUR 50,000–75,000</td><td>Bundeskriminalamt (BKA), State Labs</td><td>EU Blue Card (German language needed)</td></tr>
+                <tr><td data-label="Country">🇺🇸 USA</td><td data-label="Entry Salary">USD 50,000–70,000</td><td data-label="Mid-Career">USD 70,000–110,000</td><td data-label="Top Employers">FBI, DEA, State Crime Labs</td><td data-label="Visa">H-1B (MSc + employer sponsor)</td></tr>
+                <tr><td data-label="Country">🇬🇧 UK</td><td data-label="Entry Salary">GBP 22,000–35,000</td><td data-label="Mid-Career">GBP 45,000–65,000</td><td data-label="Top Employers">Eurofins, LGC, Met Police, NCA</td><td data-label="Visa">Skilled Worker Visa</td></tr>
+                <tr><td data-label="Country">🇨🇦 Canada</td><td data-label="Entry Salary">CAD 55,000–75,000</td><td data-label="Mid-Career">CAD 75,000–100,000</td><td data-label="Top Employers">RCMP, Provincial Labs</td><td data-label="Visa">Express Entry, PNP</td></tr>
+                <tr><td data-label="Country">🇦🇺 Australia</td><td data-label="Entry Salary">AUD 65,000–80,000</td><td data-label="Mid-Career">AUD 88,000–118,000</td><td data-label="Top Employers">NSW FASS, AFP, Victoria Police</td><td data-label="Visa">GSM, Employer Sponsorship</td></tr>
+                <tr><td data-label="Country">🇦🇪 UAE</td><td data-label="Entry Salary">AED 8k–15k/mo</td><td data-label="Mid-Career">AED 15k–25k/mo</td><td data-label="Top Employers">Dubai Police, Abu Dhabi Police</td><td data-label="Visa">Employment Visa</td></tr>
+                <tr><td data-label="Country">🇩🇪 Germany</td><td data-label="Entry Salary">EUR 35,000–50,000</td><td data-label="Mid-Career">EUR 50,000–75,000</td><td data-label="Top Employers">BKA, State Labs</td><td data-label="Visa">EU Blue Card</td></tr>
               </tbody>
             </table>
           </div>
@@ -545,14 +811,15 @@
 
         <hr class="section-divider" />
 
+        <!-- SECTION 9 -->
         <section id="salary-data" aria-labelledby="h-salary">
           <h2 id="h-salary">9. Salary Data: India & Abroad, Entry to Senior</h2>
           <p>Salary data for forensic science is genuinely scattered, and many sources conflate government and private sector figures, or confuse digital forensics with traditional lab forensics. The figures below are drawn from government pay commission notifications, Glassdoor India, BLS (USA), and SEEK (Australia) data as of 2025.</p>
           <h3>India: Government Sector Salaries</h3>
           <div class="salary-grid" aria-label="India government salary cards">
-            <div class="salary-card"><div class="role">JSA — State FSL</div><div class="amount">₹29,200</div><div class="period">starting/month + DA, HRA, allowances</div><div class="country">Pay Level 5</div></div>
+            <div class="salary-card"><div class="role">JSA — State FSL</div><div class="amount">₹29,200</div><div class="period">starting/month + DA, HRA</div><div class="country">Pay Level 5</div></div>
             <div class="salary-card"><div class="role">Scientist-B — CFSL</div><div class="amount">₹56,100</div><div class="period">starting/month (Pay Level 10)</div><div class="country">Central Govt</div></div>
-            <div class="salary-card"><div class="role">Scientist-D — CFSL</div><div class="amount">₹1,00,000+</div><div class="period">per month including allowances</div><div class="country">Pay Level 13</div></div>
+            <div class="salary-card"><div class="role">Scientist-D — CFSL</div><div class="amount">₹1,00,000+</div><div class="period">per month incl. allowances</div><div class="country">Pay Level 13</div></div>
             <div class="salary-card"><div class="role">Lab Director</div><div class="amount">₹1,31,100</div><div class="period">starting/month (Pay Level 13A)</div><div class="country">Apex Govt</div></div>
           </div>
           <h3>India: Private Sector Salaries</h3>
@@ -565,9 +832,9 @@
           <h3>Abroad: Benchmarks</h3>
           <div class="salary-grid" aria-label="International salary cards">
             <div class="salary-card"><div class="role">Forensic Scientist — USA (Entry)</div><div class="amount">$52,000</div><div class="period">per year (avg. 2025)</div><div class="country">🇺🇸 USA</div></div>
-            <div class="salary-card"><div class="role">Digital Forensic Analyst — USA (Senior)</div><div class="amount">$110,000+</div><div class="period">per year (federal roles)</div><div class="country">🇺🇸 USA</div></div>
-            <div class="salary-card"><div class="role">Forensic Scientist — Australia (Entry)</div><div class="amount">AUD 65,000</div><div class="period">per year</div><div class="country">🇦🇺 Australia</div></div>
-            <div class="salary-card"><div class="role">AFP Digital Forensics — Australia</div><div class="amount">AUD 108,000</div><div class="period">per year (Level 5)</div><div class="country">🇦🇺 Australia</div></div>
+            <div class="salary-card"><div class="role">Digital Forensic — USA (Senior)</div><div class="amount">$110,000+</div><div class="period">per year (federal roles)</div><div class="country">🇺🇸 USA</div></div>
+            <div class="salary-card"><div class="role">Forensic Scientist — Australia</div><div class="amount">AUD 65,000</div><div class="period">per year (entry)</div><div class="country">🇦🇺 Australia</div></div>
+            <div class="salary-card"><div class="role">AFP Digital Forensics</div><div class="amount">AUD 108,000</div><div class="period">per year (Level 5)</div><div class="country">🇦🇺 Australia</div></div>
           </div>
           <div class="callout callout-info">
             <div class="callout-title">ℹ️ The Real Salary Insight</div>
@@ -577,21 +844,22 @@
 
         <hr class="section-divider" />
 
+        <!-- SECTION 10 -->
         <section id="higher-studies" aria-labelledby="h-study">
           <h2 id="h-study">10. Higher Studies After BSc Forensic Science</h2>
           <p>This is where strategy separates students who build excellent careers from those who plateau early. The BSc is your entry credential. What you do next determines the ceiling of your career.</p>
-          <div class="table-wrap">
+          <div class="table-wrap" role="region" aria-label="Higher studies options table" tabindex="0">
             <table>
               <thead><tr><th>Programme</th><th>Duration</th><th>Where</th><th>Impact on Career</th></tr></thead>
               <tbody>
-                <tr><td>MSc Forensic Science</td><td>2 years</td><td>NFSU, Panjab Univ, Osmania, Amity; abroad: UWA, Strathclyde, GWU</td><td>Mandatory for CFSL/UPSC; 40–60% salary premium</td></tr>
-                <tr><td>PG Diploma in Cyber Forensics</td><td>1 year</td><td>NFSU, CDAC, Symbiosis, IISc (cert programmes)</td><td>Fast-track to digital forensic roles; employer-valued</td></tr>
-                <tr><td>LLB (Law)</td><td>3 years</td><td>Any BCI-recognised law school</td><td>Opens forensic law, legal consulting, court-side expert work</td></tr>
-                <tr><td>MBA (Fraud Management / Risk)</td><td>2 years</td><td>IIMs, NMIMS, Symbiosis, abroad</td><td>Entry into Big 4 Forensic Advisory at management level</td></tr>
-                <tr><td>MTech Forensic Science</td><td>2 years</td><td>NFSU, select NITs via GATE</td><td>Technical depth; R&D and academia track</td></tr>
-                <tr><td>MSc Digital Forensics (Abroad)</td><td>1–2 years</td><td>Cranfield (UK), John Jay (USA), Champlain (USA)</td><td>Direct entry to international professional market</td></tr>
-                <tr><td>PhD / Research</td><td>3–5 years</td><td>NFSU, IITs (interdisciplinary), IIFM, abroad</td><td>Academia, senior R&D, international research institutions</td></tr>
-                <tr><td>CFE (Certified Fraud Examiner)</td><td>Self-study + exam</td><td>ACFE (online)</td><td>High-value certification for forensic accounting track</td></tr>
+                <tr><td data-label="Programme">MSc Forensic Science</td><td data-label="Duration">2 years</td><td data-label="Where">NFSU, Panjab Univ, Osmania, Amity; abroad: UWA, Strathclyde, GWU</td><td data-label="Career Impact">Mandatory for CFSL/UPSC; 40–60% salary premium</td></tr>
+                <tr><td data-label="Programme">PG Diploma in Cyber Forensics</td><td data-label="Duration">1 year</td><td data-label="Where">NFSU, CDAC, Symbiosis, IISc (cert programmes)</td><td data-label="Career Impact">Fast-track to digital forensic roles; employer-valued</td></tr>
+                <tr><td data-label="Programme">LLB (Law)</td><td data-label="Duration">3 years</td><td data-label="Where">Any BCI-recognised law school</td><td data-label="Career Impact">Opens forensic law, legal consulting, court-side expert work</td></tr>
+                <tr><td data-label="Programme">MBA (Fraud Mgmt / Risk)</td><td data-label="Duration">2 years</td><td data-label="Where">IIMs, NMIMS, Symbiosis, abroad</td><td data-label="Career Impact">Entry into Big 4 Forensic Advisory at management level</td></tr>
+                <tr><td data-label="Programme">MTech Forensic Science</td><td data-label="Duration">2 years</td><td data-label="Where">NFSU, select NITs via GATE</td><td data-label="Career Impact">Technical depth; R&D and academia track</td></tr>
+                <tr><td data-label="Programme">MSc Digital Forensics (Abroad)</td><td data-label="Duration">1–2 years</td><td data-label="Where">Cranfield (UK), John Jay (USA), Champlain (USA)</td><td data-label="Career Impact">Direct entry to international professional market</td></tr>
+                <tr><td data-label="Programme">PhD / Research</td><td data-label="Duration">3–5 years</td><td data-label="Where">NFSU, IITs (interdisciplinary), IIFM, abroad</td><td data-label="Career Impact">Academia, senior R&D, international research institutions</td></tr>
+                <tr><td data-label="Programme">CFE (Certified Fraud Examiner)</td><td data-label="Duration">Self-study + exam</td><td data-label="Where">ACFE (online)</td><td data-label="Career Impact">High-value certification for forensic accounting track</td></tr>
               </tbody>
             </table>
           </div>
@@ -603,6 +871,7 @@
 
         <hr class="section-divider" />
 
+        <!-- SECTION 11 -->
         <section id="roadmap" aria-labelledby="h-roadmap">
           <h2 id="h-roadmap">11. Your Step-by-Step Career Roadmap</h2>
           <h3>Track A: Government Lab (Classic Forensic Science)</h3>
@@ -623,33 +892,33 @@
 
         <hr class="section-divider" />
 
+        <!-- SECTION 12 -->
         <section id="myths" aria-labelledby="h-myths">
           <h2 id="h-myths">12. Myths vs. Facts About Forensic Careers</h2>
           <div class="mvf-grid">
             <div class="mvf-card mvf-myth"><div class="mvf-label">✗ Myth</div><p>Forensic science careers are exactly like what you see on TV — fast-paced, dramatic, with results in minutes.</p></div>
-            <div class="mvf-card mvf-fact"><div class="mvf-label">✓ Fact</div><p>Lab work is methodical, documentation-heavy, and follows strict chain-of-custody protocols. A DNA result can take days. A court report can take weeks. The work is precise, not dramatic.</p></div>
+            <div class="mvf-card mvf-fact"><div class="mvf-label">✓ Fact</div><p>Lab work is methodical, documentation-heavy, and follows strict chain-of-custody protocols. A DNA result can take days. A court report can take weeks.</p></div>
             <div class="mvf-card mvf-myth"><div class="mvf-label">✗ Myth</div><p>A BSc in Forensic Science automatically qualifies you for a Central Government scientist position.</p></div>
-            <div class="mvf-card mvf-fact"><div class="mvf-label">✓ Fact</div><p>CFSL Scientist-B posts require an MSc. BSc holders can enter at state FSL Junior Scientific Assistant level — a legitimate and important starting point, but not a central scientist post.</p></div>
+            <div class="mvf-card mvf-fact"><div class="mvf-label">✓ Fact</div><p>CFSL Scientist-B posts require an MSc. BSc holders can enter at state FSL Junior Scientific Assistant level — a legitimate starting point, but not a central scientist post.</p></div>
             <div class="mvf-card mvf-myth"><div class="mvf-label">✗ Myth</div><p>There are no private sector jobs in forensic science — it's only government work.</p></div>
             <div class="mvf-card mvf-fact"><div class="mvf-label">✓ Fact</div><p>Banks, law firms, consulting firms, pharmaceutical companies, cybersecurity firms, and insurance companies all employ forensic science graduates. The private sector is growing faster than government hiring in digital specialisations.</p></div>
             <div class="mvf-card mvf-myth"><div class="mvf-label">✗ Myth</div><p>You can walk into an FBI or Interpol job after graduation.</p></div>
             <div class="mvf-card mvf-fact"><div class="mvf-label">✓ Fact</div><p>FBI Laboratory Division requires US citizenship, an MS-level degree, specific certifications, and typically 5+ years of specialised experience. Interpol coordinates national agencies — it does not directly employ large numbers of individual forensic scientists.</p></div>
             <div class="mvf-card mvf-myth"><div class="mvf-label">✗ Myth</div><p>Forensic science is only for crime investigation.</p></div>
-            <div class="mvf-card mvf-fact"><div class="mvf-label">✓ Fact</div><p>Forensic methods are used in pharmaceutical QC, food adulteration detection, environmental science, archaeology, disaster victim identification (DVI), insurance fraud investigation, and financial crime — far beyond criminal justice alone.</p></div>
+            <div class="mvf-card mvf-fact"><div class="mvf-label">✓ Fact</div><p>Forensic methods are used in pharmaceutical QC, food adulteration detection, environmental science, archaeology, disaster victim identification (DVI), insurance fraud investigation, and financial crime.</p></div>
           </div>
         </section>
 
         <!-- SHARE BAR -->
         <div class="share-bar" role="complementary" aria-label="Share this article">
-          <span class="share-label">Share this guide:</span>
-          <a class="share-btn share-wa" href="https://wa.me/?text=Complete%20BSc%20Forensic%20Science%20Career%20Guide%20%E2%80%94%20https%3A%2F%2Fprimespirit.co.in%2Fcareers%2Fbsc-forensic-science-career-guide" target="_blank" rel="noopener" aria-label="Share on WhatsApp">📱 WhatsApp</a>
-          <a class="share-btn share-fb" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fprimespirit.co.in%2Fcareers%2Fbsc-forensic-science-career-guide" target="_blank" rel="noopener" aria-label="Share on Facebook">📘 Facebook</a>
-          <a class="share-btn share-li" href="https://www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Fprimespirit.co.in%2Fcareers%2Fbsc-forensic-science-career-guide" target="_blank" rel="noopener" aria-label="Share on LinkedIn">💼 LinkedIn</a>
-          <a class="share-btn share-tw" href="https://twitter.com/intent/tweet?text=BSc%20Forensic%20Science%20Career%20Guide%20%E2%80%94%20real%20jobs%2C%20real%20salaries%2C%20India%20%26%20abroad&url=https%3A%2F%2Fprimespirit.co.in%2Fcareers%2Fbsc-forensic-science-career-guide" target="_blank" rel="noopener" aria-label="Share on X (Twitter)">✖ X</a>
-          <a class="share-btn share-tg" href="https://t.me/share/url?url=https%3A%2F%2Fprimespirit.co.in%2Fcareers%2Fbsc-forensic-science-career-guide" target="_blank" rel="noopener" aria-label="Share on Telegram">✈ Telegram</a>
-          <a class="share-btn share-rd" href="https://www.reddit.com/submit?url=https%3A%2F%2Fprimespirit.co.in%2Fcareers%2Fbsc-forensic-science-career-guide&title=BSc%20Forensic%20Science%20Career%20Guide%3A%20Jobs%2C%20Salary%20%26%20Scope" target="_blank" rel="noopener" aria-label="Share on Reddit">🔴 Reddit</a>
-          <button class="share-btn share-copy" onclick="navigator.clipboard.writeText(window.location.href); this.textContent='✅ Copied!'; setTimeout(()=>this.textContent='🔗 Copy Link',2000)" aria-label="Copy article link">🔗 Copy Link</button>
-          <button class="share-btn share-print" onclick="window.print()" aria-label="Print article">🖨️ Print</button>
+          <span class="share-label">Share:</span>
+          <a class="share-btn share-wa" href="https://wa.me/?text=Complete%20BSc%20Forensic%20Science%20Career%20Guide%20%E2%80%94%20https%3A%2F%2Fprimespirit.co.in%2Fcareers%2Fbsc-forensic-science-career-guide" target="_blank" rel="noopener" aria-label="Share on WhatsApp"><span class="share-icon-letter">📱</span><span class="share-text"> WhatsApp</span></a>
+          <a class="share-btn share-fb" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fprimespirit.co.in%2Fcareers%2Fbsc-forensic-science-career-guide" target="_blank" rel="noopener" aria-label="Share on Facebook"><span class="share-icon-letter">📘</span><span class="share-text"> Facebook</span></a>
+          <a class="share-btn share-li" href="https://www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Fprimespirit.co.in%2Fcareers%2Fbsc-forensic-science-career-guide" target="_blank" rel="noopener" aria-label="Share on LinkedIn"><span class="share-icon-letter">💼</span><span class="share-text"> LinkedIn</span></a>
+          <a class="share-btn share-tw" href="https://twitter.com/intent/tweet?text=BSc%20Forensic%20Science%20Career%20Guide%20%E2%80%94%20real%20jobs%2C%20real%20salaries%2C%20India%20%26%20abroad&url=https%3A%2F%2Fprimespirit.co.in%2Fcareers%2Fbsc-forensic-science-career-guide" target="_blank" rel="noopener" aria-label="Share on X"><span class="share-icon-letter">✖</span><span class="share-text"> X</span></a>
+          <a class="share-btn share-tg" href="https://t.me/share/url?url=https%3A%2F%2Fprimespirit.co.in%2Fcareers%2Fbsc-forensic-science-career-guide" target="_blank" rel="noopener" aria-label="Share on Telegram"><span class="share-icon-letter">✈</span><span class="share-text"> Telegram</span></a>
+          <button class="share-btn share-copy" onclick="navigator.clipboard.writeText(window.location.href);this.querySelector('.share-text').textContent=' Copied!';setTimeout(()=>this.querySelector('.share-text').textContent=' Copy Link',2000)" aria-label="Copy link"><span class="share-icon-letter">🔗</span><span class="share-text"> Copy Link</span></button>
+          <button class="share-btn share-print" onclick="window.print()" aria-label="Print"><span class="share-icon-letter">🖨️</span><span class="share-text"> Print</span></button>
         </div>
 
         <!-- CTA -->
@@ -670,60 +939,60 @@
               <div class="faq-a">Entry-level salaries vary considerably by sector. In state government labs (Junior Scientific Assistant), starting pay is approximately ₹29,200/month at Pay Level 5, plus DA, HRA, and other allowances that can add 40–60% to the basic pay. In the private sector, laboratory analyst roles typically start at ₹3–5 LPA, while digital forensics roles start at ₹5–7 LPA. With 3–5 years of experience and appropriate certifications, private sector salaries can reach ₹10–15 LPA in digital specialisations.</div>
             </div>
             <div class="faq-item" role="listitem">
-              <button class="faq-q" aria-expanded="false" onclick="toggleFaq(this)">Can I apply for CFSL Scientist posts directly after BSc Forensic Science?<span class="faq-icon" aria-hidden="true">+</span></button>
+              <button class="faq-q" aria-expanded="false" onclick="toggleFaq(this)">Can I apply for CFSL Scientist posts directly after BSc?<span class="faq-icon" aria-hidden="true">+</span></button>
               <div class="faq-a">No. Central Forensic Science Laboratory (CFSL) Scientist-B posts, notified by UPSC, require an MSc degree in the relevant specialisation (Biology, Chemistry, Physics, Documents, or Cyber Forensics). A BSc alone qualifies you for state-level Junior Scientific Assistant (JSA) posts via DSSSB or state PSCs. Think of JSA as your entry point into government service; CFSL is the subsequent career destination after gaining experience and completing postgraduate education.</div>
             </div>
             <div class="faq-item" role="listitem">
-              <button class="faq-q" aria-expanded="false" onclick="toggleFaq(this)">Is BSc Forensic Science a good career choice or is it overhyped?<span class="faq-icon" aria-hidden="true">+</span></button>
+              <button class="faq-q" aria-expanded="false" onclick="toggleFaq(this)">Is BSc Forensic Science a good career choice or overhyped?<span class="faq-icon" aria-hidden="true">+</span></button>
               <div class="faq-a">It is a genuinely good career choice with the right planning, and it is partly overhyped in the sense that television has created unrealistic expectations about the day-to-day work. The facts are encouraging: the Bureau of Police Research and Development recorded a 12% annual rise in forensic jobs between 2022–2024, 700+ vacancies went unfilled at state labs in 2023, and digital forensics is growing at 40% CAGR in India. The caveat is that most well-paying government positions require an MSc, and the most lucrative private sector roles require additional certifications. Plan for 5–6 years of education and credentialing, not 3.</div>
             </div>
             <div class="faq-item" role="listitem">
-              <button class="faq-q" aria-expanded="false" onclick="toggleFaq(this)">Which specialisation in forensic science has the best career scope?<span class="faq-icon" aria-hidden="true">+</span></button>
-              <div class="faq-a">Digital and cyber forensics currently offer the best combination of high salary, high demand, and future-proof relevance — both in India and internationally. DNA forensics / forensic biology is the second most in-demand specialisation, driven by India's expanding DNA profiling infrastructure. Forensic toxicology remains stable with consistent demand across pharma, medico-legal, and NCB sectors. Traditional specialisations like ballistics and document examination are stable but growing more slowly. Choose based on your genuine scientific interest first — sustained performance over years requires authentic engagement with the subject, not just salary projections.</div>
+              <button class="faq-q" aria-expanded="false" onclick="toggleFaq(this)">Which specialisation has the best career scope?<span class="faq-icon" aria-hidden="true">+</span></button>
+              <div class="faq-a">Digital and cyber forensics currently offer the best combination of high salary, high demand, and future-proof relevance — both in India and internationally. DNA forensics / forensic biology is the second most in-demand specialisation, driven by India's expanding DNA profiling infrastructure. Forensic toxicology remains stable with consistent demand across pharma, medico-legal, and NCB sectors. Choose based on your genuine scientific interest first — sustained performance over years requires authentic engagement with the subject.</div>
             </div>
             <div class="faq-item" role="listitem">
               <button class="faq-q" aria-expanded="false" onclick="toggleFaq(this)">Can I work for CBI after BSc Forensic Science?<span class="faq-icon" aria-hidden="true">+</span></button>
-              <div class="faq-a">The CBI's scientific staff at the CFSL-CBI in New Delhi is typically filled through deputation from CFSL or through UPSC recruitment, both of which require an MSc. A more direct route into CBI investigative functions is through the SSC CGL (Sub-Inspector in CBI) or UPSC Civil Services, where forensic science knowledge is a significant advantage. If your goal is CBI, plan for MSc → CFSL/State FSL entry → deputation to CBI after 5–10 years, or pursue SSC CGL/UPSC as a parallel track.</div>
+              <div class="faq-a">The CBI's scientific staff at the CFSL-CBI in New Delhi is typically filled through deputation from CFSL or through UPSC recruitment, both of which require an MSc. A more direct route into CBI investigative functions is through the SSC CGL (Sub-Inspector in CBI) or UPSC Civil Services, where forensic science knowledge is a significant advantage. If your goal is CBI, plan for MSc → CFSL/State FSL entry → deputation to CBI after 5–10 years.</div>
             </div>
             <div class="faq-item" role="listitem">
-              <button class="faq-q" aria-expanded="false" onclick="toggleFaq(this)">What is the scope of BSc Forensic Science abroad — especially in the USA?<span class="faq-icon" aria-hidden="true">+</span></button>
-              <div class="faq-a">The USA is the most developed market for forensic science globally, but entry as an Indian graduate requires credential evaluation, typically an MS from a US or internationally recognised institution, and usually 3–5 years of relevant experience. Entry salaries range from USD 50,000–70,000 at state crime labs; federal roles (FBI, DEA) pay USD 100,000–220,000 at senior levels but are extremely competitive and require US citizenship. The realistic pathway is: BSc India → MS USA → state crime lab position → federal application after 5–8 years. Cyber forensics is the fastest route, with more private sector employers willing to hire international candidates who hold relevant certifications (CHFI, GCFA, EnCE).</div>
+              <button class="faq-q" aria-expanded="false" onclick="toggleFaq(this)">What is the scope of BSc Forensic Science abroad?<span class="faq-icon" aria-hidden="true">+</span></button>
+              <div class="faq-a">The USA is the most developed market for forensic science globally, but entry as an Indian graduate requires credential evaluation, typically an MS from a US or internationally recognised institution, and usually 3–5 years of relevant experience. Entry salaries range from USD 50,000–70,000 at state crime labs; federal roles (FBI, DEA) pay USD 100,000–220,000 at senior levels but are extremely competitive and require US citizenship. Cyber forensics is the fastest route, with more private sector employers willing to hire international candidates who hold relevant certifications.</div>
             </div>
             <div class="faq-item" role="listitem">
               <button class="faq-q" aria-expanded="false" onclick="toggleFaq(this)">Does BSc Forensic Science help in becoming a Police Officer?<span class="faq-icon" aria-hidden="true">+</span></button>
-              <div class="faq-a">BSc Forensic Science does not give direct entry into the police service as a uniformed officer — that requires State PSC / UPSC exams or direct constable recruitment, none of which are specific to forensic science. However, forensic science graduates are at a significant advantage in: (a) Sub-Inspector recruitment tests where general science and reasoning are tested, (b) IPS preparation where scientific aptitude assists in optional papers, and (c) specialised Scientific/Technical Officer posts within police departments that specifically recruit forensic science graduates. The distinction is: uniformed police = separate exam; forensic scientist within police = different recruitment track.</div>
+              <div class="faq-a">BSc Forensic Science does not give direct entry into the police service as a uniformed officer — that requires State PSC / UPSC exams or direct constable recruitment. However, forensic science graduates are at a significant advantage in: (a) Sub-Inspector recruitment tests where general science and reasoning are tested, (b) IPS preparation where scientific aptitude assists in optional papers, and (c) specialised Scientific/Technical Officer posts within police departments that specifically recruit forensic science graduates.</div>
             </div>
             <div class="faq-item" role="listitem">
               <button class="faq-q" aria-expanded="false" onclick="toggleFaq(this)">What are the best colleges for BSc Forensic Science in India?<span class="faq-icon" aria-hidden="true">+</span></button>
-              <div class="faq-a">National Forensic Science University (NFSU), Gandhinagar is the premier institution — the world's first university dedicated to forensic science. Other strong institutions include: Panjab University (Chandigarh), Osmania University (Hyderabad), Government Institute of Forensic Science (Aurangabad), Amity University, Symbiosis Institute of Forensic Science, Jain University, and Lovely Professional University. When evaluating any programme, prioritise: NAAC accreditation, functional forensic laboratories with modern instruments (HPLC, GC-MS, AFIS), active FSL partnerships for internships, and verifiable placement records in actual forensic roles (not just generic science roles).</div>
+              <div class="faq-a">National Forensic Science University (NFSU), Gandhinagar is the premier institution. Other strong institutions include: Panjab University (Chandigarh), Osmania University (Hyderabad), Government Institute of Forensic Science (Aurangabad), Amity University, Symbiosis Institute of Forensic Science, Jain University, and Lovely Professional University. When evaluating any programme, prioritise: NAAC accreditation, functional forensic laboratories with modern instruments, active FSL partnerships for internships, and verifiable placement records.</div>
             </div>
             <div class="faq-item" role="listitem">
-              <button class="faq-q" aria-expanded="false" onclick="toggleFaq(this)">Can BSc Forensic Science graduates work in the pharmaceutical industry?<span class="faq-icon" aria-hidden="true">+</span></button>
-              <div class="faq-a">Yes. Forensic chemistry graduates are employable in pharmaceutical quality control, drug analysis, and counterfeit medicine detection. The analytical chemistry skills developed in a forensic science programme — chromatography, spectroscopy, trace analysis — are directly transferable to pharma QC and QA roles. Salary ranges from ₹3.5–6 LPA at entry in pharma, rising to ₹8–14 LPA for senior analytical roles. A further MSc in Analytical Chemistry or a pharmaceutical-focused course strengthens this pathway considerably.</div>
+              <button class="faq-q" aria-expanded="false" onclick="toggleFaq(this)">Can BSc Forensic Science graduates work in pharmaceutical industry?<span class="faq-icon" aria-hidden="true">+</span></button>
+              <div class="faq-a">Yes. Forensic chemistry graduates are employable in pharmaceutical quality control, drug analysis, and counterfeit medicine detection. The analytical chemistry skills developed in a forensic science programme — chromatography, spectroscopy, trace analysis — are directly transferable to pharma QC and QA roles. Salary ranges from ₹3.5–6 LPA at entry, rising to ₹8–14 LPA for senior analytical roles.</div>
             </div>
             <div class="faq-item" role="listitem">
-              <button class="faq-q" aria-expanded="false" onclick="toggleFaq(this)">Is there scope for self-employment or freelancing in forensic science?<span class="faq-icon" aria-hidden="true">+</span></button>
-              <div class="faq-a">Experienced forensic scientists — typically with 10+ years and strong professional credentials — can establish independent practices as expert witnesses, forensic consultants to law firms, or forensic auditors. The Indian court system increasingly calls upon private forensic experts in civil litigation, divorce proceedings, intellectual property disputes, and commercial fraud cases. This is not a Day 1 career option: it requires establishing credibility through years of institutional work, a strong professional network, and — ideally — legal training or significant experience testifying in court. Internationally, forensic accounting consultants through CFE certification have a well-established independent practice model.</div>
+              <button class="faq-q" aria-expanded="false" onclick="toggleFaq(this)">Is there scope for self-employment or freelancing?<span class="faq-icon" aria-hidden="true">+</span></button>
+              <div class="faq-a">Experienced forensic scientists — typically with 10+ years and strong professional credentials — can establish independent practices as expert witnesses, forensic consultants to law firms, or forensic auditors. This is not a Day 1 career option: it requires establishing credibility through years of institutional work and a strong professional network.</div>
             </div>
             <div class="faq-item" role="listitem">
-              <button class="faq-q" aria-expanded="false" onclick="toggleFaq(this)">How does forensic science differ from criminology as a degree?<span class="faq-icon" aria-hidden="true">+</span></button>
-              <div class="faq-a">Forensic science is primarily a laboratory-based natural science discipline — the application of biology, chemistry, and physics to legal questions. Criminology is a social science — the study of crime, criminal behaviour, law enforcement systems, and the sociology of criminal justice. They are complementary but different. Forensic science graduates work in labs, on crime scenes, and as expert witnesses. Criminology graduates work in policy, prison management, social rehabilitation, police reform, and academic research. Some universities now offer joint degrees. For anyone primarily interested in scientific investigation, forensic science is the right choice; for those interested in understanding and preventing crime at a societal level, criminology is more relevant.</div>
+              <button class="faq-q" aria-expanded="false" onclick="toggleFaq(this)">How does forensic science differ from criminology?<span class="faq-icon" aria-hidden="true">+</span></button>
+              <div class="faq-a">Forensic science is primarily a laboratory-based natural science discipline — the application of biology, chemistry, and physics to legal questions. Criminology is a social science — the study of crime, criminal behaviour, law enforcement systems, and the sociology of criminal justice. They are complementary but different. Forensic science graduates work in labs and on crime scenes; criminology graduates work in policy, prison management, and academic research.</div>
             </div>
             <div class="faq-item" role="listitem">
-              <button class="faq-q" aria-expanded="false" onclick="toggleFaq(this)">What certifications help BSc Forensic Science graduates get better jobs?<span class="faq-icon" aria-hidden="true">+</span></button>
-              <div class="faq-a">The certifications that deliver the most demonstrable career value are: CHFI (Certified Hacking Forensic Investigator) from EC-Council for digital forensics; CFE (Certified Fraud Examiner) from ACFE for forensic accounting/financial investigation; EnCE (EnCase Certified Examiner) for digital evidence analysis; GCFE/GCFA from GIAC for incident response and forensic analysis; and ISO/IEC 17025 Lead Assessor training for laboratory quality management. For government sector, familiarity with CERT-In guidelines and India-specific legal requirements (Indian Evidence Act provisions on electronic evidence) is practically important. Start with one deep certification rather than collecting multiple superficial ones.</div>
+              <button class="faq-q" aria-expanded="false" onclick="toggleFaq(this)">What certifications help get better jobs?<span class="faq-icon" aria-hidden="true">+</span></button>
+              <div class="faq-a">The certifications that deliver the most career value are: CHFI from EC-Council for digital forensics; CFE from ACFE for forensic accounting; EnCE from EnCase for digital evidence analysis; GCFE/GCFA from GIAC for incident response; and ISO/IEC 17025 Lead Assessor training for laboratory quality management. Start with one deep certification rather than collecting multiple superficial ones.</div>
             </div>
             <div class="faq-item" role="listitem">
-              <button class="faq-q" aria-expanded="false" onclick="toggleFaq(this)">How long does it realistically take to get a well-paying forensic science job in India?<span class="faq-icon" aria-hidden="true">+</span></button>
-              <div class="faq-a">Realistically: for a government forensic role at the state FSL level (₹30,000–50,000/month), expect 3–5 years — BSc (3 years) + exam preparation and selection process (1–2 years). For a private sector digital forensics role at ₹5–7 LPA, the timeline with a BSc + CHFI certification is 3–4 years. For a well-paying government central track position (CFSL Scientist-B at ₹56,100+ starting), plan for 6–8 years — BSc (3 years) + MSc (2 years) + preparation and clearing UPSC Scientist exam (1–3 years). The honest truth is that forensic science is a professional discipline that rewards sustained, methodical investment in education and credentials, not a quick entry-to-high-salary path.</div>
+              <button class="faq-q" aria-expanded="false" onclick="toggleFaq(this)">How long to get a well-paying forensic job in India?<span class="faq-icon" aria-hidden="true">+</span></button>
+              <div class="faq-a">Realistically: for a government forensic role at the state FSL level (₹30,000–50,000/month), expect 3–5 years — BSc (3 years) + exam preparation (1–2 years). For a private sector digital forensics role at ₹5–7 LPA, the timeline with a BSc + CHFI certification is 3–4 years. For a central track position (CFSL Scientist-B at ₹56,100+ starting), plan for 6–8 years — BSc (3) + MSc (2) + UPSC prep (1–3 years).</div>
             </div>
             <div class="faq-item" role="listitem">
-              <button class="faq-q" aria-expanded="false" onclick="toggleFaq(this)">Are girls/women welcome in forensic science careers in India?<span class="faq-icon" aria-hidden="true">+</span></button>
-              <div class="faq-a">Absolutely, and this deserves an unambiguous answer. Government forensic labs — CFSL, state FSLs, NIA technical units — are merit-based recruitment environments where gender plays no role in selection. In fact, the majority of students in many forensic science programmes are women. Biology and chemistry divisions in particular have strong female representation at all levels. The work does sometimes involve crime scene visits, mortuaries, and graphic evidence — conditions that are professionally manageable with training and should not be a barrier. The question to ask is not "is this field appropriate for me?" but "which specialisation aligns with my strongest scientific skills?"</div>
+              <button class="faq-q" aria-expanded="false" onclick="toggleFaq(this)">Are women welcome in forensic science careers in India?<span class="faq-icon" aria-hidden="true">+</span></button>
+              <div class="faq-a">Absolutely. Government forensic labs are merit-based recruitment environments where gender plays no role in selection. In fact, the majority of students in many forensic science programmes are women. Biology and chemistry divisions in particular have strong female representation at all levels. The work does sometimes involve crime scene visits and graphic evidence — conditions that are professionally manageable with training and should not be a barrier.</div>
             </div>
             <div class="faq-item" role="listitem">
-              <button class="faq-q" aria-expanded="false" onclick="toggleFaq(this)">What is the difference between MSc Forensic Science from NFSU vs other universities?<span class="faq-icon" aria-hidden="true">+</span></button>
-              <div class="faq-a">NFSU (National Forensic Science University) has a unique position as the world's first dedicated forensic science university with direct government institutional linkages — its graduates have cleaner pathways into DFSS and state FSL positions, and the curriculum is designed in consultation with MHA and practicing forensic scientists. Other strong universities (Panjab, Osmania, Amity) offer good programmes but with varying laboratory infrastructure and different placement networks. The practical differentiator when evaluating any MSc programme: (1) laboratory instrument availability and hands-on hours, (2) internship tie-ups with actual forensic agencies, (3) faculty who have published in indexed forensic science journals, and (4) placement data specifically for forensic roles — not just generic science placements.</div>
+              <button class="faq-q" aria-expanded="false" onclick="toggleFaq(this)">NFSU MSc vs other universities — what's the difference?<span class="faq-icon" aria-hidden="true">+</span></button>
+              <div class="faq-a">NFSU has a unique position as the world's first dedicated forensic science university with direct government institutional linkages — its graduates have cleaner pathways into DFSS and state FSL positions. The practical differentiator when evaluating any MSc programme: (1) laboratory instrument availability and hands-on hours, (2) internship tie-ups with actual forensic agencies, (3) faculty who have published in indexed forensic science journals, and (4) placement data specifically for forensic roles.</div>
             </div>
           </div>
         </section>
@@ -747,15 +1016,15 @@
             <li>Rungta University. <em>Top Jobs After BSc Forensic Science — Market Analysis.</em> <a href="https://rungta.ac.in/top-jobs-after-b-sc-forensic-science/" target="_blank" rel="noopener">rungta.ac.in</a></li>
             <li>Jain University. <em>BSc Forensic Science Jobs and Salary Guide.</em> <a href="https://www.jainuniversity.ac.in/blogs/bsc-forensic-science-jobs" target="_blank" rel="noopener">jainuniversity.ac.in</a></li>
             <li>Government of India, Ministry of Home Affairs. <em>7th Central Pay Commission Pay Matrix.</em> <a href="https://www.persmin.gov.in" target="_blank" rel="noopener">persmin.gov.in</a></li>
-            <li>EC-Council. <em>Computer Hacking Forensic Investigator (CHFI) Certification.</em> <a href="https://www.eccouncil.org/programs/computer-hacking-forensic-investigator-chfi/" target="_blank" rel="noopener">eccouncil.org</a></li>
-            <li>ACFE (Association of Certified Fraud Examiners). <em>CFE Credential Overview.</em> <a href="https://www.acfe.com/cfe-credential.aspx" target="_blank" rel="noopener">acfe.com</a></li>
+            <li>EC-Council. <em>CHFI Certification.</em> <a href="https://www.eccouncil.org/programs/computer-hacking-forensic-investigator-chfi/" target="_blank" rel="noopener">eccouncil.org</a></li>
+            <li>ACFE. <em>CFE Credential Overview.</em> <a href="https://www.acfe.com/cfe-credential.aspx" target="_blank" rel="noopener">acfe.com</a></li>
             <li>MySarkariNaukri. <em>Forensic Science Government Jobs 2026.</em> <a href="https://www.mysarkarinaukri.com/find/forensic-science-jobs" target="_blank" rel="noopener">mysarkarinaukri.com</a></li>
           </ol>
         </section>
 
         <!-- RELATED ARTICLES -->
         <section aria-labelledby="h-related">
-          <h2 id="h-related" style="font-family:'Playfair Display',serif;font-size:clamp(1.2rem,3vw,1.4rem);margin:2rem 0 1rem;border-left:4px solid var(--accent);padding-left:1rem;">Related Career Guides</h2>
+          <h2 id="h-related" style="font-family:'Playfair Display',serif;font-size:clamp(1.15rem,3vw,1.4rem);margin:2rem 0 1rem;border-left:4px solid var(--accent);padding-left:.9rem;">Related Career Guides</h2>
           <div class="related-grid">
             <div class="related-card">
               <div class="tag">Career Guide</div>
@@ -784,6 +1053,7 @@
             <button type="submit" class="nl-btn">Subscribe</button>
           </form>
         </div>
+
       </div>
     </main>
 
@@ -832,27 +1102,83 @@
   <!-- BACK TO TOP -->
   <button id="back-top" aria-label="Back to top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
 
-  <!-- JAVASCRIPT -->
   <script>
-    // Dark mode toggle
+    // ── Dark Mode ──
     const darkToggle = document.getElementById('dark-toggle');
     const html = document.documentElement;
+    // Respect system preference on first visit
+    if (!localStorage.getItem('theme')) {
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      html.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
+      darkToggle.textContent = prefersDark ? '☀️' : '🌙';
+    } else {
+      html.setAttribute('data-theme', localStorage.getItem('theme'));
+      darkToggle.textContent = localStorage.getItem('theme') === 'dark' ? '☀️' : '🌙';
+    }
     darkToggle.addEventListener('click', () => {
       const current = html.getAttribute('data-theme');
-      html.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
-      darkToggle.textContent = current === 'dark' ? '🌙' : '☀️';
+      const next = current === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', next);
+      darkToggle.textContent = next === 'dark' ? '☀️' : '🌙';
+      localStorage.setItem('theme', next);
     });
 
-    // Mobile menu toggle
+    // ── Mobile Navigation ──
     const menuToggle = document.getElementById('menu-toggle');
     const mainNav = document.getElementById('main-nav');
+    const navOverlay = document.getElementById('nav-overlay');
+
+    function openNav() {
+      mainNav.classList.add('open');
+      menuToggle.classList.add('active');
+      navOverlay.classList.add('show');
+      menuToggle.setAttribute('aria-expanded', 'true');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeNav() {
+      mainNav.classList.remove('open');
+      menuToggle.classList.remove('active');
+      navOverlay.classList.remove('show');
+      menuToggle.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+    }
+
     menuToggle.addEventListener('click', () => {
-      mainNav.classList.toggle('open');
-      const expanded = mainNav.classList.contains('open');
-      menuToggle.setAttribute('aria-expanded', expanded);
+      mainNav.classList.contains('open') ? closeNav() : openNav();
+    });
+    menuToggle.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); mainNav.classList.contains('open') ? closeNav() : openNav(); }
+    });
+    navOverlay.addEventListener('click', closeNav);
+
+    // Close nav on link click
+    document.querySelectorAll('#main-nav a').forEach(link => {
+      link.addEventListener('click', closeNav);
     });
 
-    // FAQ accordion
+    // Close nav on escape
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && mainNav.classList.contains('open')) closeNav();
+    });
+
+    // ── TOC Toggle ──
+    function toggleToc() {
+      const list = document.getElementById('toc-list');
+      const btn = document.getElementById('toc-toggle');
+      const chevron = btn.querySelector('.toc-chevron');
+      const isOpen = list.classList.contains('open');
+      list.classList.toggle('open');
+      btn.setAttribute('aria-expanded', !isOpen);
+      chevron.style.transform = isOpen ? '' : 'rotate(90deg)';
+    }
+    // Auto-open TOC on desktop
+    if (window.innerWidth > 767) {
+      document.getElementById('toc-list').classList.add('open');
+      document.getElementById('toc-toggle').querySelector('.toc-chevron').style.transform = 'rotate(90deg)';
+      document.getElementById('toc-toggle').setAttribute('aria-expanded', 'true');
+    }
+
+    // ── FAQ Accordion ──
     function toggleFaq(btn) {
       const item = btn.closest('.faq-item');
       const isOpen = item.classList.contains('open');
@@ -863,33 +1189,71 @@
       if (!isOpen) {
         item.classList.add('open');
         btn.setAttribute('aria-expanded', 'true');
+        // Scroll into view on mobile
+        if (window.innerWidth < 768) {
+          setTimeout(() => item.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 100);
+        }
       }
     }
 
-    // Progress bar
+    // ── Progress Bar ──
     const progressBar = document.getElementById('progress-bar');
+    let ticking = false;
     window.addEventListener('scroll', () => {
-      const scrollTop = window.scrollY;
-      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-      const progress = (scrollTop / docHeight) * 100;
-      progressBar.style.width = progress + '%';
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          const scrollTop = window.scrollY;
+          const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+          progressBar.style.width = (scrollTop / docHeight) * 100 + '%';
+          ticking = false;
+        });
+        ticking = true;
+      }
     });
 
-    // Back to top button
+    // ── Back to Top ──
     const backTop = document.getElementById('back-top');
+    let backTopTicking = false;
     window.addEventListener('scroll', () => {
-      if (window.scrollY > 500) backTop.classList.add('show');
-      else backTop.classList.remove('show');
+      if (!backTopTicking) {
+        requestAnimationFrame(() => {
+          backTop.classList.toggle('show', window.scrollY > 500);
+          backTopTicking = false;
+        });
+        backTopTicking = true;
+      }
     });
 
-    // Close mobile menu on link click
-    document.querySelectorAll('nav a').forEach(link => {
-      link.addEventListener('click', () => {
-        mainNav.classList.remove('open');
-        menuToggle.setAttribute('aria-expanded', 'false');
+    // ── Table Scroll Hint ──
+    document.querySelectorAll('.table-wrap').forEach(wrap => {
+      wrap.addEventListener('scroll', function() {
+        if (this.scrollLeft > 10) {
+          this.classList.add('scrolled');
+          this.classList.remove('no-scroll-hint');
+        } else {
+          this.classList.remove('scrolled');
+        }
+      }, { passive: true });
+      // Initial check
+      if (wrap.scrollWidth > wrap.clientWidth) {
+        wrap.classList.remove('no-scroll-hint');
+      } else {
+        wrap.classList.add('no-scroll-hint');
+      }
+    });
+
+    // ── Close TOC links on mobile ──
+    document.querySelectorAll('.toc a').forEach(a => {
+      a.addEventListener('click', () => {
+        if (window.innerWidth <= 767) {
+          const list = document.getElementById('toc-list');
+          const chevron = document.getElementById('toc-toggle').querySelector('.toc-chevron');
+          list.classList.remove('open');
+          chevron.style.transform = '';
+          document.getElementById('toc-toggle').setAttribute('aria-expanded', 'false');
+        }
       });
     });
   </script>
 </body>
 </html>
-
