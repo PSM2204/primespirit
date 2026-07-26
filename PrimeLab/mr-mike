@@ -1,0 +1,1370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mr. Mike: Focus Dimension | PrimeLab</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600;700&display=swap');
+
+  :root {
+    --neon-blue: #00d4ff;
+    --neon-purple: #bf00ff;
+    --neon-gold: #ffd700;
+    --neon-red: #ff3333;
+    --neon-green: #00ff88;
+    --bg-dark: #04040f;
+    --bg-panel: rgba(10,10,30,0.92);
+    --text-main: #e8eaff;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    background: var(--bg-dark);
+    font-family: 'Exo 2', sans-serif;
+    color: var(--text-main);
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+  }
+
+  /* ─── STARFIELD ─── */
+  #starfield {
+    position: fixed; inset:0; z-index:0;
+    background: radial-gradient(ellipse at 20% 50%, #0d0025 0%, #04040f 60%);
+  }
+  .star { position:absolute; border-radius:50%; animation: twinkle linear infinite; }
+  @keyframes twinkle { 0%,100%{opacity:.2} 50%{opacity:1} }
+
+  /* ─── SCREENS ─── */
+  .screen { position:fixed; inset:0; z-index:10; display:none; flex-direction:column; align-items:center; justify-content:center; }
+  .screen.active { display:flex; }
+
+  /* ─── TITLE SCREEN ─── */
+  #title-screen {
+    background: linear-gradient(160deg, rgba(0,0,20,0.95) 0%, rgba(30,0,60,0.9) 100%);
+  }
+
+  .primelab-badge {
+    position:absolute; top:18px; left:50%; transform:translateX(-50%);
+    font-family:'Orbitron',sans-serif; font-size:11px; letter-spacing:4px; color:#888;
+    text-transform:uppercase;
+  }
+  .primelab-badge span { color: var(--neon-blue); }
+
+  /* ─── ANIME CHARACTER ─── */
+  .anime-character {
+    position:relative; width:220px; height:280px; margin-bottom:10px;
+    animation: charFloat 3s ease-in-out infinite;
+  }
+  @keyframes charFloat { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)} }
+
+  .char-aura {
+    position:absolute; inset:-30px; border-radius:50%;
+    background: radial-gradient(ellipse, rgba(0,212,255,0.3) 0%, transparent 70%);
+    animation: auraPulse 2s ease-in-out infinite;
+  }
+  @keyframes auraPulse { 0%,100%{transform:scale(1);opacity:.7} 50%{transform:scale(1.15);opacity:1} }
+
+  /* SVG Anime Character */
+  .char-svg { width:100%; height:100%; filter: drop-shadow(0 0 18px #00d4ff) drop-shadow(0 0 40px #bf00ff); }
+
+  .title-logo {
+    font-family:'Orbitron',sans-serif;
+    font-size:clamp(28px,5vw,52px);
+    font-weight:900;
+    text-align:center;
+    line-height:1;
+    background: linear-gradient(135deg, #00d4ff 0%, #bf00ff 50%, #ffd700 100%);
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+    filter: drop-shadow(0 0 20px rgba(0,212,255,0.5));
+    margin-bottom:6px;
+  }
+  .title-sub {
+    font-family:'Orbitron',sans-serif; font-size:12px; letter-spacing:5px;
+    color:#bf00ff; text-transform:uppercase; margin-bottom:8px;
+  }
+  .title-tagline {
+    font-size:13px; color:#aab; text-align:center; max-width:320px;
+    margin-bottom:28px; font-style:italic; line-height:1.5;
+  }
+
+  .btn-primary {
+    font-family:'Orbitron',sans-serif; font-size:14px; font-weight:700;
+    letter-spacing:3px; text-transform:uppercase;
+    padding:14px 40px; border:none; border-radius:4px; cursor:pointer;
+    background: linear-gradient(135deg, #00d4ff, #bf00ff);
+    color:#fff; position:relative; overflow:hidden;
+    box-shadow: 0 0 30px rgba(0,212,255,0.4), 0 0 60px rgba(191,0,255,0.2);
+    transition: all .2s;
+  }
+  .btn-primary:hover { transform:scale(1.05); box-shadow: 0 0 50px rgba(0,212,255,0.7); }
+  .btn-primary::before {
+    content:''; position:absolute; top:-50%; left:-60%; width:40%; height:200%;
+    background: rgba(255,255,255,0.15); transform:skewX(-20deg);
+    animation: btnShine 3s ease-in-out infinite;
+  }
+  @keyframes btnShine { 0%,100%{left:-60%} 40%,60%{left:120%} }
+
+  .high-score-display {
+    margin-top:16px; font-size:11px; letter-spacing:2px; color:#666; text-align:center;
+  }
+  .high-score-display span { color: var(--neon-gold); font-weight:700; }
+
+  /* ─── GAME SCREEN ─── */
+  #game-screen { background: var(--bg-dark); flex-direction:column; }
+
+  /* HUD */
+  #hud {
+    position:fixed; top:0; left:0; right:0; z-index:50;
+    display:flex; align-items:center; gap:12px; padding:10px 16px;
+    background: rgba(4,4,15,0.95); border-bottom:1px solid rgba(0,212,255,0.2);
+  }
+  .hud-section { display:flex; flex-direction:column; }
+  .hud-label { font-size:8px; letter-spacing:2px; color:#555; text-transform:uppercase; }
+  .hud-value { font-family:'Orbitron',sans-serif; font-size:14px; font-weight:700; color:var(--neon-blue); }
+  .hud-sep { width:1px; height:36px; background:rgba(255,255,255,0.1); }
+  #focus-bar-wrap { flex:1; }
+  .focus-bar-bg { height:8px; border-radius:4px; background:rgba(255,255,255,0.05); overflow:hidden; margin-top:4px; }
+  .focus-bar-fill {
+    height:100%; border-radius:4px;
+    background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple));
+    transition: width .3s ease;
+    box-shadow: 0 0 8px var(--neon-blue);
+  }
+  #rank-badge {
+    font-family:'Orbitron',sans-serif; font-size:20px; font-weight:900;
+    background: linear-gradient(135deg, var(--neon-gold), #ff8800);
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+    min-width:32px; text-align:center;
+  }
+
+  /* GAME CANVAS AREA */
+  #game-area {
+    position:fixed; top:60px; left:0; right:0; bottom:0;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+  }
+
+  /* Stage title overlay */
+  #stage-intro {
+    position:fixed; inset:0; z-index:80;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    background: rgba(4,4,15,0.95);
+    transition: opacity .5s;
+  }
+  .stage-num {
+    font-family:'Orbitron',sans-serif; font-size:11px; letter-spacing:6px; color:#555;
+    text-transform:uppercase; margin-bottom:8px;
+  }
+  .stage-name {
+    font-family:'Orbitron',sans-serif; font-size:clamp(26px,5vw,56px); font-weight:900;
+    background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+    margin-bottom:12px;
+  }
+  .stage-desc { font-size:14px; color:#889; max-width:340px; text-align:center; line-height:1.6; }
+  #stage-countdown {
+    margin-top:30px; font-family:'Orbitron',sans-serif; font-size:64px; font-weight:900;
+    color:var(--neon-blue); filter:drop-shadow(0 0 20px var(--neon-blue));
+    animation: countPulse .9s ease-in-out infinite;
+  }
+  @keyframes countPulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.15)} }
+
+  /* ─── STAGE 1: Focus Gate ─── */
+  #stage1 { width:100%; height:100%; position:relative; }
+  .portal {
+    position:absolute; border-radius:50%; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    font-size:28px; transition: transform .15s;
+    border:3px solid rgba(255,255,255,0.1);
+  }
+  .portal:hover { transform:scale(1.1); }
+  .portal.glow {
+    background: radial-gradient(circle, rgba(0,212,255,0.6), rgba(0,212,255,0.1));
+    border-color: var(--neon-blue);
+    box-shadow: 0 0 20px var(--neon-blue), 0 0 40px rgba(0,212,255,0.3);
+    animation: portalPulse 1.2s ease-in-out infinite;
+  }
+  .portal.fake {
+    background: radial-gradient(circle, rgba(100,100,150,0.3), rgba(50,50,80,0.1));
+    border-color: rgba(100,100,150,0.3);
+  }
+  @keyframes portalPulse { 0%,100%{box-shadow:0 0 20px var(--neon-blue)} 50%{box-shadow:0 0 40px var(--neon-blue),0 0 80px rgba(0,212,255,0.5)} }
+
+  /* ─── STAGE 2: Shadow Clone ─── */
+  #stage2 { width:100%; height:100%; position:relative; }
+  .clone-card {
+    position:absolute; cursor:pointer; border-radius:8px;
+    background: rgba(10,10,30,0.9); border:2px solid rgba(0,212,255,0.1);
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    padding:10px; transition: all .15s;
+  }
+  .clone-card:hover { border-color: rgba(0,212,255,0.5); transform:scale(1.05); }
+  .clone-card.correct-clone { border-color: var(--neon-blue); box-shadow:0 0 20px rgba(0,212,255,0.4); }
+
+  /* ─── STAGE 3: Memory Slash ─── */
+  #stage3 { width:100%; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:20px; }
+  #memory-sequence { display:flex; gap:12px; flex-wrap:wrap; justify-content:center; }
+  .mem-symbol {
+    width:64px; height:64px; border-radius:8px;
+    background: rgba(10,10,30,0.9); border:2px solid rgba(0,212,255,0.2);
+    display:flex; align-items:center; justify-content:center; font-size:28px;
+    cursor:pointer; transition:all .15s; user-select:none;
+  }
+  .mem-symbol:hover { border-color:var(--neon-blue); transform:scale(1.05); }
+  .mem-symbol.highlight {
+    background: rgba(0,212,255,0.2); border-color:var(--neon-blue);
+    box-shadow: 0 0 20px rgba(0,212,255,0.5);
+  }
+  .mem-symbol.wrong { background:rgba(255,50,50,0.3); border-color:var(--neon-red); }
+  #mem-instruction { font-family:'Orbitron',sans-serif; font-size:13px; letter-spacing:2px; color:#889; }
+
+  /* ─── STAGE 4: Eye Focus ─── */
+  #stage4 { width:100%; height:100%; position:relative; }
+  #eye-target {
+    position:absolute; width:24px; height:24px; border-radius:50%;
+    background: radial-gradient(circle, #ffd700, #ff8800);
+    box-shadow: 0 0 20px #ffd700, 0 0 40px rgba(255,215,0,0.5);
+    pointer-events:none; transition: left .08s linear, top .08s linear;
+  }
+  #eye-cursor-ring {
+    position:absolute; width:40px; height:40px; border-radius:50%;
+    border:2px solid rgba(0,212,255,0.6); pointer-events:none;
+    transform:translate(-50%,-50%);
+    box-shadow: 0 0 10px rgba(0,212,255,0.4);
+  }
+
+  /* ─── STAGE 5: Reaction Battle ─── */
+  #stage5 { width:100%; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:20px; }
+  #reaction-prompt {
+    font-family:'Orbitron',sans-serif; font-size:clamp(32px,6vw,72px); font-weight:900;
+    text-align:center; transition:all .2s;
+  }
+  #reaction-prompt.jump { color:var(--neon-green); filter:drop-shadow(0 0 20px var(--neon-green)); }
+  #reaction-prompt.dash { color:var(--neon-blue); filter:drop-shadow(0 0 20px var(--neon-blue)); }
+  #reaction-prompt.duck { color:var(--neon-gold); filter:drop-shadow(0 0 20px var(--neon-gold)); }
+  #reaction-prompt.counter { color:var(--neon-purple); filter:drop-shadow(0 0 20px var(--neon-purple)); }
+  .reaction-btns { display:flex; gap:12px; flex-wrap:wrap; justify-content:center; }
+  .react-btn {
+    padding:12px 24px; border-radius:6px; border:2px solid;
+    font-family:'Orbitron',sans-serif; font-size:12px; font-weight:700;
+    letter-spacing:2px; cursor:pointer; background:rgba(10,10,30,0.9);
+    transition:all .15s; text-transform:uppercase;
+  }
+  .react-btn.jump { border-color:var(--neon-green); color:var(--neon-green); }
+  .react-btn.dash { border-color:var(--neon-blue); color:var(--neon-blue); }
+  .react-btn.duck { border-color:var(--neon-gold); color:var(--neon-gold); }
+  .react-btn.counter { border-color:var(--neon-purple); color:var(--neon-purple); }
+  .react-btn:hover { transform:scale(1.08); filter:brightness(1.3); }
+
+  /* ─── STAGE 6: Distraction Storm ─── */
+  #stage6 { width:100%; height:100%; position:relative; overflow:hidden; }
+  .distraction {
+    position:absolute; cursor:pointer; user-select:none;
+    font-size:clamp(16px,3vw,28px); animation: floatAround linear infinite;
+    pointer-events:auto;
+  }
+  @keyframes floatAround {
+    0% { transform:translateY(0) rotate(0deg); opacity:1; }
+    100% { transform:translateY(-120vh) rotate(360deg); opacity:0; }
+  }
+  #mission-target-s6 {
+    position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+    width:90px; height:90px; border-radius:50%;
+    background: radial-gradient(circle, rgba(0,212,255,0.5), rgba(0,212,255,0.1));
+    border:3px solid var(--neon-blue); box-shadow:0 0 30px var(--neon-blue);
+    display:flex; align-items:center; justify-content:center;
+    font-size:36px; cursor:pointer;
+    animation: missionPulse 1s ease-in-out infinite;
+  }
+  @keyframes missionPulse { 0%,100%{box-shadow:0 0 20px var(--neon-blue)} 50%{box-shadow:0 0 50px var(--neon-blue)} }
+
+  /* ─── STAGE 7: Ultra Instinct ─── */
+  #stage7 { width:100%; height:100%; position:relative; overflow:hidden; }
+  #ui-bg { position:absolute; inset:0; background: linear-gradient(45deg, #000008, #0a0025, #150030); animation: uiBgShift 2s linear infinite; }
+  @keyframes uiBgShift { 0%{filter:hue-rotate(0)} 100%{filter:hue-rotate(360deg)} }
+  .ui-orb {
+    position:absolute; border-radius:50%; pointer-events:none;
+    animation: orbMove linear infinite;
+  }
+  @keyframes orbMove { 0%{transform:translate(0,0)} 100%{transform:translate(var(--tx),var(--ty))} }
+  #ui-click-target {
+    position:absolute; border-radius:50%; cursor:pointer;
+    background: radial-gradient(circle, rgba(255,255,255,0.9), rgba(0,212,255,0.5));
+    box-shadow: 0 0 30px #fff, 0 0 60px var(--neon-blue);
+    transform:translate(-50%,-50%);
+    transition: width .1s, height .1s;
+  }
+
+  /* ─── STAGE 8: Boss Battle ─── */
+  #stage8 { width:100%; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px; position:relative; overflow:hidden; }
+  #boss-character {
+    font-size:80px; animation: bossFloat 2s ease-in-out infinite;
+    filter:drop-shadow(0 0 30px var(--neon-red));
+  }
+  @keyframes bossFloat { 0%,100%{transform:translateY(0) scale(1)} 50%{transform:translateY(-10px) scale(1.05)} }
+  #boss-hp-bar { width:min(400px,90vw); }
+  #boss-hp-fill {
+    height:14px; border-radius:7px;
+    background: linear-gradient(90deg, #ff3333, #ff8800);
+    box-shadow: 0 0 10px #ff3333; transition: width .3s;
+  }
+  #boss-attack {
+    font-family:'Orbitron',sans-serif; font-size:clamp(20px,4vw,40px); font-weight:900;
+    color:var(--neon-red); filter:drop-shadow(0 0 15px var(--neon-red));
+    animation: attackFlash .5s ease-in-out;
+  }
+  @keyframes attackFlash { 0%{transform:scale(.8);opacity:0} 50%{transform:scale(1.2)} 100%{transform:scale(1);opacity:1} }
+  .boss-btns { display:flex; gap:10px; flex-wrap:wrap; justify-content:center; }
+  .boss-btn {
+    padding:12px 22px; border-radius:6px; border:2px solid var(--neon-red);
+    font-family:'Orbitron',sans-serif; font-size:11px; font-weight:700;
+    letter-spacing:2px; cursor:pointer; background:rgba(30,5,5,0.9);
+    color:var(--neon-red); transition:all .15s; text-transform:uppercase;
+  }
+  .boss-btn:hover { background:rgba(255,50,50,0.2); transform:scale(1.05); }
+
+  /* ─── FEEDBACK OVERLAY ─── */
+  #feedback {
+    position:fixed; z-index:100;
+    font-family:'Orbitron',sans-serif; font-size:clamp(22px,5vw,52px); font-weight:900;
+    pointer-events:none; top:50%; left:50%; transform:translate(-50%,-50%);
+    animation: feedbackPop .7s forwards;
+  }
+  #feedback.good { color:var(--neon-blue); filter:drop-shadow(0 0 20px var(--neon-blue)); }
+  #feedback.great { color:var(--neon-green); filter:drop-shadow(0 0 20px var(--neon-green)); }
+  #feedback.miss { color:var(--neon-red); filter:drop-shadow(0 0 20px var(--neon-red)); }
+  @keyframes feedbackPop {
+    0%{opacity:0;transform:translate(-50%,-80%) scale(.6)}
+    30%{opacity:1;transform:translate(-50%,-50%) scale(1.2)}
+    70%{opacity:1;transform:translate(-50%,-50%) scale(1)}
+    100%{opacity:0;transform:translate(-50%,-30%) scale(.9)}
+  }
+
+  /* SHAKE */
+  @keyframes shake {
+    0%,100%{transform:translateX(0)} 20%{transform:translateX(-8px)} 40%{transform:translateX(8px)} 60%{transform:translateX(-6px)} 80%{transform:translateX(6px)}
+  }
+  .shake { animation: shake .4s ease-in-out; }
+
+  /* COMBO */
+  #combo-display {
+    position:fixed; top:70px; right:16px; z-index:50;
+    font-family:'Orbitron',sans-serif; font-size:11px; letter-spacing:2px; text-align:right;
+  }
+  #combo-num { font-size:32px; font-weight:900; color:var(--neon-gold); line-height:1; }
+
+  /* TIMER ARC */
+  #timer-wrap {
+    position:fixed; bottom:16px; left:50%; transform:translateX(-50%); z-index:50;
+    display:flex; flex-direction:column; align-items:center; gap:4px;
+  }
+  #timer-canvas { filter:drop-shadow(0 0 8px var(--neon-blue)); }
+  #timer-val { font-family:'Orbitron',sans-serif; font-size:14px; color:var(--neon-blue); }
+
+  /* ─── RESULTS SCREEN ─── */
+  #results-screen {
+    background: linear-gradient(160deg, rgba(0,0,20,0.97) 0%, rgba(20,0,40,0.95) 100%);
+    padding:20px; overflow-y:auto;
+  }
+  .results-title {
+    font-family:'Orbitron',sans-serif; font-size:clamp(20px,4vw,38px); font-weight:900;
+    background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple), var(--neon-gold));
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+    margin-bottom:8px; text-align:center;
+  }
+  .final-rank {
+    font-family:'Orbitron',sans-serif; font-size:clamp(48px,10vw,96px); font-weight:900;
+    background: linear-gradient(135deg, var(--neon-gold), #ff8800);
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+    filter:drop-shadow(0 0 20px rgba(255,215,0,0.5));
+    text-align:center; line-height:1;
+  }
+  .stats-grid {
+    display:grid; grid-template-columns:1fr 1fr; gap:10px;
+    width:min(420px,92vw); margin:16px auto;
+  }
+  .stat-card {
+    background: rgba(10,10,30,0.9); border:1px solid rgba(0,212,255,0.15);
+    border-radius:8px; padding:12px;
+  }
+  .stat-label { font-size:9px; letter-spacing:2px; color:#555; text-transform:uppercase; margin-bottom:4px; }
+  .stat-val { font-family:'Orbitron',sans-serif; font-size:20px; font-weight:700; color:var(--neon-blue); }
+  .stat-val.gold { color:var(--neon-gold); }
+  .stat-val.green { color:var(--neon-green); }
+
+  .share-box {
+    background: rgba(0,212,255,0.05); border:1px solid rgba(0,212,255,0.2);
+    border-radius:8px; padding:16px; margin:12px auto; width:min(420px,92vw);
+    text-align:center; font-size:13px; line-height:1.8; color:#aab;
+  }
+  .share-box strong { color:var(--neon-blue); font-family:'Orbitron',sans-serif; }
+
+  .btn-row { display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-top:14px; }
+  .btn-sec {
+    padding:10px 22px; border-radius:4px; border:2px solid rgba(0,212,255,0.4);
+    font-family:'Orbitron',sans-serif; font-size:11px; font-weight:700; letter-spacing:2px;
+    cursor:pointer; background:rgba(0,212,255,0.05); color:var(--neon-blue);
+    transition:all .2s; text-transform:uppercase;
+  }
+  .btn-sec:hover { background:rgba(0,212,255,0.15); border-color:var(--neon-blue); }
+
+  /* SPEED LINES */
+  #speed-lines { position:fixed; inset:0; z-index:5; pointer-events:none; opacity:0; transition:opacity .3s; }
+  #speed-lines canvas { width:100%; height:100%; }
+
+  /* PARTICLES */
+  #particles-container { position:fixed; inset:0; z-index:6; pointer-events:none; }
+  .particle {
+    position:absolute; border-radius:50%; pointer-events:none;
+    animation: particleFly linear forwards;
+  }
+  @keyframes particleFly {
+    0%{opacity:1;transform:translate(0,0) scale(1)}
+    100%{opacity:0;transform:translate(var(--px),var(--py)) scale(0)}
+  }
+
+  /* INSTRUCTION BAR */
+  #instruction-bar {
+    position:fixed; bottom:60px; left:50%; transform:translateX(-50%); z-index:50;
+    background:rgba(0,0,0,0.7); border:1px solid rgba(0,212,255,0.2); border-radius:20px;
+    padding:8px 20px; font-size:12px; letter-spacing:1px; color:#889;
+    white-space:nowrap; pointer-events:none;
+    backdrop-filter:blur(8px);
+  }
+
+  /* Character mini portrait */
+  .char-mini {
+    width:40px; height:40px; border-radius:50%; overflow:hidden;
+    border:2px solid var(--neon-blue); box-shadow:0 0 10px rgba(0,212,255,0.4);
+  }
+</style>
+</head>
+<body>
+
+<!-- Starfield -->
+<div id="starfield"></div>
+<div id="speed-lines"><canvas id="sl-canvas"></canvas></div>
+<div id="particles-container" id="particles"></div>
+
+<!-- TITLE SCREEN -->
+<div class="screen active" id="title-screen">
+  <div class="primelab-badge">Prime<span>Lab</span> — primespirit.co.in</div>
+
+  <div class="anime-character">
+    <div class="char-aura"></div>
+    <svg class="char-svg" viewBox="0 0 220 280" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Aura glow rings -->
+      <ellipse cx="110" cy="260" rx="70" ry="10" fill="rgba(0,212,255,0.15)"/>
+      <!-- Body shadow -->
+      <ellipse cx="110" cy="265" rx="50" ry="6" fill="rgba(0,0,0,0.3)"/>
+      <!-- Legs -->
+      <rect x="82" y="195" width="22" height="55" rx="10" fill="#1a1a3a"/>
+      <rect x="116" y="195" width="22" height="55" rx="10" fill="#1a1a3a"/>
+      <!-- Boots -->
+      <rect x="79" y="235" width="28" height="22" rx="8" fill="#0d0d28"/>
+      <rect x="113" y="235" width="28" height="22" rx="8" fill="#0d0d28"/>
+      <!-- Boot highlight -->
+      <rect x="82" y="237" width="10" height="4" rx="2" fill="rgba(0,212,255,0.4)"/>
+      <rect x="116" y="237" width="10" height="4" rx="2" fill="rgba(0,212,255,0.4)"/>
+      <!-- Torso / Gi -->
+      <path d="M75 130 Q70 170 72 200 L148 200 Q150 170 145 130 Z" fill="#12123a"/>
+      <!-- Gi detail lines -->
+      <path d="M110 130 L110 200" stroke="rgba(0,212,255,0.3)" stroke-width="1.5"/>
+      <path d="M90 140 L110 130 L130 140" stroke="rgba(0,212,255,0.4)" stroke-width="2" fill="none"/>
+      <!-- Belt -->
+      <rect x="75" y="180" width="70" height="10" rx="3" fill="#00aacc"/>
+      <rect x="102" y="180" width="16" height="10" rx="2" fill="#006688"/>
+      <!-- Arms -->
+      <path d="M75 135 Q50 150 45 175 Q48 185 58 182 Q68 165 82 150 Z" fill="#12123a"/>
+      <path d="M145 135 Q170 150 175 175 Q172 185 162 182 Q152 165 138 150 Z" fill="#12123a"/>
+      <!-- Hands / Energy fists -->
+      <circle cx="48" cy="183" r="14" fill="#1a1a40"/>
+      <circle cx="48" cy="183" r="14" fill="rgba(0,212,255,0.2)" stroke="#00d4ff" stroke-width="2"/>
+      <circle cx="172" cy="183" r="14" fill="#1a1a40"/>
+      <circle cx="172" cy="183" r="14" fill="rgba(191,0,255,0.2)" stroke="#bf00ff" stroke-width="2"/>
+      <!-- Energy in fists -->
+      <circle cx="48" cy="183" r="7" fill="rgba(0,212,255,0.5)"/>
+      <circle cx="172" cy="183" r="7" fill="rgba(191,0,255,0.5)"/>
+      <!-- Neck -->
+      <rect x="100" y="100" width="20" height="18" rx="6" fill="#e8b090"/>
+      <!-- Head -->
+      <ellipse cx="110" cy="85" rx="38" ry="42" fill="#e8b090"/>
+      <!-- Hair — spiky anime style -->
+      <path d="M72 75 Q65 45 80 35 Q88 28 95 40 L92 55 Z" fill="#1a0a0a"/>
+      <path d="M80 60 Q72 30 90 20 Q100 15 105 30 L100 50 Z" fill="#1a0a0a"/>
+      <path d="M95 50 Q90 20 110 18 Q120 18 118 35 L112 52 Z" fill="#1a0a0a"/>
+      <path d="M112 50 Q115 18 130 20 Q140 25 132 40 L122 52 Z" fill="#1a0a0a"/>
+      <path d="M122 55 Q135 28 148 38 Q155 48 142 60 L130 65 Z" fill="#1a0a0a"/>
+      <path d="M130 68 Q148 52 152 70 Q150 82 138 80 Z" fill="#1a0a0a"/>
+      <!-- Hair side -->
+      <path d="M72 85 Q62 95 65 110 Q70 120 78 115 Q74 100 76 88 Z" fill="#1a0a0a"/>
+      <path d="M148 85 Q158 95 155 110 Q150 120 142 115 Q146 100 144 88 Z" fill="#1a0a0a"/>
+      <!-- Face features -->
+      <!-- Eyebrows sharp anime style -->
+      <path d="M87 72 Q95 67 102 70" stroke="#2a1a1a" stroke-width="3" stroke-linecap="round" fill="none"/>
+      <path d="M118 70 Q125 67 133 72" stroke="#2a1a1a" stroke-width="3" stroke-linecap="round" fill="none"/>
+      <!-- Eyes -->
+      <ellipse cx="96" cy="82" rx="10" ry="11" fill="#fff"/>
+      <ellipse cx="124" cy="82" rx="10" ry="11" fill="#fff"/>
+      <!-- Irises — glowing blue -->
+      <ellipse cx="96" cy="83" rx="7" ry="8" fill="#00aaee"/>
+      <ellipse cx="124" cy="83" rx="7" ry="8" fill="#00aaee"/>
+      <!-- Pupils -->
+      <ellipse cx="96" cy="84" rx="4" ry="5" fill="#001133"/>
+      <ellipse cx="124" cy="84" rx="4" ry="5" fill="#001133"/>
+      <!-- Eye glow -->
+      <ellipse cx="96" cy="83" rx="7" ry="8" fill="none" stroke="rgba(0,212,255,0.6)" stroke-width="1.5"/>
+      <ellipse cx="124" cy="83" rx="7" ry="8" fill="none" stroke="rgba(0,212,255,0.6)" stroke-width="1.5"/>
+      <!-- Eye shine -->
+      <ellipse cx="92" cy="79" rx="2.5" ry="2" fill="rgba(255,255,255,0.9)"/>
+      <ellipse cx="120" cy="79" rx="2.5" ry="2" fill="rgba(255,255,255,0.9)"/>
+      <!-- Nose -->
+      <path d="M107 93 Q110 97 113 93" stroke="#c8907a" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+      <!-- Mouth — determined smirk -->
+      <path d="M100 103 Q110 110 120 103" stroke="#9a6050" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <!-- Scar mark (anime style) -->
+      <path d="M88 75 L84 80" stroke="#ff6666" stroke-width="1.5" stroke-linecap="round"/>
+      <!-- Headband -->
+      <rect x="72" y="55" width="76" height="12" rx="3" fill="#001a40" opacity="0.7"/>
+      <rect x="95" y="56" width="30" height="10" rx="2" fill="#001a40"/>
+      <!-- Headband symbol -->
+      <circle cx="110" cy="61" r="5" fill="none" stroke="rgba(0,212,255,0.8)" stroke-width="1.5"/>
+      <path d="M107 61 L110 58 L113 61 L110 64 Z" fill="rgba(0,212,255,0.6)"/>
+      <!-- Neon energy streaks -->
+      <path d="M30 140 Q10 155 25 170" stroke="rgba(0,212,255,0.4)" stroke-width="2" fill="none" stroke-dasharray="4,3"/>
+      <path d="M190 140 Q210 155 195 170" stroke="rgba(191,0,255,0.4)" stroke-width="2" fill="none" stroke-dasharray="4,3"/>
+      <!-- Speed lines around character -->
+      <line x1="20" y1="100" x2="60" y2="110" stroke="rgba(0,212,255,0.2)" stroke-width="1"/>
+      <line x1="15" y1="115" x2="55" y2="120" stroke="rgba(0,212,255,0.15)" stroke-width="1"/>
+      <line x1="200" y1="100" x2="160" y2="110" stroke="rgba(191,0,255,0.2)" stroke-width="1"/>
+      <line x1="205" y1="115" x2="165" y2="120" stroke="rgba(191,0,255,0.15)" stroke-width="1"/>
+    </svg>
+  </div>
+
+  <div class="title-logo">MR. MIKE</div>
+  <div class="title-sub">Focus Dimension</div>
+  <div class="title-tagline">"Only those with absolute concentration can protect the Mind Realm."</div>
+
+  <button class="btn-primary" onclick="startGame()">⚡ ENTER THE DIMENSION</button>
+
+  <div class="high-score-display">
+    BEST SCORE: <span id="title-best">—</span> &nbsp;|&nbsp; RANK: <span id="title-rank">—</span>
+  </div>
+
+  <div style="position:absolute;bottom:12px;font-size:9px;color:#333;letter-spacing:2px;">
+    A PRIMELAB ORIGINAL &nbsp;·&nbsp; PRIMESPIRIT.CO.IN
+  </div>
+</div>
+
+<!-- GAME SCREEN -->
+<div class="screen" id="game-screen">
+  <!-- HUD -->
+  <div id="hud">
+    <div class="char-mini">
+      <svg viewBox="0 0 40 40" fill="none">
+        <ellipse cx="20" cy="16" rx="9" ry="10" fill="#e8b090"/>
+        <path d="M11 14 Q8 8 14 6 Q17 4 19 9" fill="#1a0a0a"/>
+        <path d="M18 8 Q17 3 22 3 Q25 4 23 9" fill="#1a0a0a"/>
+        <path d="M23 8 Q25 3 28 5 Q31 8 27 12" fill="#1a0a0a"/>
+        <ellipse cx="16" cy="18" rx="3" ry="3.5" fill="#00aaee"/>
+        <ellipse cx="24" cy="18" rx="3" ry="3.5" fill="#00aaee"/>
+        <ellipse cx="16" cy="18.5" rx="1.8" ry="2" fill="#001133"/>
+        <ellipse cx="24" cy="18.5" rx="1.8" ry="2" fill="#001133"/>
+        <rect x="10" y="25" width="20" height="12" rx="6" fill="#12123a"/>
+        <rect x="9" y="12" width="3" height="6" rx="1.5" fill="#e8b090"/>
+        <rect x="28" y="12" width="3" height="6" rx="1.5" fill="#e8b090"/>
+      </svg>
+    </div>
+    <div class="hud-sep"></div>
+    <div class="hud-section">
+      <div class="hud-label">Score</div>
+      <div class="hud-value" id="hud-score">0</div>
+    </div>
+    <div class="hud-sep"></div>
+    <div class="hud-section">
+      <div class="hud-label">Stage</div>
+      <div class="hud-value" id="hud-stage">1/8</div>
+    </div>
+    <div class="hud-sep"></div>
+    <div id="focus-bar-wrap">
+      <div class="hud-label">Focus Energy</div>
+      <div class="focus-bar-bg"><div class="focus-bar-fill" id="focus-bar" style="width:100%"></div></div>
+    </div>
+    <div class="hud-sep"></div>
+    <div id="rank-badge">E</div>
+  </div>
+
+  <div id="game-area">
+    <!-- Stage containers -->
+    <div id="stage1" style="display:none"></div>
+    <div id="stage2" style="display:none"></div>
+    <div id="stage3" style="display:none">
+      <div id="mem-instruction">MEMORIZE THE SEQUENCE</div>
+      <div id="memory-sequence"></div>
+      <div id="mem-input" style="display:none;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:12px;"></div>
+    </div>
+    <div id="stage4" style="display:none">
+      <div id="eye-target"></div>
+      <div id="eye-cursor-ring"></div>
+    </div>
+    <div id="stage5" style="display:none">
+      <div id="reaction-prompt" class="jump">—</div>
+      <div class="reaction-btns">
+        <button class="react-btn jump" onclick="reactionHit('jump')">⬆ JUMP</button>
+        <button class="react-btn dash" onclick="reactionHit('dash')">▶ DASH</button>
+        <button class="react-btn duck" onclick="reactionHit('duck')">⬇ DUCK</button>
+        <button class="react-btn counter" onclick="reactionHit('counter')">⚔ COUNTER</button>
+      </div>
+      <div style="font-size:11px;color:#556;letter-spacing:2px;" id="reaction-streak">STREAK: 0</div>
+    </div>
+    <div id="stage6" style="display:none">
+      <div id="mission-target-s6">🎯</div>
+    </div>
+    <div id="stage7" style="display:none">
+      <div id="ui-bg"></div>
+      <div id="ui-click-target"></div>
+    </div>
+    <div id="stage8" style="display:none">
+      <div style="font-family:'Orbitron',sans-serif;font-size:11px;letter-spacing:3px;color:#883333;">THE KING OF DISTRACTIONS</div>
+      <div id="boss-character">👹</div>
+      <div id="boss-hp-bar">
+        <div style="font-size:9px;color:#883333;letter-spacing:2px;margin-bottom:4px;">BOSS HP</div>
+        <div class="focus-bar-bg"><div id="boss-hp-fill" style="width:100%"></div></div>
+      </div>
+      <div id="boss-attack">PREPARE YOURSELF!</div>
+      <div class="boss-btns">
+        <button class="boss-btn" onclick="bossAction('memory')">🧠 RECALL</button>
+        <button class="boss-btn" onclick="bossAction('react')">⚡ COUNTER</button>
+        <button class="boss-btn" onclick="bossAction('focus')">👁 FOCUS</button>
+        <button class="boss-btn" onclick="bossAction('precision')">🎯 PRECISION</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stage Intro -->
+  <div id="stage-intro">
+    <div class="stage-num" id="si-num">STAGE 1</div>
+    <div class="stage-name" id="si-name">FOCUS GATE</div>
+    <div class="stage-desc" id="si-desc">Portals appear. Click ONLY the glowing one. Wrong clicks break your combo!</div>
+    <div id="stage-countdown">3</div>
+  </div>
+
+  <!-- Combo display -->
+  <div id="combo-display">
+    <div class="hud-label">COMBO</div>
+    <div id="combo-num">0</div>
+  </div>
+
+  <!-- Timer -->
+  <div id="timer-wrap">
+    <canvas id="timer-canvas" width="60" height="60"></canvas>
+    <div id="timer-val">30</div>
+  </div>
+
+  <!-- Instruction bar -->
+  <div id="instruction-bar">Click the glowing portal!</div>
+</div>
+
+<!-- RESULTS SCREEN -->
+<div class="screen" id="results-screen">
+  <div class="results-title">SESSION COMPLETE</div>
+  <div class="final-rank" id="res-rank">S</div>
+  <div style="font-size:11px;letter-spacing:3px;color:#556;text-align:center;margin-bottom:8px;">FOCUS DIMENSION CLEARED</div>
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-label">Final Score</div>
+      <div class="stat-val gold" id="res-score">0</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Accuracy</div>
+      <div class="stat-val green" id="res-acc">0%</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Best Reaction</div>
+      <div class="stat-val" id="res-react">—ms</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Max Combo</div>
+      <div class="stat-val gold" id="res-combo">0</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Focus XP</div>
+      <div class="stat-val green" id="res-xp">+0</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Memory Score</div>
+      <div class="stat-val" id="res-mem">0%</div>
+    </div>
+  </div>
+
+  <div class="share-box" id="share-box">
+    🧠 <strong>Focus Rank: <span id="sb-rank">S</span></strong><br>
+    ⚡ Reaction: <span id="sb-react">—</span>ms &nbsp;|&nbsp; 🎯 Accuracy: <span id="sb-acc">—</span>%<br>
+    🔥 Max Combo: <span id="sb-combo">—</span><br>
+    <em>"I conquered the Mind Realm in Mr. Mike!"</em><br>
+    <span style="font-size:11px;color:#555;">Play at PrimeLab — primespirit.co.in</span>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn-primary" onclick="restartGame()">▶ PLAY AGAIN</button>
+    <button class="btn-sec" onclick="copyShare()">📋 COPY SCORE</button>
+    <button class="btn-sec" onclick="showTitle()">⬅ MENU</button>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════
+// STARFIELD
+// ═══════════════════════════════════════
+(function(){
+  const sf = document.getElementById('starfield');
+  for(let i=0;i<120;i++){
+    const s=document.createElement('div'); s.className='star';
+    const size=Math.random()*2.5+.5;
+    s.style.cssText=`width:${size}px;height:${size}px;left:${Math.random()*100}%;top:${Math.random()*100}%;background:rgba(${180+Math.random()*75},${180+Math.random()*75},255,${Math.random()*.8+.2});animation-duration:${2+Math.random()*4}s;animation-delay:${Math.random()*4}s`;
+    sf.appendChild(s);
+  }
+})();
+
+// ═══════════════════════════════════════
+// GAME STATE
+// ═══════════════════════════════════════
+const STAGES = [
+  {num:1, name:'FOCUS GATE',      desc:'Click ONLY the glowing portal. Wrong clicks break your combo!',  time:30},
+  {num:2, name:'SHADOW CLONE',    desc:'One hero matches the target pose. Find them before time runs out!', time:25},
+  {num:3, name:'MEMORY SLASH',    desc:'Watch the sequence of sword poses, then repeat them perfectly!',   time:0},
+  {num:4, name:'EYE FOCUS',       desc:'Keep your cursor on the golden orb as it moves. Don\'t lose it!',  time:20},
+  {num:5, name:'REACTION BATTLE', desc:'Incoming attacks! Jump, Dash, Duck, or Counter within milliseconds!', time:30},
+  {num:6, name:'DISTRACTION STORM','desc':'Ignore everything — memes, alerts, coins. Click ONLY the mission target!', time:25},
+  {num:7, name:'ULTRA INSTINCT',  desc:'Everything accelerates. Click the white orbs as fast as you can!', time:20},
+  {num:8, name:'BOSS BATTLE',     desc:'Face the King of Distractions! Use memory, reaction, focus and precision!', time:0},
+];
+
+let gs = {};
+
+function initState(){
+  gs = {
+    stage: 0,
+    score: 0,
+    combo: 0,
+    maxCombo: 0,
+    focusEnergy: 100,
+    hits: 0,
+    misses: 0,
+    bestReaction: 9999,
+    memoryCorrect: 0,
+    memoryTotal: 0,
+    timeLeft: 0,
+    timerInterval: null,
+    stageInterval: null,
+    animFrame: null,
+    rank: 'E',
+    bossHP: 100,
+    reactionStreak: 0,
+    currentReaction: null,
+    reactionStart: 0,
+  };
+}
+
+const RANKS = ['E','D','C','B','A','S','SS','SSS','Legend','Mythic','Cosmic'];
+function calcRank(score){
+  if(score>15000) return 'Cosmic';
+  if(score>10000) return 'Mythic';
+  if(score>7000)  return 'Legend';
+  if(score>5000)  return 'SSS';
+  if(score>3500)  return 'SS';
+  if(score>2500)  return 'S';
+  if(score>1500)  return 'A';
+  if(score>800)   return 'B';
+  if(score>400)   return 'C';
+  if(score>150)   return 'D';
+  return 'E';
+}
+
+// ═══════════════════════════════════════
+// UI HELPERS
+// ═══════════════════════════════════════
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function showFeedback(text, cls){
+  document.querySelectorAll('#feedback').forEach(el=>el.remove());
+  const el = document.createElement('div');
+  el.id='feedback'; el.className=cls; el.textContent=text;
+  document.body.appendChild(el);
+  el.addEventListener('animationend',()=>el.remove());
+}
+
+function spawnParticles(x,y,color='#00d4ff',count=12){
+  const c=document.getElementById('particles-container');
+  for(let i=0;i<count;i++){
+    const p=document.createElement('div'); p.className='particle';
+    const angle=Math.random()*Math.PI*2;
+    const dist=40+Math.random()*80;
+    p.style.cssText=`left:${x}px;top:${y}px;width:${3+Math.random()*5}px;height:${3+Math.random()*5}px;background:${color};--px:${Math.cos(angle)*dist}px;--py:${Math.sin(angle)*dist}px;animation-duration:${.4+Math.random()*.5}s`;
+    c.appendChild(p);
+    p.addEventListener('animationend',()=>p.remove());
+  }
+}
+
+function updateHUD(){
+  document.getElementById('hud-score').textContent = gs.score.toLocaleString();
+  document.getElementById('hud-stage').textContent = `${gs.stage}/8`;
+  document.getElementById('focus-bar').style.width = Math.max(0,gs.focusEnergy)+'%';
+  document.getElementById('combo-num').textContent = gs.combo;
+  gs.rank = calcRank(gs.score);
+  document.getElementById('rank-badge').textContent = gs.rank;
+}
+
+function addScore(pts){
+  const mult = 1 + gs.combo * 0.05;
+  gs.score += Math.round(pts * mult);
+  gs.hits++;
+  gs.combo++;
+  gs.maxCombo = Math.max(gs.maxCombo, gs.combo);
+  gs.focusEnergy = Math.min(100, gs.focusEnergy + 3);
+  updateHUD();
+}
+
+function missAction(){
+  gs.misses++;
+  gs.combo = 0;
+  gs.focusEnergy = Math.max(0, gs.focusEnergy - 10);
+  document.getElementById('game-screen').classList.add('shake');
+  setTimeout(()=>document.getElementById('game-screen').classList.remove('shake'),400);
+  showFeedback('MISS!','miss');
+  updateHUD();
+}
+
+// Timer
+let timerCtx;
+function initTimerCanvas(){
+  const canvas = document.getElementById('timer-canvas');
+  timerCtx = canvas.getContext('2d');
+}
+function drawTimer(val, max){
+  if(!timerCtx) return;
+  const c = timerCtx, w=60, h=60, r=24;
+  c.clearRect(0,0,w,h);
+  c.beginPath(); c.arc(w/2,h/2,r,0,Math.PI*2);
+  c.strokeStyle='rgba(255,255,255,0.05)'; c.lineWidth=5; c.stroke();
+  if(max>0){
+    const frac=val/max;
+    c.beginPath(); c.arc(w/2,h/2,r,-Math.PI/2,-Math.PI/2+frac*Math.PI*2);
+    c.strokeStyle = frac<.3?'#ff3333':frac<.6?'#ffd700':'#00d4ff';
+    c.lineWidth=5; c.stroke();
+  }
+  document.getElementById('timer-val').textContent = Math.ceil(val);
+}
+function startTimer(secs, onDone){
+  clearInterval(gs.timerInterval);
+  gs.timeLeft = secs;
+  drawTimer(secs, secs);
+  if(secs<=0){onDone&&onDone();return;}
+  const max=secs;
+  gs.timerInterval=setInterval(()=>{
+    gs.timeLeft-=.1;
+    drawTimer(gs.timeLeft, max);
+    if(gs.timeLeft<=0){ clearInterval(gs.timerInterval); onDone&&onDone(); }
+  },100);
+}
+
+// ═══════════════════════════════════════
+// STAGE INTRO
+// ═══════════════════════════════════════
+function showStageIntro(stageObj, cb){
+  const si=document.getElementById('stage-intro');
+  si.style.display='flex'; si.style.opacity='1';
+  document.getElementById('si-num').textContent = `STAGE ${stageObj.num} OF 8`;
+  document.getElementById('si-name').textContent = stageObj.name;
+  document.getElementById('si-desc').textContent = stageObj.desc;
+  let count=3;
+  document.getElementById('stage-countdown').textContent=count;
+  const t=setInterval(()=>{
+    count--;
+    if(count<=0){
+      clearInterval(t);
+      si.style.opacity='0';
+      setTimeout(()=>{ si.style.display='none'; cb&&cb(); },500);
+    } else {
+      document.getElementById('stage-countdown').textContent=count;
+    }
+  },900);
+}
+
+// ═══════════════════════════════════════
+// GAME FLOW
+// ═══════════════════════════════════════
+function startGame(){
+  initState();
+  showScreen('game-screen');
+  initTimerCanvas();
+  updateHUD();
+  nextStage();
+}
+function nextStage(){
+  // Hide all stages
+  for(let i=1;i<=8;i++) document.getElementById(`stage${i}`).style.display='none';
+  gs.stage++;
+  if(gs.stage>8){ endGame(); return; }
+  document.getElementById('hud-stage').textContent=`${gs.stage}/8`;
+  const stageObj = STAGES[gs.stage-1];
+  showStageIntro(stageObj, ()=>{ launchStage(gs.stage); });
+}
+
+function launchStage(n){
+  const el=document.getElementById(`stage${n}`);
+  el.style.display='block';
+  switch(n){
+    case 1: launchStage1(); break;
+    case 2: launchStage2(); break;
+    case 3: launchStage3(); break;
+    case 4: launchStage4(); break;
+    case 5: launchStage5(); break;
+    case 6: launchStage6(); break;
+    case 7: launchStage7(); break;
+    case 8: launchStage8(); break;
+  }
+}
+
+function stageComplete(){
+  clearInterval(gs.timerInterval);
+  clearInterval(gs.stageInterval);
+  cancelAnimationFrame(gs.animFrame);
+  showFeedback('STAGE CLEAR!','great');
+  spawnParticles(window.innerWidth/2,window.innerHeight/2,'#00d4ff',20);
+  addScore(500);
+  setTimeout(nextStage, 1400);
+}
+
+// ═══════════════════════════════════════
+// STAGE 1: FOCUS GATE
+// ═══════════════════════════════════════
+function launchStage1(){
+  document.getElementById('instruction-bar').textContent='Click ONLY the glowing portal!';
+  const area=document.getElementById('stage1');
+  area.innerHTML='';
+  let clicks=0;
+  const goal=12;
+  function spawnPortals(){
+    area.innerHTML='';
+    const count=3+Math.floor(clicks/3);
+    const glowIdx=Math.floor(Math.random()*count);
+    const symbols=['🌀','🌊','🔥','⚡','🌙','💫','🔮','✨','🌸','⭐'];
+    const aw=area.clientWidth||window.innerWidth;
+    const ah=area.clientHeight||(window.innerHeight-120);
+    for(let i=0;i<count;i++){
+      const p=document.createElement('div'); p.className='portal';
+      const size=70+Math.random()*30;
+      const x=Math.random()*(aw-size-20)+10;
+      const y=Math.random()*(ah-size-20)+10;
+      p.style.cssText=`width:${size}px;height:${size}px;left:${x}px;top:${y}px;font-size:${size*.4}px`;
+      if(i===glowIdx){ p.classList.add('glow'); p.textContent='⚡'; }
+      else { p.classList.add('fake'); p.textContent=symbols[Math.floor(Math.random()*symbols.length)]; }
+      p.addEventListener('click', (e)=>{
+        spawnParticles(e.clientX,e.clientY);
+        if(i===glowIdx){
+          addScore(100); clicks++;
+          showFeedback(clicks%5===0?'INCREDIBLE!':'FOCUS!', 'great');
+          if(clicks>=goal) stageComplete();
+          else spawnPortals();
+        } else {
+          missAction();
+          spawnPortals();
+        }
+      });
+      area.appendChild(p);
+    }
+  }
+  spawnPortals();
+  startTimer(30, stageComplete);
+}
+
+// ═══════════════════════════════════════
+// STAGE 2: SHADOW CLONE
+// ═══════════════════════════════════════
+const POSES = ['🗡','🛡','🏹','✊','🦵','👊','🤜','⚔','🥋','🔱'];
+const CHARS = ['🥷','🧙','🗡','⚔','🏹','🛡','🔮','💪','🌊','⚡'];
+function launchStage2(){
+  document.getElementById('instruction-bar').textContent='Find the hero matching the TARGET POSE!';
+  const area=document.getElementById('stage2');
+  area.innerHTML='';
+  let found=0, goal=8;
+  function spawnClones(){
+    area.innerHTML='';
+    const targetPose=POSES[Math.floor(Math.random()*POSES.length)];
+    // Target display
+    const tgt=document.createElement('div');
+    tgt.style.cssText=`position:absolute;top:12px;left:50%;transform:translateX(-50%);font-family:'Orbitron',sans-serif;font-size:12px;letter-spacing:3px;color:#889;text-align:center;`;
+    tgt.innerHTML=`<span style="color:#aab;font-size:10px;">TARGET POSE</span><br><span style="font-size:52px;">${targetPose}</span>`;
+    area.appendChild(tgt);
+    const count=4+Math.floor(found/2);
+    const correctIdx=Math.floor(Math.random()*count);
+    const aw=area.clientWidth||window.innerWidth;
+    const ah=(area.clientHeight||(window.innerHeight-120))-120;
+    const cardW=90, cardH=100;
+    for(let i=0;i<count;i++){
+      const card=document.createElement('div'); card.className='clone-card';
+      const col=count<=4?i:i%Math.ceil(count/2);
+      const row=count<=4?0:Math.floor(i/Math.ceil(count/2));
+      const cols=count<=4?count:Math.ceil(count/2);
+      const totalW=cols*(cardW+14)-14;
+      const startX=(aw-totalW)/2;
+      card.style.cssText=`width:${cardW}px;height:${cardH}px;left:${startX+col*(cardW+14)}px;top:${120+row*(cardH+14)}px;`;
+      const pose=i===correctIdx?targetPose:POSES.filter(p=>p!==targetPose)[Math.floor(Math.random()*(POSES.length-1))];
+      const char=CHARS[Math.floor(Math.random()*CHARS.length)];
+      card.innerHTML=`<div style="font-size:28px;">${char}</div><div style="font-size:22px;margin-top:4px;">${pose}</div>`;
+      card.addEventListener('click',(e)=>{
+        spawnParticles(e.clientX,e.clientY,i===correctIdx?'#00d4ff':'#ff3333');
+        if(i===correctIdx){ addScore(120); found++; showFeedback('FOUND HIM!','great'); if(found>=goal)stageComplete(); else spawnClones(); }
+        else { missAction(); spawnClones(); }
+      });
+      area.appendChild(card);
+    }
+  }
+  spawnClones();
+  startTimer(25, stageComplete);
+}
+
+// ═══════════════════════════════════════
+// STAGE 3: MEMORY SLASH
+// ═══════════════════════════════════════
+const MEM_SYMBOLS=['⚔','🗡','🏹','🔮','💥','🌀','⚡','🔥','🌊','🛡'];
+function launchStage3(){
+  document.getElementById('instruction-bar').textContent='Watch carefully, then repeat!';
+  document.getElementById('timer-val').textContent='—';
+  drawTimer(0,0);
+  let round=0, maxRounds=5;
+  function doRound(){
+    round++;
+    const len=2+round;
+    const seq=Array.from({length:len},()=>MEM_SYMBOLS[Math.floor(Math.random()*MEM_SYMBOLS.length)]);
+    gs.memoryTotal++;
+    const seqEl=document.getElementById('memory-sequence');
+    const inputEl=document.getElementById('mem-input');
+    const instrEl=document.getElementById('mem-instruction');
+    instrEl.textContent='MEMORIZE THE SEQUENCE';
+    seqEl.style.display='flex'; inputEl.style.display='none';
+    seqEl.innerHTML='';
+    seq.forEach((s,i)=>{
+      const el=document.createElement('div'); el.className='mem-symbol';
+      el.textContent='?'; seqEl.appendChild(el);
+      setTimeout(()=>{
+        el.textContent=s; el.classList.add('highlight');
+        setTimeout(()=>{ el.textContent='?'; el.classList.remove('highlight'); },600);
+      }, i*700);
+    });
+    // Wait for sequence display, then let player input
+    setTimeout(()=>{
+      instrEl.textContent='REPEAT THE SEQUENCE';
+      seqEl.style.display='none'; inputEl.style.display='flex';
+      inputEl.innerHTML='';
+      MEM_SYMBOLS.slice(0,8).forEach(s=>{
+        const btn=document.createElement('div'); btn.className='mem-symbol'; btn.textContent=s;
+        let userSeq=[];
+        btn.addEventListener('click',()=>{
+          userSeq.push(s);
+          btn.classList.add('highlight');
+          setTimeout(()=>btn.classList.remove('highlight'),200);
+          if(userSeq.length===seq.length){
+            const correct=userSeq.every((v,i)=>v===seq[i]);
+            if(correct){ gs.memoryCorrect++; addScore(150*round); showFeedback('PERFECT!','great'); spawnParticles(window.innerWidth/2,window.innerHeight/2,'#00d4ff'); }
+            else { missAction(); showFeedback('WRONG!','miss'); }
+            inputEl.querySelectorAll('.mem-symbol').forEach(b=>b.style.pointerEvents='none');
+            if(round>=maxRounds) setTimeout(stageComplete,900);
+            else setTimeout(doRound,1000);
+          }
+        });
+        inputEl.appendChild(btn);
+      });
+      // Allow re-click tracking per sequence attempt
+      let userSeqTrack=[];
+      inputEl.querySelectorAll('.mem-symbol').forEach(btn=>{
+        btn.addEventListener('click',function(){
+          userSeqTrack.push(btn.textContent);
+        });
+      });
+    }, seq.length*700+800);
+  }
+  doRound();
+}
+
+// ═══════════════════════════════════════
+// STAGE 4: EYE FOCUS
+// ═══════════════════════════════════════
+function launchStage4(){
+  document.getElementById('instruction-bar').textContent='Keep your cursor on the golden orb!';
+  const area=document.getElementById('stage4');
+  const target=document.getElementById('eye-target');
+  const ring=document.getElementById('eye-cursor-ring');
+  let tx=window.innerWidth/2, ty=window.innerHeight/2;
+  let vx=3+Math.random()*2, vy=2+Math.random()*2;
+  let tracking=false, trackScore=0;
+  const aw=area.clientWidth||window.innerWidth;
+  const ah=area.clientHeight||(window.innerHeight-120);
+  area.addEventListener('mousemove',(e)=>{
+    ring.style.left=e.clientX+'px'; ring.style.top=e.clientY+'px';
+    const dx=e.clientX-tx, dy=e.clientY-(ty+60);
+    tracking = Math.sqrt(dx*dx+dy*dy)<40;
+  });
+  area.addEventListener('touchmove',(e)=>{
+    const t=e.touches[0];
+    ring.style.left=t.clientX+'px'; ring.style.top=t.clientY+'px';
+    const dx=t.clientX-tx, dy=t.clientY-(ty+60);
+    tracking=Math.sqrt(dx*dx+dy*dy)<40;
+  },{passive:true});
+  function animate(){
+    tx+=vx; ty+=vy;
+    if(tx<20||tx>aw-20) vx*=-1;
+    if(ty<80||ty>ah-20) vy*=-1;
+    target.style.left=(tx-12)+'px'; target.style.top=(ty+48)+'px';
+    if(tracking){ trackScore+=.5; gs.focusEnergy=Math.min(100,gs.focusEnergy+.05); }
+    else { gs.focusEnergy=Math.max(0,gs.focusEnergy-.2); }
+    if(trackScore>0&&Math.floor(trackScore)%30===0&&Math.floor(trackScore)>0){ addScore(50); }
+    updateHUD();
+    gs.animFrame=requestAnimationFrame(animate);
+  }
+  animate();
+  startTimer(20,()=>{ cancelAnimationFrame(gs.animFrame); stageComplete(); });
+}
+
+// ═══════════════════════════════════════
+// STAGE 5: REACTION BATTLE
+// ═══════════════════════════════════════
+const REACTIONS=['jump','dash','duck','counter'];
+const REACTION_LABELS={jump:'⬆ JUMP!',dash:'▶ DASH!',duck:'⬇ DUCK!',counter:'⚔ COUNTER!'};
+function launchStage5(){
+  document.getElementById('instruction-bar').textContent='React to the incoming attack!';
+  let count=0, goal=15;
+  function nextReaction(){
+    gs.currentReaction=REACTIONS[Math.floor(Math.random()*4)];
+    const el=document.getElementById('reaction-prompt');
+    el.textContent='...'; el.className='';
+    const delay=600+Math.random()*1000;
+    setTimeout(()=>{
+      el.textContent=REACTION_LABELS[gs.currentReaction];
+      el.className=gs.currentReaction;
+      gs.reactionStart=Date.now();
+    },delay);
+  }
+  nextReaction();
+  startTimer(30,stageComplete);
+  window._reactionCount=count; window._reactionGoal=goal;
+}
+function reactionHit(action){
+  if(!gs.currentReaction) return;
+  if(action===gs.currentReaction){
+    const rt=Date.now()-gs.reactionStart;
+    if(rt>2500){missAction();gs.currentReaction=null;nextReactionCall();return;}
+    gs.bestReaction=Math.min(gs.bestReaction,rt);
+    addScore(rt<250?250:rt<400?180:120);
+    gs.reactionStreak++;
+    document.getElementById('reaction-streak').textContent='STREAK: '+gs.reactionStreak;
+    showFeedback(rt<250?'LIGHTNING!':'SHARP!','great');
+    spawnParticles(window.innerWidth/2,window.innerHeight/2,'#00ff88',10);
+    gs.currentReaction=null;
+    let c=(window._reactionCount||0)+1; window._reactionCount=c;
+    if(c>=(window._reactionGoal||15)) stageComplete();
+    else nextReactionCall();
+  } else {
+    missAction(); gs.reactionStreak=0;
+    document.getElementById('reaction-streak').textContent='STREAK: 0';
+    gs.currentReaction=null;
+    nextReactionCall();
+  }
+}
+function nextReactionCall(){
+  const el=document.getElementById('reaction-prompt');
+  el.textContent='...'; el.className='';
+  const delay=600+Math.random()*800;
+  setTimeout(()=>{
+    gs.currentReaction=REACTIONS[Math.floor(Math.random()*4)];
+    el.textContent=REACTION_LABELS[gs.currentReaction]; el.className=gs.currentReaction;
+    gs.reactionStart=Date.now();
+  },delay);
+}
+
+// ═══════════════════════════════════════
+// STAGE 6: DISTRACTION STORM
+// ═══════════════════════════════════════
+const DISTRACTIONS=['📱','💬','🔔','💰','🎮','📺','🍕','😂','🎵','💌','🎁','🌮','🛒','📸','🎉'];
+function launchStage6(){
+  document.getElementById('instruction-bar').textContent='Click ONLY the mission target 🎯 — ignore everything else!';
+  const area=document.getElementById('stage6');
+  let clicks=0, goal=10;
+  document.getElementById('mission-target-s6').onclick=(e)=>{
+    spawnParticles(e.clientX,e.clientY,'#00d4ff',15);
+    addScore(200); clicks++;
+    showFeedback('FOCUSED!','great');
+    if(clicks>=goal) stageComplete();
+  };
+  function spawnDistraction(){
+    const d=document.createElement('div'); d.className='distraction';
+    d.textContent=DISTRACTIONS[Math.floor(Math.random()*DISTRACTIONS.length)];
+    d.style.left=Math.random()*90+'%';
+    d.style.bottom='-10%';
+    const dur=2+Math.random()*3;
+    d.style.animationDuration=dur+'s';
+    d.style.animationDelay=Math.random()*.5+'s';
+    d.addEventListener('click',(e)=>{ missAction(); spawnParticles(e.clientX,e.clientY,'#ff3333',6); });
+    area.appendChild(d);
+    setTimeout(()=>d.remove(),dur*1000+500);
+  }
+  gs.stageInterval=setInterval(spawnDistraction,400);
+  startTimer(25,()=>{ clearInterval(gs.stageInterval); stageComplete(); });
+}
+
+// ═══════════════════════════════════════
+// STAGE 7: ULTRA INSTINCT
+// ═══════════════════════════════════════
+function launchStage7(){
+  document.getElementById('instruction-bar').textContent='Click the white orbs — ultra speed mode!';
+  const area=document.getElementById('stage7');
+  let clicks=0, goal=20;
+  function spawnOrb(){
+    const t=document.getElementById('ui-click-target');
+    const aw=area.clientWidth||window.innerWidth;
+    const ah=(area.clientHeight||(window.innerHeight-120));
+    const size=25+Math.random()*35;
+    const x=size/2+Math.random()*(aw-size);
+    const y=size/2+80+Math.random()*(ah-size-80);
+    t.style.width=size+'px'; t.style.height=size+'px';
+    t.style.left=x+'px'; t.style.top=y+'px';
+    t.onclick=(e)=>{
+      spawnParticles(e.clientX,e.clientY,'#ffffff',12);
+      addScore(150); clicks++;
+      showFeedback('INSTINCT!','great');
+      if(clicks>=goal) stageComplete();
+      else spawnOrb();
+    };
+  }
+  spawnOrb();
+  // Spawn extra orbs as distractors
+  const orbColors=['rgba(0,212,255,0.15)','rgba(191,0,255,0.15)','rgba(255,215,0,0.1)'];
+  for(let i=0;i<8;i++){
+    const orb=document.createElement('div'); orb.className='ui-orb';
+    const size=15+Math.random()*25;
+    const aw=area.clientWidth||window.innerWidth;
+    const ah=area.clientHeight||(window.innerHeight-120);
+    orb.style.cssText=`width:${size}px;height:${size}px;left:${Math.random()*aw}px;top:${80+Math.random()*(ah-80)}px;background:${orbColors[i%3]};border:1px solid rgba(255,255,255,0.1);--tx:${(Math.random()-.5)*200}px;--ty:${(Math.random()-.5)*200}px;animation-duration:${2+Math.random()*3}s;animation-direction:alternate;animation-iteration-count:infinite`;
+    area.appendChild(orb);
+  }
+  startTimer(20,stageComplete);
+}
+
+// ═══════════════════════════════════════
+// STAGE 8: BOSS BATTLE
+// ═══════════════════════════════════════
+const BOSS_ATTACKS=[
+  {text:'MEMORY STRIKE! Use RECALL!', correct:'memory'},
+  {text:'COUNTER INCOMING! Press COUNTER!', correct:'react'},
+  {text:'FOCUS BEAM! Use FOCUS!', correct:'focus'},
+  {text:'PRECISION SLASH! Use PRECISION!', correct:'precision'},
+];
+let bossPhase=0;
+function launchStage8(){
+  document.getElementById('instruction-bar').textContent='Defeat the King of Distractions!';
+  gs.bossHP=100;
+  bossPhase=0;
+  nextBossAttack();
+}
+function nextBossAttack(){
+  if(gs.bossHP<=0){stageComplete();return;}
+  const atk=BOSS_ATTACKS[Math.floor(Math.random()*BOSS_ATTACKS.length)];
+  document.getElementById('boss-attack').textContent=atk.text;
+  document.getElementById('boss-attack').dataset.correct=atk.correct;
+}
+function bossAction(action){
+  const correct=document.getElementById('boss-attack').dataset.correct;
+  if(action===correct){
+    gs.bossHP-=25;
+    document.getElementById('boss-hp-fill').style.width=Math.max(0,gs.bossHP)+'%';
+    addScore(300);
+    spawnParticles(window.innerWidth/2,window.innerHeight/3,'#00d4ff',20);
+    showFeedback('CRITICAL HIT!','great');
+    if(gs.bossHP<=0){
+      document.getElementById('boss-attack').textContent='YOU WIN! 🏆';
+      setTimeout(stageComplete,1000);
+    } else {
+      setTimeout(nextBossAttack,800);
+    }
+  } else {
+    missAction();
+    showFeedback('BLOCKED!','miss');
+    gs.focusEnergy-=10; updateHUD();
+    setTimeout(nextBossAttack,600);
+  }
+}
+
+// ═══════════════════════════════════════
+// END GAME
+// ═══════════════════════════════════════
+function endGame(){
+  const rank=calcRank(gs.score);
+  const acc=gs.hits+gs.misses>0?Math.round(gs.hits/(gs.hits+gs.misses)*100):0;
+  const react=gs.bestReaction===9999?'—':gs.bestReaction;
+  const memPct=gs.memoryTotal>0?Math.round(gs.memoryCorrect/gs.memoryTotal*100):100;
+  // Save high score
+  const prev=parseInt(localStorage.getItem('mrmike_best')||'0');
+  if(gs.score>prev) localStorage.setItem('mrmike_best',gs.score);
+  // Populate results
+  document.getElementById('res-rank').textContent=rank;
+  document.getElementById('res-score').textContent=gs.score.toLocaleString();
+  document.getElementById('res-acc').textContent=acc+'%';
+  document.getElementById('res-react').textContent=(react==='—'?'—':react+'ms');
+  document.getElementById('res-combo').textContent=gs.maxCombo;
+  document.getElementById('res-xp').textContent='+'+(Math.round(gs.score/10));
+  document.getElementById('res-mem').textContent=memPct+'%';
+  // Share box
+  document.getElementById('sb-rank').textContent=rank;
+  document.getElementById('sb-react').textContent=react==='—'?'—':react;
+  document.getElementById('sb-acc').textContent=acc;
+  document.getElementById('sb-combo').textContent=gs.maxCombo;
+  showScreen('results-screen');
+  // Update title
+  const best=localStorage.getItem('mrmike_best')||0;
+  document.getElementById('title-best').textContent=parseInt(best).toLocaleString();
+  document.getElementById('title-rank').textContent=calcRank(parseInt(best));
+}
+
+function restartGame(){
+  clearInterval(gs.timerInterval);
+  clearInterval(gs.stageInterval);
+  cancelAnimationFrame(gs.animFrame);
+  startGame();
+}
+function showTitle(){
+  clearInterval(gs.timerInterval);
+  clearInterval(gs.stageInterval);
+  cancelAnimationFrame(gs.animFrame);
+  const best=localStorage.getItem('mrmike_best')||0;
+  document.getElementById('title-best').textContent=parseInt(best).toLocaleString();
+  document.getElementById('title-rank').textContent=calcRank(parseInt(best));
+  showScreen('title-screen');
+}
+function copyShare(){
+  const rank=document.getElementById('sb-rank').textContent;
+  const react=document.getElementById('sb-react').textContent;
+  const acc=document.getElementById('sb-acc').textContent;
+  const combo=document.getElementById('sb-combo').textContent;
+  const score=document.getElementById('res-score').textContent;
+  const text=`🧠 Focus Rank: ${rank}\n⚡ Reaction: ${react}ms | 🎯 Accuracy: ${acc}%\n🔥 Max Combo: ${combo} | Score: ${score}\n"I conquered the Mind Realm in Mr. Mike!"\nPlay at PrimeLab — primespirit.co.in`;
+  navigator.clipboard.writeText(text).then(()=>showFeedback('COPIED!','great')).catch(()=>showFeedback('COPY FAILED','miss'));
+}
+
+// Init
+(function(){
+  const best=localStorage.getItem('mrmike_best')||0;
+  if(parseInt(best)>0){
+    document.getElementById('title-best').textContent=parseInt(best).toLocaleString();
+    document.getElementById('title-rank').textContent=calcRank(parseInt(best));
+  }
+})();
+</script>
+</body>
+</html>
