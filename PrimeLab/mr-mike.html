@@ -12,7 +12,8 @@
     --bg-panel:rgba(10,10,30,0.92);--text-main:#e8eaff;
   }
   *{margin:0;padding:0;box-sizing:border-box}
-  body{background:var(--bg-dark);font-family:'Exo 2',sans-serif;color:var(--text-main);overflow:hidden;height:100vh;width:100vw}
+  body{background:var(--bg-dark);font-family:'Exo 2',sans-serif;color:var(--text-main);overflow-x:hidden;min-height:100vh}
+  #game-screen, #title-screen, #results-screen { overflow-y: auto; }
   #starfield{position:fixed;inset:0;z-index:0;background:radial-gradient(ellipse at 20% 50%,#0d0025 0%,#04040f 60%)}
   .star{position:absolute;border-radius:50%;animation:twinkle linear infinite}
   @keyframes twinkle{0%,100%{opacity:.2}50%{opacity:1}}
@@ -138,21 +139,68 @@
   @keyframes particleFly{0%{opacity:1;transform:translate(0,0) scale(1)}100%{opacity:0;transform:translate(var(--px),var(--py)) scale(0)}}
   #instruction-bar{position:fixed;bottom:60px;left:50%;transform:translateX(-50%);z-index:50;background:rgba(0,0,0,0.7);border:1px solid rgba(0,212,255,0.2);border-radius:20px;padding:8px 20px;font-size:12px;letter-spacing:1px;color:#889;white-space:nowrap;pointer-events:none;backdrop-filter:blur(8px)}
   .char-mini{width:40px;height:40px;border-radius:50%;overflow:hidden;border:2px solid var(--neon-blue);box-shadow:0 0 10px rgba(0,212,255,0.4)}
-  /* mute button */
   #mute-btn{position:fixed;top:72px;left:16px;z-index:200;width:32px;height:32px;border-radius:50%;background:rgba(10,10,30,0.9);border:1px solid rgba(0,212,255,0.3);color:var(--neon-blue);font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s}
   #mute-btn:hover{border-color:var(--neon-blue);box-shadow:0 0 10px rgba(0,212,255,0.3)}
-  /* share buttons */
-  .share-btns{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:4px}
-  .share-btn{display:inline-flex;align-items:center;gap:7px;padding:9px 16px;border-radius:8px;border:none;font-family:'Orbitron',sans-serif;font-size:10px;font-weight:700;letter-spacing:1px;cursor:pointer;transition:transform .15s,box-shadow .15s;text-transform:uppercase}
-  .share-btn:hover{transform:translateY(-2px)}
-  .share-btn.whatsapp{background:#25D366;color:#fff;box-shadow:0 4px 14px rgba(37,211,102,0.35)}
-  .share-btn.whatsapp:hover{box-shadow:0 6px 20px rgba(37,211,102,0.55)}
-  .share-btn.twitter{background:#000;color:#fff;border:1px solid #333;box-shadow:0 4px 14px rgba(0,0,0,0.4)}
-  .share-btn.twitter:hover{box-shadow:0 6px 20px rgba(255,255,255,0.15)}
-  .share-btn.instagram{background:linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);color:#fff;box-shadow:0 4px 14px rgba(220,39,67,0.35)}
-  .share-btn.instagram:hover{box-shadow:0 6px 20px rgba(220,39,67,0.55)}
-  .share-btn.native{background:rgba(0,212,255,0.12);color:var(--neon-blue);border:1px solid rgba(0,212,255,0.3);box-shadow:0 4px 14px rgba(0,212,255,0.15)}
-  .share-btn.native:hover{box-shadow:0 6px 20px rgba(0,212,255,0.3)}
+
+  /* ── Enhanced Share Section ── */
+  .share-section-header{
+    font-family:'Orbitron',sans-serif;font-size:10px;letter-spacing:4px;color:#556;text-transform:uppercase;margin-bottom:14px;text-align:center;
+  }
+  .share-section-header::before,.share-section-header::after{
+    content:'';display:inline-block;width:40px;height:1px;background:linear-gradient(90deg,transparent,var(--neon-blue),transparent);vertical-align:middle;margin:0 10px;
+  }
+  .share-grid{
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;width:min(500px,92vw);margin:0 auto 10px;
+  }
+  .share-btn{
+    display:flex;align-items:center;justify-content:center;gap:8px;
+    padding:11px 10px;border-radius:10px;border:none;
+    font-family:'Orbitron',sans-serif;font-size:10px;font-weight:700;letter-spacing:1px;
+    cursor:pointer;transition:transform .18s,box-shadow .18s,filter .18s;
+    text-transform:uppercase;color:#fff;position:relative;overflow:hidden;
+  }
+  .share-btn svg{flex-shrink:0}
+  .share-btn:hover{transform:translateY(-3px) scale(1.03)}
+  .share-btn:active{transform:translateY(0) scale(0.97)}
+
+  .share-btn.whatsapp{background:#25D366;box-shadow:0 4px 16px rgba(37,211,102,0.4)}
+  .share-btn.whatsapp:hover{box-shadow:0 8px 24px rgba(37,211,102,0.6)}
+  .share-btn.facebook{background:#1877F2;box-shadow:0 4px 16px rgba(24,119,242,0.4)}
+  .share-btn.facebook:hover{box-shadow:0 8px 24px rgba(24,119,242,0.6)}
+  .share-btn.twitter{background:#000;color:#fff;border:1px solid #333;box-shadow:0 4px 16px rgba(0,0,0,0.5)}
+  .share-btn.twitter:hover{box-shadow:0 8px 24px rgba(255,255,255,0.1)}
+  .share-btn.telegram{background:#0088cc;box-shadow:0 4px 16px rgba(0,136,204,0.4)}
+  .share-btn.telegram:hover{box-shadow:0 8px 24px rgba(0,136,204,0.6)}
+  .share-btn.snapchat{background:#FFFC00;color:#000;box-shadow:0 4px 16px rgba(255,252,0,0.35)}
+  .share-btn.snapchat:hover{box-shadow:0 8px 24px rgba(255,252,0,0.55)}
+  .share-btn.instagram{background:linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);box-shadow:0 4px 16px rgba(220,39,67,0.4)}
+  .share-btn.instagram:hover{box-shadow:0 8px 24px rgba(220,39,67,0.6)}
+  .share-btn.linkedin{background:#0A66C2;box-shadow:0 4px 16px rgba(10,102,194,0.4)}
+  .share-btn.linkedin:hover{box-shadow:0 8px 24px rgba(10,102,194,0.6)}
+  .share-btn.reddit{background:#FF4500;box-shadow:0 4px 16px rgba(255,69,0,0.4)}
+  .share-btn.reddit:hover{box-shadow:0 8px 24px rgba(255,69,0,0.6)}
+  .share-btn.native{
+    background:linear-gradient(135deg,rgba(0,212,255,0.15),rgba(191,0,255,0.15));
+    color:var(--neon-blue);border:1px solid rgba(0,212,255,0.3);box-shadow:0 4px 16px rgba(0,212,255,0.15);
+  }
+  .share-btn.native:hover{box-shadow:0 8px 24px rgba(0,212,255,0.3)}
+  .share-btn.copy-link{
+    background:rgba(255,255,255,0.06);color:var(--neon-gold);border:1px solid rgba(255,215,0,0.3);box-shadow:0 4px 16px rgba(255,215,0,0.1);
+  }
+  .share-btn.copy-link:hover{box-shadow:0 8px 24px rgba(255,215,0,0.25);background:rgba(255,215,0,0.08)}
+
+  .share-btn::after{
+    content:'';position:absolute;top:-50%;left:-60%;width:40%;height:200%;background:rgba(255,255,255,0.12);transform:skewX(-20deg);transition:left .5s;pointer-events:none;
+  }
+  .share-btn:hover::after{left:120%}
+
+  #share-toast{
+    display:none;margin-top:12px;font-family:'Orbitron',sans-serif;font-size:10px;letter-spacing:2px;
+    color:var(--neon-green);background:rgba(0,255,136,0.08);border:1px solid rgba(0,255,136,0.2);
+    border-radius:20px;padding:8px 18px;animation:toastIn .3s ease;
+  }
+  @keyframes toastIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+  .share-hint{font-size:10px;color:#334;margin-top:10px;letter-spacing:1px;text-align:center}
 </style>
 </head>
 <body>
@@ -341,34 +389,79 @@
     <span style="font-size:11px;color:#555;">Play at PrimeLab — primespirit.co.in</span>
   </div>
 
-  <!-- Social share buttons -->
-  <div style="text-align:center;margin-bottom:6px;">
-    <div style="font-family:'Orbitron',sans-serif;font-size:9px;letter-spacing:3px;color:#445;text-transform:uppercase;margin-bottom:10px;">Share Your Score</div>
-    <div class="share-btns">
+  <!-- ── ENHANCED SOCIAL SHARE GRID ── -->
+  <div style="text-align:center;margin:14px 0 4px;">
+    <div class="share-section-header">Share Your Score</div>
+    <div class="share-grid">
+
+      <!-- WhatsApp -->
       <button class="share-btn whatsapp" onclick="shareWhatsApp()" title="Share on WhatsApp">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
         WhatsApp
       </button>
+
+      <!-- Facebook -->
+      <button class="share-btn facebook" onclick="shareFacebook()" title="Share on Facebook">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+        Facebook
+      </button>
+
+      <!-- X / Twitter -->
       <button class="share-btn twitter" onclick="shareTwitter()" title="Share on X / Twitter">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.737-8.835L1.254 2.25H8.08l4.259 5.631 5.905-5.631zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
         X / Twitter
       </button>
+
+      <!-- Instagram -->
       <button class="share-btn instagram" onclick="shareInstagram()" title="Copy for Instagram">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
         Instagram
       </button>
+
+      <!-- Telegram -->
+      <button class="share-btn telegram" onclick="shareTelegram()" title="Share on Telegram">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.479.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+        Telegram
+      </button>
+
+      <!-- Snapchat -->
+      <button class="share-btn snapchat" onclick="shareSnapchat()" title="Share on Snapchat">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12.206.793c.99 0 4.347.276 5.93 3.821.529 1.193.403 3.219.299 4.847l-.003.06c-.012.18-.022.345-.03.51.075.045.203.09.401.09.3-.016.659-.12.979-.279.18-.09.382-.12.532-.12.27 0 .54.09.72.27.27.24.39.57.39.93 0 .36-.15.69-.42.93-.24.21-.54.36-.89.42-.06.015-.12.03-.18.045.03.18.06.36.09.54.12.75.24 1.5.27 2.25.03.6-.09 1.2-.36 1.74-.39.81-1.05 1.38-1.86 1.74-.42.18-.87.3-1.35.39-.21.03-.42.06-.63.09-.12.18-.27.36-.45.54-.15.15-.33.24-.51.33-.15.06-.3.12-.48.15-.06.015-.12.03-.18.03-.06 0-.12 0-.18-.015h-.09c-.06 0-.12 0-.18-.015-.06 0-.12-.015-.18-.015-.12 0-.24-.015-.36-.015h-.06c-.15.015-.3.03-.45.03-.27 0-.54-.03-.81-.09-.54-.12-1.05-.3-1.53-.57-.45-.27-.84-.6-1.17-.99-.33-.39-.57-.84-.69-1.35-.09-.36-.12-.69-.15-1.05-.015-.18-.015-.36-.015-.54 0-.06 0-.12.015-.18.015-.06.015-.12.03-.18.03-.18.06-.39.09-.57-.09-.015-.18-.03-.3-.03-.18 0-.39.03-.6.06-.36.06-.69.12-.99.18-.48.09-.9.18-1.23.21-.18.015-.33.03-.45.03-.15 0-.3-.015-.42-.03-.36-.06-.66-.24-.87-.51-.24-.3-.36-.66-.36-1.05 0-.36.12-.72.36-.99.15-.18.33-.3.54-.39.12-.06.24-.09.36-.12.12-.03.24-.06.36-.09.06-.015.12-.015.18-.03.06-.015.12-.015.18-.03.03 0 .09-.015.15-.015.06-.015.12-.015.18-.03.03-.015.06-.015.09-.015l.12-.03c-.03-.18-.06-.33-.06-.51 0-.39.06-.78.15-1.17.12-.6.33-1.2.6-1.74.33-.66.75-1.2 1.29-1.65.48-.39 1.02-.66 1.65-.84.51-.15 1.08-.21 1.68-.21h.12c.06 0 .12 0 .18.015.06 0 .12 0 .18.015h.36c.48 0 .96.03 1.44.09.54.06 1.08.18 1.56.33z"/></svg>
+        Snapchat
+      </button>
+
+      <!-- LinkedIn -->
+      <button class="share-btn linkedin" onclick="shareLinkedIn()" title="Share on LinkedIn">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+        LinkedIn
+      </button>
+
+      <!-- Reddit -->
+      <button class="share-btn reddit" onclick="shareReddit()" title="Share on Reddit">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.01 1.614a3.111 3.111 0 0 1 .042.52c0 2.694-3.13 4.87-7.004 4.87-3.874 0-7.004-2.176-7.004-4.87 0-.183.015-.366.043-.534A1.748 1.748 0 0 1 4.028 12c0-.968.786-1.754 1.754-1.754.463 0 .898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342 0 0 1 .14-.197.35.35 0 0 1 .238-.042l2.906.617a1.214 1.214 0 0 1 1.108-.701zM9.25 12C8.561 12 8 12.562 8 13.25c0 .687.561 1.248 1.25 1.248.687 0 1.248-.561 1.248-1.249 0-.688-.561-1.249-1.249-1.249zm5.5 0c-.687 0-1.248.561-1.248 1.25 0 .687.561 1.248 1.249 1.248.688 0 1.249-.561 1.249-1.249 0-.687-.562-1.249-1.25-1.249zm-5.466 3.99a.327.327 0 0 0-.231.094.33.33 0 0 0 0 .463c.842.842 2.484.913 2.961.913.477 0 2.105-.056 2.961-.913a.361.361 0 0 0 .029-.463.33.33 0 0 0-.464 0c-.547.533-1.684.73-2.512.73-.828 0-1.979-.196-2.512-.73a.326.326 0 0 0-.232-.095z"/></svg>
+        Reddit
+      </button>
+
+      <!-- Copy Link -->
+      <button class="share-btn copy-link" onclick="copyShareLink()" title="Copy game link">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+        Copy Link
+      </button>
+
+      <!-- Native Share (mobile) -->
       <button class="share-btn native" onclick="shareNative()" title="More share options" id="native-share-btn" style="display:none">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
         More
       </button>
     </div>
-    <div id="share-toast" style="display:none;margin-top:10px;font-family:'Orbitron',sans-serif;font-size:10px;letter-spacing:2px;color:var(--neon-green);">✓ COPIED TO CLIPBOARD!</div>
-    <div style="font-size:10px;color:#334;margin-top:8px;letter-spacing:1px;">📸 Instagram: copy text → paste in your story caption</div>
+
+    <div id="share-toast" style="display:none;"></div>
+    <div class="share-hint">Instagram: copy text and paste in your story caption</div>
   </div>
 
   <div class="btn-row">
     <button class="btn-primary" onclick="restartGame()">▶ PLAY AGAIN</button>
-    <button class="btn-sec" onclick="copyShare()">📋 COPY TEXT</button>
+    <button class="btn-sec" onclick="copyShare()">📋 COPY SCORE TEXT</button>
     <button class="btn-sec" onclick="showTitle()">⬅ MENU</button>
   </div>
 </div>
@@ -400,7 +493,6 @@ function toggleMute(){
   if(masterGain) masterGain.gain.value=isMuted?0:0.7;
 }
 
-// ── Low-level helpers ──────────────────────────────────
 function osc(freq, type='sine', start=0, dur=0.3, gainVal=0.4, detune=0){
   const ac=getACtx(), now=ac.currentTime+start;
   const g=ac.createGain(); g.connect(masterGain);
@@ -437,224 +529,54 @@ function sweep(startF, endF, type='sawtooth', dur=0.4, gainVal=0.35){
   o.start(now); o.stop(now+dur+0.05);
 }
 
-// ── Named sound effects ────────────────────────────────
 const SFX = {
-
-  // UI / menu
-  btnClick(){
-    osc(880,'sine',0,0.08,0.2);
-    osc(1200,'sine',0.04,0.08,0.15);
-  },
-  hover(){
-    osc(600,'sine',0,0.06,0.08);
-  },
-
-  // Countdown beeps
-  countBeep(n){
-    const f = n>1 ? 660 : 1100;
-    osc(f,'square',0,0.12,0.25);
-    osc(f*2,'sine',0,0.08,0.1);
-  },
-
-  // Portal / click correct
-  portalHit(){
-    sweep(400,1200,'sine',0.25,0.4);
-    osc(800,'sine',0,0.15,0.2);
-    noise(0.05,0.15,3000);
-  },
-
-  // Wrong click
-  miss(){
-    sweep(300,80,'sawtooth',0.35,0.45);
-    noise(0.12,0.2,400);
-    osc(120,'sine',0,0.3,0.25);
-  },
-
-  // Combo hit (pitch rises with combo)
-  comboHit(combo){
-    const base = Math.min(300+combo*15, 700);
-    sweep(base, base*1.5, 'sine', 0.18, 0.35);
-    osc(base*2,'sine',0,0.1,0.15);
-  },
-
-  // Big combo milestone
-  comboMilestone(){
-    [0,.08,.16].forEach((t,i)=>{
-      osc([660,880,1100][i],'sine',t,0.15,0.3);
-    });
-    noise(0.06,0.1,4000);
-  },
-
-  // Memory reveal (card flip sound)
-  memReveal(){
-    sweep(200,600,'triangle',0.12,0.25);
-    osc(400,'sine',0,0.1,0.15);
-  },
-
-  // Memory correct
-  memCorrect(){
-    [0,.1,.2,.3].forEach((t,i)=>{
-      osc([523,659,784,1047][i],'sine',t,0.15,0.28);
-    });
-  },
-
-  // Memory wrong
-  memWrong(){
-    osc(200,'sawtooth',0,0.4,0.4);
-    sweep(300,100,'square',0.3,0.3);
-  },
-
-  // Reaction command appears
-  reactionAlert(){
-    osc(880,'square',0,0.07,0.3);
-    osc(1320,'square',0.05,0.07,0.2);
-  },
-
-  // Reaction hit (lightning fast)
-  reactionHitSfx(rt){
-    const pitch = rt<250?1400:rt<400?1000:700;
-    sweep(pitch,pitch*1.6,'sine',0.2,0.45);
-    noise(0.05,0.15,5000);
-  },
-
-  // Reaction miss
-  reactionMiss(){
-    sweep(400,100,'sawtooth',0.35,0.4);
-    osc(150,'sine',0,0.3,0.3);
-  },
-
-  // Eye tracking — soft tone while locked on
-  trackingOn(){
-    osc(220,'sine',0,0.5,0.08);
-  },
-
-  // Distraction clicked (bad)
-  distractionHit(){
-    noise(0.2,0.35,800);
-    osc(180,'sawtooth',0,0.25,0.3);
-    sweep(500,80,'square',0.2,0.25);
-  },
-
-  // Mission target clicked (good)
-  missionHit(){
-    sweep(300,1000,'sine',0.2,0.4);
-    osc(600,'sine',0,0.15,0.2);
-    noise(0.04,0.1,4000);
-  },
-
-  // Ultra instinct orb click
-  orbHit(){
-    const f=800+Math.random()*600;
-    sweep(f,f*2,'sine',0.12,0.35);
-    noise(0.03,0.08,5000);
-  },
-
-  // Boss attack incoming
-  bossAttack(){
-    sweep(800,200,'sawtooth',0.5,0.5);
-    osc(100,'square',0,0.4,0.35);
-    noise(0.15,0.25,300);
-  },
-
-  // Boss hit (critical)
-  bossCritical(){
-    [0,.06,.12,.18].forEach((t,i)=>{
-      osc([300,500,700,1000][i],'sawtooth',t,0.2,0.4);
-    });
-    noise(0.08,0.2,3000);
-    sweep(200,600,'sine',0.3,0.3);
-  },
-
-  // Boss blocked (wrong action)
-  bossBlocked(){
-    sweep(600,100,'square',0.4,0.45);
-    noise(0.2,0.3,500);
-  },
-
-  // Stage clear fanfare
-  stageClear(){
-    const melody=[523,659,784,1047,784,1047,1319];
-    const times=[0,.1,.2,.3,.45,.55,.65];
-    melody.forEach((f,i)=>osc(f,'sine',times[i],0.2,0.4));
-    // harmony
-    const harm=[659,784,987,1319,987,1319,1567];
-    harm.forEach((f,i)=>osc(f,'triangle',times[i]+0.01,0.18,0.2));
-    noise(0.1,0.15,4000);
-  },
-
-  // Game victory (full clear)
-  victory(){
-    const mel=[523,659,784,659,784,1047,784,1047,1319,1047,1319,1568];
-    const t=  [0,.1,.2, .32,.42,.52, .65,.75,.85, 1.0, 1.1, 1.2];
-    mel.forEach((f,i)=>osc(f,'sine',t[i],0.3,0.45));
-    const harm=[659,784,987,784,987,1319,987,1319,1568,1319,1568,1976];
-    harm.forEach((f,i)=>osc(f,'triangle',t[i]+.01,0.28,0.22));
-    // drum hits
-    [0,.52,1.0,1.2].forEach(t=>{
-      noise(0.08,0.3,200);
-      setTimeout(()=>noise(0.08,0.3,200),t*1000);
-    });
-  },
-
-  // Rank up
-  rankUp(){
-    [0,.12,.24].forEach((t,i)=>{
-      osc([660,880,1100][i],'sine',t,0.18,0.35);
-      osc([660,880,1100][i]*1.5,'triangle',t,0.15,0.18);
-    });
-    noise(0.06,0.12,5000);
-  },
-
-  // Timer low warning (tick)
-  timerTick(){
-    osc(440,'square',0,0.05,0.15);
-  },
-
-  // Timer urgent
-  timerUrgent(){
-    osc(660,'square',0,0.08,0.2);
-    osc(880,'square',0.03,0.05,0.1);
-  },
-
-  // Stage intro whoosh
-  stageWhoosh(){
-    sweep(80,2000,'sawtooth',0.5,0.25);
-    sweep(60,1500,'sine',0.1,0.2);
-    noise(0.4,0.1,1500);
-  },
+  btnClick(){ osc(880,'sine',0,0.08,0.2); osc(1200,'sine',0.04,0.08,0.15); },
+  hover(){ osc(600,'sine',0,0.06,0.08); },
+  countBeep(n){ const f=n>1?660:1100; osc(f,'square',0,0.12,0.25); osc(f*2,'sine',0,0.08,0.1); },
+  portalHit(){ sweep(400,1200,'sine',0.25,0.4); osc(800,'sine',0,0.15,0.2); noise(0.05,0.15,3000); },
+  miss(){ sweep(300,80,'sawtooth',0.35,0.45); noise(0.12,0.2,400); osc(120,'sine',0,0.3,0.25); },
+  comboHit(combo){ const base=Math.min(300+combo*15,700); sweep(base,base*1.5,'sine',0.18,0.35); osc(base*2,'sine',0,0.1,0.15); },
+  comboMilestone(){ [0,.08,.16].forEach((t,i)=>{osc([660,880,1100][i],'sine',t,0.15,0.3);}); noise(0.06,0.1,4000); },
+  memReveal(){ sweep(200,600,'triangle',0.12,0.25); osc(400,'sine',0,0.1,0.15); },
+  memCorrect(){ [0,.1,.2,.3].forEach((t,i)=>{osc([523,659,784,1047][i],'sine',t,0.15,0.28);}); },
+  memWrong(){ osc(200,'sawtooth',0,0.4,0.4); sweep(300,100,'square',0.3,0.3); },
+  reactionAlert(){ osc(880,'square',0,0.07,0.3); osc(1320,'square',0.05,0.07,0.2); },
+  reactionHitSfx(rt){ const pitch=rt<250?1400:rt<400?1000:700; sweep(pitch,pitch*1.6,'sine',0.2,0.45); noise(0.05,0.15,5000); },
+  reactionMiss(){ sweep(400,100,'sawtooth',0.35,0.4); osc(150,'sine',0,0.3,0.3); },
+  trackingOn(){ osc(220,'sine',0,0.5,0.08); },
+  distractionHit(){ noise(0.2,0.35,800); osc(180,'sawtooth',0,0.25,0.3); sweep(500,80,'square',0.2,0.25); },
+  missionHit(){ sweep(300,1000,'sine',0.2,0.4); osc(600,'sine',0,0.15,0.2); noise(0.04,0.1,4000); },
+  orbHit(){ const f=800+Math.random()*600; sweep(f,f*2,'sine',0.12,0.35); noise(0.03,0.08,5000); },
+  bossAttack(){ sweep(800,200,'sawtooth',0.5,0.5); osc(100,'square',0,0.4,0.35); noise(0.15,0.25,300); },
+  bossCritical(){ [0,.06,.12,.18].forEach((t,i)=>{osc([300,500,700,1000][i],'sawtooth',t,0.2,0.4);}); noise(0.08,0.2,3000); sweep(200,600,'sine',0.3,0.3); },
+  bossBlocked(){ sweep(600,100,'square',0.4,0.45); noise(0.2,0.3,500); },
+  stageClear(){ const melody=[523,659,784,1047,784,1047,1319]; const times=[0,.1,.2,.3,.45,.55,.65]; melody.forEach((f,i)=>osc(f,'sine',times[i],0.2,0.4)); const harm=[659,784,987,1319,987,1319,1567]; harm.forEach((f,i)=>osc(f,'triangle',times[i]+0.01,0.18,0.2)); noise(0.1,0.15,4000); },
+  victory(){ const mel=[523,659,784,659,784,1047,784,1047,1319,1047,1319,1568]; const t=[0,.1,.2,.32,.42,.52,.65,.75,.85,1.0,1.1,1.2]; mel.forEach((f,i)=>osc(f,'sine',t[i],0.3,0.45)); const harm=[659,784,987,784,987,1319,987,1319,1568,1319,1568,1976]; harm.forEach((f,i)=>osc(f,'triangle',t[i]+.01,0.28,0.22)); [0,.52,1.0,1.2].forEach(t=>{noise(0.08,0.3,200);setTimeout(()=>noise(0.08,0.3,200),t*1000);}); },
+  rankUp(){ [0,.12,.24].forEach((t,i)=>{osc([660,880,1100][i],'sine',t,0.18,0.35);osc([660,880,1100][i]*1.5,'triangle',t,0.15,0.18);}); noise(0.06,0.12,5000); },
+  timerTick(){ osc(440,'square',0,0.05,0.15); },
+  timerUrgent(){ osc(660,'square',0,0.08,0.2); osc(880,'square',0.03,0.05,0.1); },
+  stageWhoosh(){ sweep(80,2000,'sawtooth',0.5,0.25); sweep(60,1500,'sine',0.1,0.2); noise(0.4,0.1,1500); },
 };
 
-// ── Background Music Engine ────────────────────────────
 function startBGM(stage){
   stopBGM();
   if(isMuted) return;
   const ac=getACtx();
-
-  if(stage===8){
-    startBossBGM(ac);
-  } else if(stage===7){
-    startUltraInstinctBGM(ac);
-  } else {
-    startAmbientBGM(ac, stage);
-  }
+  if(stage===8) startBossBGM(ac);
+  else if(stage===7) startUltraInstinctBGM(ac);
+  else startAmbientBGM(ac, stage);
 }
 
 function stopBGM(){
-  Object.values(bgmNodes).forEach(n=>{ try{n.stop&&n.stop(); n.disconnect&&n.disconnect();}catch(e){} });
-  bgmNodes={};
-  bgmPlaying=false;
+  Object.values(bgmNodes).forEach(n=>{try{n.stop&&n.stop();n.disconnect&&n.disconnect();}catch(e){}});
+  bgmNodes={}; bgmPlaying=false;
 }
 
 function startAmbientBGM(ac, stage){
   bgmPlaying=true;
-  // Pulsing bass drone
-  const bassFreqs=[55,55,55,55,55,55,44,44];
-  let beat=0;
   const bassG=ac.createGain(); bassG.gain.value=0.12; bassG.connect(masterGain);
   const bassOsc=ac.createOscillator(); bassOsc.type='sawtooth'; bassOsc.frequency.value=55; bassOsc.connect(bassG); bassOsc.start();
   bgmNodes.bass=bassOsc; bgmNodes.bassG=bassG;
-
-  // High arp melody loop
   const arpNotes=[523,659,784,880,784,659,523,440];
   let arpIdx=0;
   function arpStep(){
@@ -663,111 +585,64 @@ function startAmbientBGM(ac, stage){
     const now=ac.currentTime;
     const g=ac.createGain(); g.connect(masterGain);
     const o=ac.createOscillator(); o.type='triangle'; o.frequency.value=f*(1+stage*0.05);
-    o.connect(g);
-    g.gain.setValueAtTime(0.07,now);
-    g.gain.exponentialRampToValueAtTime(0.001,now+0.35);
-    o.start(now); o.stop(now+0.4);
-    arpIdx++;
+    o.connect(g); g.gain.setValueAtTime(0.07,now); g.gain.exponentialRampToValueAtTime(0.001,now+0.35);
+    o.start(now); o.stop(now+0.4); arpIdx++;
     bgmNodes.arpTimer=setTimeout(arpStep, 250-(stage*15));
   }
   arpStep();
-
-  // Subtle hi-hat
-  function hihat(){
-    if(!bgmPlaying) return;
-    noise(0.04, 0.04+Math.random()*0.02, 8000+Math.random()*4000);
-    bgmNodes.hhTimer=setTimeout(hihat, 200+(stage<4?50:0));
-  }
+  function hihat(){ if(!bgmPlaying) return; noise(0.04,0.04+Math.random()*0.02,8000+Math.random()*4000); bgmNodes.hhTimer=setTimeout(hihat,200+(stage<4?50:0)); }
   hihat();
-
-  // Kick on every beat
-  function kick(){
-    if(!bgmPlaying) return;
-    noise(0.06,0.18,120);
-    osc(60,'sine',0,0.12,0.2);
-    bgmNodes.kickTimer=setTimeout(kick, 480);
-  }
+  function kick(){ if(!bgmPlaying) return; noise(0.06,0.18,120); osc(60,'sine',0,0.12,0.2); bgmNodes.kickTimer=setTimeout(kick,480); }
   kick();
 }
 
 function startUltraInstinctBGM(ac){
   bgmPlaying=true;
-  // Fast arp
   const notes=[880,1100,1320,1760,1320,1100,880,660];
   let idx=0;
   function step(){
     if(!bgmPlaying) return;
-    const f=notes[idx%notes.length];
-    const now=ac.currentTime;
+    const f=notes[idx%notes.length]; const now=ac.currentTime;
     const g=ac.createGain(); g.connect(masterGain);
     const o=ac.createOscillator(); o.type='square'; o.frequency.value=f; o.detune.value=Math.random()*10-5;
     o.connect(g); g.gain.setValueAtTime(0.06,now); g.gain.exponentialRampToValueAtTime(0.001,now+0.15);
-    o.start(now); o.stop(now+0.2);
-    idx++;
-    bgmNodes.uiArp=setTimeout(step,120);
+    o.start(now); o.stop(now+0.2); idx++; bgmNodes.uiArp=setTimeout(step,120);
   }
   step();
-  // Rumble bass
   const bassOsc=ac.createOscillator(); bassOsc.type='sawtooth'; bassOsc.frequency.value=80;
   const bassG=ac.createGain(); bassG.gain.value=0.1; bassOsc.connect(bassG); bassG.connect(masterGain); bassOsc.start();
   bgmNodes.uiBass=bassOsc; bgmNodes.uiBassG=bassG;
-  // Fast hats
-  function fhh(){
-    if(!bgmPlaying) return;
-    noise(0.03,0.06,9000);
-    bgmNodes.fhhT=setTimeout(fhh,100);
-  }
+  function fhh(){ if(!bgmPlaying) return; noise(0.03,0.06,9000); bgmNodes.fhhT=setTimeout(fhh,100); }
   fhh();
 }
 
 function startBossBGM(ac){
   bgmPlaying=true;
-  // Ominous low drone
   const droneOsc=ac.createOscillator(); droneOsc.type='sawtooth'; droneOsc.frequency.value=55;
   const droneOsc2=ac.createOscillator(); droneOsc2.type='square'; droneOsc2.frequency.value=55.5;
   const droneG=ac.createGain(); droneG.gain.value=0.09;
   droneOsc.connect(droneG); droneOsc2.connect(droneG); droneG.connect(masterGain);
   droneOsc.start(); droneOsc2.start();
   bgmNodes.drone=droneOsc; bgmNodes.drone2=droneOsc2; bgmNodes.droneG=droneG;
-
-  // Pounding war drums
-  function drum(){
-    if(!bgmPlaying) return;
-    noise(0.1,0.4,100);
-    osc(50,'sine',0,0.15,0.35);
-    bgmNodes.drumT=setTimeout(drum,400);
-  }
+  function drum(){ if(!bgmPlaying) return; noise(0.1,0.4,100); osc(50,'sine',0,0.15,0.35); bgmNodes.drumT=setTimeout(drum,400); }
   drum();
-
-  // Menacing high notes
   const bossNotes=[440,370,330,294,330,370,440,494];
   let bi=0;
-  function bossArp(){
-    if(!bgmPlaying) return;
-    const f=bossNotes[bi%bossNotes.length];
-    osc(f,'sawtooth',0,0.2,0.12);
-    osc(f*0.5,'sine',0,0.2,0.08);
-    bi++;
-    bgmNodes.bossArpT=setTimeout(bossArp,300);
-  }
+  function bossArp(){ if(!bgmPlaying) return; const f=bossNotes[bi%bossNotes.length]; osc(f,'sawtooth',0,0.2,0.12); osc(f*0.5,'sine',0,0.2,0.08); bi++; bgmNodes.bossArpT=setTimeout(bossArp,300); }
   bossArp();
 }
 
-// ── Timer warning tracker ──────────────────────────────
 let lastTimerWarn=-1;
-function checkTimerSound(val, max){
+function checkTimerSound(val,max){
   if(max<=0) return;
   const pct=val/max;
   if(pct<0.2 && Math.floor(val)!==lastTimerWarn && Math.floor(val)%1===0){
     lastTimerWarn=Math.floor(val);
-    if(pct<0.1) SFX.timerUrgent();
-    else SFX.timerTick();
+    if(pct<0.1) SFX.timerUrgent(); else SFX.timerTick();
   }
 }
 
-// ═══════════════════════════════════════
 // STARFIELD
-// ═══════════════════════════════════════
 (function(){
   const sf=document.getElementById('starfield');
   for(let i=0;i<120;i++){
@@ -778,18 +653,16 @@ function checkTimerSound(val, max){
   }
 })();
 
-// ═══════════════════════════════════════
 // GAME STATE
-// ═══════════════════════════════════════
 const STAGES=[
-  {num:1,name:'FOCUS GATE',     desc:'Click ONLY the glowing portal. Wrong clicks break your combo!',time:30},
-  {num:2,name:'SHADOW CLONE',   desc:'One hero matches the target pose. Find them before time runs out!',time:25},
-  {num:3,name:'MEMORY SLASH',   desc:'Watch the sequence of sword poses, then repeat them perfectly!',time:0},
-  {num:4,name:'EYE FOCUS',      desc:'Keep your cursor on the golden orb as it moves. Don\'t lose it!',time:20},
+  {num:1,name:'FOCUS GATE',desc:'Click ONLY the glowing portal. Wrong clicks break your combo!',time:30},
+  {num:2,name:'SHADOW CLONE',desc:'One hero matches the target pose. Find them before time runs out!',time:25},
+  {num:3,name:'MEMORY SLASH',desc:'Watch the sequence of sword poses, then repeat them perfectly!',time:0},
+  {num:4,name:'EYE FOCUS',desc:'Keep your cursor on the golden orb as it moves. Don\'t lose it!',time:20},
   {num:5,name:'REACTION BATTLE',desc:'Incoming attacks! Jump, Dash, Duck, or Counter within milliseconds!',time:30},
   {num:6,name:'DISTRACTION STORM',desc:'Ignore everything — memes, alerts, coins. Click ONLY the mission target!',time:25},
-  {num:7,name:'ULTRA INSTINCT', desc:'Everything accelerates. Click the white orbs as fast as you can!',time:20},
-  {num:8,name:'BOSS BATTLE',    desc:'Face the King of Distractions! Use memory, reaction, focus and precision!',time:0},
+  {num:7,name:'ULTRA INSTINCT',desc:'Everything accelerates. Click the white orbs as fast as you can!',time:20},
+  {num:8,name:'BOSS BATTLE',desc:'Face the King of Distractions! Use memory, reaction, focus and precision!',time:0},
 ];
 
 let gs={};
@@ -812,9 +685,6 @@ function checkRankUp(newRank){
   if(order.indexOf(newRank)>order.indexOf(prevRank)){ SFX.rankUp(); prevRank=newRank; }
 }
 
-// ═══════════════════════════════════════
-// UI HELPERS
-// ═══════════════════════════════════════
 function showScreen(id){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
@@ -855,7 +725,6 @@ function addScore(pts){
   gs.hits++; gs.combo++;
   gs.maxCombo=Math.max(gs.maxCombo,gs.combo);
   gs.focusEnergy=Math.min(100,gs.focusEnergy+3);
-  // combo sounds
   if(gs.combo>0&&gs.combo%10===0) SFX.comboMilestone();
   else SFX.comboHit(gs.combo);
   updateHUD();
@@ -870,12 +739,8 @@ function missAction(){
   updateHUD();
 }
 
-// Timer
 let timerCtx;
-function initTimerCanvas(){
-  const canvas=document.getElementById('timer-canvas');
-  timerCtx=canvas.getContext('2d');
-}
+function initTimerCanvas(){ const canvas=document.getElementById('timer-canvas'); timerCtx=canvas.getContext('2d'); }
 function drawTimer(val,max){
   if(!timerCtx) return;
   const c=timerCtx,w=60,h=60,r=24;
@@ -892,22 +757,16 @@ function drawTimer(val,max){
   document.getElementById('timer-val').textContent=Math.ceil(val);
 }
 function startTimer(secs,onDone){
-  clearInterval(gs.timerInterval);
-  lastTimerWarn=-1;
-  gs.timeLeft=secs;
-  drawTimer(secs,secs);
+  clearInterval(gs.timerInterval); lastTimerWarn=-1;
+  gs.timeLeft=secs; drawTimer(secs,secs);
   if(secs<=0){onDone&&onDone();return;}
   const max=secs;
   gs.timerInterval=setInterval(()=>{
-    gs.timeLeft-=.1;
-    drawTimer(gs.timeLeft,max);
+    gs.timeLeft-=.1; drawTimer(gs.timeLeft,max);
     if(gs.timeLeft<=0){clearInterval(gs.timerInterval);onDone&&onDone();}
   },100);
 }
 
-// ═══════════════════════════════════════
-// STAGE INTRO
-// ═══════════════════════════════════════
 function showStageIntro(stageObj,cb){
   const si=document.getElementById('stage-intro');
   si.style.display='flex'; si.style.opacity='1';
@@ -915,31 +774,17 @@ function showStageIntro(stageObj,cb){
   document.getElementById('si-name').textContent=stageObj.name;
   document.getElementById('si-desc').textContent=stageObj.desc;
   SFX.stageWhoosh();
-  let count=3;
-  document.getElementById('stage-countdown').textContent=count;
+  let count=3; document.getElementById('stage-countdown').textContent=count;
   const t=setInterval(()=>{
-    count--;
-    SFX.countBeep(count);
-    if(count<=0){
-      clearInterval(t);
-      si.style.opacity='0';
-      setTimeout(()=>{si.style.display='none';cb&&cb();},500);
-    } else {
-      document.getElementById('stage-countdown').textContent=count;
-    }
+    count--; SFX.countBeep(count);
+    if(count<=0){ clearInterval(t); si.style.opacity='0'; setTimeout(()=>{si.style.display='none';cb&&cb();},500); }
+    else document.getElementById('stage-countdown').textContent=count;
   },900);
 }
 
-// ═══════════════════════════════════════
-// GAME FLOW
-// ═══════════════════════════════════════
 function startGame(){
-  getACtx(); // unlock audio on user gesture
-  initState(); prevRank='E';
-  showScreen('game-screen');
-  initTimerCanvas();
-  updateHUD();
-  nextStage();
+  getACtx(); initState(); prevRank='E';
+  showScreen('game-screen'); initTimerCanvas(); updateHUD(); nextStage();
 }
 
 function nextStage(){
@@ -949,35 +794,25 @@ function nextStage(){
   document.getElementById('hud-stage').textContent=`${gs.stage}/8`;
   stopBGM();
   const stageObj=STAGES[gs.stage-1];
-  showStageIntro(stageObj,()=>{
-    startBGM(gs.stage);
-    launchStage(gs.stage);
-  });
+  showStageIntro(stageObj,()=>{ startBGM(gs.stage); launchStage(gs.stage); });
 }
 
 function launchStage(n){
-  const el=document.getElementById(`stage${n}`);
-  el.style.display='block';
+  const el=document.getElementById(`stage${n}`); el.style.display='block';
   switch(n){
-    case 1:launchStage1();break; case 2:launchStage2();break; case 3:launchStage3();break;
-    case 4:launchStage4();break; case 5:launchStage5();break; case 6:launchStage6();break;
-    case 7:launchStage7();break; case 8:launchStage8();break;
+    case 1:launchStage1();break;case 2:launchStage2();break;case 3:launchStage3();break;
+    case 4:launchStage4();break;case 5:launchStage5();break;case 6:launchStage6();break;
+    case 7:launchStage7();break;case 8:launchStage8();break;
   }
 }
 
 function stageComplete(){
   clearInterval(gs.timerInterval); clearInterval(gs.stageInterval); cancelAnimationFrame(gs.animFrame);
-  stopBGM();
-  SFX.stageClear();
-  showFeedback('STAGE CLEAR!','great');
+  stopBGM(); SFX.stageClear(); showFeedback('STAGE CLEAR!','great');
   spawnParticles(window.innerWidth/2,window.innerHeight/2,'#00d4ff',20);
-  addScore(500);
-  setTimeout(nextStage,1600);
+  addScore(500); setTimeout(nextStage,1600);
 }
 
-// ═══════════════════════════════════════
-// STAGE 1: FOCUS GATE
-// ═══════════════════════════════════════
 function launchStage1(){
   document.getElementById('instruction-bar').textContent='Click ONLY the glowing portal!';
   const area=document.getElementById('stage1'); area.innerHTML='';
@@ -996,27 +831,15 @@ function launchStage1(){
       if(i===glowIdx){p.classList.add('glow');p.textContent='⚡';}
       else{p.classList.add('fake');p.textContent=symbols[Math.floor(Math.random()*symbols.length)];}
       p.addEventListener('click',(e)=>{
-        if(i===glowIdx){
-          spawnParticles(e.clientX,e.clientY,'#00d4ff',12);
-          SFX.portalHit();
-          addScore(100); clicks++;
-          showFeedback(clicks%5===0?'INCREDIBLE!':'FOCUS!','great');
-          if(clicks>=goal) stageComplete(); else spawnPortals();
-        } else {
-          spawnParticles(e.clientX,e.clientY,'#ff3333',6);
-          missAction(); spawnPortals();
-        }
+        if(i===glowIdx){ spawnParticles(e.clientX,e.clientY,'#00d4ff',12); SFX.portalHit(); addScore(100); clicks++; showFeedback(clicks%5===0?'INCREDIBLE!':'FOCUS!','great'); if(clicks>=goal) stageComplete(); else spawnPortals(); }
+        else{ spawnParticles(e.clientX,e.clientY,'#ff3333',6); missAction(); spawnPortals(); }
       });
       area.appendChild(p);
     }
   }
-  spawnPortals();
-  startTimer(30,stageComplete);
+  spawnPortals(); startTimer(30,stageComplete);
 }
 
-// ═══════════════════════════════════════
-// STAGE 2: SHADOW CLONE
-// ═══════════════════════════════════════
 const POSES=['🗡','🛡','🏹','✊','🦵','👊','🤜','⚔','🥋','🔱'];
 const CHARS=['🥷','🧙','🗡','⚔','🏹','🛡','🔮','💪','🌊','⚡'];
 function launchStage2(){
@@ -1043,32 +866,19 @@ function launchStage2(){
       const char=CHARS[Math.floor(Math.random()*CHARS.length)];
       card.innerHTML=`<div style="font-size:28px;">${char}</div><div style="font-size:22px;margin-top:4px;">${pose}</div>`;
       card.addEventListener('click',(e)=>{
-        if(i===correctIdx){
-          spawnParticles(e.clientX,e.clientY,'#00d4ff',12);
-          SFX.portalHit();
-          addScore(120); found++;
-          showFeedback('FOUND HIM!','great');
-          if(found>=goal) stageComplete(); else spawnClones();
-        } else {
-          spawnParticles(e.clientX,e.clientY,'#ff3333',6);
-          missAction(); spawnClones();
-        }
+        if(i===correctIdx){ spawnParticles(e.clientX,e.clientY,'#00d4ff',12); SFX.portalHit(); addScore(120); found++; showFeedback('FOUND HIM!','great'); if(found>=goal) stageComplete(); else spawnClones(); }
+        else{ spawnParticles(e.clientX,e.clientY,'#ff3333',6); missAction(); spawnClones(); }
       });
       area.appendChild(card);
     }
   }
-  spawnClones();
-  startTimer(25,stageComplete);
+  spawnClones(); startTimer(25,stageComplete);
 }
 
-// ═══════════════════════════════════════
-// STAGE 3: MEMORY SLASH
-// ═══════════════════════════════════════
 const MEM_SYMBOLS=['⚔','🗡','🏹','🔮','💥','🌀','⚡','🔥','🌊','🛡'];
 function launchStage3(){
   document.getElementById('instruction-bar').textContent='Watch carefully, then repeat!';
-  document.getElementById('timer-val').textContent='—';
-  drawTimer(0,0);
+  document.getElementById('timer-val').textContent='—'; drawTimer(0,0);
   let round=0,maxRounds=5;
   function doRound(){
     round++;
@@ -1082,11 +892,7 @@ function launchStage3(){
     seqEl.style.display='flex'; inputEl.style.display='none'; seqEl.innerHTML='';
     seq.forEach((s,i)=>{
       const el=document.createElement('div'); el.className='mem-symbol'; el.textContent='?'; seqEl.appendChild(el);
-      setTimeout(()=>{
-        el.textContent=s; el.classList.add('highlight');
-        SFX.memReveal();
-        setTimeout(()=>{el.textContent='?';el.classList.remove('highlight');},600);
-      },i*700);
+      setTimeout(()=>{ el.textContent=s; el.classList.add('highlight'); SFX.memReveal(); setTimeout(()=>{el.textContent='?';el.classList.remove('highlight');},600); },i*700);
     });
     setTimeout(()=>{
       instrEl.textContent='REPEAT THE SEQUENCE';
@@ -1095,24 +901,14 @@ function launchStage3(){
       MEM_SYMBOLS.slice(0,8).forEach(s=>{
         const btn=document.createElement('div'); btn.className='mem-symbol'; btn.textContent=s;
         btn.addEventListener('click',()=>{
-          userSeq.push(s);
-          btn.classList.add('highlight');
-          SFX.memReveal();
+          userSeq.push(s); btn.classList.add('highlight'); SFX.memReveal();
           setTimeout(()=>btn.classList.remove('highlight'),200);
           if(userSeq.length===seq.length){
             const correct=userSeq.every((v,i)=>v===seq[i]);
-            if(correct){
-              gs.memoryCorrect++; addScore(150*round);
-              SFX.memCorrect();
-              showFeedback('PERFECT!','great');
-              spawnParticles(window.innerWidth/2,window.innerHeight/2,'#00d4ff',15);
-            } else {
-              SFX.memWrong();
-              missAction(); showFeedback('WRONG!','miss');
-            }
+            if(correct){ gs.memoryCorrect++; addScore(150*round); SFX.memCorrect(); showFeedback('PERFECT!','great'); spawnParticles(window.innerWidth/2,window.innerHeight/2,'#00d4ff',15); }
+            else{ SFX.memWrong(); missAction(); showFeedback('WRONG!','miss'); }
             inputEl.querySelectorAll('.mem-symbol').forEach(b=>b.style.pointerEvents='none');
-            if(round>=maxRounds) setTimeout(stageComplete,900);
-            else setTimeout(doRound,1000);
+            if(round>=maxRounds) setTimeout(stageComplete,900); else setTimeout(doRound,1000);
           }
         });
         inputEl.appendChild(btn);
@@ -1122,9 +918,6 @@ function launchStage3(){
   doRound();
 }
 
-// ═══════════════════════════════════════
-// STAGE 4: EYE FOCUS
-// ═══════════════════════════════════════
 function launchStage4(){
   document.getElementById('instruction-bar').textContent='Keep your cursor on the golden orb!';
   const area=document.getElementById('stage4');
@@ -1133,38 +926,20 @@ function launchStage4(){
   let vx=3+Math.random()*2, vy=2+Math.random()*2;
   let tracking=false, trackScore=0, trackSoundTimer=0;
   const aw=area.clientWidth||window.innerWidth, ah=area.clientHeight||(window.innerHeight-120);
-  area.addEventListener('mousemove',(e)=>{
-    ring.style.left=e.clientX+'px'; ring.style.top=e.clientY+'px';
-    const dx=e.clientX-tx, dy=e.clientY-(ty+60);
-    tracking=Math.sqrt(dx*dx+dy*dy)<40;
-  });
-  area.addEventListener('touchmove',(e)=>{
-    const t=e.touches[0];
-    ring.style.left=t.clientX+'px'; ring.style.top=t.clientY+'px';
-    const dx=t.clientX-tx, dy=t.clientY-(ty+60);
-    tracking=Math.sqrt(dx*dx+dy*dy)<40;
-  },{passive:true});
+  area.addEventListener('mousemove',(e)=>{ ring.style.left=e.clientX+'px'; ring.style.top=e.clientY+'px'; const dx=e.clientX-tx, dy=e.clientY-(ty+60); tracking=Math.sqrt(dx*dx+dy*dy)<40; });
+  area.addEventListener('touchmove',(e)=>{ const t=e.touches[0]; ring.style.left=t.clientX+'px'; ring.style.top=t.clientY+'px'; const dx=t.clientX-tx, dy=t.clientY-(ty+60); tracking=Math.sqrt(dx*dx+dy*dy)<40; },{passive:true});
   function animate(){
     tx+=vx; ty+=vy;
-    if(tx<20||tx>aw-20) vx*=-1;
-    if(ty<80||ty>ah-20) vy*=-1;
+    if(tx<20||tx>aw-20) vx*=-1; if(ty<80||ty>ah-20) vy*=-1;
     target.style.left=(tx-12)+'px'; target.style.top=(ty+48)+'px';
-    if(tracking){
-      trackScore+=.5; gs.focusEnergy=Math.min(100,gs.focusEnergy+.05);
-      trackSoundTimer++;
-      if(trackSoundTimer%60===0) SFX.trackingOn(); // soft tone every ~1sec while locked
-    } else { gs.focusEnergy=Math.max(0,gs.focusEnergy-.2); }
-    if(trackScore>0&&Math.floor(trackScore)%30===0&&Math.floor(trackScore)>0){ addScore(50); }
-    updateHUD();
-    gs.animFrame=requestAnimationFrame(animate);
+    if(tracking){ trackScore+=.5; gs.focusEnergy=Math.min(100,gs.focusEnergy+.05); trackSoundTimer++; if(trackSoundTimer%60===0) SFX.trackingOn(); }
+    else gs.focusEnergy=Math.max(0,gs.focusEnergy-.2);
+    if(trackScore>0&&Math.floor(trackScore)%30===0&&Math.floor(trackScore)>0) addScore(50);
+    updateHUD(); gs.animFrame=requestAnimationFrame(animate);
   }
-  animate();
-  startTimer(20,()=>{cancelAnimationFrame(gs.animFrame);stageComplete();});
+  animate(); startTimer(20,()=>{cancelAnimationFrame(gs.animFrame);stageComplete();});
 }
 
-// ═══════════════════════════════════════
-// STAGE 5: REACTION BATTLE
-// ═══════════════════════════════════════
 const REACTIONS=['jump','dash','duck','counter'];
 const REACTION_LABELS={jump:'⬆ JUMP!',dash:'▶ DASH!',duck:'⬇ DUCK!',counter:'⚔ COUNTER!'};
 function launchStage5(){
@@ -1174,18 +949,11 @@ function launchStage5(){
     gs.currentReaction=REACTIONS[Math.floor(Math.random()*4)];
     const el=document.getElementById('reaction-prompt');
     el.textContent='...'; el.className='';
-    const delay=600+Math.random()*1000;
-    setTimeout(()=>{
-      el.textContent=REACTION_LABELS[gs.currentReaction]; el.className=gs.currentReaction;
-      gs.reactionStart=Date.now();
-      SFX.reactionAlert(); // alert sound when command appears
-    },delay);
+    setTimeout(()=>{ el.textContent=REACTION_LABELS[gs.currentReaction]; el.className=gs.currentReaction; gs.reactionStart=Date.now(); SFX.reactionAlert(); },600+Math.random()*1000);
   }
-  nextReaction();
-  startTimer(30,stageComplete);
+  nextReaction(); startTimer(30,stageComplete);
   window._reactionCount=count; window._reactionGoal=goal;
 }
-
 function reactionHit(action){
   if(!gs.currentReaction) return;
   if(action===gs.currentReaction){
@@ -1193,8 +961,7 @@ function reactionHit(action){
     if(rt>2500){missAction();gs.currentReaction=null;nextReactionCall();return;}
     gs.bestReaction=Math.min(gs.bestReaction,rt);
     addScore(rt<250?250:rt<400?180:120);
-    gs.reactionStreak++;
-    SFX.reactionHitSfx(rt);
+    gs.reactionStreak++; SFX.reactionHitSfx(rt);
     document.getElementById('reaction-streak').textContent='STREAK: '+gs.reactionStreak;
     showFeedback(rt<250?'LIGHTNING!':'SHARP!','great');
     spawnParticles(window.innerWidth/2,window.innerHeight/2,'#00ff88',10);
@@ -1202,61 +969,34 @@ function reactionHit(action){
     let c=(window._reactionCount||0)+1; window._reactionCount=c;
     if(c>=(window._reactionGoal||15)) stageComplete(); else nextReactionCall();
   } else {
-    SFX.reactionMiss();
-    missAction(); gs.reactionStreak=0;
+    SFX.reactionMiss(); missAction(); gs.reactionStreak=0;
     document.getElementById('reaction-streak').textContent='STREAK: 0';
     gs.currentReaction=null; nextReactionCall();
   }
 }
-
 function nextReactionCall(){
-  const el=document.getElementById('reaction-prompt');
-  el.textContent='...'; el.className='';
-  const delay=600+Math.random()*800;
-  setTimeout(()=>{
-    gs.currentReaction=REACTIONS[Math.floor(Math.random()*4)];
-    el.textContent=REACTION_LABELS[gs.currentReaction]; el.className=gs.currentReaction;
-    gs.reactionStart=Date.now();
-    SFX.reactionAlert();
-  },delay);
+  const el=document.getElementById('reaction-prompt'); el.textContent='...'; el.className='';
+  setTimeout(()=>{ gs.currentReaction=REACTIONS[Math.floor(Math.random()*4)]; el.textContent=REACTION_LABELS[gs.currentReaction]; el.className=gs.currentReaction; gs.reactionStart=Date.now(); SFX.reactionAlert(); },600+Math.random()*800);
 }
 
-// ═══════════════════════════════════════
-// STAGE 6: DISTRACTION STORM
-// ═══════════════════════════════════════
 const DISTRACTIONS=['📱','💬','🔔','💰','🎮','📺','🍕','😂','🎵','💌','🎁','🌮','🛒','📸','🎉'];
 function launchStage6(){
-  document.getElementById('instruction-bar').textContent='Click ONLY the mission target 🎯 — ignore everything else!';
+  document.getElementById('instruction-bar').textContent='Click ONLY the mission target — ignore everything else!';
   const area=document.getElementById('stage6');
   let clicks=0,goal=10;
-  document.getElementById('mission-target-s6').onclick=(e)=>{
-    spawnParticles(e.clientX,e.clientY,'#00d4ff',15);
-    SFX.missionHit();
-    addScore(200); clicks++;
-    showFeedback('FOCUSED!','great');
-    if(clicks>=goal) stageComplete();
-  };
+  document.getElementById('mission-target-s6').onclick=(e)=>{ spawnParticles(e.clientX,e.clientY,'#00d4ff',15); SFX.missionHit(); addScore(200); clicks++; showFeedback('FOCUSED!','great'); if(clicks>=goal) stageComplete(); };
   function spawnDistraction(){
     const d=document.createElement('div'); d.className='distraction';
     d.textContent=DISTRACTIONS[Math.floor(Math.random()*DISTRACTIONS.length)];
     d.style.left=Math.random()*90+'%'; d.style.bottom='-10%';
-    const dur=2+Math.random()*3;
-    d.style.animationDuration=dur+'s'; d.style.animationDelay=Math.random()*.5+'s';
-    d.addEventListener('click',(e)=>{
-      SFX.distractionHit();
-      missAction();
-      spawnParticles(e.clientX,e.clientY,'#ff3333',6);
-    });
-    area.appendChild(d);
-    setTimeout(()=>d.remove(),dur*1000+500);
+    const dur=2+Math.random()*3; d.style.animationDuration=dur+'s'; d.style.animationDelay=Math.random()*.5+'s';
+    d.addEventListener('click',(e)=>{ SFX.distractionHit(); missAction(); spawnParticles(e.clientX,e.clientY,'#ff3333',6); });
+    area.appendChild(d); setTimeout(()=>d.remove(),dur*1000+500);
   }
   gs.stageInterval=setInterval(spawnDistraction,400);
   startTimer(25,()=>{clearInterval(gs.stageInterval);stageComplete();});
 }
 
-// ═══════════════════════════════════════
-// STAGE 7: ULTRA INSTINCT
-// ═══════════════════════════════════════
 function launchStage7(){
   document.getElementById('instruction-bar').textContent='Click the white orbs — ultra speed mode!';
   const area=document.getElementById('stage7');
@@ -1267,13 +1007,7 @@ function launchStage7(){
     const size=25+Math.random()*35;
     const x=size/2+Math.random()*(aw-size), y=size/2+80+Math.random()*(ah-size-80);
     t.style.width=size+'px'; t.style.height=size+'px'; t.style.left=x+'px'; t.style.top=y+'px';
-    t.onclick=(e)=>{
-      spawnParticles(e.clientX,e.clientY,'#ffffff',12);
-      SFX.orbHit();
-      addScore(150); clicks++;
-      showFeedback('INSTINCT!','great');
-      if(clicks>=goal) stageComplete(); else spawnOrb();
-    };
+    t.onclick=(e)=>{ spawnParticles(e.clientX,e.clientY,'#ffffff',12); SFX.orbHit(); addScore(150); clicks++; showFeedback('INSTINCT!','great'); if(clicks>=goal) stageComplete(); else spawnOrb(); };
   }
   spawnOrb();
   const orbColors=['rgba(0,212,255,0.15)','rgba(191,0,255,0.15)','rgba(255,215,0,0.1)'];
@@ -1286,9 +1020,6 @@ function launchStage7(){
   startTimer(20,stageComplete);
 }
 
-// ═══════════════════════════════════════
-// STAGE 8: BOSS BATTLE
-// ═══════════════════════════════════════
 const BOSS_ATTACKS=[
   {text:'MEMORY STRIKE! Use RECALL!',correct:'memory'},
   {text:'COUNTER INCOMING! Press COUNTER!',correct:'react'},
@@ -1298,8 +1029,7 @@ const BOSS_ATTACKS=[
 let bossPhase=0;
 function launchStage8(){
   document.getElementById('instruction-bar').textContent='Defeat the King of Distractions!';
-  gs.bossHP=100; bossPhase=0;
-  nextBossAttack();
+  gs.bossHP=100; bossPhase=0; nextBossAttack();
 }
 function nextBossAttack(){
   if(gs.bossHP<=0){stageComplete();return;}
@@ -1311,21 +1041,14 @@ function nextBossAttack(){
 function bossAction(action){
   const correct=document.getElementById('boss-attack').dataset.correct;
   if(action===correct){
-    gs.bossHP-=25;
-    document.getElementById('boss-hp-fill').style.width=Math.max(0,gs.bossHP)+'%';
-    addScore(300);
-    SFX.bossCritical();
-    spawnParticles(window.innerWidth/2,window.innerHeight/3,'#00d4ff',20);
+    gs.bossHP-=25; document.getElementById('boss-hp-fill').style.width=Math.max(0,gs.bossHP)+'%';
+    addScore(300); SFX.bossCritical(); spawnParticles(window.innerWidth/2,window.innerHeight/3,'#00d4ff',20);
     showFeedback('CRITICAL HIT!','great');
-    if(gs.bossHP<=0){
-      document.getElementById('boss-attack').textContent='YOU WIN! 🏆';
-      setTimeout(stageComplete,1000);
-    } else { setTimeout(nextBossAttack,800); }
+    if(gs.bossHP<=0){ document.getElementById('boss-attack').textContent='YOU WIN! 🏆'; setTimeout(stageComplete,1000); }
+    else setTimeout(nextBossAttack,800);
   } else {
-    SFX.bossBlocked();
-    missAction(); showFeedback('BLOCKED!','miss');
-    gs.focusEnergy-=10; updateHUD();
-    setTimeout(nextBossAttack,600);
+    SFX.bossBlocked(); missAction(); showFeedback('BLOCKED!','miss');
+    gs.focusEnergy-=10; updateHUD(); setTimeout(nextBossAttack,600);
   }
 }
 
@@ -1372,20 +1095,11 @@ function showTitle(){
   document.getElementById('title-rank').textContent=calcRank(parseInt(best));
   showScreen('title-screen');
 }
-function copyShare(){
-  SFX.btnClick();
-  const rank=document.getElementById('sb-rank').textContent;
-  const react=document.getElementById('sb-react').textContent;
-  const acc=document.getElementById('sb-acc').textContent;
-  const combo=document.getElementById('sb-combo').textContent;
-  const score=document.getElementById('res-score').textContent;
-  const text=`🧠 Focus Rank: ${rank}\n⚡ Reaction: ${react}ms | 🎯 Accuracy: ${acc}%\n🔥 Max Combo: ${combo} | Score: ${score}\n"I conquered the Mind Realm in Mr. Mike!"\nPlay at PrimeLab — primespirit.co.in`;
-  navigator.clipboard.writeText(text).then(()=>showFeedback('COPIED!','great')).catch(()=>showFeedback('COPY FAILED','miss'));
-}
 
 // ═══════════════════════════════════════
-// SOCIAL SHARING
+// SHARING — All Platforms
 // ═══════════════════════════════════════
+
 function buildShareText(){
   const rank=document.getElementById('sb-rank').textContent;
   const react=document.getElementById('sb-react').textContent;
@@ -1395,18 +1109,31 @@ function buildShareText(){
   return `🧠 Focus Rank: ${rank}\n⚡ Reaction: ${react}ms  🎯 Accuracy: ${acc}%\n🔥 Max Combo: ${combo}  📊 Score: ${score}\n\n"I conquered the Mind Realm in Mr. Mike: Focus Dimension!"\n\n🎮 Play FREE at PrimeLab:\nprimespirit.co.in\n\n#MrMike #FocusDimension #PrimeLab #BrainTraining #AnimeGame`;
 }
 
-function showToast(msg='✓ COPIED TO CLIPBOARD!'){
+function buildShortShareText(){
+  const rank=document.getElementById('sb-rank').textContent;
+  const score=document.getElementById('res-score').textContent;
+  return `🧠 I got Focus Rank ${rank} with ${score} pts in Mr. Mike: Focus Dimension! Can you beat me? 🎮 Play FREE → primespirit.co.in #MrMike #PrimeLab`;
+}
+
+function showToast(msg='COPIED TO CLIPBOARD!'){
   const t=document.getElementById('share-toast');
-  t.textContent=msg; t.style.display='block';
+  t.textContent=msg; t.style.display='inline-block';
+  t.style.cssText='display:inline-block;margin-top:12px;font-family:Orbitron,sans-serif;font-size:10px;letter-spacing:2px;color:#00ff88;background:rgba(0,255,136,0.08);border:1px solid rgba(0,255,136,0.2);border-radius:20px;padding:8px 18px;animation:toastIn .3s ease';
   clearTimeout(window._toastTimer);
-  window._toastTimer=setTimeout(()=>t.style.display='none',2800);
+  window._toastTimer=setTimeout(()=>{t.style.display='none';},3000);
 }
 
 function shareWhatsApp(){
   SFX.btnClick();
   const text=encodeURIComponent(buildShareText());
-  const url=`https://wa.me/?text=${text}`;
-  window.open(url,'_blank','noopener,noreferrer');
+  window.open(`https://wa.me/?text=${text}`,'_blank','noopener,noreferrer');
+}
+
+function shareFacebook(){
+  SFX.btnClick();
+  const url=encodeURIComponent('https://primespirit.co.in');
+  const quote=encodeURIComponent(buildShortShareText());
+  window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}&quote=${quote}`,'_blank','width=600,height=400,noopener,noreferrer');
 }
 
 function shareTwitter(){
@@ -1415,45 +1142,84 @@ function shareTwitter(){
   const acc=document.getElementById('sb-acc').textContent;
   const react=document.getElementById('sb-react').textContent;
   const score=document.getElementById('res-score').textContent;
-  const tweet=`🧠 Focus Rank: ${rank}  🎯 Accuracy: ${acc}%  ⚡ ${react}ms reaction  📊 ${score} pts\n\n"I conquered the Mind Realm in Mr. Mike: Focus Dimension!"\n\n🎮 Play FREE → primespirit.co.in\n\n#MrMike #PrimeLab #BrainTraining #AnimeGame`;
-  const url=`https://twitter.com/intent/tweet?text=${encodeURIComponent(tweet)}`;
-  window.open(url,'_blank','noopener,noreferrer');
+  const tweet=`🧠 Focus Rank: ${rank} | 🎯 ${acc}% accuracy | ⚡ ${react}ms reaction | 📊 ${score} pts\n\n"I conquered the Mind Realm in Mr. Mike!"\n\n🎮 Play FREE → primespirit.co.in\n\n#MrMike #PrimeLab #BrainTraining`;
+  window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(tweet)}`,'_blank','noopener,noreferrer');
 }
 
 function shareInstagram(){
-  // Instagram has no web share URL — best UX is copy text + prompt
   SFX.btnClick();
-  const text=buildShareText();
-  navigator.clipboard.writeText(text)
-    .then(()=>showToast('✓ COPIED! Paste into your Instagram story/post caption'))
-    .catch(()=>showToast('Open Instagram and paste your score manually!'));
+  navigator.clipboard.writeText(buildShareText())
+    .then(()=>showToast('✓ COPIED! Paste into your Instagram story/post'))
+    .catch(()=>showToast('Copy manually and paste in Instagram'));
+}
+
+function shareTelegram(){
+  SFX.btnClick();
+  const text=encodeURIComponent(buildShareText());
+  const url=encodeURIComponent('https://primespirit.co.in');
+  window.open(`https://t.me/share/url?url=${url}&text=${text}`,'_blank','noopener,noreferrer');
+}
+
+function shareSnapchat(){
+  SFX.btnClick();
+  // Snapchat uses a web intent with URL
+  const text=encodeURIComponent(buildShortShareText());
+  const url=encodeURIComponent('https://primespirit.co.in');
+  // Snapchat's web share is limited — open their web intent
+  window.open(`https://www.snapchat.com/scan?attachmentUrl=${url}`,'_blank','noopener,noreferrer');
+  // Also copy text for easy paste
+  navigator.clipboard.writeText(buildShareText()).then(()=>showToast('✓ Text copied — paste in Snapchat!')).catch(()=>{});
+}
+
+function shareLinkedIn(){
+  SFX.btnClick();
+  const url=encodeURIComponent('https://primespirit.co.in');
+  const title=encodeURIComponent('Mr. Mike: Focus Dimension — My Score');
+  const summary=encodeURIComponent(buildShortShareText());
+  window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${url}`,'_blank','width=600,height=400,noopener,noreferrer');
+  // LinkedIn sharing via URL only; copy text as fallback
+  navigator.clipboard.writeText(buildShareText()).then(()=>showToast('✓ Score copied — paste in your LinkedIn post!')).catch(()=>{});
+}
+
+function shareReddit(){
+  SFX.btnClick();
+  const title=encodeURIComponent(`I got Rank ${document.getElementById('sb-rank').textContent} in Mr. Mike: Focus Dimension! Can you beat my score?`);
+  const url=encodeURIComponent('https://primespirit.co.in');
+  const text=encodeURIComponent(buildShareText());
+  window.open(`https://www.reddit.com/submit?title=${title}&url=${url}&selftext=true`,'_blank','noopener,noreferrer');
 }
 
 function shareNative(){
   SFX.btnClick();
-  const text=buildShareText();
   if(navigator.share){
     navigator.share({
       title:'Mr. Mike: Focus Dimension | PrimeLab',
-      text:text,
+      text:buildShareText(),
       url:'https://primespirit.co.in'
     }).catch(()=>{});
   }
 }
 
+function copyShareLink(){
+  SFX.btnClick();
+  navigator.clipboard.writeText('https://primespirit.co.in')
+    .then(()=>showToast('✓ GAME LINK COPIED!'))
+    .catch(()=>showToast('Copy the link manually'));
+}
+
 function copyShare(){
   SFX.btnClick();
   navigator.clipboard.writeText(buildShareText())
-    .then(()=>showToast('✓ COPIED TO CLIPBOARD!'))
-    .catch(()=>showToast('Select and copy manually!'));
+    .then(()=>showToast('✓ SCORE TEXT COPIED!'))
+    .catch(()=>showToast('Select and copy manually'));
 }
 
-// Show native share button only if Web Share API is supported (mobile browsers)
+// Show native share button only on mobile
 if(navigator.share){
   document.getElementById('native-share-btn').style.display='inline-flex';
 }
 
-// Button sound on title
+// Button hover sound
 document.querySelector('.btn-primary').addEventListener('mouseenter',()=>SFX.hover());
 
 // Init
