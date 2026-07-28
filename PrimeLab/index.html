@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PrimeLab: NeuroVerse | Prime Spirit Mentors</title>
+  <meta name="description" content="PrimeLab: NeuroVerse — A cognitive adventure game by Prime Spirit Mentors. Train your brain with physics puzzles, memory challenges, and strategic thinking. Free to play in your browser.">
+  <meta property="og:title" content="PrimeLab: NeuroVerse">
+  <meta property="og:description" content="Think Faster. Solve Smarter. Create New Rules. A browser-based cognitive game for students and puzzle lovers.">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/neuroverse.css">
+</head>
+<body>
+
+<!-- PARTICLE CANVAS -->
+<canvas id="bgCanvas"></canvas>
+
+<!-- SCREEN: TITLE -->
+<div id="screen-title" class="screen active">
+  <div class="title-bg">
+    <div class="neural-grid"></div>
+  </div>
+  <div class="title-content">
+    <div class="brand-badge">PRIME SPIRIT MENTORS</div>
+    <div class="game-logo">
+      <span class="logo-prime">Prime</span><span class="logo-lab">Lab</span>
+    </div>
+    <div class="game-subtitle">NEURO<span class="accent">VERSE</span></div>
+    <div class="tagline">Think Faster · Solve Smarter · Create New Rules</div>
+    
+    <!-- RIO Mascot -->
+    <div class="rio-container" id="rio">
+      <div class="rio-body">
+        <div class="rio-face">
+          <div class="rio-eye left"><div class="rio-pupil"></div></div>
+          <div class="rio-eye right"><div class="rio-pupil"></div></div>
+          <div class="rio-mouth"></div>
+        </div>
+        <div class="rio-antenna"><div class="rio-orb"></div></div>
+        <div class="rio-hair"></div>
+      </div>
+      <div class="rio-body-lower">
+        <div class="rio-arm left"></div>
+        <div class="rio-arm right"></div>
+      </div>
+      <div class="rio-shadow"></div>
+    </div>
+
+    <div class="title-buttons">
+      <button class="btn-primary" onclick="Game.startGame()">
+        <span class="btn-icon">▶</span> ENTER NEUROVERSE
+      </button>
+      <button class="btn-secondary" onclick="Game.showHowToPlay()">
+        <span class="btn-icon">?</span> HOW TO PLAY
+      </button>
+    </div>
+
+    <div class="stats-bar">
+      <div class="stat-item"><span class="stat-num" id="stat-levels">0</span><span class="stat-label">Levels Cleared</span></div>
+      <div class="stat-item"><span class="stat-num" id="stat-score">0</span><span class="stat-label">Brain Score</span></div>
+      <div class="stat-item"><span class="stat-num" id="stat-streak">0</span><span class="stat-label">Day Streak</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- SCREEN: HOW TO PLAY -->
+<div id="screen-howtoplay" class="screen">
+  <div class="modal-overlay">
+    <div class="modal-box">
+      <h2 class="modal-title">HOW TO PLAY</h2>
+      <div class="htp-grid">
+        <div class="htp-card">
+          <div class="htp-icon">🧠</div>
+          <h3>RULE MANIPULATION</h3>
+          <p>Drag rule tiles to rewrite the laws of physics. Change what is solid, what floats, what destroys.</p>
+        </div>
+        <div class="htp-card">
+          <div class="htp-icon">⚡</div>
+          <h3>PHYSICS PUZZLES</h3>
+          <p>Use gravity, magnetism, and momentum to route energy crystals to the Core.</p>
+        </div>
+        <div class="htp-card">
+          <div class="htp-icon">♟️</div>
+          <h3>STRATEGIC MOVES</h3>
+          <p>Every action costs a move. Plan ahead — the enemy predicts you.</p>
+        </div>
+        <div class="htp-card">
+          <div class="htp-icon">💾</div>
+          <h3>MEMORY MATRIX</h3>
+          <p>Observe hidden patterns, then reproduce them under time pressure.</p>
+        </div>
+      </div>
+      <div class="htp-controls">
+        <div class="ctrl-row"><kbd>DRAG</kbd> Move pieces and rules</div>
+        <div class="ctrl-row"><kbd>CLICK</kbd> Select / Activate</div>
+        <div class="ctrl-row"><kbd>R</kbd> Reset level</div>
+        <div class="ctrl-row"><kbd>H</kbd> Hint (costs XP)</div>
+      </div>
+      <button class="btn-primary" onclick="Game.hideHowToPlay()">GOT IT — LET'S GO!</button>
+    </div>
+  </div>
+</div>
+
+<!-- SCREEN: LEVEL SELECT -->
+<div id="screen-levels" class="screen">
+  <div class="level-header">
+    <button class="btn-back" onclick="Game.showTitle()">← BACK</button>
+    <div class="level-title">
+      <span class="level-chapter">CHAPTER 1</span>
+      <span class="level-chapter-name">Neural Awakening</span>
+    </div>
+    <div class="player-hud">
+      <div class="hud-xp"><span id="hud-xp">0</span> XP</div>
+    </div>
+  </div>
+  <div class="levels-grid" id="levels-grid"></div>
+  <div class="story-banner">
+    <div class="story-text" id="story-text">The NeuroVerse is fracturing. Knowledge crystals are going dark. You are RIO's pilot — guide the repairs, one neuron at a time.</div>
+  </div>
+</div>
+
+<!-- SCREEN: GAME -->
+<div id="screen-game" class="screen">
+  <div class="game-header">
+    <button class="btn-back" onclick="Game.exitToLevels()">← LEVELS</button>
+    <div class="level-info">
+      <span class="level-label">LEVEL</span>
+      <span class="level-num" id="current-level-num">1</span>
+      <span class="level-type-badge" id="level-type-badge">PHYSICS</span>
+    </div>
+    <div class="game-stats">
+      <div class="g-stat" id="moves-display">
+        <span class="g-stat-icon">♟</span>
+        <span id="moves-left">∞</span>
+      </div>
+      <div class="g-stat" id="time-display">
+        <span class="g-stat-icon">⏱</span>
+        <span id="time-left">--</span>
+      </div>
+      <div class="g-stat">
+        <span class="g-stat-icon">💎</span>
+        <span id="crystals-display">0/0</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="game-area">
+    <!-- Rule Panel (for rule levels) -->
+    <div class="rules-panel" id="rules-panel">
+      <div class="rules-title">ACTIVE RULES</div>
+      <div class="rules-list" id="rules-list"></div>
+      <div class="rules-available" id="rules-available"></div>
+    </div>
+
+    <!-- Main Game Canvas -->
+    <div class="game-canvas-wrapper">
+      <canvas id="gameCanvas"></canvas>
+      <div class="game-overlay" id="game-overlay"></div>
+    </div>
+
+    <!-- Info Panel -->
+    <div class="info-panel" id="info-panel">
+      <div class="rio-mini" id="rio-mini">
+        <div class="rio-mini-face">
+          <div class="rio-mini-eyes"></div>
+          <div class="rio-mini-mouth" id="rio-expression">😮</div>
+        </div>
+      </div>
+      <div class="rio-speech" id="rio-speech">Let's repair this neuron!</div>
+      <div class="hint-btn-wrap">
+        <button class="btn-hint" onclick="Game.useHint()" id="hint-btn">💡 HINT <span class="hint-cost">(-50 XP)</span></button>
+      </div>
+      <div class="level-objectives" id="level-objectives"></div>
+    </div>
+  </div>
+</div>
+
+<!-- SCREEN: LEVEL COMPLETE -->
+<div id="screen-complete" class="screen">
+  <div class="complete-burst"></div>
+  <div class="complete-content">
+    <div class="complete-rio victory-dance" id="complete-rio">🤖</div>
+    <div class="complete-title">NEURON REPAIRED!</div>
+    <div class="complete-subtitle" id="complete-subtitle">Level 1 Complete</div>
+    <div class="score-breakdown" id="score-breakdown"></div>
+    <div class="stars-display" id="stars-display"></div>
+    <div class="analytics-snapshot" id="analytics-snapshot"></div>
+    <div class="complete-buttons">
+      <button class="btn-secondary" onclick="Game.replayLevel()">↺ REPLAY</button>
+      <button class="btn-primary" onclick="Game.nextLevel()">NEXT LEVEL →</button>
+    </div>
+    <div class="share-section">
+      <div class="share-label">Share your victory</div>
+      <div class="share-buttons">
+        <button class="share-btn whatsapp" onclick="Game.share('whatsapp')">WhatsApp</button>
+        <button class="share-btn twitter" onclick="Game.share('twitter')">X / Twitter</button>
+        <button class="share-btn copy" onclick="Game.share('copy')">Copy Link</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SCREEN: ANALYTICS -->
+<div id="screen-analytics" class="screen" style="display:none"></div>
+
+<script src="js/neuroverse.js"></script>
+</body>
+</html>
