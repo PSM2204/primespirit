@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<title>Mystigative — A PrimeLab Detective Experience | Prime Spirit Mentors</title>
+<meta name="description" content="Mystigative is an anime-style detective investigation game by Prime Spirit Mentors. Solve original mystery cases, examine evidence, question suspects and sharpen your logical reasoning — part of the PrimeLab educational game collection.">
+<meta name="keywords" content="Mystigative, PrimeLab, Prime Spirit Mentors, detective game, mystery game, logical reasoning game, educational game, brain training">
+<link rel="canonical" href="https://primespirit.co.in/primelab/mystigative.html">
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#12132b">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="Mystigative — A PrimeLab Detective Experience">
+<meta property="og:description" content="An anime-inspired detective investigation game. Examine clues, interrogate suspects, and crack the case. A PrimeLab experience by Prime Spirit Mentors.">
+<meta property="og:url" content="https://primespirit.co.in/primelab/mystigative.html">
+<meta property="og:site_name" content="PrimeLab by Prime Spirit Mentors">
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Mystigative — A PrimeLab Detective Experience">
+<meta name="twitter:description" content="Solve original mystery cases and train your logical reasoning. A PrimeLab game by Prime Spirit Mentors.">
+
+<!-- JSON-LD Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "VideoGame",
+  "name": "Mystigative",
+  "description": "An anime-inspired detective investigation game featuring original mystery cases, part of the PrimeLab educational game collection by Prime Spirit Mentors.",
+  "genre": ["Puzzle", "Detective", "Educational"],
+  "applicationCategory": "Game",
+  "operatingSystem": "Any (Web Browser)",
+  "publisher": {
+    "@type": "Organization",
+    "name": "Prime Spirit Mentors",
+    "url": "https://primespirit.co.in"
+  },
+  "isPartOf": {
+    "@type": "CreativeWorkSeries",
+    "name": "PrimeLab",
+    "url": "https://primespirit.co.in/primelab.html"
+  }
+}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700;800&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --bg-deep:#0a0a18;
+  --bg-mid:#12132b;
+  --bg-panel:#181a38;
+  --ink:#eef0fa;
+  --ink-dim:#a9a8c9;
+  --violet:#7d6bb0;
+  --cyan:#5fd9e8;
+  --cyan-dim:#5fd9e84d;
+  --amber:#f2a641;
+  --red-string:#e8546a;
+  --success:#6fd88a;
+  --danger:#e8546a;
+  --radius:10px;
+  --serif:'Shippori Mincho', serif;
+  --sans:'Zen Kaku Gothic New', sans-serif;
+}
+*{box-sizing:border-box; margin:0; padding:0;}
+html{scroll-behavior:smooth;}
+body{
+  background:
+    radial-gradient(ellipse 900px 500px at 15% -10%, #2a2360 0%, transparent 60%),
+    radial-gradient(ellipse 700px 500px at 100% 20%, #0e2f38 0%, transparent 55%),
+    var(--bg-deep);
+  color:var(--ink);
+  font-family:var(--sans);
+  min-height:100vh;
+  overflow-x:hidden;
+}
+@media (prefers-reduced-motion: reduce){
+  *{animation-duration:0.01ms !important; transition-duration:0.01ms !important;}
+}
+button{font-family:inherit; cursor:pointer;}
+a{color:inherit;}
+:focus-visible{outline:2px solid var(--cyan); outline-offset:3px;}
+
+.screen{ display:none; min-height:100vh; flex-direction:column; }
+.screen.active{ display:flex; }
+.fade-out{ animation:fadeOut .4s ease forwards; }
+@keyframes fadeOut{ to{opacity:0; transform:translateY(-8px);} }
+.fade-in{ animation:fadeIn .5s ease; }
+@keyframes fadeIn{ from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:translateY(0);} }
+
+/* ===== Shared top bar ===== */
+.topbar{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:16px 24px; border-bottom:1px solid #2a2c55;
+  background:rgba(10,10,24,0.6); backdrop-filter:blur(6px);
+  position:sticky; top:0; z-index:50;
+}
+.brandmark{ display:flex; align-items:center; gap:10px; font-family:var(--serif); font-weight:700; letter-spacing:.03em; }
+.brandmark .glyph{
+  width:30px;height:30px; border:2px solid var(--cyan); border-radius:50%;
+  display:flex; align-items:center; justify-content:center; font-size:14px; color:var(--cyan);
+  box-shadow:0 0 12px var(--cyan-dim);
+}
+.primelab-btn{
+  display:flex; align-items:center; gap:8px;
+  background:transparent; border:1px solid var(--amber); color:var(--amber);
+  padding:8px 16px; border-radius:999px; font-size:13px; font-weight:700;
+  letter-spacing:.02em; transition:all .25s ease; text-decoration:none;
+}
+.primelab-btn:hover{ background:var(--amber); color:#1a1305; box-shadow:0 0 18px #f2a64188; transform:translateY(-1px); }
+.primelab-btn .ico{ font-size:14px; }
+
+/* ===== Landing ===== */
+.landing{ flex:1; display:flex; align-items:center; justify-content:center; padding:60px 24px; text-align:center; position:relative; }
+.landing::before{
+  content:""; position:absolute; inset:0; pointer-events:none;
+  background-image:radial-gradient(circle, #ffffff10 1px, transparent 1px);
+  background-size:26px 26px; opacity:.25;
+}
+.landing-inner{ max-width:640px; position:relative; z-index:1; }
+.eyebrow{ color:var(--amber); letter-spacing:.28em; font-size:12px; text-transform:uppercase; font-weight:700; }
+.title-logo{ font-family:var(--serif); font-size:clamp(44px,9vw,84px); font-weight:800; margin:14px 0 8px; line-height:1; }
+.title-logo .accent{ color:var(--cyan); text-shadow:0 0 30px var(--cyan-dim); }
+.tagline{ color:var(--ink-dim); font-size:16px; max-width:480px; margin:0 auto 34px; line-height:1.6; }
+.cta-row{ display:flex; gap:14px; justify-content:center; flex-wrap:wrap; }
+.btn{
+  border:none; border-radius:8px; padding:14px 30px; font-size:15px; font-weight:700;
+  letter-spacing:.02em; transition:transform .2s ease, box-shadow .2s ease;
+}
+.btn-primary{ background:linear-gradient(135deg, var(--cyan), #3ab8c9); color:#04262b; box-shadow:0 8px 24px #5fd9e833;}
+.btn-primary:hover{ transform:translateY(-2px); box-shadow:0 10px 30px #5fd9e855; }
+.btn-ghost{ background:transparent; border:1px solid #3d3f6e; color:var(--ink); }
+.btn-ghost:hover{ border-color:var(--cyan); color:var(--cyan); }
+
+/* ===== Menu / case select ===== */
+.menu-wrap{ flex:1; padding:40px 24px 100px; max-width:1000px; margin:0 auto; width:100%; }
+.section-heading{ font-family:var(--serif); font-size:28px; margin-bottom:6px; }
+.section-sub{ color:var(--ink-dim); font-size:14px; margin-bottom:28px; }
+.case-grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(240px,1fr)); gap:18px; }
+.case-card{
+  background:var(--bg-panel); border:1px solid #2a2c55; border-radius:var(--radius);
+  padding:20px; text-align:left; position:relative; overflow:hidden; transition:all .25s ease; color:var(--ink);
+}
+.case-card:hover:not(.locked){ border-color:var(--cyan); transform:translateY(-3px); box-shadow:0 12px 28px #00000055; }
+.case-card.locked{ opacity:.45; cursor:not-allowed; }
+.case-card.solved{ border-color:var(--success); }
+.case-num{ font-family:var(--serif); color:var(--amber); font-size:12px; letter-spacing:.15em; }
+.case-title{ font-family:var(--serif); font-size:19px; margin:6px 0 8px; font-weight:700; }
+.case-desc{ font-size:13px; color:var(--ink-dim); line-height:1.5; }
+.case-status{ margin-top:14px; font-size:12px; font-weight:700; }
+.case-status.solved{ color:var(--success); }
+.case-status.new{ color:var(--cyan); }
+.case-status.locked{ color:var(--ink-dim); }
+
+/* ===== Investigation ===== */
+.invest-wrap{ flex:1; display:grid; grid-template-columns:1.3fr 1fr; gap:0; min-height:0; }
+@media (max-width:860px){ .invest-wrap{ grid-template-columns:1fr; } }
+.board-pane{ padding:26px; border-right:1px solid #2a2c55; overflow-y:auto; }
+.case-brief{ background:var(--bg-panel); border:1px solid #2a2c55; border-radius:var(--radius); padding:18px 20px; margin-bottom:22px; }
+.case-brief h2{ font-family:var(--serif); font-size:20px; margin-bottom:6px; }
+.case-brief p{ font-size:13.5px; color:var(--ink-dim); line-height:1.6; }
+.clue-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:14px; }
+.clue-card{
+  background:var(--bg-panel); border:1px solid #2a2c55; border-radius:8px;
+  padding:14px; cursor:pointer; transition:all .2s ease; position:relative; min-height:90px;
+}
+.clue-card:hover{ border-color:var(--amber); }
+.clue-card.pinned{ border-color:var(--cyan); box-shadow:0 0 0 1px var(--cyan) inset; }
+.clue-icon{ font-size:20px; }
+.clue-label{ font-size:12.5px; font-weight:700; margin-top:8px; }
+.clue-pin{ position:absolute; top:8px; right:8px; width:8px; height:8px; border-radius:50%; background:var(--red-string); display:none; }
+.clue-card.pinned .clue-pin{ display:block; }
+
+.suspects-pane{ padding:26px; overflow-y:auto; }
+.suspects-pane h3{ font-family:var(--serif); font-size:18px; margin-bottom:14px; }
+.suspect-card{
+  display:flex; gap:12px; align-items:flex-start; background:var(--bg-panel);
+  border:1px solid #2a2c55; border-radius:8px; padding:14px; margin-bottom:12px; cursor:pointer; transition:all .2s ease;
+}
+.suspect-card:hover{ border-color:var(--cyan); }
+.suspect-card.selected{ border-color:var(--amber); box-shadow:0 0 0 1px var(--amber) inset; }
+.suspect-avatar{
+  width:42px; height:42px; border-radius:50%; flex-shrink:0;
+  background:linear-gradient(135deg,#3d3f6e,#1c1d3d); display:flex; align-items:center; justify-content:center;
+  font-family:var(--serif); font-weight:700; color:var(--cyan); font-size:16px;
+}
+.suspect-name{ font-weight:700; font-size:14px; }
+.suspect-alibi{ font-size:12px; color:var(--ink-dim); margin-top:3px; line-height:1.5; }
+.accuse-btn{
+  margin-top:18px; width:100%; background:var(--amber); color:#1a1305; border:none;
+  padding:13px; border-radius:8px; font-weight:800; font-size:14px; letter-spacing:.02em;
+}
+.accuse-btn:disabled{ opacity:.35; cursor:not-allowed; }
+
+.clue-detail{ position:fixed; inset:0; background:#05050f9e; display:none; align-items:center; justify-content:center; z-index:100; padding:20px; }
+.clue-detail.active{ display:flex; }
+.clue-detail-card{
+  background:var(--bg-panel); border:1px solid var(--cyan); border-radius:var(--radius);
+  max-width:440px; width:100%; padding:26px; position:relative;
+}
+.clue-detail-card h4{ font-family:var(--serif); font-size:18px; margin-bottom:10px; color:var(--cyan); }
+.clue-detail-card p{ font-size:14px; line-height:1.6; color:var(--ink); }
+.close-x{ position:absolute; top:14px; right:16px; background:none; border:none; color:var(--ink-dim); font-size:18px; }
+
+/* ===== Result / completion ===== */
+.result-wrap{ flex:1; display:flex; align-items:center; justify-content:center; padding:40px 24px; text-align:center; }
+.result-card{ max-width:520px; }
+.result-icon{ font-size:52px; margin-bottom:12px; }
+.result-title{ font-family:var(--serif); font-size:32px; margin-bottom:10px; }
+.result-text{ color:var(--ink-dim); font-size:14.5px; line-height:1.7; margin-bottom:28px; }
+.result-row{ display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
+
+/* ===== Pause menu ===== */
+.pause-overlay{ position:fixed; inset:0; background:#05050fc0; display:none; align-items:center; justify-content:center; z-index:200; }
+.pause-overlay.active{ display:flex; }
+.pause-box{ background:var(--bg-panel); border:1px solid #2a2c55; border-radius:var(--radius); padding:30px; width:280px; }
+.pause-box h3{ font-family:var(--serif); margin-bottom:16px; }
+.pause-item{ display:block; width:100%; text-align:left; background:none; border:none; color:var(--ink); padding:11px 6px; font-size:14px; border-bottom:1px solid #22244a; }
+.pause-item:hover{ color:var(--cyan); }
+.pause-item:last-child{ border-bottom:none; color:var(--danger); }
+
+/* ===== Footer ===== */
+.site-footer{ border-top:1px solid #2a2c55; padding:26px 24px; text-align:center; font-size:12.5px; color:var(--ink-dim); }
+.site-footer .footer-title{ font-family:var(--serif); color:var(--ink); margin-bottom:4px; font-size:14px; }
+.site-footer a.pl-link{ color:var(--amber); font-weight:700; text-decoration:none; border-bottom:1px dotted var(--amber); transition:opacity .2s; }
+.site-footer a.pl-link:hover{ opacity:.75; }
+
+/* progress bar top */
+.progress-track{ height:3px; background:#22244a; }
+.progress-fill{ height:100%; background:linear-gradient(90deg,var(--cyan),var(--amber)); transition:width .4s ease; width:0%; }
+
+.icon-btn{ background:none; border:1px solid #3d3f6e; color:var(--ink-dim); width:36px; height:36px; border-radius:8px; font-size:15px; }
+.icon-btn:hover{ border-color:var(--cyan); color:var(--cyan); }
+.hud{ display:flex; align-items:center; gap:10px; }
+</style>
+</head>
+<body>
+
+<!-- ============ LANDING ============ -->
+<section class="screen active" id="screen-landing">
+  <div class="topbar">
+    <div class="brandmark"><span class="glyph">◎</span> MYSTIGATIVE</div>
+    <a class="primelab-btn back-primelab" href="https://primespirit.co.in/primelab.html">
+      <span class="ico">🧭</span> Back to PrimeLab
+    </a>
+  </div>
+  <div class="landing">
+    <div class="landing-inner">
+      <div class="eyebrow">A PrimeLab Experience</div>
+      <h1 class="title-logo">MYSTI<span class="accent">GATIVE</span></h1>
+      <p class="tagline">Step into the role of a detective. Examine evidence, question suspects, and follow the logic to its only true conclusion. Every case is solvable — if you look closely enough.</p>
+      <div class="cta-row">
+        <button class="btn btn-primary" onclick="goTo('screen-menu')">🔍 Begin Investigation</button>
+        <button class="btn btn-ghost" onclick="goTo('screen-help')">How to Play</button>
+      </div>
+    </div>
+  </div>
+  <footer class="site-footer">
+    <div class="footer-title">Mystigative — A <a class="pl-link" href="https://primespirit.co.in/primelab.html">PrimeLab</a> Experience</div>
+    <div>Developed by Prime Spirit Mentors · <a class="pl-link" href="https://primespirit.co.in/primelab.html">Explore more educational games on PrimeLab</a></div>
+  </footer>
+</section>
+
+<!-- ============ HELP ============ -->
+<section class="screen" id="screen-help">
+  <div class="topbar">
+    <div class="brandmark"><span class="glyph">◎</span> MYSTIGATIVE</div>
+    <a class="primelab-btn back-primelab" href="https://primespirit.co.in/primelab.html"><span class="ico">🧭</span> Back to PrimeLab</a>
+  </div>
+  <div class="menu-wrap">
+    <h2 class="section-heading">How to Play</h2>
+    <p class="section-sub">Master these steps to become a top investigator.</p>
+    <div class="case-brief"><h2>1. Read the Brief</h2><p>Every case opens with a short brief describing the incident. Read it carefully — the wording often matters.</p></div>
+    <div class="case-brief"><h2>2. Examine the Clues</h2><p>Click each evidence card to reveal what it tells you. Pin the clues that seem relevant.</p></div>
+    <div class="case-brief"><h2>3. Question the Suspects</h2><p>Compare each suspect's alibi against the evidence you've gathered.</p></div>
+    <div class="case-brief"><h2>4. Make Your Accusation</h2><p>Select the suspect whose story doesn't hold up, and submit your accusation. Choose wisely — you only get one shot per case.</p></div>
+    <button class="btn btn-primary" style="margin-top:10px" onclick="goTo('screen-menu')">Start Investigating</button>
+  </div>
+  <footer class="site-footer">
+    <div class="footer-title">Mystigative — A <a class="pl-link" href="https://primespirit.co.in/primelab.html">PrimeLab</a> Experience</div>
+  </footer>
+</section>
+
+<!-- ============ CASE SELECT MENU ============ -->
+<section class="screen" id="screen-menu">
+  <div class="topbar">
+    <div class="brandmark"><span class="glyph">◎</span> MYSTIGATIVE</div>
+    <div class="hud">
+      <span id="menu-score-badge" style="font-size:13px;color:var(--ink-dim)"></span>
+      <a class="primelab-btn back-primelab" href="https://primespirit.co.in/primelab.html"><span class="ico">🧭</span> Back to PrimeLab</a>
+    </div>
+  </div>
+  <div class="menu-wrap">
+    <h2 class="section-heading">Case Files</h2>
+    <p class="section-sub">Select an investigation to begin. Solve a case to unlock the next.</p>
+    <div class="case-grid" id="case-grid"></div>
+  </div>
+  <footer class="site-footer">
+    <div class="footer-title">Mystigative — A <a class="pl-link" href="https://primespirit.co.in/primelab.html">PrimeLab</a> Experience</div>
+    <div>Developed by Prime Spirit Mentors · <a class="pl-link" href="https://primespirit.co.in/primelab.html">Discover more learning games</a></div>
+  </footer>
+</section>
+
+<!-- ============ INVESTIGATION ============ -->
+<section class="screen" id="screen-investigate">
+  <div class="topbar">
+    <div class="brandmark"><span class="glyph">◎</span> MYSTIGATIVE</div>
+    <div class="hud">
+      <button class="icon-btn" onclick="openPause()" title="Pause" aria-label="Pause menu">⏸</button>
+    </div>
+  </div>
+  <div class="progress-track"><div class="progress-fill" id="case-progress"></div></div>
+  <div class="invest-wrap">
+    <div class="board-pane">
+      <div class="case-brief">
+        <h2 id="ci-title">Case Title</h2>
+        <p id="ci-brief">Case brief text.</p>
+      </div>
+      <div class="clue-grid" id="clue-grid"></div>
+    </div>
+    <div class="suspects-pane">
+      <h3>Suspects</h3>
+      <div id="suspect-list"></div>
+      <button class="accuse-btn" id="accuse-btn" disabled onclick="submitAccusation()">Submit Accusation</button>
+    </div>
+  </div>
+</section>
+
+<!-- clue detail modal -->
+<div class="clue-detail" id="clue-modal">
+  <div class="clue-detail-card">
+    <button class="close-x" onclick="closeClue()">✕</button>
+    <h4 id="cd-title">Clue</h4>
+    <p id="cd-text">Detail</p>
+  </div>
+</div>
+
+<!-- pause overlay -->
+<div class="pause-overlay" id="pause-overlay">
+  <div class="pause-box">
+    <h3>Paused</h3>
+    <button class="pause-item" onclick="closePause()">Continue Investigation</button>
+    <button class="pause-item" onclick="restartCase()">Restart Level</button>
+    <button class="pause-item" onclick="closePause();goTo('screen-help')">Settings / Help</button>
+    <button class="pause-item" onclick="shareProgress()">Share Progress</button>
+    <button class="pause-item" onclick="location.href='https://primespirit.co.in/primelab.html'">Return to PrimeLab</button>
+    <button class="pause-item" onclick="closePause();goTo('screen-menu')">Quit to Case Files</button>
+  </div>
+</div>
+
+<!-- ============ RESULT ============ -->
+<section class="screen" id="screen-result">
+  <div class="topbar">
+    <div class="brandmark"><span class="glyph">◎</span> MYSTIGATIVE</div>
+    <a class="primelab-btn back-primelab" href="https://primespirit.co.in/primelab.html"><span class="ico">🧭</span> Back to PrimeLab</a>
+  </div>
+  <div class="result-wrap">
+    <div class="result-card">
+      <div class="result-icon" id="res-icon">🏆</div>
+      <h2 class="result-title" id="res-title">Case Closed</h2>
+      <p class="result-text" id="res-text">Result text goes here.</p>
+      <div class="result-row" id="res-actions"></div>
+    </div>
+  </div>
+  <footer class="site-footer">
+    <div class="footer-title">Mystigative — A <a class="pl-link" href="https://primespirit.co.in/primelab.html">PrimeLab</a> Experience</div>
+  </footer>
+</section>
+
+<!-- ============ FINAL COMPLETION ============ -->
+<section class="screen" id="screen-final">
+  <div class="topbar">
+    <div class="brandmark"><span class="glyph">◎</span> MYSTIGATIVE</div>
+  </div>
+  <div class="result-wrap">
+    <div class="result-card">
+      <div class="result-icon">🏆</div>
+      <h2 class="result-title">Congratulations, Detective!</h2>
+      <p class="result-text">You have solved every mystery in Mystigative and achieved the title of <strong>Master Investigator</strong>.</p>
+      <div class="result-row">
+        <button class="btn btn-primary" onclick="resetAll();goTo('screen-menu')">🔄 Play Again</button>
+        <button class="btn btn-ghost" onclick="location.href='https://primespirit.co.in/primelab.html'">🧪 Explore More PrimeLab Games</button>
+        <button class="btn btn-ghost" onclick="shareProgress()">📤 Share Achievement</button>
+      </div>
+    </div>
+  </div>
+  <footer class="site-footer">
+    <div class="footer-title">Mystigative — A <a class="pl-link" href="https://primespirit.co.in/primelab.html">PrimeLab</a> Experience</div>
+    <div>Developed by Prime Spirit Mentors · Educational Gaming Initiative</div>
+  </footer>
+</section>
+
+<script>
+/* ============================================================
+   MYSTIGATIVE — core game logic
+   Extensible case format: add new objects to CASES[] to grow
+   the collection toward the full 20-case roster.
+   ============================================================ */
+
+const CASES = [
+  {
+    id:"c1",
+    title:"The Silent Recital",
+    brief:"Renowned pianist Elena Voss collapsed on stage moments after finishing her recital at the Aurelian Hall. Her private water bottle, kept backstage, is missing its cap. Three people had backstage access that evening.",
+    clues:[
+      {icon:"💧", label:"Water Bottle", text:"Elena's water bottle was found open with a faint bitter almond smell — consistent with a fast-acting sedative, not a poison meant to kill."},
+      {icon:"🎫", label:"Backstage Log", text:"The sign-in sheet shows the stage manager left backstage at 7:40pm, ten minutes before curtain, and didn't return until after the show."},
+      {icon:"🕰️", label:"Timeline", text:"Elena drank from the bottle at 7:50pm during her final warm-up, just before going on stage."},
+      {icon:"👜", label:"Assistant's Bag", text:"A small vial matching a common sedative was found in the assistant's bag, but she claims it's for her own migraines."},
+      {icon:"🗣️", label:"Rival's Statement", text:"The rival pianist, who lost the audition to Elena last month, was seen near the dressing rooms at 7:45pm by a stagehand."}
+    ],
+    suspects:[
+      {name:"Stage Manager", alibi:"Claims he was outside on a phone call from 7:40–8:10pm.", guilty:false},
+      {name:"Personal Assistant", alibi:"Says she never left Elena's side, but the sedative vial in her bag matches the substance found.", guilty:false},
+      {name:"Rival Pianist", alibi:"Denies going backstage at all — but was placed there at 7:45pm, right before Elena drank from the bottle.", guilty:true}
+    ],
+    solution:2,
+    explain:"The rival pianist lied about not going backstage. She was seen at 7:45pm — five minutes before Elena drank the sedative-laced water — giving her both motive (the lost audition) and opportunity that no one else had."
+  },
+  {
+    id:"c2",
+    title:"The Vanishing Ledger",
+    brief:"The head accountant of Kestrel Trading discovers the company's master ledger has disappeared from a locked office overnight. Only three employees have keys.",
+    clues:[
+      {icon:"🔑", label:"Key Access", text:"The office lock records show only one badge was used to enter after 9pm — but the log shows it was scanned twice, 40 seconds apart."},
+      {icon:"📷", label:"CCTV Gap", text:"The hallway camera outside the office was mysteriously offline between 9:05pm and 9:12pm — the exact window of the badge scans."},
+      {icon:"💰", label:"Motive Clue", text:"An internal audit due next week would have revealed a shortfall of ₹4.2 lakh in the junior accountant's client accounts."},
+      {icon:"🧾", label:"Handwriting", text:"A torn corner of ledger paper found in a nearby bin shows handwriting matching the junior accountant's distinctive '7'."},
+      {icon:"🖥️", label:"Login Record", text:"The office manager's login was used to disable the CCTV feed remotely — but she was on a video call, visibly on-screen, when it happened."}
+    ],
+    suspects:[
+      {name:"Office Manager", alibi:"Her login disabled the CCTV, but she was visibly on a video call elsewhere at that exact time.", guilty:false},
+      {name:"Junior Accountant", alibi:"Claims to have gone home at 6pm, but a torn ledger scrap with his handwriting was found near the office bin.", guilty:true},
+      {name:"Senior Partner", alibi:"Was traveling out of town and returned only the next morning, confirmed by hotel check-in records.", guilty:false}
+    ],
+    solution:1,
+    explain:"The junior accountant had the clearest motive — the audit would have exposed his shortfall — and physical evidence (the torn ledger scrap in his handwriting) placed the missing pages in his hands, not the office manager's, whose login was used remotely while she had a solid alibi."
+  },
+  {
+    id:"c3",
+    title:"Frost on the Greenhouse",
+    brief:"A rare orchid worth a small fortune was found destroyed by frost inside a climate-controlled greenhouse that should never drop below 18°C. The greenhouse's temperature log shows a sudden 40-minute cold snap at 2am.",
+    clues:[
+      {icon:"🌡️", label:"Thermostat Log", text:"The thermostat was manually overridden to 2°C at 1:55am and reset to normal at 2:35am — a deliberate act, not a malfunction."},
+      {icon:"🧤", label:"Glove Fibers", text:"Wool fibers matching a gardener's winter glove were found snagged on the thermostat control panel."},
+      {icon:"📵", label:"Alarm Silence", text:"The greenhouse's cold-alert alarm was disabled from the same control panel minutes before the override."},
+      {icon:"💼", label:"Insurance Angle", text:"The orchid's owner had recently increased its insurance valuation and was in serious debt."},
+      {icon:"🚶", label:"Footprint", text:"A single set of muddy footprints, matching the head gardener's boots, led from the potting shed to the panel and back."}
+    ],
+    suspects:[
+      {name:"The Orchid's Owner", alibi:"Had a financial motive via the insurance payout, but was confirmed at a dinner event 40 minutes away all night.", guilty:false},
+      {name:"Head Gardener", alibi:"Denies entering the greenhouse after dark, but glove fibers and matching footprints place him at the control panel.", guilty:true},
+      {name:"Greenhouse Technician", alibi:"Was on-site fixing an unrelated pump issue, logged and witnessed by two night-shift staff.", guilty:false}
+    ],
+    solution:1,
+    explain:"Despite the owner having a financial motive, his alibi was solid. The head gardener's glove fibers and footprints directly place him at the exact panel used to override the thermostat and silence the alarm."
+  }
+];
+
+let progress = JSON.parse(localStorageSafeGet());
+function localStorageSafeGet(){
+  // In-memory only (no browser storage) — resets each session.
+  return JSON.stringify({ solved:[], score:0, currentCaseIdx:0, pinned:[], selectedSuspect:null });
+}
+let state = { solved:new Set(), score:0 };
+
+let activeCaseIndex = null;
+let pinnedClues = new Set();
+let selectedSuspectIdx = null;
+
+function goTo(id, animate=true){
+  const current = document.querySelector('.screen.active');
+  const next = document.getElementById(id);
+  if(current === next) return;
+  if(current && animate){
+    current.classList.add('fade-out');
+    setTimeout(()=>{
+      current.classList.remove('active','fade-out');
+      next.classList.add('active','fade-in');
+    },380);
+  } else {
+    if(current) current.classList.remove('active');
+    next.classList.add('active','fade-in');
+  }
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function renderMenu(){
+  const grid = document.getElementById('case-grid');
+  grid.innerHTML = '';
+  CASES.forEach((c,i)=>{
+    const locked = i > 0 && !state.solved.has(CASES[i-1].id);
+    const solved = state.solved.has(c.id);
+    const card = document.createElement('button');
+    card.className = 'case-card' + (locked?' locked':'') + (solved?' solved':'');
+    card.disabled = locked;
+    card.innerHTML = `
+      <div class="case-num">CASE ${String(i+1).padStart(2,'0')}</div>
+      <div class="case-title">${locked? '???' : c.title}</div>
+      <div class="case-desc">${locked? 'Solve the previous case to unlock this file.' : c.brief.slice(0,90)+'…'}</div>
+      <div class="case-status ${solved?'solved':locked?'locked':'new'}">${solved?'✔ Solved':locked?'🔒 Locked':'● New Case'}</div>`;
+    if(!locked) card.onclick = ()=> startCase(i);
+    grid.appendChild(card);
+  });
+  document.getElementById('menu-score-badge').textContent = `Cases solved: ${state.solved.size}/${CASES.length}`;
+}
+
+function startCase(i){
+  activeCaseIndex = i;
+  pinnedClues = new Set();
+  selectedSuspectIdx = null;
+  const c = CASES[i];
+  document.getElementById('ci-title').textContent = c.title;
+  document.getElementById('ci-brief').textContent = c.brief;
+  document.getElementById('case-progress').style.width = `${Math.round((i)/CASES.length*100)}%`;
+
+  const clueGrid = document.getElementById('clue-grid');
+  clueGrid.innerHTML = '';
+  c.clues.forEach((cl,idx)=>{
+    const el = document.createElement('button');
+    el.className = 'clue-card';
+    el.innerHTML = `<span class="clue-pin"></span><div class="clue-icon">${cl.icon}</div><div class="clue-label">${cl.label}</div>`;
+    el.onclick = ()=> viewClue(idx, el);
+    clueGrid.appendChild(el);
+  });
+
+  const suspectList = document.getElementById('suspect-list');
+  suspectList.innerHTML = '';
+  c.suspects.forEach((s,idx)=>{
+    const el = document.createElement('div');
+    el.className = 'suspect-card';
+    el.tabIndex = 0;
+    el.innerHTML = `<div class="suspect-avatar">${s.name.charAt(0)}</div>
+      <div><div class="suspect-name">${s.name}</div><div class="suspect-alibi">${s.alibi}</div></div>`;
+    el.onclick = ()=> selectSuspect(idx, el);
+    suspectList.appendChild(el);
+  });
+  document.getElementById('accuse-btn').disabled = true;
+  goTo('screen-investigate');
+}
+
+function viewClue(idx, el){
+  const c = CASES[activeCaseIndex];
+  const cl = c.clues[idx];
+  document.getElementById('cd-title').textContent = cl.label;
+  document.getElementById('cd-text').textContent = cl.text;
+  document.getElementById('clue-modal').classList.add('active');
+  pinnedClues.add(idx);
+  el.classList.add('pinned');
+}
+function closeClue(){ document.getElementById('clue-modal').classList.remove('active'); }
+
+function selectSuspect(idx, el){
+  document.querySelectorAll('.suspect-card').forEach(c=>c.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedSuspectIdx = idx;
+  document.getElementById('accuse-btn').disabled = false;
+}
+
+function submitAccusation(){
+  const c = CASES[activeCaseIndex];
+  const correct = selectedSuspectIdx === c.solution;
+  const iconEl = document.getElementById('res-icon');
+  const titleEl = document.getElementById('res-title');
+  const textEl = document.getElementById('res-text');
+  const actions = document.getElementById('res-actions');
+  actions.innerHTML = '';
+
+  if(correct){
+    state.solved.add(c.id);
+    state.score += Math.max(10, 30 - pinnedClues.size*2);
+    iconEl.textContent = '🏆';
+    titleEl.textContent = 'Case Closed!';
+    textEl.textContent = `Correct — ${c.suspects[c.solution].name} was the culprit. ${c.explain}`;
+    const hasNext = activeCaseIndex < CASES.length - 1;
+    if(hasNext){
+      const btn = document.createElement('button');
+      btn.className='btn btn-primary'; btn.textContent='Next Case →';
+      btn.onclick = ()=> startCase(activeCaseIndex+1);
+      actions.appendChild(btn);
+    }
+  } else {
+    iconEl.textContent = '❌';
+    titleEl.textContent = 'Wrong Suspect';
+    textEl.textContent = `${c.suspects[selectedSuspectIdx].name} wasn't responsible. Review the evidence again — the real culprit left a clear trail.`;
+    const retry = document.createElement('button');
+    retry.className='btn btn-primary'; retry.textContent='Try Again';
+    retry.onclick = ()=> startCase(activeCaseIndex);
+    actions.appendChild(retry);
+  }
+  const menuBtn = document.createElement('button');
+  menuBtn.className='btn btn-ghost'; menuBtn.textContent='Case Files';
+  menuBtn.onclick = ()=>{ renderMenu(); goTo('screen-menu'); };
+  actions.appendChild(menuBtn);
+
+  const plBtn = document.createElement('a');
+  plBtn.className='primelab-btn'; plBtn.href='https://primespirit.co.in/primelab.html';
+  plBtn.innerHTML = '🧪 Explore More PrimeLab Games';
+  actions.appendChild(plBtn);
+
+  goTo('screen-result');
+
+  if(correct && state.solved.size === CASES.length){
+    setTimeout(()=> goTo('screen-final'), 1800);
+  }
+}
+
+function restartCase(){ closePause(); startCase(activeCaseIndex); }
+function resetAll(){ state.solved.clear(); state.score=0; }
+
+function openPause(){ document.getElementById('pause-overlay').classList.add('active'); }
+function closePause(){ document.getElementById('pause-overlay').classList.remove('active'); }
+
+function shareProgress(){
+  const c = CASES[activeCaseIndex] || CASES[0];
+  const text = `🕵️ I just solved "${c.title}" in Mystigative! Think you can crack the case faster than me? 🔍 Play now: https://primespirit.co.in/primelab.html #Mystigative #PrimeLab #PrimeSpiritMentors`;
+  if(navigator.share){
+    navigator.share({title:'Mystigative', text, url:'https://primespirit.co.in/primelab.html'}).catch(()=>{});
+  } else if(navigator.clipboard){
+    navigator.clipboard.writeText(text);
+    alert('Share text copied to clipboard!');
+  }
+}
+
+// Smooth page-transition for all "Back to PrimeLab" links
+document.querySelectorAll('.back-primelab').forEach(link=>{
+  link.addEventListener('click', function(e){
+    e.preventDefault();
+    const href = this.href;
+    document.body.style.transition = 'opacity .35s ease';
+    document.body.style.opacity = '0';
+    setTimeout(()=>{ window.location.href = href; }, 350);
+  });
+});
+
+document.addEventListener('keydown', (e)=>{
+  if(e.key === 'Escape'){
+    if(document.getElementById('clue-modal').classList.contains('active')) closeClue();
+    else if(document.getElementById('pause-overlay').classList.contains('active')) closePause();
+  }
+});
+
+renderMenu();
+</script>
+</body>
+</html>
