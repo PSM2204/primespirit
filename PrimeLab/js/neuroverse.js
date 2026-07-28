@@ -5,6 +5,21 @@
 
 'use strict';
 
+// ─── ROUNDRECT POLYFILL ───
+if (!CanvasRenderingContext2D.prototype.roundRect) {
+  CanvasRenderingContext2D.prototype.roundRect = function(x, y, w, h, r) {
+    if (w < 2 * r) r = w / 2;
+    if (h < 2 * r) r = h / 2;
+    this.beginPath();
+    this.moveTo(x + r, y);
+    this.arcTo(x + w, y, x + w, y + h, r);
+    this.arcTo(x + w, y + h, x, y + h, r);
+    this.arcTo(x, y + h, x, y, r);
+    this.arcTo(x, y, x + w, y, r);
+    this.closePath();
+  };
+}
+
 // ─── BACKGROUND PARTICLE ENGINE ───
 const bgCanvas = document.getElementById('bgCanvas');
 const bgCtx = bgCanvas.getContext('2d');
@@ -925,11 +940,12 @@ class MemoryEngine {
     this.counterDown = 3;
     this.counterInterval = setInterval(() => {
       this.counterDown--;
-      if (this.counterDown <= 0) {
+      if (this.counterDown < 1) {
         clearInterval(this.counterInterval);
+        this.counterInterval = null;
         this.startShowing();
       }
-    }, 800);
+    }, 600);
   }
 
   startShowing() {
@@ -1129,7 +1145,10 @@ class MemoryEngine {
   destroy() {
     this.destroyed = true;
     if (this.animFrame) cancelAnimationFrame(this.animFrame);
-    if (this.counterInterval) clearInterval(this.counterInterval);
+    if (this.counterInterval) {
+      clearInterval(this.counterInterval);
+      this.counterInterval = null;
+    }
   }
 }
 
