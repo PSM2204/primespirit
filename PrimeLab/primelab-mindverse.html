@@ -91,6 +91,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Exo+2:wght@300;400;500;600;700&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
+/* ============================================================
+   CSS RESET & VARIABLES
+   ============================================================ */
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
 :root {
@@ -127,19 +130,21 @@ html, body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* === SCROLLBAR === */
+/* Scrollbar */
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: var(--bg-primary); }
 ::-webkit-scrollbar-thumb { background: var(--accent-purple); border-radius: 3px; }
 
-/* === CANVAS === */
+/* Game Canvas */
 #game-canvas {
   position: fixed; top: 0; left: 0;
   width: 100%; height: 100%;
   z-index: 0;
 }
 
-/* === OVERLAYS === */
+/* ============================================================
+   SCREEN OVERLAYS
+   ============================================================ */
 .screen-overlay {
   position: fixed; inset: 0;
   z-index: 100;
@@ -153,7 +158,9 @@ html, body {
   opacity: 0; visibility: hidden; pointer-events: none;
 }
 
-/* === LOADING SCREEN === */
+/* ============================================================
+   LOADING SCREEN
+   ============================================================ */
 #loading-screen {
   background: var(--bg-deep);
   gap: 30px;
@@ -191,8 +198,24 @@ html, body {
   letter-spacing: 3px;
   text-transform: uppercase;
 }
+.loading-start-hint {
+  font-family: var(--font-ui);
+  font-size: 0.85rem;
+  color: var(--accent-cyan);
+  letter-spacing: 2px;
+  animation: blink-hint 1.5s ease-in-out infinite;
+  display: none;
+  margin-top: 10px;
+}
+.loading-start-hint.visible { display: block; }
+@keyframes blink-hint {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
 
-/* === MENU SCREEN === */
+/* ============================================================
+   MENU SCREEN
+   ============================================================ */
 #menu-screen {
   background: radial-gradient(ellipse at 50% 20%, #1a0a3e 0%, var(--bg-deep) 70%);
 }
@@ -286,7 +309,9 @@ html, body {
   max-width: 320px;
 }
 
-/* === BUTTONS === */
+/* ============================================================
+   BUTTONS
+   ============================================================ */
 .btn {
   display: flex;
   align-items: center;
@@ -336,14 +361,14 @@ html, body {
   transform: translateY(-1px);
 }
 
-.btn-icon {
-  width: 44px; height: 44px;
-  padding: 0;
-  border-radius: 50%;
-  font-size: 1.2rem;
+.btn-link {
+  text-decoration: none;
+  text-align: center;
 }
 
-/* === CHARACTER SELECT === */
+/* ============================================================
+   CHARACTER SELECT
+   ============================================================ */
 #character-select {
   background: var(--bg-deep);
   padding: 20px;
@@ -371,7 +396,7 @@ html, body {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
   gap: 12px;
-  max-height: 60vh;
+  max-height: 55vh;
   overflow-y: auto;
   padding: 4px;
 }
@@ -477,7 +502,9 @@ html, body {
   justify-content: center;
 }
 
-/* === MODE SELECT === */
+/* ============================================================
+   MODE SELECT
+   ============================================================ */
 #mode-select {
   background: var(--bg-deep);
   padding: 20px;
@@ -521,7 +548,9 @@ html, body {
   line-height: 1.5;
 }
 
-/* === GAME HUD === */
+/* ============================================================
+   GAME HUD
+   ============================================================ */
 #game-hud {
   position: fixed; inset: 0;
   z-index: 50;
@@ -576,9 +605,7 @@ html, body {
 .hud-bar-fill.health { background: linear-gradient(90deg, #ff4444, #ff8800); }
 .hud-bar-fill.energy { background: linear-gradient(90deg, var(--accent-purple), var(--accent-cyan)); }
 
-.hud-center {
-  text-align: center;
-}
+.hud-center { text-align: center; }
 .hud-level-name {
   font-family: var(--font-display);
   font-size: 0.75rem;
@@ -694,7 +721,9 @@ html, body {
   transform: translate(-50%, -50%);
 }
 
-/* === PAUSE MENU === */
+/* ============================================================
+   PAUSE MENU
+   ============================================================ */
 #pause-menu {
   background: rgba(5, 8, 22, 0.85);
   backdrop-filter: blur(20px);
@@ -713,7 +742,9 @@ html, body {
   width: 260px;
 }
 
-/* === LEVEL COMPLETE === */
+/* ============================================================
+   LEVEL COMPLETE
+   ============================================================ */
 #level-complete {
   background: rgba(5, 8, 22, 0.9);
   backdrop-filter: blur(20px);
@@ -758,7 +789,9 @@ html, body {
   margin-top: 4px;
 }
 
-/* === ANALYTICS === */
+/* ============================================================
+   ANALYTICS
+   ============================================================ */
 #analytics-screen {
   background: var(--bg-deep);
   padding: 20px;
@@ -771,9 +804,7 @@ html, body {
   flex-direction: column;
   gap: 20px;
 }
-.analytics-header {
-  text-align: center;
-}
+.analytics-header { text-align: center; }
 .analytics-header h2 {
   font-family: var(--font-display);
   font-size: 1.6rem;
@@ -834,7 +865,9 @@ html, body {
   margin-top: 8px;
 }
 
-/* === SETTINGS === */
+/* ============================================================
+   SETTINGS
+   ============================================================ */
 #settings-screen {
   background: var(--bg-deep);
   padding: 20px;
@@ -889,31 +922,10 @@ input[type="range"]::-webkit-slider-thumb {
   border-radius: 50%;
   cursor: pointer;
 }
-.toggle {
-  width: 44px; height: 24px;
-  background: var(--bg-elevated);
-  border-radius: 12px;
-  cursor: pointer;
-  position: relative;
-  border: 1px solid var(--glass-border);
-  transition: all 0.3s ease;
-}
-.toggle.active {
-  background: var(--accent-purple);
-  border-color: var(--accent-purple);
-}
-.toggle::after {
-  content: '';
-  position: absolute;
-  width: 18px; height: 18px;
-  background: white;
-  border-radius: 50%;
-  top: 2px; left: 2px;
-  transition: transform 0.3s ease;
-}
-.toggle.active::after { transform: translateX(20px); }
 
-/* === MOBILE CONTROLS === */
+/* ============================================================
+   MOBILE CONTROLS
+   ============================================================ */
 #mobile-controls {
   display: none;
   position: fixed; bottom: 0; left: 0; right: 0;
@@ -960,36 +972,9 @@ input[type="range"]::-webkit-slider-thumb {
   touch-action: none;
 }
 
-/* === RESPONSIVE === */
-@media (max-width: 768px) {
-  .char-grid { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); }
-  .mode-grid { grid-template-columns: 1fr 1fr; }
-  .complete-stats { grid-template-columns: 1fr; }
-  .hud-timer { font-size: 1.2rem; }
-  .hud-bar { width: 100px; }
-  .ability-btn { width: 44px; height: 44px; }
-}
-@media (max-width: 480px) {
-  .menu-title { letter-spacing: 3px; }
-  .menu-subtitle { letter-spacing: 4px; font-size: 0.8rem; }
-  .mode-grid { grid-template-columns: 1fr; }
-}
-@media (hover: none) and (pointer: coarse) {
-  #mobile-controls { display: block; }
-}
-
-/* === ANIMATIONS === */
-@keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-@keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 15px rgba(0, 240, 255, 0.2); }
-  50% { box-shadow: 0 0 30px rgba(0, 240, 255, 0.4); }
-}
-.animate-in { animation: fadeInUp 0.5s ease forwards; }
-
-/* === NOTIFICATION === */
+/* ============================================================
+   NOTIFICATIONS
+   ============================================================ */
 .notification {
   position: fixed;
   top: 80px; right: 20px;
@@ -1006,22 +991,59 @@ input[type="range"]::-webkit-slider-thumb {
   animation: fadeInUp 0.4s ease, fadeOut 0.4s ease 2.5s forwards;
   pointer-events: none;
 }
+
+/* ============================================================
+   ANIMATIONS
+   ============================================================ */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
 @keyframes fadeOut {
   to { opacity: 0; transform: translateY(-10px); }
+}
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 15px rgba(0, 240, 255, 0.2); }
+  50% { box-shadow: 0 0 30px rgba(0, 240, 255, 0.4); }
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 768px) {
+  .char-grid { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); }
+  .mode-grid { grid-template-columns: 1fr 1fr; }
+  .complete-stats { grid-template-columns: 1fr; }
+  .hud-timer { font-size: 1.2rem; }
+  .hud-bar { width: 100px; }
+  .ability-btn { width: 44px; height: 44px; }
+}
+@media (max-width: 480px) {
+  .menu-title { letter-spacing: 3px; }
+  .menu-subtitle { letter-spacing: 4px; font-size: 0.8rem; }
+  .mode-grid { grid-template-columns: 1fr; }
+}
+@media (hover: none) and (pointer: coarse) {
+  #mobile-controls { display: block; }
 }
 </style>
 </head>
 
 <body>
 
-<!-- Loading Screen -->
+<!-- ============================================================
+     LOADING SCREEN
+     ============================================================ -->
 <div id="loading-screen" class="screen-overlay">
   <div class="loading-brand">PRIMELAB</div>
   <div class="loading-bar-container"><div class="loading-bar" id="loading-bar"></div></div>
   <div class="loading-text" id="loading-text">Initializing Quantum Engine...</div>
+  <div class="loading-start-hint" id="loading-hint">Click or Tap Anywhere to Begin</div>
 </div>
 
-<!-- Menu Screen -->
+<!-- ============================================================
+     MENU SCREEN
+     ============================================================ -->
 <div id="menu-screen" class="screen-overlay hidden">
   <div class="menu-particles" id="menu-particles"></div>
   <div class="menu-content">
@@ -1030,14 +1052,17 @@ input[type="range"]::-webkit-slider-thumb {
     <div class="menu-subtitle">PrimeLab</div>
     <p class="menu-tagline">Train Your Brain. Master Physics. Unlock Your Power.</p>
     <div class="menu-buttons">
-      <button class="btn btn-primary" onclick="UI.goTo('character-select')">▶ START GAME</button>
-      <button class="btn btn-secondary" onclick="UI.goTo('analytics-screen')">📊 Brain Analytics</button>
-      <button class="btn btn-secondary" onclick="UI.goTo('settings-screen')">⚙ Settings</button>
+      <button class="btn btn-primary" id="btn-start">&#9654; START GAME</button>
+      <button class="btn btn-secondary" id="btn-analytics">&#128202; Brain Analytics</button>
+      <button class="btn btn-secondary" id="btn-settings">&#9881; Settings</button>
+      <a href="https://primespirit.co.in/primelab.html" class="btn btn-secondary btn-link" id="btn-back-home">&larr; Back to PrimeLab</a>
     </div>
   </div>
 </div>
 
-<!-- Character Select -->
+<!-- ============================================================
+     CHARACTER SELECT
+     ============================================================ -->
 <div id="character-select" class="screen-overlay hidden">
   <div class="char-select-inner">
     <div class="char-header">
@@ -1050,41 +1075,45 @@ input[type="range"]::-webkit-slider-thumb {
       <div class="char-stats" id="char-info-stats"></div>
     </div>
     <div class="char-select-actions">
-      <button class="btn btn-secondary" onclick="UI.goTo('menu-screen')">← Back</button>
-      <button class="btn btn-primary" id="btn-select-char" onclick="UI.confirmCharacter()">SELECT & PLAY</button>
+      <button class="btn btn-secondary" id="btn-char-back">&larr; Back</button>
+      <button class="btn btn-primary" id="btn-select-char">SELECT &amp; PLAY</button>
     </div>
   </div>
 </div>
 
-<!-- Mode Select -->
+<!-- ============================================================
+     MODE SELECT
+     ============================================================ -->
 <div id="mode-select" class="screen-overlay hidden">
   <div class="char-header" style="margin-bottom:20px"><h2>CHOOSE MODE</h2></div>
   <div class="mode-grid">
-    <div class="mode-card" onclick="Game.startLevel('story')">
-      <div class="mode-icon">📖</div>
+    <div class="mode-card" data-mode="story">
+      <div class="mode-icon">&#128214;</div>
       <div class="mode-title">Story Mode</div>
-      <div class="mode-desc">Adventure through floating islands. Solve physics puzzles & defeat enemies.</div>
+      <div class="mode-desc">Adventure through floating islands. Solve physics puzzles &amp; defeat enemies.</div>
     </div>
-    <div class="mode-card" onclick="Game.startLevel('physics')">
-      <div class="mode-icon">⚡</div>
+    <div class="mode-card" data-mode="physics">
+      <div class="mode-icon">&#9889;</div>
       <div class="mode-title">Physics Challenge</div>
       <div class="mode-desc">Pure physics puzzles. Master gravity, momentum, and projectiles.</div>
     </div>
-    <div class="mode-card" onclick="Game.startLevel('brain')">
-      <div class="mode-icon">🧠</div>
+    <div class="mode-card" data-mode="brain">
+      <div class="mode-icon">&#129504;</div>
       <div class="mode-title">Brain Gym</div>
       <div class="mode-desc">Train memory, reflexes, and logic with focused cognitive exercises.</div>
     </div>
-    <div class="mode-card" onclick="Game.startLevel('free')">
-      <div class="mode-icon">🌍</div>
+    <div class="mode-card" data-mode="free">
+      <div class="mode-icon">&#127758;</div>
       <div class="mode-title">Free Play</div>
       <div class="mode-desc">Explore at your own pace. Experiment with physics freely.</div>
     </div>
   </div>
-  <button class="btn btn-secondary" style="margin-top:20px" onclick="UI.goTo('character-select')">← Back</button>
+  <button class="btn btn-secondary" style="margin-top:20px" id="btn-mode-back">&larr; Back</button>
 </div>
 
-<!-- Game HUD -->
+<!-- ============================================================
+     GAME HUD
+     ============================================================ -->
 <div id="game-hud">
   <div class="hud-top">
     <div class="hud-player">
@@ -1099,55 +1128,52 @@ input[type="range"]::-webkit-slider-thumb {
       <div class="hud-timer" id="hud-timer">00:00</div>
     </div>
     <div class="hud-score">
-      <div class="hud-score-item"><span class="hud-score-icon">💰</span><span id="hud-coins">0</span></div>
-      <div class="hud-score-item"><span class="hud-score-icon">💎</span><span id="hud-crystals">0</span></div>
-      <div class="hud-score-item"><span class="hud-score-icon">⭐</span><span id="hud-score">0</span></div>
+      <div class="hud-score-item"><span class="hud-score-icon">&#128176;</span><span id="hud-coins">0</span></div>
+      <div class="hud-score-item"><span class="hud-score-icon">&#128142;</span><span id="hud-crystals">0</span></div>
+      <div class="hud-score-item"><span class="hud-score-icon">&#11088;</span><span id="hud-score">0</span></div>
     </div>
   </div>
   <div class="hud-crosshair"></div>
   <div class="hud-bottom">
     <div class="hud-abilities">
-      <div class="ability-btn" id="ability-atk" onclick="Game.playerAttack()">
-        ⚔<span class="key">LMB</span>
-        <div class="ability-cooldown" id="cd-atk"></div>
-      </div>
-      <div class="ability-btn" id="ability-special" onclick="Game.playerSpecial()">
-        ✦<span class="key">E</span>
-        <div class="ability-cooldown" id="cd-special"></div>
-      </div>
-      <div class="ability-btn" id="ability-ultimate" onclick="Game.playerUltimate()">
-        ☀<span class="key">Q</span>
-        <div class="ability-cooldown" id="cd-ultimate"></div>
-      </div>
+      <div class="ability-btn" id="ability-atk">&#9876;<span class="key">LMB</span><div class="ability-cooldown" id="cd-atk"></div></div>
+      <div class="ability-btn" id="ability-special">&#10022;<span class="key">E</span><div class="ability-cooldown" id="cd-special"></div></div>
+      <div class="ability-btn" id="ability-ultimate">&#9728;<span class="key">Q</span><div class="ability-cooldown" id="cd-ultimate"></div></div>
     </div>
     <div class="hud-objective" id="hud-objective">Explore the Floating Islands</div>
   </div>
 </div>
 
-<!-- Pause Menu -->
+<!-- ============================================================
+     PAUSE MENU
+     ============================================================ -->
 <div id="pause-menu" class="screen-overlay hidden">
   <h2>PAUSED</h2>
   <div class="pause-buttons">
-    <button class="btn btn-primary" onclick="Game.resume()">▶ Resume</button>
-    <button class="btn btn-secondary" onclick="UI.goTo('settings-screen')">⚙ Settings</button>
-    <button class="btn btn-secondary" onclick="Game.quit()">✕ Quit to Menu</button>
+    <button class="btn btn-primary" id="btn-resume">&#9654; Resume</button>
+    <button class="btn btn-secondary" id="btn-pause-settings">&#9881; Settings</button>
+    <button class="btn btn-secondary" id="btn-quit">&#10005; Quit to Menu</button>
   </div>
 </div>
 
-<!-- Level Complete -->
+<!-- ============================================================
+     LEVEL COMPLETE
+     ============================================================ -->
 <div id="level-complete" class="screen-overlay hidden">
   <div class="complete-title">LEVEL COMPLETE!</div>
   <div class="complete-stats" id="complete-stats"></div>
   <div style="display:flex;gap:12px;margin-top:16px">
-    <button class="btn btn-secondary" onclick="Game.quit()">Menu</button>
-    <button class="btn btn-primary" onclick="Game.nextLevel()">Next Level →</button>
+    <button class="btn btn-secondary" id="btn-complete-menu">Menu</button>
+    <button class="btn btn-primary" id="btn-next-level">Next Level &rarr;</button>
   </div>
 </div>
 
-<!-- Analytics -->
+<!-- ============================================================
+     ANALYTICS
+     ============================================================ -->
 <div id="analytics-screen" class="screen-overlay hidden">
   <div class="analytics-inner">
-    <div class="analytics-header"><h2>🧠 BRAIN ANALYTICS</h2></div>
+    <div class="analytics-header"><h2>&#129504; BRAIN ANALYTICS</h2></div>
     <div class="brain-score-display">
       <div class="brain-score-value" id="brain-score-val">0</div>
       <div class="brain-score-label">Overall Brain Score</div>
@@ -1159,77 +1185,60 @@ input[type="range"]::-webkit-slider-thumb {
       <div class="chart-card"><h3>Session History</h3><canvas id="chart-history"></canvas></div>
     </div>
     <div style="display:flex;gap:12px;justify-content:center">
-      <button class="btn btn-secondary" onclick="UI.goTo('menu-screen')">← Back to Menu</button>
-      <button class="btn btn-secondary" onclick="ShareSystem.share()">📤 Share Results</button>
+      <button class="btn btn-secondary" id="btn-analytics-back">&larr; Back to Menu</button>
+      <button class="btn btn-secondary" id="btn-share">&#128228; Share Results</button>
     </div>
   </div>
 </div>
 
-<!-- Settings -->
+<!-- ============================================================
+     SETTINGS
+     ============================================================ -->
 <div id="settings-screen" class="screen-overlay hidden">
   <div class="settings-inner">
-    <div class="char-header"><h2>⚙ SETTINGS</h2></div>
+    <div class="char-header"><h2>&#9881; SETTINGS</h2></div>
     <div class="settings-group">
       <h3>Audio</h3>
       <div class="setting-row">
         <span class="setting-label">Master Volume</span>
-        <input type="range" id="vol-master" min="0" max="100" value="70" oninput="AudioSys.setVolume('master',this.value)">
+        <input type="range" id="vol-master" min="0" max="100" value="70">
       </div>
       <div class="setting-row">
         <span class="setting-label">Music</span>
-        <input type="range" id="vol-music" min="0" max="100" value="50" oninput="AudioSys.setVolume('music',this.value)">
+        <input type="range" id="vol-music" min="0" max="100" value="50">
       </div>
       <div class="setting-row">
         <span class="setting-label">SFX</span>
-        <input type="range" id="vol-sfx" min="0" max="100" value="80" oninput="AudioSys.setVolume('sfx',this.value)">
+        <input type="range" id="vol-sfx" min="0" max="100" value="80">
       </div>
     </div>
     <div class="settings-group">
       <h3>Gameplay</h3>
       <div class="setting-row">
-        <span class="setting-label">Difficulty</span>
-        <select id="sel-difficulty" style="background:var(--bg-elevated);color:var(--text-primary);border:1px solid var(--glass-border);padding:6px 12px;border-radius:6px;font-family:var(--font-ui)">
-          <option value="easy">Easy</option>
-          <option value="normal" selected>Normal</option>
-          <option value="hard">Hard</option>
-        </select>
-      </div>
-      <div class="setting-row">
         <span class="setting-label">Camera Sensitivity</span>
-        <input type="range" id="cam-sens" min="1" max="10" value="5" oninput="CONFIG.cameraSensitivity=this.value*0.002">
-      </div>
-      <div class="setting-row">
-        <span class="setting-label">Reduced Motion</span>
-        <div class="toggle" id="toggle-motion" onclick="this.classList.toggle('active')"></div>
+        <input type="range" id="cam-sens" min="1" max="10" value="5">
       </div>
     </div>
-    <div class="settings-group">
-      <h3>Display</h3>
-      <div class="setting-row">
-        <span class="setting-label">Show FPS</span>
-        <div class="toggle" id="toggle-fps" onclick="this.classList.toggle('active')"></div>
-      </div>
-      <div class="setting-row">
-        <span class="setting-label">Post Processing</span>
-        <div class="toggle active" id="toggle-postfx" onclick="this.classList.toggle('active')"></div>
-      </div>
-    </div>
-    <button class="btn btn-secondary" onclick="UI.goBack()">← Back</button>
+    <button class="btn btn-secondary" id="btn-settings-back">&larr; Back</button>
   </div>
 </div>
 
-<!-- Mobile Controls -->
+<!-- ============================================================
+     MOBILE CONTROLS
+     ============================================================ -->
 <div id="mobile-controls">
   <div class="touch-joystick" id="touch-joystick">
     <div class="touch-joystick-inner" id="joystick-inner"></div>
   </div>
   <div class="touch-actions">
-    <div class="touch-btn" id="btn-jump">⬆</div>
-    <div class="touch-btn" id="btn-atk">⚔</div>
+    <div class="touch-btn" id="btn-jump">&uarr;</div>
+    <div class="touch-btn" id="btn-atk">&#9876;</div>
   </div>
 </div>
 
-<!-- CDN Scripts -->
+<!-- ============================================================
+     CDN SCRIPTS
+     ============================================================ -->
 <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
@@ -1240,7 +1249,7 @@ input[type="range"]::-webkit-slider-thumb {
 /* ============================================================
    CONFIGURATION
    ============================================================ */
-const CONFIG = {
+var CONFIG = {
   cameraSensitivity: 0.003,
   moveSpeed: 8,
   jumpForce: 12,
@@ -1249,499 +1258,558 @@ const CONFIG = {
   maxEnergy: 100,
   coinValue: 10,
   crystalValue: 50,
-  difficulty: 'normal',
-  volume: { master: 0.7, music: 0.5, sfx: 0.8 },
-  showFPS: false,
-  postFX: true,
+  volume: { master: 0.7, music: 0.5, sfx: 0.8 }
 };
 
 /* ============================================================
-   CHARACTER DEFINITIONS
+   CHARACTER DEFINITIONS (20 Heroes)
    ============================================================ */
-const CHARACTERS = [
-  { id:'aether',name:'Aether Blaze',element:'Fire',icon:'🔥',color:'#ff4422',emissive:'#ff2200',
+var CHARACTERS = [
+  { id:'aether',name:'Aether Blaze',element:'Fire',icon:'\u{1F525}',color:'#ff4422',emissive:'#ff2200',
     desc:'Master of fire manipulation. Burns through obstacles and deals area damage.',
     stats:{power:90,speed:70,defense:50,energy:80,control:60},
     abilities:{attack:'Flame Burst',special:'Inferno Wave',ultimate:'Supernova'} },
-  { id:'rei',name:'Rei Quantum',element:'Time',icon:'⏳',color:'#8844ff',emissive:'#6622dd',
+  { id:'rei',name:'Rei Quantum',element:'Time',icon:'\u231B',color:'#8844ff',emissive:'#6622dd',
     desc:'Shifts through time. Slows enemies and rewinds mistakes.',
     stats:{power:60,speed:80,defense:60,energy:90,control:95},
     abilities:{attack:'Time Strike',special:'Slow Field',ultimate:'Chrono Break'} },
-  { id:'kairo',name:'Kairo Volt',element:'Electric',icon:'⚡',color:'#ffdd00',emissive:'#ffaa00',
+  { id:'kairo',name:'Kairo Volt',element:'Electric',icon:'\u26A1',color:'#ffdd00',emissive:'#ffaa00',
     desc:'Lightning-fast attacks with chain electricity.',
     stats:{power:85,speed:95,defense:40,energy:75,control:70},
     abilities:{attack:'Spark Punch',special:'Chain Lightning',ultimate:'Thunder God'} },
-  { id:'luna',name:'Luna Frost',element:'Ice',icon:'❄',color:'#00ccff',emissive:'#0088ff',
+  { id:'luna',name:'Luna Frost',element:'Ice',icon:'\u2744',color:'#00ccff',emissive:'#0088ff',
     desc:'Freezes platforms and enemies. Creates ice bridges.',
     stats:{power:70,speed:60,defense:85,energy:80,control:90},
     abilities:{attack:'Ice Shard',special:'Glacier Wall',ultimate:'Absolute Zero'} },
-  { id:'nova',name:'Nova Eclipse',element:'Gravity',icon:'🌀',color:'#aa44ff',emissive:'#8822cc',
+  { id:'nova',name:'Nova Eclipse',element:'Gravity',icon:'\u{1F300}',color:'#aa44ff',emissive:'#8822cc',
     desc:'Manipulates gravity fields. Floats objects and reverses falls.',
     stats:{power:75,speed:65,defense:70,energy:95,control:95},
     abilities:{attack:'Gravity Pulse',special:'Float Zone',ultimate:'Singularity'} },
-  { id:'zephyr',name:'Zephyr Storm',element:'Wind',icon:'🌪',color:'#44ffaa',emissive:'#22cc88',
+  { id:'zephyr',name:'Zephyr Storm',element:'Wind',icon:'\u{1F32A}',color:'#44ffaa',emissive:'#22cc88',
     desc:'Wind master who creates tornados and deflects projectiles.',
     stats:{power:65,speed:90,defense:55,energy:85,control:80},
     abilities:{attack:'Gale Slash',special:'Tornado Shield',ultimate:'Hurricane'} },
-  { id:'kaizen',name:'Kaizen Iron',element:'Metal',icon:'⚙',color:'#8899aa',emissive:'#667788',
+  { id:'kaizen',name:'Kaizen Iron',element:'Metal',icon:'\u2699',color:'#8899aa',emissive:'#667788',
     desc:'Metal armor with incredible defense. Magnetic abilities.',
     stats:{power:80,speed:40,defense:95,energy:60,control:70},
     abilities:{attack:'Iron Fist',special:'Magnet Pull',ultimate:'Meteor Armor'} },
-  { id:'astra',name:'Astra Pulse',element:'Light',icon:'✨',color:'#ffee88',emissive:'#ffcc44',
+  { id:'astra',name:'Astra Pulse',element:'Light',icon:'\u2728',color:'#ffee88',emissive:'#ffcc44',
     desc:'Light energy beams and blinding flashes.',
     stats:{power:85,speed:85,defense:45,energy:90,control:75},
     abilities:{attack:'Photon Beam',special:'Flash Bang',ultimate:'Star Fall'} },
-  { id:'nyra',name:'Nyra Shade',element:'Shadow',icon:'🌑',color:'#442266',emissive:'#220044',
+  { id:'nyra',name:'Nyra Shade',element:'Shadow',icon:'\u{1F311}',color:'#442266',emissive:'#220044',
     desc:'Creates shadow clones and phases through walls.',
     stats:{power:80,speed:80,defense:55,energy:85,control:90},
     abilities:{attack:'Shadow Strike',special:'Clone Jutsu',ultimate:'Void Collapse'} },
-  { id:'orion',name:'Orion Flux',element:'Magnetism',icon:'🧲',color:'#cc44ff',emissive:'#9922cc',
+  { id:'orion',name:'Orion Flux',element:'Magnetism',icon:'\u{1F9F2}',color:'#cc44ff',emissive:'#9922cc',
     desc:'Controls magnetic fields. Attracts and repels objects.',
     stats:{power:75,speed:60,defense:70,energy:80,control:95},
     abilities:{attack:'Mag Pulse',special:'Attract/Repel',ultimate:'Polarity Shift'} },
-  { id:'hana',name:'Hana Bloom',element:'Nature',icon:'🌸',color:'#ff88cc',emissive:'#ff44aa',
+  { id:'hana',name:'Hana Bloom',element:'Nature',icon:'\u{1F338}',color:'#ff88cc',emissive:'#ff44aa',
     desc:'Nature healer with vine attacks and growth powers.',
     stats:{power:50,speed:65,defense:80,energy:90,control:85},
     abilities:{attack:'Thorn Whip',special:'Heal Bloom',ultimate:'World Tree'} },
-  { id:'riku',name:'Riku Wave',element:'Water',icon:'🌊',color:'#2288ff',emissive:'#0066dd',
+  { id:'riku',name:'Riku Wave',element:'Water',icon:'\u{1F30A}',color:'#2288ff',emissive:'#0066dd',
     desc:'Water manipulation with tidal waves and water shields.',
     stats:{power:70,speed:75,defense:75,energy:85,control:80},
     abilities:{attack:'Water Jet',special:'Tidal Wave',ultimate:'Leviathan'} },
-  { id:'vex',name:'Vex Prism',element:'Illusion',icon:'🔮',color:'#ff44ff',emissive:'#cc22cc',
+  { id:'vex',name:'Vex Prism',element:'Illusion',icon:'\u{1F52E}',color:'#ff44ff',emissive:'#cc22cc',
     desc:'Creates illusions and confuses enemies with light tricks.',
     stats:{power:55,speed:70,defense:50,energy:90,control:95},
     abilities:{attack:'Prism Shot',special:'Mirror Image',ultimate:'Reality Break'} },
-  { id:'sora',name:'Sora Ignite',element:'Plasma',icon:'☀',color:'#ff6600',emissive:'#ff4400',
+  { id:'sora',name:'Sora Ignite',element:'Plasma',icon:'\u2600',color:'#ff6600',emissive:'#ff4400',
     desc:'Superheated plasma attacks that melt through anything.',
     stats:{power:95,speed:75,defense:35,energy:80,control:65},
     abilities:{attack:'Plasma Ball',special:'Meltdown',ultimate:'Solar Flare'} },
-  { id:'mira',name:'Mira Echo',element:'Sound',icon:'🔊',color:'#44ddff',emissive:'#22aadd',
+  { id:'mira',name:'Mira Echo',element:'Sound',icon:'\u{1F50A}',color:'#44ddff',emissive:'#22aadd',
     desc:'Sound wave attacks that stun and push enemies.',
     stats:{power:70,speed:70,defense:60,energy:85,control:90},
     abilities:{attack:'Sonic Pulse',special:'Shockwave',ultimate:'Deafening Roar'} },
-  { id:'toshi',name:'Toshi Vector',element:'Momentum',icon:'↗',color:'#44ff88',emissive:'#22cc66',
+  { id:'toshi',name:'Toshi Vector',element:'Momentum',icon:'\u2197',color:'#44ff88',emissive:'#22cc66',
     desc:'Controls momentum and velocity. Redirects projectiles.',
     stats:{power:75,speed:85,defense:55,energy:80,control:95},
     abilities:{attack:'Vector Strike',special:'Redirect',ultimate:'Inertia Null'} },
-  { id:'eiko',name:'Eiko Photon',element:'Laser',icon:'💎',color:'#ff2288',emissive:'#cc0066',
+  { id:'eiko',name:'Eiko Photon',element:'Laser',icon:'\u{1F48E}',color:'#ff2288',emissive:'#cc0066',
     desc:'Precision laser beams and light refraction.',
     stats:{power:90,speed:80,defense:40,energy:85,control:85},
     abilities:{attack:'Laser Beam',special:'Prism Split',ultimate:'Death Ray'} },
-  { id:'jin',name:'Jin Terra',element:'Earth',icon:'🏔',color:'#886622',emissive:'#664400',
+  { id:'jin',name:'Jin Terra',element:'Earth',icon:'\u{1F3D4}',color:'#886622',emissive:'#664400',
     desc:'Earth manipulation. Raises walls and creates earthquakes.',
     stats:{power:85,speed:45,defense:95,energy:70,control:75},
     abilities:{attack:'Rock Throw',special:'Earth Wall',ultimate:'Earthquake'} },
-  { id:'yuna',name:'Yuna Cipher',element:'Digital',icon:'💻',color:'#00ffaa',emissive:'#00cc88',
+  { id:'yuna',name:'Yuna Cipher',element:'Digital',icon:'\u{1F4BB}',color:'#00ffaa',emissive:'#00cc88',
     desc:'Intelligence hacker. Disrupts enemy patterns and systems.',
     stats:{power:60,speed:75,defense:55,energy:95,control:95},
     abilities:{attack:'Data Spike',special:'System Hack',ultimate:'Override'} },
-  { id:'zenith',name:'Zenith Prime',element:'Universal',icon:'⭐',color:'#ffffff',emissive:'#aaccff',
+  { id:'zenith',name:'Zenith Prime',element:'Universal',icon:'\u2B50',color:'#ffffff',emissive:'#aaccff',
     desc:'Universal energy wielder. Balanced in all abilities.',
     stats:{power:80,speed:80,defense:80,energy:80,control:80},
-    abilities:{attack:'Cosmic Bolt',special:'Energy Wave',ultimate:'Big Bang'} },
+    abilities:{attack:'Cosmic Bolt',special:'Energy Wave',ultimate:'Big Bang'} }
 ];
 
 /* ============================================================
-   AUDIO SYSTEM (Web Audio API)
+   AUDIO SYSTEM (Web Audio API — safe init)
    ============================================================ */
-const AudioSys = {
+var AudioSys = {
   ctx: null,
   masterGain: null,
   musicGain: null,
   sfxGain: null,
   musicOsc: null,
 
-  init() {
-    this.ctx = new (window.AudioContext || window.webkitAudioContext)();
-    this.masterGain = this.ctx.createGain();
-    this.musicGain = this.ctx.createGain();
-    this.sfxGain = this.ctx.createGain();
-    this.musicGain.connect(this.masterGain);
-    this.sfxGain.connect(this.masterGain);
-    this.masterGain.connect(this.ctx.destination);
-    this.setVolume('master', 70);
-    this.setVolume('music', 50);
-    this.setVolume('sfx', 80);
+  init: function() {
+    try {
+      this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+      this.masterGain = this.ctx.createGain();
+      this.musicGain = this.ctx.createGain();
+      this.sfxGain = this.ctx.createGain();
+      this.musicGain.connect(this.masterGain);
+      this.sfxGain.connect(this.masterGain);
+      this.masterGain.connect(this.ctx.destination);
+      this.setVolume('master', 70);
+      this.setVolume('music', 50);
+      this.setVolume('sfx', 80);
+    } catch(e) {
+      console.warn('Audio init deferred:', e);
+    }
   },
 
-  resume() { if (this.ctx && this.ctx.state === 'suspended') this.ctx.resume(); },
+  resume: function() {
+    if (this.ctx && this.ctx.state === 'suspended') {
+      this.ctx.resume();
+    }
+  },
 
-  setVolume(type, val) {
-    const v = val / 100;
+  setVolume: function(type, val) {
+    var v = val / 100;
     CONFIG.volume[type] = v;
-    if (type === 'master' && this.masterGain) this.masterGain.gain.setTargetAtTime(v, this.ctx.currentTime, 0.1);
-    if (type === 'music' && this.musicGain) this.musicGain.gain.setTargetAtTime(v, this.ctx.currentTime, 0.1);
-    if (type === 'sfx' && this.sfxGain) this.sfxGain.gain.setTargetAtTime(v, this.ctx.currentTime, 0.1);
+    try {
+      if (type === 'master' && this.masterGain) this.masterGain.gain.setTargetAtTime(v, this.ctx.currentTime, 0.1);
+      if (type === 'music' && this.musicGain) this.musicGain.gain.setTargetAtTime(v, this.ctx.currentTime, 0.1);
+      if (type === 'sfx' && this.sfxGain) this.sfxGain.gain.setTargetAtTime(v, this.ctx.currentTime, 0.1);
+    } catch(e) {}
   },
 
-  playTone(freq, duration, type = 'sine', volume = 0.3) {
+  playTone: function(freq, duration, type, volume) {
     if (!this.ctx) return;
-    const osc = this.ctx.createOscillator();
-    const gain = this.ctx.createGain();
-    osc.type = type;
-    osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
-    gain.gain.setValueAtTime(volume, this.ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + duration);
-    osc.connect(gain);
-    gain.connect(this.sfxGain);
-    osc.start();
-    osc.stop(this.ctx.currentTime + duration);
-  },
-
-  playJump() { this.playTone(400, 0.15, 'sine', 0.2); this.playTone(600, 0.1, 'sine', 0.15); },
-  playCoin() { this.playTone(880, 0.08, 'square', 0.15); setTimeout(() => this.playTone(1100, 0.12, 'square', 0.15), 80); },
-  playCrystal() { this.playTone(660, 0.15, 'sine', 0.2); setTimeout(() => this.playTone(990, 0.2, 'sine', 0.2), 100); setTimeout(() => this.playTone(1320, 0.25, 'sine', 0.15), 200); },
-  playHit() { this.playTone(150, 0.15, 'sawtooth', 0.2); this.playTone(80, 0.2, 'square', 0.15); },
-  playAttack() { this.playTone(300, 0.08, 'sawtooth', 0.2); this.playTone(200, 0.12, 'square', 0.15); },
-  playComplete() { [523,659,784,1047].forEach((f,i) => setTimeout(() => this.playTone(f, 0.3, 'sine', 0.2), i*120)); },
-  playClick() { this.playTone(700, 0.05, 'sine', 0.1); },
-
-  startAmbient() {
-    if (!this.ctx || this.musicOsc) return;
-    const createDrone = (freq) => {
-      const osc = this.ctx.createOscillator();
-      const gain = this.ctx.createGain();
-      const filter = this.ctx.createBiquadFilter();
-      osc.type = 'sine';
+    try {
+      var osc = this.ctx.createOscillator();
+      var gain = this.ctx.createGain();
+      osc.type = type || 'sine';
       osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
-      gain.gain.setValueAtTime(0.04, this.ctx.currentTime);
-      filter.type = 'lowpass';
-      filter.frequency.setValueAtTime(400, this.ctx.currentTime);
-      osc.connect(filter);
-      filter.connect(gain);
-      gain.connect(this.musicGain);
+      gain.gain.setValueAtTime(volume || 0.3, this.ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + duration);
+      osc.connect(gain);
+      gain.connect(this.sfxGain);
       osc.start();
-      return osc;
-    };
-    this.musicOsc = [createDrone(110), createDrone(165), createDrone(220)];
+      osc.stop(this.ctx.currentTime + duration);
+    } catch(e) {}
   },
 
-  stopAmbient() {
-    if (this.musicOsc) { this.musicOsc.forEach(o => { try { o.stop(); } catch(e){} }); this.musicOsc = null; }
+  playJump: function() {
+    this.playTone(400, 0.15, 'sine', 0.2);
+    var self = this;
+    setTimeout(function() { self.playTone(600, 0.1, 'sine', 0.15); }, 50);
+  },
+
+  playCoin: function() {
+    this.playTone(880, 0.08, 'square', 0.15);
+    var self = this;
+    setTimeout(function() { self.playTone(1100, 0.12, 'square', 0.15); }, 80);
+  },
+
+  playCrystal: function() {
+    this.playTone(660, 0.15, 'sine', 0.2);
+    var self = this;
+    setTimeout(function() { self.playTone(990, 0.2, 'sine', 0.2); }, 100);
+    setTimeout(function() { self.playTone(1320, 0.25, 'sine', 0.15); }, 200);
+  },
+
+  playHit: function() {
+    this.playTone(150, 0.15, 'sawtooth', 0.2);
+    this.playTone(80, 0.2, 'square', 0.15);
+  },
+
+  playAttack: function() {
+    this.playTone(300, 0.08, 'sawtooth', 0.2);
+    this.playTone(200, 0.12, 'square', 0.15);
+  },
+
+  playComplete: function() {
+    var self = this;
+    var notes = [523, 659, 784, 1047];
+    notes.forEach(function(f, i) {
+      setTimeout(function() { self.playTone(f, 0.3, 'sine', 0.2); }, i * 120);
+    });
+  },
+
+  playClick: function() {
+    this.playTone(700, 0.05, 'sine', 0.1);
+  },
+
+  startAmbient: function() {
+    if (!this.ctx || this.musicOsc) return;
+    try {
+      var self = this;
+      var createDrone = function(freq) {
+        var osc = self.ctx.createOscillator();
+        var gain = self.ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, self.ctx.currentTime);
+        gain.gain.setValueAtTime(0.04, self.ctx.currentTime);
+        osc.connect(gain);
+        gain.connect(self.musicGain);
+        osc.start();
+        return osc;
+      };
+      this.musicOsc = [createDrone(110), createDrone(165), createDrone(220)];
+    } catch(e) {}
+  },
+
+  stopAmbient: function() {
+    if (this.musicOsc) {
+      this.musicOsc.forEach(function(o) { try { o.stop(); } catch(e) {} });
+      this.musicOsc = null;
+    }
   }
 };
 
 /* ============================================================
    LIGHTWEIGHT PHYSICS ENGINE
    ============================================================ */
-class PhysicsBody {
-  constructor(opts = {}) {
-    this.position = opts.position || new THREE.Vector3();
-    this.velocity = opts.velocity || new THREE.Vector3();
-    this.acceleration = new THREE.Vector3();
-    this.mass = opts.mass || 1;
-    this.restitution = opts.restitution || 0.3;
-    this.friction = opts.friction || 0.1;
-    this.isStatic = opts.isStatic || false;
-    this.radius = opts.radius || 0.5;
-    this.halfExtents = opts.halfExtents || null; // AABB
-    this.isGrounded = false;
-    this.mesh = opts.mesh || null;
-    this.type = opts.type || 'dynamic'; // dynamic, static, kinematic
-    this.onCollide = opts.onCollide || null;
-    this.tag = opts.tag || '';
-    this.health = opts.health || 0;
-  }
-
-  applyForce(force) {
-    if (this.isStatic) return;
-    this.acceleration.addScaledVector(force, 1 / this.mass);
-  }
-
-  applyImpulse(impulse) {
-    if (this.isStatic) return;
-    this.velocity.addScaledVector(impulse, 1 / this.mass);
-  }
+function PhysicsBody(opts) {
+  opts = opts || {};
+  this.position = opts.position || new THREE.Vector3();
+  this.velocity = opts.velocity || new THREE.Vector3();
+  this.acceleration = new THREE.Vector3();
+  this.mass = opts.mass || 1;
+  this.restitution = opts.restitution || 0.3;
+  this.friction = opts.friction || 0.1;
+  this.isStatic = opts.isStatic || false;
+  this.radius = opts.radius || 0.5;
+  this.isGrounded = false;
+  this.mesh = opts.mesh || null;
+  this.tag = opts.tag || '';
+  this.health = opts.health || 0;
+  this.userData = {};
 }
 
-class PhysicsWorld {
-  constructor() {
-    this.bodies = [];
-    this.gravity = new THREE.Vector3(0, CONFIG.gravity, 0);
-    this.tempVec = new THREE.Vector3();
+PhysicsBody.prototype.applyForce = function(force) {
+  if (this.isStatic) return;
+  this.acceleration.addScaledVector(force, 1 / this.mass);
+};
+
+PhysicsBody.prototype.applyImpulse = function(impulse) {
+  if (this.isStatic) return;
+  this.velocity.addScaledVector(impulse, 1 / this.mass);
+};
+
+function PhysicsWorld() {
+  this.bodies = [];
+  this.gravity = new THREE.Vector3(0, CONFIG.gravity, 0);
+  this.tempVec = new THREE.Vector3();
+}
+
+PhysicsWorld.prototype.addBody = function(body) {
+  this.bodies.push(body);
+  return body;
+};
+
+PhysicsWorld.prototype.removeBody = function(body) {
+  var i = this.bodies.indexOf(body);
+  if (i >= 0) this.bodies.splice(i, 1);
+};
+
+PhysicsWorld.prototype.step = function(dt) {
+  dt = Math.min(dt, 0.033);
+  var substeps = 2;
+  var subDt = dt / substeps;
+
+  for (var s = 0; s < substeps; s++) {
+    for (var bi = 0; bi < this.bodies.length; bi++) {
+      var body = this.bodies[bi];
+      if (body.isStatic) continue;
+
+      // Apply gravity
+      body.velocity.addScaledVector(this.gravity, subDt);
+
+      // Apply accumulated acceleration
+      body.velocity.addScaledVector(body.acceleration, subDt);
+      body.acceleration.set(0, 0, 0);
+
+      // Position update
+      body.position.addScaledVector(body.velocity, subDt);
+
+      // Friction
+      if (body.isGrounded) {
+        body.velocity.x *= (1 - body.friction);
+        body.velocity.z *= (1 - body.friction);
+      } else {
+        body.velocity.x *= (1 - body.friction * 0.2);
+        body.velocity.z *= (1 - body.friction * 0.2);
+      }
+    }
+    this.resolveCollisions();
   }
 
-  addBody(body) { this.bodies.push(body); return body; }
-  removeBody(body) { const i = this.bodies.indexOf(body); if (i >= 0) this.bodies.splice(i, 1); }
+  // Sync meshes to physics positions
+  for (var mi = 0; mi < this.bodies.length; mi++) {
+    var b = this.bodies[mi];
+    if (b.mesh) b.mesh.position.copy(b.position);
+  }
+};
 
-  step(dt) {
-    dt = Math.min(dt, 0.033); // cap at ~30fps physics
-    const substeps = 2;
-    const subDt = dt / substeps;
+PhysicsWorld.prototype.resolveCollisions = function() {
+  for (var i = 0; i < this.bodies.length; i++) {
+    var a = this.bodies[i];
+    a.isGrounded = false;
 
-    for (let s = 0; s < substeps; s++) {
-      for (const body of this.bodies) {
-        if (body.isStatic || body.type === 'kinematic') continue;
-        // Gravity
-        body.velocity.addScaledVector(this.gravity, subDt);
-        // Acceleration
-        body.velocity.addScaledVector(body.acceleration, subDt);
-        body.acceleration.set(0, 0, 0);
-        // Position update
-        body.position.addScaledVector(body.velocity, subDt);
-        // Friction (horizontal)
-        if (body.isGrounded) {
-          body.velocity.x *= (1 - body.friction);
-          body.velocity.z *= (1 - body.friction);
-        } else {
-          body.velocity.x *= (1 - body.friction * 0.2);
-          body.velocity.z *= (1 - body.friction * 0.2);
+    // Ground plane collision
+    if (!a.isStatic && a.position.y < a.radius) {
+      a.position.y = a.radius;
+      if (a.velocity.y < 0) {
+        a.velocity.y *= -a.restitution;
+        if (Math.abs(a.velocity.y) < 0.5) a.velocity.y = 0;
+      }
+      a.isGrounded = true;
+    }
+
+    // Body-body collisions
+    for (var j = i + 1; j < this.bodies.length; j++) {
+      var b = this.bodies[j];
+      if (a.isStatic && b.isStatic) continue;
+
+      var dx = b.position.x - a.position.x;
+      var dy = b.position.y - a.position.y;
+      var dz = b.position.z - a.position.z;
+      var dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
+      var minDist = a.radius + b.radius;
+
+      if (dist < minDist && dist > 0.001) {
+        var nx = dx / dist;
+        var ny = dy / dist;
+        var nz = dz / dist;
+        var overlap = minDist - dist;
+
+        // Separate bodies
+        var totalInvMass = (a.isStatic ? 0 : 1 / a.mass) + (b.isStatic ? 0 : 1 / b.mass);
+        if (totalInvMass > 0) {
+          if (!a.isStatic) {
+            var ra = (1 / a.mass) / totalInvMass;
+            a.position.x -= nx * overlap * ra;
+            a.position.y -= ny * overlap * ra;
+            a.position.z -= nz * overlap * ra;
+          }
+          if (!b.isStatic) {
+            var rb = (1 / b.mass) / totalInvMass;
+            b.position.x += nx * overlap * rb;
+            b.position.y += ny * overlap * rb;
+            b.position.z += nz * overlap * rb;
+          }
         }
-      }
-      this.resolveCollisions();
-    }
 
-    // Sync meshes
-    for (const body of this.bodies) {
-      if (body.mesh) {
-        body.mesh.position.copy(body.position);
-      }
-    }
-  }
+        // Collision impulse
+        var relVx = a.velocity.x - b.velocity.x;
+        var relVy = a.velocity.y - b.velocity.y;
+        var relVz = a.velocity.z - b.velocity.z;
+        var vn = relVx * nx + relVy * ny + relVz * nz;
 
-  resolveCollisions() {
-    for (let i = 0; i < this.bodies.length; i++) {
-      const a = this.bodies[i];
-      a.isGrounded = false;
+        if (vn > 0) continue; // separating
 
-      // Ground plane collision
-      if (!a.isStatic && a.position.y < a.radius) {
-        a.position.y = a.radius;
-        if (a.velocity.y < 0) {
-          a.velocity.y *= -a.restitution;
-          if (Math.abs(a.velocity.y) < 0.5) a.velocity.y = 0;
-        }
-        a.isGrounded = true;
-      }
+        var e = Math.min(a.restitution, b.restitution);
+        var jImpulse = -(1 + e) * vn / totalInvMass;
 
-      // Body-body collisions
-      for (let j = i + 1; j < this.bodies.length; j++) {
-        const b = this.bodies[j];
-        if (a.isStatic && b.isStatic) continue;
-        this.checkCollision(a, b);
-      }
-    }
-  }
-
-  checkCollision(a, b) {
-    const dx = b.position.x - a.position.x;
-    const dy = b.position.y - a.position.y;
-    const dz = b.position.z - a.position.z;
-    const dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
-    const minDist = a.radius + b.radius;
-
-    if (dist < minDist && dist > 0.001) {
-      const nx = dx / dist, ny = dy / dist, nz = dz / dist;
-      const overlap = minDist - dist;
-
-      // Separate
-      const totalMass = (a.isStatic ? 0 : 1/a.mass) + (b.isStatic ? 0 : 1/b.mass);
-      if (totalMass > 0) {
         if (!a.isStatic) {
-          const ratio = (1/a.mass) / totalMass;
-          a.position.x -= nx * overlap * ratio;
-          a.position.y -= ny * overlap * ratio;
-          a.position.z -= nz * overlap * ratio;
+          a.velocity.x += (jImpulse / a.mass) * nx;
+          a.velocity.y += (jImpulse / a.mass) * ny;
+          a.velocity.z += (jImpulse / a.mass) * nz;
         }
         if (!b.isStatic) {
-          const ratio = (1/b.mass) / totalMass;
-          b.position.x += nx * overlap * ratio;
-          b.position.y += ny * overlap * ratio;
-          b.position.z += nz * overlap * ratio;
+          b.velocity.x -= (jImpulse / b.mass) * nx;
+          b.velocity.y -= (jImpulse / b.mass) * ny;
+          b.velocity.z -= (jImpulse / b.mass) * nz;
         }
+
+        // Grounded check
+        if (ny > 0.5 && !a.isStatic) a.isGrounded = true;
+        if (ny < -0.5 && !b.isStatic) b.isGrounded = true;
       }
+    }
+  }
+};
 
-      // Impulse
-      const relVelX = a.velocity.x - b.velocity.x;
-      const relVelY = a.velocity.y - b.velocity.y;
-      const relVelZ = a.velocity.z - b.velocity.z;
-      const velAlongNormal = relVelX * nx + relVelY * ny + relVelZ * nz;
+PhysicsWorld.prototype.raycast = function(origin, direction, maxDist) {
+  maxDist = maxDist || 50;
+  var closest = null;
+  var closestDist = maxDist;
+  var oc = this.tempVec;
 
-      if (velAlongNormal > 0) return; // separating
-
-      const e = Math.min(a.restitution, b.restitution);
-      let j = -(1 + e) * velAlongNormal;
-      j /= (a.isStatic ? 0 : 1/a.mass) + (b.isStatic ? 0 : 1/b.mass);
-
-      if (!a.isStatic) {
-        a.velocity.x += (j / a.mass) * nx;
-        a.velocity.y += (j / a.mass) * ny;
-        a.velocity.z += (j / a.mass) * nz;
+  for (var i = 0; i < this.bodies.length; i++) {
+    var body = this.bodies[i];
+    oc.copy(origin).sub(body.position);
+    var b2 = oc.dot(direction);
+    var c2 = oc.dot(oc) - body.radius * body.radius;
+    var disc = b2 * b2 - c2;
+    if (disc > 0) {
+      var t = -b2 - Math.sqrt(disc);
+      if (t > 0 && t < closestDist) {
+        closestDist = t;
+        closest = body;
       }
-      if (!b.isStatic) {
-        b.velocity.x -= (j / b.mass) * nx;
-        b.velocity.y -= (j / b.mass) * ny;
-        b.velocity.z -= (j / b.mass) * nz;
-      }
-
-      // Ground check for a
-      if (ny > 0.5 && !a.isStatic) a.isGrounded = true;
-      if (ny < -0.5 && !b.isStatic) b.isGrounded = true;
-
-      if (a.onCollide) a.onCollide(b);
-      if (b.onCollide) b.onCollide(a);
     }
   }
 
-  raycast(origin, direction, maxDist = 50) {
-    let closest = null;
-    let closestDist = maxDist;
-    for (const body of this.bodies) {
-      // Sphere ray intersection
-      const oc = this.tempVec.copy(origin).sub(body.position);
-      const b2 = oc.dot(direction);
-      const c2 = oc.dot(oc) - body.radius * body.radius;
-      const disc = b2 * b2 - c2;
-      if (disc > 0) {
-        const t = -b2 - Math.sqrt(disc);
-        if (t > 0 && t < closestDist) {
-          closestDist = t;
-          closest = body;
-        }
-      }
-    }
-    return closest ? { body: closest, distance: closestDist, point: origin.clone().addScaledVector(direction, closestDist) } : null;
-  }
-}
+  return closest ? {
+    body: closest,
+    distance: closestDist,
+    point: origin.clone().addScaledVector(direction, closestDist)
+  } : null;
+};
 
 /* ============================================================
-   PARTICLE SYSTEM
+   PARTICLE EMITTER
    ============================================================ */
-class ParticleEmitter {
-  constructor(scene, opts = {}) {
-    this.scene = scene;
-    this.maxParticles = opts.maxParticles || 200;
-    this.lifetime = opts.lifetime || 1.5;
-    this.size = opts.size || 0.15;
-    this.color = opts.color || new THREE.Color(0x00f0ff);
-    this.gravity = opts.gravity || -2;
-    this.speed = opts.speed || 3;
-    this.spread = opts.spread || 1;
-    this.particles = [];
-    this.geometry = new THREE.BufferGeometry();
-    this.positions = new Float32Array(this.maxParticles * 3);
-    this.colors = new Float32Array(this.maxParticles * 3);
-    this.sizes = new Float32Array(this.maxParticles);
-    this.geometry.setAttribute('position', new THREE.BufferAttribute(this.positions, 3));
-    this.geometry.setAttribute('color', new THREE.BufferAttribute(this.colors, 3));
-    this.geometry.setAttribute('size', new THREE.BufferAttribute(this.sizes, 1));
-    this.material = new THREE.PointsMaterial({
-      size: this.size, vertexColors: true, transparent: true, opacity: 0.8,
-      blending: THREE.AdditiveBlending, depthWrite: false, sizeAttenuation: true
-    });
-    this.points = new THREE.Points(this.geometry, this.material);
-    scene.add(this.points);
-    this.active = true;
-  }
+function ParticleEmitter(scene, opts) {
+  opts = opts || {};
+  this.scene = scene;
+  this.maxParticles = opts.maxParticles || 200;
+  this.lifetime = opts.lifetime || 1.5;
+  this.size = opts.size || 0.15;
+  this.color = opts.color || new THREE.Color(0x00f0ff);
+  this.gravity = opts.gravity || -2;
+  this.speed = opts.speed || 3;
+  this.spread = opts.spread || 1;
+  this.particles = [];
 
-  emit(position, count = 10) {
-    for (let i = 0; i < count; i++) {
-      if (this.particles.length >= this.maxParticles) break;
-      this.particles.push({
-        x: position.x + (Math.random() - 0.5) * this.spread,
-        y: position.y + (Math.random() - 0.5) * this.spread,
-        z: position.z + (Math.random() - 0.5) * this.spread,
-        vx: (Math.random() - 0.5) * this.speed,
-        vy: Math.random() * this.speed,
-        vz: (Math.random() - 0.5) * this.speed,
-        life: this.lifetime,
-        maxLife: this.lifetime
-      });
-    }
-  }
+  this.geometry = new THREE.BufferGeometry();
+  this.positions = new Float32Array(this.maxParticles * 3);
+  this.colors = new Float32Array(this.maxParticles * 3);
+  this.sizes = new Float32Array(this.maxParticles);
 
-  update(dt) {
-    for (let i = this.particles.length - 1; i >= 0; i--) {
-      const p = this.particles[i];
-      p.life -= dt;
-      if (p.life <= 0) { this.particles.splice(i, 1); continue; }
-      p.vy += this.gravity * dt;
-      p.x += p.vx * dt;
-      p.y += p.vy * dt;
-      p.z += p.vz * dt;
-    }
+  this.geometry.setAttribute('position', new THREE.BufferAttribute(this.positions, 3));
+  this.geometry.setAttribute('color', new THREE.BufferAttribute(this.colors, 3));
+  this.geometry.setAttribute('size', new THREE.BufferAttribute(this.sizes, 1));
 
-    for (let i = 0; i < this.maxParticles; i++) {
-      if (i < this.particles.length) {
-        const p = this.particles[i];
-        const alpha = p.life / p.maxLife;
-        this.positions[i * 3] = p.x;
-        this.positions[i * 3 + 1] = p.y;
-        this.positions[i * 3 + 2] = p.z;
-        this.colors[i * 3] = this.color.r * alpha;
-        this.colors[i * 3 + 1] = this.color.g * alpha;
-        this.colors[i * 3 + 2] = this.color.b * alpha;
-        this.sizes[i] = this.size * alpha;
-      } else {
-        this.positions[i * 3 + 1] = -9999;
-        this.sizes[i] = 0;
-      }
-    }
-    this.geometry.attributes.position.needsUpdate = true;
-    this.geometry.attributes.color.needsUpdate = true;
-    this.geometry.attributes.size.needsUpdate = true;
-  }
+  this.material = new THREE.PointsMaterial({
+    size: this.size,
+    vertexColors: true,
+    transparent: true,
+    opacity: 0.8,
+    blending: THREE.AdditiveBlending,
+    depthWrite: false,
+    sizeAttenuation: true
+  });
 
-  dispose() {
-    this.scene.remove(this.points);
-    this.geometry.dispose();
-    this.material.dispose();
-  }
+  this.points = new THREE.Points(this.geometry, this.material);
+  scene.add(this.points);
 }
+
+ParticleEmitter.prototype.emit = function(position, count) {
+  count = count || 10;
+  for (var i = 0; i < count; i++) {
+    if (this.particles.length >= this.maxParticles) break;
+    this.particles.push({
+      x: position.x + (Math.random() - 0.5) * this.spread,
+      y: position.y + (Math.random() - 0.5) * this.spread,
+      z: position.z + (Math.random() - 0.5) * this.spread,
+      vx: (Math.random() - 0.5) * this.speed,
+      vy: Math.random() * this.speed,
+      vz: (Math.random() - 0.5) * this.speed,
+      life: this.lifetime,
+      maxLife: this.lifetime
+    });
+  }
+};
+
+ParticleEmitter.prototype.update = function(dt) {
+  for (var i = this.particles.length - 1; i >= 0; i--) {
+    var p = this.particles[i];
+    p.life -= dt;
+    if (p.life <= 0) {
+      this.particles.splice(i, 1);
+      continue;
+    }
+    p.vy += this.gravity * dt;
+    p.x += p.vx * dt;
+    p.y += p.vy * dt;
+    p.z += p.vz * dt;
+  }
+
+  for (var j = 0; j < this.maxParticles; j++) {
+    if (j < this.particles.length) {
+      var pp = this.particles[j];
+      var alpha = pp.life / pp.maxLife;
+      this.positions[j * 3] = pp.x;
+      this.positions[j * 3 + 1] = pp.y;
+      this.positions[j * 3 + 2] = pp.z;
+      this.colors[j * 3] = this.color.r * alpha;
+      this.colors[j * 3 + 1] = this.color.g * alpha;
+      this.colors[j * 3 + 2] = this.color.b * alpha;
+      this.sizes[j] = this.size * alpha;
+    } else {
+      this.positions[j * 3 + 1] = -9999;
+      this.sizes[j] = 0;
+    }
+  }
+  this.geometry.attributes.position.needsUpdate = true;
+  this.geometry.attributes.color.needsUpdate = true;
+  this.geometry.attributes.size.needsUpdate = true;
+};
 
 /* ============================================================
    CEL-SHADING MATERIAL FACTORY
    ============================================================ */
-const CelShader = {
-  vertexShader: `
-    varying vec3 vNormal;
-    varying vec3 vViewPos;
-    varying vec3 vWorldPos;
-    void main() {
-      vNormal = normalize(normalMatrix * normal);
-      vec4 mvPos = modelViewMatrix * vec4(position, 1.0);
-      vViewPos = mvPos.xyz;
-      vWorldPos = (modelMatrix * vec4(position, 1.0)).xyz;
-      gl_Position = projectionMatrix * mvPos;
-    }
-  `,
-  fragmentShader: `
-    uniform vec3 uColor;
-    uniform vec3 uEmissive;
-    uniform vec3 uLightDir;
-    varying vec3 vNormal;
-    varying vec3 vViewPos;
-    varying vec3 vWorldPos;
-    void main() {
-      float NdotL = dot(vNormal, uLightDir);
-      float intensity;
-      if (NdotL > 0.6) intensity = 1.0;
-      else if (NdotL > 0.2) intensity = 0.7;
-      else if (NdotL > -0.1) intensity = 0.45;
-      else intensity = 0.25;
-      vec3 color = uColor * intensity;
-      vec3 viewDir = normalize(-vViewPos);
-      float rim = 1.0 - max(dot(viewDir, vNormal), 0.0);
-      rim = smoothstep(0.5, 1.0, rim);
-      color += vec3(0.3, 0.5, 1.0) * rim * 0.35;
-      vec3 halfDir = normalize(uLightDir + viewDir);
-      float spec = pow(max(dot(vNormal, halfDir), 0.0), 48.0);
-      float specBanded = step(0.5, spec);
-      color += vec3(1.0) * specBanded * 0.2;
-      color += uEmissive;
-      gl_FragColor = vec4(color, 1.0);
-    }
-  `,
+var CelShader = {
+  vertexShader: [
+    'varying vec3 vNormal;',
+    'varying vec3 vViewPos;',
+    'varying vec3 vWorldPos;',
+    'void main() {',
+    '  vNormal = normalize(normalMatrix * normal);',
+    '  vec4 mvPos = modelViewMatrix * vec4(position, 1.0);',
+    '  vViewPos = mvPos.xyz;',
+    '  vWorldPos = (modelMatrix * vec4(position, 1.0)).xyz;',
+    '  gl_Position = projectionMatrix * mvPos;',
+    '}'
+  ].join('\n'),
 
-  create(color, emissive = '#000000') {
+  fragmentShader: [
+    'uniform vec3 uColor;',
+    'uniform vec3 uEmissive;',
+    'uniform vec3 uLightDir;',
+    'varying vec3 vNormal;',
+    'varying vec3 vViewPos;',
+    'varying vec3 vWorldPos;',
+    'void main() {',
+    '  float NdotL = dot(vNormal, uLightDir);',
+    '  float intensity;',
+    '  if (NdotL > 0.6) intensity = 1.0;',
+    '  else if (NdotL > 0.2) intensity = 0.7;',
+    '  else if (NdotL > -0.1) intensity = 0.45;',
+    '  else intensity = 0.25;',
+    '  vec3 color = uColor * intensity;',
+    '  vec3 viewDir = normalize(-vViewPos);',
+    '  float rim = 1.0 - max(dot(viewDir, vNormal), 0.0);',
+    '  rim = smoothstep(0.5, 1.0, rim);',
+    '  color += vec3(0.3, 0.5, 1.0) * rim * 0.35;',
+    '  vec3 halfDir = normalize(uLightDir + viewDir);',
+    '  float spec = pow(max(dot(vNormal, halfDir), 0.0), 48.0);',
+    '  float specBanded = step(0.5, spec);',
+    '  color += vec3(1.0) * specBanded * 0.2;',
+    '  color += uEmissive;',
+    '  gl_FragColor = vec4(color, 1.0);',
+    '}'
+  ].join('\n'),
+
+  create: function(color, emissive) {
     return new THREE.ShaderMaterial({
       uniforms: {
         uColor: { value: new THREE.Color(color) },
-        uEmissive: { value: new THREE.Color(emissive) },
+        uEmissive: { value: new THREE.Color(emissive || '#000000') },
         uLightDir: { value: new THREE.Vector3(1, 2, 1.5).normalize() }
       },
-      vertexShader: this.vertexShader,
-      fragmentShader: this.fragmentShader
+      vertexShader: CelShader.vertexShader,
+      fragmentShader: CelShader.fragmentShader
     });
   }
 };
@@ -1749,116 +1817,132 @@ const CelShader = {
 /* ============================================================
    CHARACTER MODEL BUILDER
    ============================================================ */
-const CharacterBuilder = {
-  create(charDef) {
-    const group = new THREE.Group();
-    const mat = CelShader.create(charDef.color, charDef.emissive);
-    const skinMat = CelShader.create('#f5d0b0', '#000000');
-    const darkMat = CelShader.create('#222233', '#000000');
+var CharacterBuilder = {
+  create: function(charDef) {
+    var group = new THREE.Group();
+    var mat = CelShader.create(charDef.color, charDef.emissive);
+    var skinMat = CelShader.create('#f5d0b0', '#000000');
+    var darkMat = CelShader.create('#222233', '#000000');
 
-    // Body
-    const body = new THREE.Mesh(new THREE.CylinderGeometry(0.28, 0.22, 0.7, 8), mat);
+    // Body torso
+    var body = new THREE.Mesh(new THREE.CylinderGeometry(0.28, 0.22, 0.7, 8), mat);
     body.position.y = 0.85;
     group.add(body);
 
     // Head
-    const head = new THREE.Mesh(new THREE.SphereGeometry(0.24, 12, 12), skinMat);
+    var head = new THREE.Mesh(new THREE.SphereGeometry(0.24, 12, 12), skinMat);
     head.position.y = 1.45;
     group.add(head);
 
-    // Hair (spiky anime style)
-    const hairMat = CelShader.create(charDef.color, charDef.emissive);
-    for (let i = 0; i < 7; i++) {
-      const angle = (i / 7) * Math.PI * 2;
-      const spike = new THREE.Mesh(new THREE.ConeGeometry(0.08, 0.2 + Math.random() * 0.15, 4), hairMat);
+    // Anime spiky hair
+    var hairMat = CelShader.create(charDef.color, charDef.emissive);
+    for (var hi = 0; hi < 7; hi++) {
+      var angle = (hi / 7) * Math.PI * 2;
+      var spike = new THREE.Mesh(new THREE.ConeGeometry(0.08, 0.2 + Math.random() * 0.15, 4), hairMat);
       spike.position.set(Math.cos(angle) * 0.18, 1.65 + Math.random() * 0.1, Math.sin(angle) * 0.18);
       spike.rotation.x = Math.sin(angle) * 0.3;
       spike.rotation.z = -Math.cos(angle) * 0.3;
       group.add(spike);
     }
-    // Hair cap
-    const hairCap = new THREE.Mesh(new THREE.SphereGeometry(0.26, 12, 8, 0, Math.PI * 2, 0, Math.PI * 0.55), hairMat);
+    var hairCap = new THREE.Mesh(new THREE.SphereGeometry(0.26, 12, 8, 0, Math.PI * 2, 0, Math.PI * 0.55), hairMat);
     hairCap.position.y = 1.48;
     group.add(hairCap);
 
-    // Eyes (anime style - bright colored)
-    const eyeMat = new THREE.MeshBasicMaterial({ color: new THREE.Color(charDef.color) });
-    const eyeWhite = new THREE.MeshBasicMaterial({ color: 0xffffff });
-    [-0.08, 0.08].forEach(x => {
-      const white = new THREE.Mesh(new THREE.PlaneGeometry(0.09, 0.06), eyeWhite);
-      white.position.set(x, 1.47, 0.22);
+    // Anime eyes
+    var eyeMat = new THREE.MeshBasicMaterial({ color: new THREE.Color(charDef.color) });
+    var eyeWhite = new THREE.MeshBasicMaterial({ color: 0xffffff });
+    var eyePositions = [-0.08, 0.08];
+    for (var ei = 0; ei < eyePositions.length; ei++) {
+      var ex = eyePositions[ei];
+      var white = new THREE.Mesh(new THREE.PlaneGeometry(0.09, 0.06), eyeWhite);
+      white.position.set(ex, 1.47, 0.22);
       group.add(white);
-      const iris = new THREE.Mesh(new THREE.PlaneGeometry(0.05, 0.05), eyeMat);
-      iris.position.set(x, 1.47, 0.225);
+      var iris = new THREE.Mesh(new THREE.PlaneGeometry(0.05, 0.05), eyeMat);
+      iris.position.set(ex, 1.47, 0.225);
       group.add(iris);
-    });
+    }
 
     // Arms
-    const leftArm = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.05, 0.5, 6), mat);
+    var leftArm = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.05, 0.5, 6), mat);
     leftArm.position.set(-0.38, 0.9, 0);
     leftArm.rotation.z = 0.2;
     group.add(leftArm);
-    group.userData.leftArm = leftArm;
 
-    const rightArm = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.05, 0.5, 6), mat);
+    var rightArm = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.05, 0.5, 6), mat);
     rightArm.position.set(0.38, 0.9, 0);
     rightArm.rotation.z = -0.2;
     group.add(rightArm);
-    group.userData.rightArm = rightArm;
 
     // Legs
-    const leftLeg = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.06, 0.5, 6), darkMat);
+    var leftLeg = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.06, 0.5, 6), darkMat);
     leftLeg.position.set(-0.12, 0.3, 0);
     group.add(leftLeg);
-    group.userData.leftLeg = leftLeg;
 
-    const rightLeg = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.06, 0.5, 6), darkMat);
+    var rightLeg = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.06, 0.5, 6), darkMat);
     rightLeg.position.set(0.12, 0.3, 0);
     group.add(rightLeg);
-    group.userData.rightLeg = rightLeg;
 
-    // Outline effect (inverted hull)
-    const outlineMat = new THREE.MeshBasicMaterial({ color: 0x111122, side: THREE.BackSide });
-    const outlineBody = new THREE.Mesh(new THREE.CylinderGeometry(0.30, 0.24, 0.72, 8), outlineMat);
+    // Outline (inverted hull)
+    var outlineMat = new THREE.MeshBasicMaterial({ color: 0x111122, side: THREE.BackSide });
+    var outlineBody = new THREE.Mesh(new THREE.CylinderGeometry(0.30, 0.24, 0.72, 8), outlineMat);
     outlineBody.position.y = 0.85;
     group.add(outlineBody);
-    const outlineHead = new THREE.Mesh(new THREE.SphereGeometry(0.26, 12, 12), outlineMat);
+    var outlineHead = new THREE.Mesh(new THREE.SphereGeometry(0.26, 12, 12), outlineMat);
     outlineHead.position.y = 1.45;
     group.add(outlineHead);
 
     // Ability glow ring
-    const ringGeo = new THREE.TorusGeometry(0.5, 0.02, 8, 32);
-    const ringMat = new THREE.MeshBasicMaterial({ color: new THREE.Color(charDef.color), transparent: true, opacity: 0.3 });
-    const ring = new THREE.Mesh(ringGeo, ringMat);
+    var ring = new THREE.Mesh(
+      new THREE.TorusGeometry(0.5, 0.02, 8, 32),
+      new THREE.MeshBasicMaterial({ color: new THREE.Color(charDef.color), transparent: true, opacity: 0.3 })
+    );
     ring.position.y = 0.05;
     ring.rotation.x = Math.PI / 2;
     group.add(ring);
-    group.userData.ring = ring;
 
-    group.userData.charDef = charDef;
+    // Store refs for animation
+    group.userData = {
+      leftArm: leftArm,
+      rightArm: rightArm,
+      leftLeg: leftLeg,
+      rightLeg: rightLeg,
+      ring: ring,
+      charDef: charDef
+    };
+
     return group;
   },
 
-  animate(group, state, time) {
-    if (!group.userData.leftArm) return;
-    const { leftArm, rightArm, leftLeg, rightLeg, ring } = group.userData;
+  animate: function(group, state, time) {
+    if (!group.userData || !group.userData.leftArm) return;
+    var leftArm = group.userData.leftArm;
+    var rightArm = group.userData.rightArm;
+    var leftLeg = group.userData.leftLeg;
+    var rightLeg = group.userData.rightLeg;
+    var ring = group.userData.ring;
+
+    // Idle bob
+    group.position.y += Math.sin(time * 2) * 0.001;
 
     switch (state) {
       case 'idle':
-        group.position.y += Math.sin(time * 2) * 0.001;
+        leftArm.rotation.x = 0;
+        rightArm.rotation.x = 0;
         leftArm.rotation.z = 0.2 + Math.sin(time * 1.5) * 0.05;
         rightArm.rotation.z = -0.2 - Math.sin(time * 1.5) * 0.05;
         leftLeg.rotation.x = 0;
         rightLeg.rotation.x = 0;
         if (ring) ring.rotation.z = time;
         break;
+
       case 'run':
-        const swing = Math.sin(time * 12) * 0.6;
+        var swing = Math.sin(time * 12) * 0.6;
         leftArm.rotation.x = swing;
         rightArm.rotation.x = -swing;
         leftLeg.rotation.x = -swing;
         rightLeg.rotation.x = swing;
         break;
+
       case 'jump':
         leftArm.rotation.z = 0.8;
         rightArm.rotation.z = -0.8;
@@ -1867,6 +1951,7 @@ const CharacterBuilder = {
         leftLeg.rotation.x = 0.2;
         rightLeg.rotation.x = -0.2;
         break;
+
       case 'attack':
         rightArm.rotation.x = -1.5;
         rightArm.rotation.z = 0;
@@ -1879,29 +1964,37 @@ const CharacterBuilder = {
 /* ============================================================
    WORLD BUILDER
    ============================================================ */
-const WorldBuilder = {
+var WorldBuilder = {
   platforms: [],
   collectibles: [],
   enemies: [],
-  puzzles: [],
+  movingPlatforms: [],
 
-  clear(scene) {
-    this.platforms.forEach(p => scene.remove(p));
-    this.collectibles.forEach(c => { scene.remove(c.mesh); });
-    this.enemies.forEach(e => { scene.remove(e.mesh); });
-    this.puzzles.forEach(p => { scene.remove(p.mesh); });
+  clear: function(scene) {
+    var i;
+    for (i = 0; i < this.platforms.length; i++) {
+      try { scene.remove(this.platforms[i]); } catch(e) {}
+    }
+    for (i = 0; i < this.collectibles.length; i++) {
+      try {
+        scene.remove(this.collectibles[i].mesh);
+        if (this.collectibles[i].light) scene.remove(this.collectibles[i].light);
+      } catch(e) {}
+    }
+    for (i = 0; i < this.enemies.length; i++) {
+      try { scene.remove(this.enemies[i].mesh); } catch(e) {}
+    }
     this.platforms = [];
     this.collectibles = [];
     this.enemies = [];
-    this.puzzles = [];
+    this.movingPlatforms = [];
   },
 
-  buildLevel(scene, physics) {
+  buildLevel: function(scene, physics) {
     this.clear(scene);
 
-    const grassMat = CelShader.create('#2a8844', '#000000');
-    const rockMat = CelShader.create('#555566', '#000000');
-    const glowMat = new THREE.MeshBasicMaterial({ color: 0x00f0ff, transparent: true, opacity: 0.3 });
+    var grassMat = CelShader.create('#2a8844', '#000000');
+    var rockMat = CelShader.create('#555566', '#000000');
 
     // === ISLAND 1: Start ===
     this.createIsland(scene, physics, 0, 0, 0, 8, 1, 8, grassMat, rockMat);
@@ -1911,23 +2004,23 @@ const WorldBuilder = {
     this.addCollectible(scene, physics, new THREE.Vector3(0, 1.5, -3), 'coin');
     this.addCollectible(scene, physics, new THREE.Vector3(2, 1.5, -2), 'coin');
 
-    // === ISLAND 2: Physics Playground (connected by bridge) ===
+    // === ISLAND 2: Physics Playground ===
     this.createBridge(scene, physics, 0, 0, -6, 0, 0, -14, 2);
     this.createIsland(scene, physics, 0, -1, -18, 10, 1.5, 10, grassMat, rockMat);
 
     // Pushable blocks
-    for (let i = 0; i < 3; i++) {
-      const blockMat = CelShader.create('#4488cc', '#224466');
-      const blockMesh = new THREE.Mesh(new THREE.BoxGeometry(0.8, 0.8, 0.8), blockMat);
-      blockMesh.position.set(-2 + i * 2, 0.5, -18);
+    for (var bi = 0; bi < 3; bi++) {
+      var blockMat = CelShader.create('#4488cc', '#224466');
+      var blockMesh = new THREE.Mesh(new THREE.BoxGeometry(0.8, 0.8, 0.8), blockMat);
+      blockMesh.position.set(-2 + bi * 2, 0.5, -18);
       scene.add(blockMesh);
-      const body = physics.addBody(new PhysicsBody({
-        position: blockMesh.position.clone(), mass: 3, radius: 0.4, mesh: blockMesh,
-        restitution: 0.1, friction: 0.3, tag: 'pushable'
+      physics.addBody(new PhysicsBody({
+        position: blockMesh.position.clone(), mass: 3, radius: 0.4,
+        mesh: blockMesh, restitution: 0.1, friction: 0.3, tag: 'pushable'
       }));
     }
 
-    // Target platform (raised, need block stack)
+    // Target platform (raised)
     this.createIsland(scene, physics, 5, 2, -18, 3, 0.5, 3, grassMat, rockMat);
     this.addCollectible(scene, physics, new THREE.Vector3(5, 3.5, -18), 'crystal');
 
@@ -1945,76 +2038,83 @@ const WorldBuilder = {
     this.createIsland(scene, physics, 0, 1, -54, 6, 1, 6, CelShader.create('#444466', '#222244'), rockMat);
 
     // Moving platform
-    const movPlatMesh = new THREE.Mesh(
+    var movPlatMesh = new THREE.Mesh(
       new THREE.BoxGeometry(3, 0.3, 3),
       CelShader.create('#6644aa', '#4422aa')
     );
     movPlatMesh.position.set(0, 1, -60);
     scene.add(movPlatMesh);
-    const movPlatBody = physics.addBody(new PhysicsBody({
-      position: movPlatMesh.position.clone(), isStatic: true, radius: 2, mesh: movPlatMesh, tag: 'moving'
+    var movPlatBody = physics.addBody(new PhysicsBody({
+      position: movPlatMesh.position.clone(), isStatic: true, radius: 2,
+      mesh: movPlatMesh, tag: 'moving'
     }));
-    movPlatBody.userData = { origin: new THREE.Vector3(0, 1, -60), axis: 'x', range: 4, speed: 1.5 };
+    this.movingPlatforms.push({
+      body: movPlatBody,
+      origin: new THREE.Vector3(0, 1, -60),
+      axis: 'x',
+      range: 4,
+      speed: 1.5
+    });
 
     // Final platform
     this.createIsland(scene, physics, 0, 2, -68, 5, 1, 5, CelShader.create('#446644', '#224422'), rockMat);
 
     // Goal
-    const goalGeo = new THREE.OctahedronGeometry(0.5, 0);
-    const goalMat = new THREE.MeshBasicMaterial({ color: 0xffd700, transparent: true, opacity: 0.7 });
-    const goalMesh = new THREE.Mesh(goalGeo, goalMat);
+    var goalMesh = new THREE.Mesh(
+      new THREE.OctahedronGeometry(0.5, 0),
+      new THREE.MeshBasicMaterial({ color: 0xffd700, transparent: true, opacity: 0.7 })
+    );
     goalMesh.position.set(0, 4, -68);
     scene.add(goalMesh);
-    const goalBody = physics.addBody(new PhysicsBody({
-      position: goalMesh.position.clone(), isStatic: true, radius: 1, mesh: goalMesh, tag: 'goal'
+
+    var goalBody = physics.addBody(new PhysicsBody({
+      position: goalMesh.position.clone(), isStatic: true, radius: 1,
+      mesh: goalMesh, tag: 'goal'
     }));
     goalBody.userData = { type: 'goal' };
 
     // Goal glow
-    const goalLight = new THREE.PointLight(0xffd700, 2, 8);
+    var goalLight = new THREE.PointLight(0xffd700, 2, 8);
     goalLight.position.set(0, 4, -68);
     scene.add(goalLight);
 
-    // Collectibles along the path
-    const coinPositions = [
-      [0,1.5,-4],[0,1.5,-8],[0,1.5,-12],
-      [-3,0.5,-18],[3,0.5,-18],
-      [0,1.5,-30],[0,1.5,-33],
-      [0,2,-50],[0,2,-52],
-      [0,3.5,-68]
+    // Collectibles along path
+    var coinPositions = [
+      [0, 1.5, -4], [0, 1.5, -8], [0, 1.5, -12],
+      [-3, 0.5, -18], [3, 0.5, -18],
+      [0, 1.5, -30], [0, 1.5, -33],
+      [0, 2, -50], [0, 2, -52],
+      [0, 3.5, -68]
     ];
-    coinPositions.forEach(([x,y,z]) => {
-      this.addCollectible(scene, physics, new THREE.Vector3(x, y, z), Math.random() > 0.7 ? 'crystal' : 'coin');
-    });
+    for (var ci = 0; ci < coinPositions.length; ci++) {
+      var cp = coinPositions[ci];
+      var ctype = Math.random() > 0.7 ? 'crystal' : 'coin';
+      this.addCollectible(scene, physics, new THREE.Vector3(cp[0], cp[1], cp[2]), ctype);
+    }
 
-    return { goalMesh, goalBody, movPlatBody };
+    return { goalMesh: goalMesh, goalBody: goalBody };
   },
 
-  createIsland(scene, physics, x, y, z, w, h, d, topMat, sideMat) {
-    // Top surface
-    const top = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), topMat);
+  createIsland: function(scene, physics, x, y, z, w, h, d, topMat, sideMat) {
+    var top = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), topMat);
     top.position.set(x, y, z);
     top.receiveShadow = true;
     scene.add(top);
 
-    // Side rock
-    const side = new THREE.Mesh(new THREE.BoxGeometry(w + 0.2, h + 2, d + 0.2), sideMat);
+    var side = new THREE.Mesh(new THREE.BoxGeometry(w + 0.2, h + 2, d + 0.2), sideMat);
     side.position.set(x, y - 1.5, z);
     scene.add(side);
 
-    // Edge glow
-    const edges = new THREE.EdgesGeometry(new THREE.BoxGeometry(w, 0.1, d));
-    const lineMat = new THREE.LineBasicMaterial({ color: 0x00f0ff, transparent: true, opacity: 0.15 });
-    const edgeLines = new THREE.LineSegments(edges, lineMat);
-    edgeLines.position.set(x, y + h/2 + 0.05, z);
+    var edges = new THREE.EdgesGeometry(new THREE.BoxGeometry(w, 0.1, d));
+    var lineMat = new THREE.LineBasicMaterial({ color: 0x00f0ff, transparent: true, opacity: 0.15 });
+    var edgeLines = new THREE.LineSegments(edges, lineMat);
+    edgeLines.position.set(x, y + h / 2 + 0.05, z);
     scene.add(edgeLines);
 
-    // Physics
     physics.addBody(new PhysicsBody({
-      position: new THREE.Vector3(x, y + h/2, z),
+      position: new THREE.Vector3(x, y + h / 2, z),
       isStatic: true,
       radius: Math.max(w, d) / 2 + 0.5,
-      halfExtents: new THREE.Vector3(w/2, h/2, d/2),
       tag: 'platform'
     }));
 
@@ -2022,96 +2122,114 @@ const WorldBuilder = {
     return top;
   },
 
-  createBridge(scene, physics, x1, y1, z1, x2, y2, z2, segments) {
-    const dx = (x2-x1)/segments, dy = (y2-y1)/segments, dz = (z2-z1)/segments;
-    const bridgeMat = CelShader.create('#555577', '#333355');
-    for (let i = 0; i < segments; i++) {
-      const px = x1 + dx * (i + 0.5);
-      const py = y1 + dy * (i + 0.5);
-      const pz = z1 + dz * (i + 0.5);
-      const plank = new THREE.Mesh(new THREE.BoxGeometry(2, 0.2, 2.5), bridgeMat);
+  createBridge: function(scene, physics, x1, y1, z1, x2, y2, z2, segments) {
+    var dx = (x2 - x1) / segments;
+    var dy = (y2 - y1) / segments;
+    var dz = (z2 - z1) / segments;
+    var bridgeMat = CelShader.create('#555577', '#333355');
+
+    for (var i = 0; i < segments; i++) {
+      var px = x1 + dx * (i + 0.5);
+      var py = y1 + dy * (i + 0.5);
+      var pz = z1 + dz * (i + 0.5);
+      var plank = new THREE.Mesh(new THREE.BoxGeometry(2, 0.2, 2.5), bridgeMat);
       plank.position.set(px, py, pz);
       scene.add(plank);
       physics.addBody(new PhysicsBody({
-        position: new THREE.Vector3(px, py, pz), isStatic: true, radius: 1.5, tag: 'bridge'
+        position: new THREE.Vector3(px, py, pz),
+        isStatic: true, radius: 1.5, tag: 'bridge'
       }));
       this.platforms.push(plank);
     }
   },
 
-  addCollectible(scene, physics, pos, type) {
-    const isCrystal = type === 'crystal';
-    const geo = isCrystal ? new THREE.OctahedronGeometry(0.25, 0) : new THREE.CylinderGeometry(0.2, 0.2, 0.05, 12);
-    const mat = new THREE.MeshBasicMaterial({
+  addCollectible: function(scene, physics, pos, type) {
+    var isCrystal = type === 'crystal';
+    var geo = isCrystal
+      ? new THREE.OctahedronGeometry(0.25, 0)
+      : new THREE.CylinderGeometry(0.2, 0.2, 0.05, 12);
+    var mat = new THREE.MeshBasicMaterial({
       color: isCrystal ? 0x8844ff : 0xffd700,
       transparent: true, opacity: 0.9
     });
-    const mesh = new THREE.Mesh(geo, mat);
+    var mesh = new THREE.Mesh(geo, mat);
     mesh.position.copy(pos);
     scene.add(mesh);
 
-    // Glow
-    const light = new THREE.PointLight(isCrystal ? 0x8844ff : 0xffd700, 0.5, 3);
+    var light = new THREE.PointLight(isCrystal ? 0x8844ff : 0xffd700, 0.5, 3);
     light.position.copy(pos);
     scene.add(light);
 
-    const body = physics.addBody(new PhysicsBody({
-      position: pos.clone(), isStatic: true, radius: 0.5, mesh, tag: 'collectible'
+    var body = physics.addBody(new PhysicsBody({
+      position: pos.clone(), isStatic: true, radius: 0.5, mesh: mesh, tag: 'collectible'
     }));
-    body.userData = { type, light };
-    this.collectibles.push({ mesh, body, light, type });
+    body.userData = { type: type, light: light };
+
+    this.collectibles.push({ mesh: mesh, body: body, light: light, type: type });
   },
 
-  addEnemy(scene, physics, pos, type) {
-    const isBrute = type === 'brute';
-    const color = isBrute ? '#cc2222' : '#ff6644';
-    const emissive = isBrute ? '#880000' : '#cc3300';
-    const mat = CelShader.create(color, emissive);
-    const scale = isBrute ? 1.4 : 1;
+  addEnemy: function(scene, physics, pos, type) {
+    var isBrute = type === 'brute';
+    var color = isBrute ? '#cc2222' : '#ff6644';
+    var emissive = isBrute ? '#880000' : '#cc3300';
+    var mat = CelShader.create(color, emissive);
+    var scale = isBrute ? 1.4 : 1;
 
-    const group = new THREE.Group();
-    const body = new THREE.Mesh(new THREE.CylinderGeometry(0.3 * scale, 0.25 * scale, 0.8 * scale, 8), mat);
-    body.position.y = 0.6 * scale;
-    group.add(body);
-    const head = new THREE.Mesh(new THREE.SphereGeometry(0.22 * scale, 8, 8), mat);
-    head.position.y = 1.2 * scale;
-    group.add(head);
+    var group = new THREE.Group();
+    var bodyMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.3 * scale, 0.25 * scale, 0.8 * scale, 8), mat);
+    bodyMesh.position.y = 0.6 * scale;
+    group.add(bodyMesh);
 
-    // Angry eyes
-    const eyeMat = new THREE.MeshBasicMaterial({ color: 0xff0000 });
-    [-0.07, 0.07].forEach(x => {
-      const eye = new THREE.Mesh(new THREE.PlaneGeometry(0.06, 0.04), eyeMat);
-      eye.position.set(x * scale, 1.22 * scale, 0.2 * scale);
+    var headMesh = new THREE.Mesh(new THREE.SphereGeometry(0.22 * scale, 8, 8), mat);
+    headMesh.position.y = 1.2 * scale;
+    group.add(headMesh);
+
+    // Angry red eyes
+    var eyeMat = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+    var eyeXPositions = [-0.07, 0.07];
+    for (var eei = 0; eei < eyeXPositions.length; eei++) {
+      var eye = new THREE.Mesh(new THREE.PlaneGeometry(0.06, 0.04), eyeMat);
+      eye.position.set(eyeXPositions[eei] * scale, 1.22 * scale, 0.2 * scale);
       group.add(eye);
-    });
+    }
 
     // Outline
-    const outMat = new THREE.MeshBasicMaterial({ color: 0x111111, side: THREE.BackSide });
-    const outBody = new THREE.Mesh(new THREE.CylinderGeometry(0.32 * scale, 0.27 * scale, 0.82 * scale, 8), outMat);
+    var outMat = new THREE.MeshBasicMaterial({ color: 0x111111, side: THREE.BackSide });
+    var outBody = new THREE.Mesh(new THREE.CylinderGeometry(0.32 * scale, 0.27 * scale, 0.82 * scale, 8), outMat);
     outBody.position.y = 0.6 * scale;
     group.add(outBody);
 
     group.position.copy(pos);
     scene.add(group);
 
-    const physBody = physics.addBody(new PhysicsBody({
-      position: pos.clone(), mass: isBrute ? 5 : 2, radius: 0.4 * scale, mesh: group,
-      restitution: 0.2, friction: 0.2, tag: 'enemy', health: isBrute ? 5 : 2
+    var health = isBrute ? 5 : 2;
+    var physBody = physics.addBody(new PhysicsBody({
+      position: pos.clone(), mass: isBrute ? 5 : 2, radius: 0.4 * scale,
+      mesh: group, restitution: 0.2, friction: 0.2, tag: 'enemy', health: health
     }));
 
-    this.enemies.push({ mesh: group, body: physBody, type, health: isBrute ? 5 : 2, maxHealth: isBrute ? 5 : 2, ai: { state: 'patrol', timer: 0, origin: pos.clone(), dir: 1 } });
+    this.enemies.push({
+      mesh: group,
+      body: physBody,
+      type: type,
+      health: health,
+      maxHealth: health,
+      ai: { timer: 0, origin: pos.clone(), dir: 1 }
+    });
   },
 
-  updateEnemies(dt, playerPos) {
-    for (const enemy of this.enemies) {
+  updateEnemies: function(dt, playerPos) {
+    for (var i = 0; i < this.enemies.length; i++) {
+      var enemy = this.enemies[i];
       if (enemy.health <= 0) continue;
-      const e = enemy.body.position;
-      const dist = e.distanceTo(playerPos);
+
+      var e = enemy.body.position;
+      var dist = e.distanceTo(playerPos);
       enemy.ai.timer += dt;
 
       if (dist < 12) {
         // Chase player
-        const dir = new THREE.Vector3().subVectors(playerPos, e).normalize();
+        var dir = new THREE.Vector3().subVectors(playerPos, e).normalize();
         enemy.body.velocity.x = dir.x * 3;
         enemy.body.velocity.z = dir.z * 3;
         enemy.mesh.lookAt(playerPos.x, enemy.mesh.position.y, playerPos.z);
@@ -2126,275 +2244,357 @@ const WorldBuilder = {
     }
   },
 
-  updateCollectibles(time) {
-    for (const c of this.collectibles) {
+  updateCollectibles: function(time) {
+    for (var i = 0; i < this.collectibles.length; i++) {
+      var c = this.collectibles[i];
       if (!c.mesh.parent) continue;
       c.mesh.rotation.y = time * 2;
       c.mesh.position.y += Math.sin(time * 3 + c.mesh.position.x) * 0.002;
     }
   },
 
-  updateMovingPlatforms(time) {
-    // Handled in game loop
+  updateMovingPlatforms: function(time) {
+    for (var i = 0; i < this.movingPlatforms.length; i++) {
+      var mp = this.movingPlatforms[i];
+      if (mp.axis === 'x') {
+        mp.body.position.x = mp.origin.x + Math.sin(time * mp.speed) * mp.range;
+      } else if (mp.axis === 'z') {
+        mp.body.position.z = mp.origin.z + Math.sin(time * mp.speed) * mp.range;
+      } else if (mp.axis === 'y') {
+        mp.body.position.y = mp.origin.y + Math.sin(time * mp.speed) * mp.range;
+      }
+    }
   }
 };
 
 /* ============================================================
    INPUT MANAGER
    ============================================================ */
-const Input = {
+var Input = {
   keys: {},
   mouse: { x: 0, y: 0, dx: 0, dy: 0, locked: false, buttons: {} },
   joystick: { x: 0, y: 0, active: false },
-  init() {
-    window.addEventListener('keydown', e => { this.keys[e.code] = true; });
-    window.addEventListener('keyup', e => { this.keys[e.code] = false; });
-    window.addEventListener('mousemove', e => {
+
+  init: function() {
+    var self = this;
+
+    window.addEventListener('keydown', function(e) { self.keys[e.code] = true; });
+    window.addEventListener('keyup', function(e) { self.keys[e.code] = false; });
+
+    window.addEventListener('mousemove', function(e) {
       if (document.pointerLockElement) {
-        this.mouse.dx = e.movementX;
-        this.mouse.dy = e.movementY;
+        self.mouse.dx = e.movementX;
+        self.mouse.dy = e.movementY;
       }
     });
-    window.addEventListener('mousedown', e => { this.mouse.buttons[e.button] = true; });
-    window.addEventListener('mouseup', e => { this.mouse.buttons[e.button] = false; });
+
+    window.addEventListener('mousedown', function(e) { self.mouse.buttons[e.button] = true; });
+    window.addEventListener('mouseup', function(e) { self.mouse.buttons[e.button] = false; });
 
     // Mobile joystick
-    const joystick = document.getElementById('touch-joystick');
-    const inner = document.getElementById('joystick-inner');
-    if (joystick) {
-      joystick.addEventListener('touchstart', e => { this.joystick.active = true; e.preventDefault(); }, { passive: false });
-      joystick.addEventListener('touchmove', e => {
-        if (!this.joystick.active) return;
-        const touch = e.touches[0];
-        const rect = joystick.getBoundingClientRect();
-        const cx = rect.left + rect.width/2, cy = rect.top + rect.height/2;
-        let dx = (touch.clientX - cx) / (rect.width/2);
-        let dy = (touch.clientY - cy) / (rect.height/2);
-        const len = Math.sqrt(dx*dx + dy*dy);
-        if (len > 1) { dx /= len; dy /= len; }
-        this.joystick.x = dx;
-        this.joystick.y = dy;
-        inner.style.transform = `translate(calc(-50% + ${dx*35}px), calc(-50% + ${dy*35}px))`;
+    var joystick = document.getElementById('touch-joystick');
+    var inner = document.getElementById('joystick-inner');
+    if (joystick && inner) {
+      joystick.addEventListener('touchstart', function(e) {
+        self.joystick.active = true;
         e.preventDefault();
       }, { passive: false });
-      const resetJoystick = () => {
-        this.joystick.active = false;
-        this.joystick.x = 0;
-        this.joystick.y = 0;
+
+      joystick.addEventListener('touchmove', function(e) {
+        if (!self.joystick.active) return;
+        var touch = e.touches[0];
+        var rect = joystick.getBoundingClientRect();
+        var cx = rect.left + rect.width / 2;
+        var cy = rect.top + rect.height / 2;
+        var dx = (touch.clientX - cx) / (rect.width / 2);
+        var dy = (touch.clientY - cy) / (rect.height / 2);
+        var len = Math.sqrt(dx * dx + dy * dy);
+        if (len > 1) { dx /= len; dy /= len; }
+        self.joystick.x = dx;
+        self.joystick.y = dy;
+        inner.style.transform = 'translate(calc(-50% + ' + dx * 35 + 'px), calc(-50% + ' + dy * 35 + 'px))';
+        e.preventDefault();
+      }, { passive: false });
+
+      var resetJoystick = function() {
+        self.joystick.active = false;
+        self.joystick.x = 0;
+        self.joystick.y = 0;
         inner.style.transform = 'translate(-50%, -50%)';
       };
       joystick.addEventListener('touchend', resetJoystick);
       joystick.addEventListener('touchcancel', resetJoystick);
     }
 
-    // Mobile buttons
-    const btnJump = document.getElementById('btn-jump');
-    const btnAtk = document.getElementById('btn-atk');
-    if (btnJump) btnJump.addEventListener('touchstart', e => { this.keys['Space'] = true; e.preventDefault(); }, { passive: false });
-    if (btnJump) btnJump.addEventListener('touchend', () => { this.keys['Space'] = false; });
-    if (btnAtk) btnAtk.addEventListener('touchstart', e => { this.mouse.buttons[0] = true; e.preventDefault(); }, { passive: false });
-    if (btnAtk) btnAtk.addEventListener('touchend', () => { this.mouse.buttons[0] = false; });
+    // Mobile action buttons
+    var btnJump = document.getElementById('btn-jump');
+    var btnAtk = document.getElementById('btn-atk');
+    if (btnJump) {
+      btnJump.addEventListener('touchstart', function(e) { self.keys['Space'] = true; e.preventDefault(); }, { passive: false });
+      btnJump.addEventListener('touchend', function() { self.keys['Space'] = false; });
+    }
+    if (btnAtk) {
+      btnAtk.addEventListener('touchstart', function(e) { self.mouse.buttons[0] = true; e.preventDefault(); }, { passive: false });
+      btnAtk.addEventListener('touchend', function() { self.mouse.buttons[0] = false; });
+    }
   },
 
-  isForward() { return this.keys['KeyW'] || this.keys['ArrowUp'] || this.joystick.y < -0.2; },
-  isBackward() { return this.keys['KeyS'] || this.keys['ArrowDown'] || this.joystick.y > 0.2; },
-  isLeft() { return this.keys['KeyA'] || this.keys['ArrowLeft'] || this.joystick.x < -0.2; },
-  isRight() { return this.keys['KeyD'] || this.keys['ArrowRight'] || this.joystick.x > 0.2; },
-  isJump() { return this.keys['Space']; },
-  isAttack() { return this.mouse.buttons[0]; },
-  isSpecial() { return this.keys['KeyE']; },
-  isUltimate() { return this.keys['KeyQ']; },
-  isInteract() { return this.keys['KeyF']; },
-  isPause() { return this.keys['Escape']; },
+  isForward: function() { return this.keys['KeyW'] || this.keys['ArrowUp'] || this.joystick.y < -0.2; },
+  isBackward: function() { return this.keys['KeyS'] || this.keys['ArrowDown'] || this.joystick.y > 0.2; },
+  isLeft: function() { return this.keys['KeyA'] || this.keys['ArrowLeft'] || this.joystick.x < -0.2; },
+  isRight: function() { return this.keys['KeyD'] || this.keys['ArrowRight'] || this.joystick.x > 0.2; },
+  isJump: function() { return this.keys['Space']; }
 };
 
 /* ============================================================
-   SAVE SYSTEM
+   SAVE SYSTEM (LocalStorage)
    ============================================================ */
-const SaveSystem = {
+var SaveSystem = {
   key: 'primelab_mindverse_save',
 
-  getDefault() {
+  getDefault: function() {
     return {
       selectedChar: 0,
       coins: 0, crystals: 0, score: 0,
       levelsCompleted: [],
-      brainScores: { memory: 50, logic: 50, spatial: 50, reflex: 50, physics: 50, focus: 50, creativity: 50, strategy: 50 },
-      sessions: [],
-      settings: {},
+      brainScores: {
+        memory: 50, logic: 50, spatial: 50, reflex: 50,
+        physics: 50, focus: 50, creativity: 50, strategy: 50
+      },
+      sessions: []
     };
   },
 
-  load() {
+  load: function() {
     try {
-      const data = localStorage.getItem(this.key);
-      return data ? { ...this.getDefault(), ...JSON.parse(data) } : this.getDefault();
-    } catch { return this.getDefault(); }
+      var data = localStorage.getItem(this.key);
+      var def = this.getDefault();
+      return data ? Object.assign({}, def, JSON.parse(data)) : def;
+    } catch(e) {
+      return this.getDefault();
+    }
   },
 
-  save(data) {
-    try { localStorage.setItem(this.key, JSON.stringify(data)); } catch(e) { console.warn('Save failed:', e); }
+  save: function(data) {
+    try { localStorage.setItem(this.key, JSON.stringify(data)); } catch(e) {}
   },
 
-  addSession(session) {
-    const data = this.load();
-    data.sessions.push({ ...session, date: Date.now() });
+  addSession: function(session) {
+    var data = this.load();
+    data.sessions.push(Object.assign({}, session, { date: Date.now() }));
     if (data.sessions.length > 50) data.sessions = data.sessions.slice(-50);
-    // Update brain scores with running average
-    const keys = Object.keys(data.brainScores);
-    keys.forEach(k => {
+
+    var keys = Object.keys(data.brainScores);
+    for (var i = 0; i < keys.length; i++) {
+      var k = keys[i];
       if (session[k] !== undefined) {
         data.brainScores[k] = data.brainScores[k] * 0.7 + session[k] * 0.3;
       }
-    });
+    }
     this.save(data);
     return data;
   }
 };
 
 /* ============================================================
-   ANALYTICS / CHARTS
+   ANALYTICS / BRAIN SCORES
    ============================================================ */
-const Analytics = {
+var Analytics = {
   charts: {},
-  currentSession: { memory: 0, logic: 0, spatial: 0, reflex: 0, physics: 0, focus: 0, creativity: 0, strategy: 0, score: 0, time: 0 },
-
-  resetSession() {
-    this.currentSession = { memory: 50, logic: 50, spatial: 50, reflex: 50, physics: 50, focus: 50, creativity: 50, strategy: 50, score: 0, time: 0 };
+  currentSession: {
+    memory: 50, logic: 50, spatial: 50, reflex: 50,
+    physics: 50, focus: 50, creativity: 50, strategy: 50,
+    score: 0, time: 0
   },
 
-  track(metric, value) {
+  resetSession: function() {
+    this.currentSession = {
+      memory: 50, logic: 50, spatial: 50, reflex: 50,
+      physics: 50, focus: 50, creativity: 50, strategy: 50,
+      score: 0, time: 0
+    };
+  },
+
+  track: function(metric, value) {
     if (this.currentSession[metric] !== undefined) {
       this.currentSession[metric] = this.currentSession[metric] * 0.8 + value * 0.2;
     }
   },
 
-  finishSession() {
+  finishSession: function() {
     this.currentSession.score = Game.score;
     this.currentSession.time = Game.playTime;
     return SaveSystem.addSession(this.currentSession);
   },
 
-  getBrainScore(data) {
-    const scores = data ? data.brainScores : SaveSystem.load().brainScores;
-    const vals = Object.values(scores);
-    return Math.round(vals.reduce((a,b) => a+b, 0) / vals.length);
+  getBrainScore: function(data) {
+    var d = data || SaveSystem.load();
+    var scores = d.brainScores;
+    var vals = Object.values(scores);
+    return Math.round(vals.reduce(function(a, b) { return a + b; }, 0) / vals.length);
   },
 
-  renderCharts() {
-    const data = SaveSystem.load();
-    const scores = data.brainScores;
-    const labels = ['Memory','Logic','Spatial','Reflex','Physics','Focus','Creativity','Strategy'];
-    const values = labels.map(l => Math.round(scores[l.toLowerCase()]));
+  renderCharts: function() {
+    var data = SaveSystem.load();
+    var scores = data.brainScores;
+    var labels = ['Memory', 'Logic', 'Spatial', 'Reflex', 'Physics', 'Focus', 'Creativity', 'Strategy'];
+    var values = labels.map(function(l) { return Math.round(scores[l.toLowerCase()]); });
 
-    // Brain score
-    document.getElementById('brain-score-val').textContent = this.getBrainScore(data);
+    // Brain score display
+    var bsv = document.getElementById('brain-score-val');
+    if (bsv) bsv.textContent = this.getBrainScore(data);
 
     // Destroy old charts
-    Object.values(this.charts).forEach(c => { try { c.destroy(); } catch(e){} });
+    var self = this;
+    Object.keys(this.charts).forEach(function(k) {
+      try { self.charts[k].destroy(); } catch(e) {}
+    });
 
-    const chartColors = {
+    var cc = {
       cyan: 'rgba(0, 240, 255, 0.8)',
       purple: 'rgba(123, 47, 247, 0.8)',
       pink: 'rgba(255, 46, 139, 0.8)',
       gold: 'rgba(255, 215, 0, 0.8)',
-      gridColor: 'rgba(255,255,255,0.06)',
-      textColor: '#8b92b3'
+      grid: 'rgba(255,255,255,0.06)',
+      text: '#8b92b3'
     };
 
-    const defaultOpts = {
-      responsive: true, maintainAspectRatio: true,
-      plugins: { legend: { labels: { color: chartColors.textColor, font: { family: 'Rajdhani' } } } },
-      scales: {
-        r: { grid: { color: chartColors.gridColor }, pointLabels: { color: chartColors.textColor, font: { size: 11, family: 'Rajdhani' } }, ticks: { display: false }, suggestedMin: 0, suggestedMax: 100 },
-        x: { grid: { color: chartColors.gridColor }, ticks: { color: chartColors.textColor, font: { family: 'Rajdhani' } } },
-        y: { grid: { color: chartColors.gridColor }, ticks: { color: chartColors.textColor, font: { family: 'Rajdhani' } }, suggestedMin: 0, suggestedMax: 100 }
+    var scales = {
+      r: {
+        grid: { color: cc.grid },
+        pointLabels: { color: cc.text, font: { size: 11, family: 'Rajdhani' } },
+        ticks: { display: false },
+        suggestedMin: 0, suggestedMax: 100
+      },
+      x: { grid: { color: cc.grid }, ticks: { color: cc.text, font: { family: 'Rajdhani' } } },
+      y: { grid: { color: cc.grid }, ticks: { color: cc.text, font: { family: 'Rajdhani' } }, suggestedMin: 0, suggestedMax: 100 }
+    };
+
+    var defOpts = {
+      responsive: true,
+      maintainAspectRatio: true,
+      plugins: { legend: { labels: { color: cc.text, font: { family: 'Rajdhani' } } } }
+    };
+
+    // Radar chart
+    try {
+      var rc = document.getElementById('chart-radar');
+      if (rc) {
+        this.charts.radar = new Chart(rc, {
+          type: 'radar',
+          data: {
+            labels: labels,
+            datasets: [{
+              label: 'Cognitive Profile',
+              data: values,
+              borderColor: cc.cyan,
+              backgroundColor: 'rgba(0, 240, 255, 0.15)',
+              pointBackgroundColor: cc.cyan,
+              pointBorderColor: '#fff',
+              pointRadius: 4
+            }]
+          },
+          options: Object.assign({}, defOpts, { scales: { r: scales.r } })
+        });
       }
-    };
+    } catch(e) {}
 
-    // Radar
-    const radarCtx = document.getElementById('chart-radar');
-    if (radarCtx) {
-      this.charts.radar = new Chart(radarCtx, {
-        type: 'radar',
-        data: { labels, datasets: [{ label: 'Cognitive Profile', data: values, borderColor: chartColors.cyan, backgroundColor: 'rgba(0, 240, 255, 0.15)', pointBackgroundColor: chartColors.cyan, pointBorderColor: '#fff', pointRadius: 4 }] },
-        options: { ...defaultOpts, scales: { r: defaultOpts.scales.r } }
-      });
-    }
+    // Line chart
+    try {
+      var lc = document.getElementById('chart-line');
+      if (lc) {
+        var sessions = data.sessions.slice(-10);
+        this.charts.line = new Chart(lc, {
+          type: 'line',
+          data: {
+            labels: sessions.map(function(s, i) { return '#' + (i + 1); }),
+            datasets: [{
+              label: 'Brain Score',
+              data: sessions.map(function(s) {
+                var v = Object.values(s).filter(function(x) { return typeof x === 'number' && x >= 0 && x <= 100; });
+                return Math.round(v.reduce(function(a, b) { return a + b; }, 0) / (v.length || 1));
+              }),
+              borderColor: cc.purple,
+              backgroundColor: 'rgba(123, 47, 247, 0.1)',
+              fill: true, tension: 0.4, pointRadius: 4, pointBackgroundColor: cc.purple
+            }]
+          },
+          options: defOpts
+        });
+      }
+    } catch(e) {}
 
-    // Line
-    const lineCtx = document.getElementById('chart-line');
-    if (lineCtx) {
-      const sessions = data.sessions.slice(-10);
-      this.charts.line = new Chart(lineCtx, {
-        type: 'line',
-        data: {
-          labels: sessions.map((s, i) => `#${i+1}`),
-          datasets: [{
-            label: 'Brain Score',
-            data: sessions.map(s => {
-              const vals = Object.values(s).filter(v => typeof v === 'number' && v >= 0 && v <= 100);
-              return Math.round(vals.reduce((a,b) => a+b, 0) / (vals.length || 1));
-            }),
-            borderColor: chartColors.purple, backgroundColor: 'rgba(123, 47, 247, 0.1)',
-            fill: true, tension: 0.4, pointRadius: 4, pointBackgroundColor: chartColors.purple
-          }]
-        },
-        options: defaultOpts
-      });
-    }
+    // Bar chart
+    try {
+      var bc = document.getElementById('chart-bar');
+      if (bc) {
+        this.charts.bar = new Chart(bc, {
+          type: 'bar',
+          data: {
+            labels: labels,
+            datasets: [{
+              label: 'Score',
+              data: values,
+              backgroundColor: [cc.cyan, cc.purple, cc.pink, cc.gold, 'rgba(0,255,136,0.7)', 'rgba(255,136,0,0.7)', 'rgba(136,0,255,0.7)', 'rgba(0,200,255,0.7)'],
+              borderRadius: 6
+            }]
+          },
+          options: defOpts
+        });
+      }
+    } catch(e) {}
 
-    // Bar
-    const barCtx = document.getElementById('chart-bar');
-    if (barCtx) {
-      this.charts.bar = new Chart(barCtx, {
-        type: 'bar',
-        data: {
-          labels,
-          datasets: [{ label: 'Score', data: values, backgroundColor: [chartColors.cyan, chartColors.purple, chartColors.pink, chartColors.gold, 'rgba(0,255,136,0.7)', 'rgba(255,136,0,0.7)', 'rgba(136,0,255,0.7)', 'rgba(0,200,255,0.7)'], borderRadius: 6 }]
-        },
-        options: defaultOpts
-      });
-    }
-
-    // History scatter
-    const histCtx = document.getElementById('chart-history');
-    if (histCtx) {
-      const sessions = data.sessions.slice(-20);
-      this.charts.history = new Chart(histCtx, {
-        type: 'line',
-        data: {
-          labels: sessions.map((s, i) => `#${i+1}`),
-          datasets: [
-            { label: 'Score', data: sessions.map(s => s.score || 0), borderColor: chartColors.gold, backgroundColor: 'transparent', tension: 0.3, pointRadius: 3 },
-            { label: 'Time (s)', data: sessions.map(s => Math.round(s.time || 0)), borderColor: chartColors.cyan, backgroundColor: 'transparent', tension: 0.3, pointRadius: 3, yAxisID: 'y1' }
-          ]
-        },
-        options: {
-          ...defaultOpts,
-          scales: {
-            ...defaultOpts.scales,
-            y1: { position: 'right', grid: { display: false }, ticks: { color: chartColors.textColor } }
-          }
-        }
-      });
-    }
+    // History chart
+    try {
+      var hc = document.getElementById('chart-history');
+      if (hc) {
+        var histSessions = data.sessions.slice(-20);
+        this.charts.history = new Chart(hc, {
+          type: 'line',
+          data: {
+            labels: histSessions.map(function(s, i) { return '#' + (i + 1); }),
+            datasets: [
+              {
+                label: 'Score',
+                data: histSessions.map(function(s) { return s.score || 0; }),
+                borderColor: cc.gold,
+                backgroundColor: 'transparent',
+                tension: 0.3, pointRadius: 3
+              },
+              {
+                label: 'Time (s)',
+                data: histSessions.map(function(s) { return Math.round(s.time || 0); }),
+                borderColor: cc.cyan,
+                backgroundColor: 'transparent',
+                tension: 0.3, pointRadius: 3,
+                yAxisID: 'y1'
+              }
+            ]
+          },
+          options: Object.assign({}, defOpts, {
+            scales: Object.assign({}, scales, {
+              y1: { position: 'right', grid: { display: false }, ticks: { color: cc.text } }
+            })
+          })
+        });
+      }
+    } catch(e) {}
   }
 };
 
 /* ============================================================
    SOCIAL SHARING
    ============================================================ */
-const ShareSystem = {
-  share() {
-    const data = SaveSystem.load();
-    const brainScore = Analytics.getBrainScore(data);
-    const text = `🧠 I scored ${brainScore} Brain Score in PrimeLab MindVerse by @PrimeSpiritMentors! Can you beat me? Train your brain with physics puzzles! 🎮`;
+var ShareSystem = {
+  share: function() {
+    var bs = Analytics.getBrainScore();
+    var text = '\u{1F9E0} I scored ' + bs + ' Brain Score in PrimeLab MindVerse by @PrimeSpiritMentors! Can you beat me? \u{1F3AE}';
+    var url = 'https://primespirit.co.in/primelab.html';
 
     if (navigator.share) {
-      navigator.share({ title: 'PrimeLab MindVerse', text, url: 'https://primespirit.co.in/primelab.html' }).catch(() => {});
+      navigator.share({ title: 'PrimeLab MindVerse', text: text, url: url }).catch(function() {});
     } else {
-      const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent('https://primespirit.co.in/primelab.html')}`;
+      var twitterUrl = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(text) + '&url=' + encodeURIComponent(url);
       window.open(twitterUrl, '_blank');
     }
   }
@@ -2403,175 +2603,336 @@ const ShareSystem = {
 /* ============================================================
    UI MANAGER
    ============================================================ */
-const UI = {
+var UI = {
   currentScreen: 'loading-screen',
   previousScreen: null,
   selectedChar: 0,
 
-  init() {
+  init: function() {
     this.buildCharacterGrid();
-    this.goTo('menu-screen');
     this.createMenuParticles();
+    this.bindEvents();
+    this.goTo('menu-screen');
   },
 
-  createMenuParticles() {
-    const container = document.getElementById('menu-particles');
+  bindEvents: function() {
+    var self = this;
+    var $ = function(id) { return document.getElementById(id); };
+
+    // Menu buttons
+    if ($('btn-start')) {
+      $('btn-start').addEventListener('click', function() {
+        AudioSys.resume();
+        AudioSys.playClick();
+        self.goTo('character-select');
+      });
+    }
+    if ($('btn-analytics')) {
+      $('btn-analytics').addEventListener('click', function() {
+        AudioSys.playClick();
+        self.goTo('analytics-screen');
+      });
+    }
+    if ($('btn-settings')) {
+      $('btn-settings').addEventListener('click', function() {
+        AudioSys.playClick();
+        self.goTo('settings-screen');
+      });
+    }
+    // Back to PrimeLab — navigates away
+    // (Already an <a> tag with href, no JS needed)
+
+    // Character select
+    if ($('btn-char-back')) {
+      $('btn-char-back').addEventListener('click', function() {
+        AudioSys.playClick();
+        self.goTo('menu-screen');
+      });
+    }
+    if ($('btn-select-char')) {
+      $('btn-select-char').addEventListener('click', function() {
+        self.confirmCharacter();
+      });
+    }
+
+    // Mode select
+    var modeCards = document.querySelectorAll('.mode-card');
+    for (var mi = 0; mi < modeCards.length; mi++) {
+      (function(card) {
+        card.addEventListener('click', function() {
+          AudioSys.playClick();
+          Game.startLevel(card.getAttribute('data-mode'));
+        });
+      })(modeCards[mi]);
+    }
+    if ($('btn-mode-back')) {
+      $('btn-mode-back').addEventListener('click', function() {
+        AudioSys.playClick();
+        self.goTo('character-select');
+      });
+    }
+
+    // Pause menu
+    if ($('btn-resume')) {
+      $('btn-resume').addEventListener('click', function() { Game.resume(); });
+    }
+    if ($('btn-pause-settings')) {
+      $('btn-pause-settings').addEventListener('click', function() { self.goTo('settings-screen'); });
+    }
+    if ($('btn-quit')) {
+      $('btn-quit').addEventListener('click', function() { Game.quit(); });
+    }
+
+    // Level complete
+    if ($('btn-complete-menu')) {
+      $('btn-complete-menu').addEventListener('click', function() { Game.quit(); });
+    }
+    if ($('btn-next-level')) {
+      $('btn-next-level').addEventListener('click', function() { Game.nextLevel(); });
+    }
+
+    // Analytics
+    if ($('btn-analytics-back')) {
+      $('btn-analytics-back').addEventListener('click', function() { self.goTo('menu-screen'); });
+    }
+    if ($('btn-share')) {
+      $('btn-share').addEventListener('click', function() { ShareSystem.share(); });
+    }
+
+    // Settings
+    if ($('btn-settings-back')) {
+      $('btn-settings-back').addEventListener('click', function() { self.goBack(); });
+    }
+    if ($('vol-master')) {
+      $('vol-master').addEventListener('input', function() { AudioSys.setVolume('master', this.value); });
+    }
+    if ($('vol-music')) {
+      $('vol-music').addEventListener('input', function() { AudioSys.setVolume('music', this.value); });
+    }
+    if ($('vol-sfx')) {
+      $('vol-sfx').addEventListener('input', function() { AudioSys.setVolume('sfx', this.value); });
+    }
+    if ($('cam-sens')) {
+      $('cam-sens').addEventListener('input', function() { CONFIG.cameraSensitivity = this.value * 0.002; });
+    }
+
+    // Ability buttons
+    if ($('ability-atk')) {
+      $('ability-atk').addEventListener('click', function() { Game.playerAttack(); });
+    }
+    if ($('ability-special')) {
+      $('ability-special').addEventListener('click', function() { Game.playerSpecial(); });
+    }
+    if ($('ability-ultimate')) {
+      $('ability-ultimate').addEventListener('click', function() { Game.playerUltimate(); });
+    }
+
+    // Keyboard shortcuts
+    window.addEventListener('keydown', function(e) {
+      if (e.code === 'Escape' && Game.state === 'playing') { Game.pause(); return; }
+      if (e.code === 'Escape' && Game.state === 'paused') { Game.resume(); return; }
+      if (e.code === 'KeyE' && Game.state === 'playing') Game.playerSpecial();
+      if (e.code === 'KeyQ' && Game.state === 'playing') Game.playerUltimate();
+    });
+  },
+
+  createMenuParticles: function() {
+    var container = document.getElementById('menu-particles');
     if (!container) return;
-    for (let i = 0; i < 40; i++) {
-      const p = document.createElement('div');
+    for (var i = 0; i < 40; i++) {
+      var p = document.createElement('div');
       p.className = 'menu-particle';
       p.style.left = Math.random() * 100 + '%';
       p.style.animationDuration = (5 + Math.random() * 10) + 's';
       p.style.animationDelay = Math.random() * 10 + 's';
-      p.style.width = (2 + Math.random() * 3) + 'px';
-      p.style.height = p.style.width;
+      var sz = (2 + Math.random() * 3) + 'px';
+      p.style.width = sz;
+      p.style.height = sz;
       p.style.background = Math.random() > 0.5 ? '#00f0ff' : '#7b2ff7';
       container.appendChild(p);
     }
   },
 
-  goTo(screenId) {
-    AudioSys.playClick();
+  goTo: function(screenId) {
     this.previousScreen = this.currentScreen;
-    document.querySelectorAll('.screen-overlay').forEach(el => el.classList.add('hidden'));
-    const target = document.getElementById(screenId);
+    var overlays = document.querySelectorAll('.screen-overlay');
+    for (var i = 0; i < overlays.length; i++) {
+      overlays[i].classList.add('hidden');
+    }
+    var target = document.getElementById(screenId);
     if (target) {
       target.classList.remove('hidden');
       this.currentScreen = screenId;
     }
 
-    // HUD visibility
-    const hud = document.getElementById('game-hud');
-    hud.classList.toggle('active', screenId === 'game-active');
+    var hud = document.getElementById('game-hud');
+    if (hud) hud.classList.toggle('active', false);
 
     if (screenId === 'analytics-screen') {
-      setTimeout(() => Analytics.renderCharts(), 100);
+      var self = this;
+      setTimeout(function() { Analytics.renderCharts(); }, 100);
     }
   },
 
-  goBack() {
+  goBack: function() {
     this.goTo(this.previousScreen || 'menu-screen');
   },
 
-  buildCharacterGrid() {
-    const grid = document.getElementById('char-grid');
+  buildCharacterGrid: function() {
+    var grid = document.getElementById('char-grid');
+    if (!grid) return;
     grid.innerHTML = '';
-    CHARACTERS.forEach((char, i) => {
-      const card = document.createElement('div');
+
+    for (var i = 0; i < CHARACTERS.length; i++) {
+      var char = CHARACTERS[i];
+      var card = document.createElement('div');
       card.className = 'char-card' + (i === 0 ? ' selected' : '');
-      card.innerHTML = `
-        <div class="char-avatar" style="background:${char.color}22;color:${char.color};border-color:${char.color}">${char.icon}</div>
-        <div class="char-name">${char.name}</div>
-        <div class="char-element" style="color:${char.color}">${char.element}</div>
-      `;
-      card.onclick = () => this.selectCharacter(i);
+      card.setAttribute('data-index', i);
+      card.innerHTML =
+        '<div class="char-avatar" style="background:' + char.color + '22;color:' + char.color + ';border-color:' + char.color + '">' + char.icon + '</div>' +
+        '<div class="char-name">' + char.name + '</div>' +
+        '<div class="char-element" style="color:' + char.color + '">' + char.element + '</div>';
+      (function(idx) {
+        card.addEventListener('click', function() { UI.selectCharacter(idx); });
+      })(i);
       grid.appendChild(card);
-    });
+    }
   },
 
-  selectCharacter(index) {
+  selectCharacter: function(index) {
     AudioSys.playClick();
     this.selectedChar = index;
-    const cards = document.querySelectorAll('.char-card');
-    cards.forEach((c, i) => c.classList.toggle('selected', i === index));
 
-    const char = CHARACTERS[index];
-    const panel = document.getElementById('char-info');
-    panel.style.display = 'flex';
-    document.getElementById('char-info-name').textContent = `${char.icon} ${char.name}`;
-    document.getElementById('char-info-name').style.color = char.color;
-    document.getElementById('char-info-desc').textContent = char.desc;
+    var cards = document.querySelectorAll('.char-card');
+    for (var i = 0; i < cards.length; i++) {
+      cards[i].classList.toggle('selected', i === index);
+    }
 
-    const statsDiv = document.getElementById('char-info-stats');
-    statsDiv.innerHTML = '';
-    Object.entries(char.stats).forEach(([key, val]) => {
-      const colors = { power: '#ff4444', speed: '#00ddff', defense: '#ffaa00', energy: '#aa44ff', control: '#00ff88' };
-      statsDiv.innerHTML += `
-        <div class="stat-bar-container">
-          <span class="stat-label">${key}</span>
-          <div class="stat-bar"><div class="stat-fill" style="width:${val}%;background:${colors[key] || '#00f0ff'}"></div></div>
-        </div>`;
-    });
+    var char = CHARACTERS[index];
+    var panel = document.getElementById('char-info');
+    if (panel) {
+      panel.style.display = 'flex';
+      document.getElementById('char-info-name').textContent = char.icon + ' ' + char.name;
+      document.getElementById('char-info-name').style.color = char.color;
+      document.getElementById('char-info-desc').textContent = char.desc;
+
+      var statsDiv = document.getElementById('char-info-stats');
+      statsDiv.innerHTML = '';
+      var statColors = { power: '#ff4444', speed: '#00ddff', defense: '#ffaa00', energy: '#aa44ff', control: '#00ff88' };
+      var statKeys = Object.keys(char.stats);
+      for (var si = 0; si < statKeys.length; si++) {
+        var key = statKeys[si];
+        var val = char.stats[key];
+        statsDiv.innerHTML +=
+          '<div class="stat-bar-container">' +
+          '<span class="stat-label">' + key + '</span>' +
+          '<div class="stat-bar"><div class="stat-fill" style="width:' + val + '%;background:' + (statColors[key] || '#00f0ff') + '"></div></div>' +
+          '</div>';
+      }
+    }
   },
 
-  confirmCharacter() {
+  confirmCharacter: function() {
     AudioSys.playClick();
     Game.selectedChar = this.selectedChar;
     this.goTo('mode-select');
   },
 
-  updateHUD(player, coins, crystals, score, time) {
-    document.getElementById('hud-health').style.width = (player.health / CONFIG.maxHealth * 100) + '%';
-    document.getElementById('hud-energy').style.width = (player.energy / CONFIG.maxEnergy * 100) + '%';
-    document.getElementById('hud-coins').textContent = coins;
-    document.getElementById('hud-crystals').textContent = crystals;
-    document.getElementById('hud-score').textContent = score;
-    const mins = Math.floor(time / 60);
-    const secs = Math.floor(time % 60);
-    document.getElementById('hud-timer').textContent = `${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`;
+  updateHUD: function(player, coins, crystals, score, time) {
+    var $ = function(id) { return document.getElementById(id); };
+    if ($('hud-health')) $('hud-health').style.width = (player.health / CONFIG.maxHealth * 100) + '%';
+    if ($('hud-energy')) $('hud-energy').style.width = (player.energy / CONFIG.maxEnergy * 100) + '%';
+    if ($('hud-coins')) $('hud-coins').textContent = coins;
+    if ($('hud-crystals')) $('hud-crystals').textContent = crystals;
+    if ($('hud-score')) $('hud-score').textContent = score;
+    if ($('hud-timer')) {
+      var mins = Math.floor(time / 60);
+      var secs = Math.floor(time % 60);
+      $('hud-timer').textContent = String(mins).padStart(2, '0') + ':' + String(secs).padStart(2, '0');
+    }
   },
 
-  showNotification(text) {
-    const n = document.createElement('div');
+  showNotification: function(text) {
+    var n = document.createElement('div');
     n.className = 'notification';
     n.textContent = text;
     document.body.appendChild(n);
-    setTimeout(() => n.remove(), 3000);
+    setTimeout(function() { n.remove(); }, 3000);
   },
 
-  showLevelComplete(stats) {
-    const container = document.getElementById('complete-stats');
+  showLevelComplete: function(stats) {
+    var container = document.getElementById('complete-stats');
+    if (!container) return;
     container.innerHTML = '';
-    const items = [
+    var items = [
       { label: 'Score', value: stats.score },
       { label: 'Time', value: Math.floor(stats.time) + 's' },
       { label: 'Coins', value: stats.coins },
-      { label: 'Crystals', value: stats.crystals },
+      { label: 'Crystals', value: stats.crystals }
     ];
-    items.forEach(item => {
-      container.innerHTML += `<div class="complete-stat"><div class="complete-stat-value">${item.value}</div><div class="complete-stat-label">${item.label}</div></div>`;
-    });
+    for (var i = 0; i < items.length; i++) {
+      container.innerHTML +=
+        '<div class="complete-stat">' +
+        '<div class="complete-stat-value">' + items[i].value + '</div>' +
+        '<div class="complete-stat-label">' + items[i].label + '</div>' +
+        '</div>';
+    }
     this.goTo('level-complete');
+    var hud = document.getElementById('game-hud');
+    if (hud) hud.classList.add('active');
   },
 
-  showObjective(text) {
-    document.getElementById('hud-objective').textContent = text;
+  showObjective: function(text) {
+    var el = document.getElementById('hud-objective');
+    if (el) el.textContent = text;
   }
 };
 
 /* ============================================================
-   MAIN GAME
+   MAIN GAME CONTROLLER
    ============================================================ */
-const Game = {
+var Game = {
   state: 'menu',
   selectedChar: 0,
-  score: 0, coins: 0, crystals: 0, playTime: 0,
+  score: 0,
+  coins: 0,
+  crystals: 0,
+  playTime: 0,
   health: CONFIG.maxHealth,
   energy: CONFIG.maxEnergy,
 
-  // Three.js
-  scene: null, camera: null, renderer: null,
+  // Three.js references
+  scene: null,
+  camera: null,
+  renderer: null,
+  clock: null,
   physics: null,
   playerBody: null,
   playerMesh: null,
-  playerYaw: 0,
-  playerPitch: -0.2,
   goalData: null,
-  movPlatData: null,
-  enemies: [],
   particles: null,
   attackParticles: null,
-  clock: new THREE.Clock(),
-  fpsCounter: { frames: 0, lastTime: 0, fps: 0 },
-  cameraOffset: new THREE.Vector3(0, 4, 8),
-  cameraTarget: new THREE.Vector3(),
+  cameraTarget: null,
+
+  // Player state
+  playerYaw: 0,
+  playerPitch: -0.2,
   isAttacking: false,
   attackCooldown: 0,
   specialCooldown: 0,
   ultimateCooldown: 0,
   levelMode: 'story',
 
-  init() {
+  /* FIX #2: Guard against missing Three.js */
+  init: function() {
+    if (typeof THREE === 'undefined') {
+      console.warn('Three.js not loaded — menu-only mode');
+      return;
+    }
+
+    this.clock = new THREE.Clock();
+    this.cameraTarget = new THREE.Vector3();
+
     // Scene
     this.scene = new THREE.Scene();
     this.scene.fog = new THREE.FogExp2(0x0a0e27, 0.012);
@@ -2581,7 +2942,7 @@ const Game = {
     this.camera.position.set(0, 6, 12);
 
     // Renderer
-    this.renderer = new THREE.WebGLRenderer({ canvas: document.createElement('canvas'), antialias: true, alpha: false });
+    this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
     this.renderer.setSize(window.innerWidth, window.innerHeight);
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     this.renderer.shadowMap.enabled = true;
@@ -2592,10 +2953,9 @@ const Game = {
     document.body.prepend(this.renderer.domElement);
 
     // Lighting
-    const ambient = new THREE.AmbientLight(0x2a2a4a, 0.6);
-    this.scene.add(ambient);
+    this.scene.add(new THREE.AmbientLight(0x2a2a4a, 0.6));
 
-    const sun = new THREE.DirectionalLight(0xffeedd, 1.2);
+    var sun = new THREE.DirectionalLight(0xffeedd, 1.2);
     sun.position.set(10, 20, 10);
     sun.castShadow = true;
     sun.shadow.mapSize.set(2048, 2048);
@@ -2607,113 +2967,118 @@ const Game = {
     sun.shadow.camera.bottom = -50;
     this.scene.add(sun);
 
-    const rim = new THREE.DirectionalLight(0x4488ff, 0.4);
-    rim.position.set(-10, 5, -10);
-    this.scene.add(rim);
+    var rimLight = new THREE.DirectionalLight(0x4488ff, 0.4);
+    rimLight.position.set(-10, 5, -10);
+    this.scene.add(rimLight);
 
     // Sky
     this.createSky();
 
     // Particles
-    this.particles = new ParticleEmitter(this.scene, { maxParticles: 300, size: 0.1, color: new THREE.Color(0x4488ff), gravity: -0.5, speed: 0.5, spread: 40 });
-    this.attackParticles = new ParticleEmitter(this.scene, { maxParticles: 100, size: 0.2, color: new THREE.Color(0xff4488), gravity: -5, speed: 5, spread: 0.5 });
+    this.particles = new ParticleEmitter(this.scene, {
+      maxParticles: 300, size: 0.1,
+      color: new THREE.Color(0x4488ff), gravity: -0.5, speed: 0.5, spread: 40
+    });
+    this.attackParticles = new ParticleEmitter(this.scene, {
+      maxParticles: 100, size: 0.2,
+      color: new THREE.Color(0xff4488), gravity: -5, speed: 5, spread: 0.5
+    });
 
     // Physics
     this.physics = new PhysicsWorld();
 
-    // Events
-    window.addEventListener('resize', () => this.onResize());
-    document.addEventListener('pointerlockchange', () => {
+    // Resize handler
+    var self = this;
+    window.addEventListener('resize', function() { self.onResize(); });
+
+    // Pointer lock change
+    document.addEventListener('pointerlockchange', function() {
       Input.mouse.locked = !!document.pointerLockElement;
     });
 
-    // Keyboard shortcuts
-    window.addEventListener('keydown', e => {
-      if (e.code === 'Escape' && this.state === 'playing') {
-        this.pause();
-      } else if (e.code === 'Escape' && this.state === 'paused') {
-        this.resume();
-      }
-      if (e.code === 'KeyE' && this.state === 'playing') this.playerSpecial();
-      if (e.code === 'KeyQ' && this.state === 'playing') this.playerUltimate();
-    });
-
-    this.renderer.domElement.addEventListener('click', () => {
-      if (this.state === 'playing') {
-        this.renderer.domElement.requestPointerLock();
+    // Click to lock pointer
+    this.renderer.domElement.addEventListener('click', function() {
+      if (self.state === 'playing') {
+        try { self.renderer.domElement.requestPointerLock(); } catch(e) {}
       }
     });
 
-    this.renderer.domElement.addEventListener('mousedown', () => {
-      if (this.state === 'playing' && Input.mouse.locked) this.playerAttack();
+    // Mouse attack
+    this.renderer.domElement.addEventListener('mousedown', function() {
+      if (self.state === 'playing' && Input.mouse.locked) {
+        self.playerAttack();
+      }
     });
   },
 
-  createSky() {
-    const skyGeo = new THREE.SphereGeometry(200, 32, 32);
-    const skyMat = new THREE.ShaderMaterial({
-      uniforms: {
-        uTime: { value: 0 }
-      },
-      vertexShader: `
-        varying vec3 vWorldPos;
-        void main() {
-          vWorldPos = position;
-          gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-        }
-      `,
-      fragmentShader: `
-        uniform float uTime;
-        varying vec3 vWorldPos;
-        void main() {
-          vec3 dir = normalize(vWorldPos);
-          float y = dir.y * 0.5 + 0.5;
-          vec3 bottom = vec3(0.02, 0.03, 0.08);
-          vec3 mid = vec3(0.06, 0.02, 0.15);
-          vec3 top = vec3(0.01, 0.01, 0.05);
-          vec3 sky = mix(bottom, mid, smoothstep(0.0, 0.3, y));
-          sky = mix(sky, top, smoothstep(0.3, 0.8, y));
-          // Stars
-          float stars = 0.0;
-          vec2 uv = dir.xz / (dir.y + 0.01) * 3.0;
-          float n = fract(sin(dot(floor(uv), vec2(127.1, 311.7))) * 43758.5453);
-          if (n > 0.98 && y > 0.3) stars = (n - 0.98) * 50.0 * (0.5 + 0.5 * sin(uTime * 2.0 + n * 100.0));
-          // Nebula
-          float nebula = sin(dir.x * 3.0 + uTime * 0.1) * cos(dir.z * 2.0) * 0.5 + 0.5;
-          nebula *= smoothstep(0.2, 0.6, y) * smoothstep(0.8, 0.5, y);
-          sky += vec3(0.1, 0.02, 0.15) * nebula * 0.3;
-          sky += vec3(stars);
-          gl_FragColor = vec4(sky, 1.0);
-        }
-      `,
+  createSky: function() {
+    var skyGeo = new THREE.SphereGeometry(200, 32, 32);
+    var skyMat = new THREE.ShaderMaterial({
+      uniforms: { uTime: { value: 0 } },
+      vertexShader: [
+        'varying vec3 vWorldPos;',
+        'void main() {',
+        '  vWorldPos = position;',
+        '  gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);',
+        '}'
+      ].join('\n'),
+      fragmentShader: [
+        'uniform float uTime;',
+        'varying vec3 vWorldPos;',
+        'void main() {',
+        '  vec3 dir = normalize(vWorldPos);',
+        '  float y = dir.y * 0.5 + 0.5;',
+        '  vec3 bottom = vec3(0.02, 0.03, 0.08);',
+        '  vec3 mid = vec3(0.06, 0.02, 0.15);',
+        '  vec3 top = vec3(0.01, 0.01, 0.05);',
+        '  vec3 sky = mix(bottom, mid, smoothstep(0.0, 0.3, y));',
+        '  sky = mix(sky, top, smoothstep(0.3, 0.8, y));',
+        '  vec2 uv = dir.xz / (dir.y + 0.01) * 3.0;',
+        '  float n = fract(sin(dot(floor(uv), vec2(127.1, 311.7))) * 43758.5453);',
+        '  float stars = 0.0;',
+        '  if (n > 0.98 && y > 0.3) stars = (n - 0.98) * 50.0 * (0.5 + 0.5 * sin(uTime * 2.0 + n * 100.0));',
+        '  float nebula = sin(dir.x * 3.0 + uTime * 0.1) * cos(dir.z * 2.0) * 0.5 + 0.5;',
+        '  nebula *= smoothstep(0.2, 0.6, y) * smoothstep(0.8, 0.5, y);',
+        '  sky += vec3(0.1, 0.02, 0.15) * nebula * 0.3;',
+        '  sky += vec3(stars);',
+        '  gl_FragColor = vec4(sky, 1.0);',
+        '}'
+      ].join('\n'),
       side: THREE.BackSide
     });
     this.skyMesh = new THREE.Mesh(skyGeo, skyMat);
     this.scene.add(this.skyMesh);
   },
 
-  startLevel(mode) {
+  startLevel: function(mode) {
+    if (typeof THREE === 'undefined') return;
     AudioSys.resume();
     AudioSys.playClick();
     this.levelMode = mode;
 
     // Save selected char
-    const save = SaveSystem.load();
+    var save = SaveSystem.load();
     save.selectedChar = this.selectedChar;
     SaveSystem.save(save);
 
     // Reset state
-    this.score = 0; this.coins = 0; this.crystals = 0; this.playTime = 0;
-    this.health = CONFIG.maxHealth; this.energy = CONFIG.maxEnergy;
-    this.attackCooldown = 0; this.specialCooldown = 0; this.ultimateCooldown = 0;
+    this.score = 0;
+    this.coins = 0;
+    this.crystals = 0;
+    this.playTime = 0;
+    this.health = CONFIG.maxHealth;
+    this.energy = CONFIG.maxEnergy;
+    this.attackCooldown = 0;
+    this.specialCooldown = 0;
+    this.ultimateCooldown = 0;
 
     Analytics.resetSession();
 
     // Build world
     this.goalData = WorldBuilder.buildLevel(this.scene, this.physics);
 
-    // Create player
-    const charDef = CHARACTERS[this.selectedChar];
+    // Create player character
+    var charDef = CHARACTERS[this.selectedChar];
     if (this.playerMesh) this.scene.remove(this.playerMesh);
     this.playerMesh = CharacterBuilder.create(charDef);
     this.playerMesh.position.set(0, 1, 2);
@@ -2725,129 +3090,142 @@ const Game = {
       restitution: 0, friction: 0.15, mesh: this.playerMesh, tag: 'player'
     }));
 
-    // Update HUD
-    const portrait = document.getElementById('hud-portrait');
-    portrait.textContent = charDef.icon;
-    portrait.style.borderColor = charDef.color;
-    portrait.style.background = charDef.color + '22';
-    document.getElementById('hud-level').textContent = mode === 'story' ? 'FLOATING ISLANDS' : mode.toUpperCase() + ' MODE';
+    // Update HUD portrait
+    var portrait = document.getElementById('hud-portrait');
+    if (portrait) {
+      portrait.textContent = charDef.icon;
+      portrait.style.borderColor = charDef.color;
+      portrait.style.background = charDef.color + '22';
+    }
+    var hudLevel = document.getElementById('hud-level');
+    if (hudLevel) {
+      hudLevel.textContent = mode === 'story' ? 'FLOATING ISLANDS' : mode.toUpperCase() + ' MODE';
+    }
 
+    // Show game
     this.state = 'playing';
-    UI.goTo('game-active'); // special: doesn't exist as overlay, just activates HUD
+    var overlays = document.querySelectorAll('.screen-overlay');
+    for (var i = 0; i < overlays.length; i++) overlays[i].classList.add('hidden');
     document.getElementById('game-hud').classList.add('active');
-    document.querySelectorAll('.screen-overlay').forEach(el => el.classList.add('hidden'));
 
     // Request pointer lock
-    setTimeout(() => this.renderer.domElement.requestPointerLock(), 100);
+    var self = this;
+    setTimeout(function() {
+      try { self.renderer.domElement.requestPointerLock(); } catch(e) {}
+    }, 100);
 
     AudioSys.startAmbient();
     UI.showObjective('Explore the Floating Islands');
   },
 
-  pause() {
+  pause: function() {
     this.state = 'paused';
-    document.exitPointerLock();
+    try { document.exitPointerLock(); } catch(e) {}
     UI.goTo('pause-menu');
     document.getElementById('game-hud').classList.add('active');
   },
 
-  resume() {
+  resume: function() {
     this.state = 'playing';
-    document.querySelectorAll('.screen-overlay').forEach(el => el.classList.add('hidden'));
+    var overlays = document.querySelectorAll('.screen-overlay');
+    for (var i = 0; i < overlays.length; i++) overlays[i].classList.add('hidden');
     document.getElementById('game-hud').classList.add('active');
-    this.renderer.domElement.requestPointerLock();
+    var self = this;
+    setTimeout(function() {
+      try { self.renderer.domElement.requestPointerLock(); } catch(e) {}
+    }, 100);
   },
 
-  quit() {
+  quit: function() {
     this.state = 'menu';
-    document.exitPointerLock();
+    try { document.exitPointerLock(); } catch(e) {}
     AudioSys.stopAmbient();
     document.getElementById('game-hud').classList.remove('active');
-    // Clean up
+
+    // Clean up world
     WorldBuilder.clear(this.scene);
     if (this.playerMesh) { this.scene.remove(this.playerMesh); this.playerMesh = null; }
     if (this.playerBody) { this.physics.removeBody(this.playerBody); this.playerBody = null; }
     this.physics.bodies = [];
+
     UI.goTo('menu-screen');
   },
 
-  nextLevel() {
+  nextLevel: function() {
+    var mode = this.levelMode;
     this.quit();
-    setTimeout(() => this.startLevel(this.levelMode), 200);
+    var self = this;
+    setTimeout(function() { self.startLevel(mode); }, 200);
   },
 
-  playerAttack() {
-    if (this.attackCooldown > 0 || this.state !== 'playing') return;
+  playerAttack: function() {
+    if (this.attackCooldown > 0 || this.state !== 'playing' || !this.playerMesh) return;
+
     AudioSys.playAttack();
     this.attackCooldown = 0.3;
     this.isAttacking = true;
-    setTimeout(() => this.isAttacking = false, 200);
+    var self = this;
+    setTimeout(function() { self.isAttacking = false; }, 200);
 
     // Attack particles
-    if (this.playerMesh) {
-      const charDef = CHARACTERS[this.selectedChar];
-      this.attackParticles.color = new THREE.Color(charDef.color);
-      const fwd = new THREE.Vector3(0, 0, -1).applyAxisAngle(new THREE.Vector3(0, 1, 0), this.playerYaw);
-      this.attackParticles.emit(this.playerMesh.position.clone().addScaledVector(fwd, 1), 15);
-    }
+    var charDef = CHARACTERS[this.selectedChar];
+    this.attackParticles.color = new THREE.Color(charDef.color);
+    var fwd = new THREE.Vector3(0, 0, -1).applyAxisAngle(new THREE.Vector3(0, 1, 0), this.playerYaw);
+    this.attackParticles.emit(this.playerMesh.position.clone().addScaledVector(fwd, 1), 15);
 
     // Raycast for hit detection
-    if (this.playerMesh) {
-      const origin = this.playerMesh.position.clone();
-      origin.y += 0.8;
-      const dir = new THREE.Vector3(0, 0, -1).applyAxisAngle(new THREE.Vector3(0, 1, 0), this.playerYaw);
-      const hit = this.physics.raycast(origin, dir, 3);
-      if (hit && hit.body.tag === 'enemy') {
-        const enemy = WorldBuilder.enemies.find(e => e.body === hit.body);
-        if (enemy && enemy.health > 0) {
-          enemy.health -= 1;
-          AudioSys.playHit();
-          // Knockback
-          hit.body.velocity.addScaledVector(dir, 8);
-          hit.body.velocity.y = 3;
-          // Flash
-          if (enemy.mesh.children[0] && enemy.mesh.children[0].material && enemy.mesh.children[0].material.uniforms) {
-            const origColor = enemy.mesh.children[0].material.uniforms.uColor.value.clone();
-            enemy.mesh.children[0].material.uniforms.uColor.value.set(1,1,1);
-            setTimeout(() => { if (enemy.mesh.children[0].material.uniforms) enemy.mesh.children[0].material.uniforms.uColor.value.copy(origColor); }, 100);
-          }
-          if (enemy.health <= 0) {
-            this.score += 100;
-            this.physics.removeBody(hit.body);
-            this.scene.remove(enemy.mesh);
-            Analytics.track('reflex', 75);
-            UI.showNotification('+100 Enemy Defeated!');
-          }
+    var origin = this.playerMesh.position.clone();
+    origin.y += 0.8;
+    var dir = new THREE.Vector3(0, 0, -1).applyAxisAngle(new THREE.Vector3(0, 1, 0), this.playerYaw);
+    var hit = this.physics.raycast(origin, dir, 3);
+
+    if (hit && hit.body.tag === 'enemy') {
+      var enemy = null;
+      for (var i = 0; i < WorldBuilder.enemies.length; i++) {
+        if (WorldBuilder.enemies[i].body === hit.body) { enemy = WorldBuilder.enemies[i]; break; }
+      }
+      if (enemy && enemy.health > 0) {
+        enemy.health -= 1;
+        AudioSys.playHit();
+        hit.body.velocity.addScaledVector(dir, 8);
+        hit.body.velocity.y = 3;
+        if (enemy.health <= 0) {
+          this.score += 100;
+          this.physics.removeBody(hit.body);
+          this.scene.remove(enemy.mesh);
+          Analytics.track('reflex', 75);
+          UI.showNotification('+100 Enemy Defeated!');
         }
       }
-      // Check collectibles
-      if (hit && hit.body.tag === 'collectible') {
-        this.collectItem(hit.body);
-      }
+    }
+
+    // Check collectible hit
+    if (hit && hit.body.tag === 'collectible') {
+      this.collectItem(hit.body);
     }
   },
 
-  playerSpecial() {
-    if (this.specialCooldown > 0 || this.state !== 'playing' || this.energy < 20) return;
+  playerSpecial: function() {
+    if (this.specialCooldown > 0 || this.state !== 'playing' || this.energy < 20 || !this.playerMesh) return;
+
     this.specialCooldown = 2;
     this.energy -= 20;
     AudioSys.playTone(440, 0.3, 'sine', 0.2);
     AudioSys.playTone(660, 0.2, 'sine', 0.15);
 
-    const charDef = CHARACTERS[this.selectedChar];
-    if (this.playerMesh) {
-      this.attackParticles.color = new THREE.Color(charDef.color);
-      this.attackParticles.emit(this.playerMesh.position.clone(), 30);
-    }
+    var charDef = CHARACTERS[this.selectedChar];
+    this.attackParticles.color = new THREE.Color(charDef.color);
+    this.attackParticles.emit(this.playerMesh.position.clone(), 30);
 
     // AOE attack
-    const playerPos = this.playerBody.position;
-    for (const enemy of WorldBuilder.enemies) {
+    var playerPos = this.playerBody.position;
+    for (var i = WorldBuilder.enemies.length - 1; i >= 0; i--) {
+      var enemy = WorldBuilder.enemies[i];
       if (enemy.health <= 0) continue;
-      const dist = enemy.body.position.distanceTo(playerPos);
+      var dist = enemy.body.position.distanceTo(playerPos);
       if (dist < 5) {
         enemy.health -= 2;
-        const dir = new THREE.Vector3().subVectors(enemy.body.position, playerPos).normalize();
+        var dir = new THREE.Vector3().subVectors(enemy.body.position, playerPos).normalize();
         enemy.body.velocity.addScaledVector(dir, 12);
         enemy.body.velocity.y = 5;
         if (enemy.health <= 0) {
@@ -2861,30 +3239,33 @@ const Game = {
     Analytics.track('logic', 70);
   },
 
-  playerUltimate() {
-    if (this.ultimateCooldown > 0 || this.state !== 'playing' || this.energy < 50) return;
+  playerUltimate: function() {
+    if (this.ultimateCooldown > 0 || this.state !== 'playing' || this.energy < 50 || !this.playerMesh) return;
+
     this.ultimateCooldown = 8;
     this.energy -= 50;
     AudioSys.playTone(220, 0.5, 'sawtooth', 0.2);
-    setTimeout(() => AudioSys.playTone(440, 0.4, 'sine', 0.2), 200);
-    setTimeout(() => AudioSys.playTone(880, 0.3, 'sine', 0.15), 400);
+    var self = this;
+    setTimeout(function() { AudioSys.playTone(440, 0.4, 'sine', 0.2); }, 200);
+    setTimeout(function() { AudioSys.playTone(880, 0.3, 'sine', 0.15); }, 400);
 
-    const charDef = CHARACTERS[this.selectedChar];
-    if (this.playerMesh) {
-      this.attackParticles.color = new THREE.Color(charDef.color);
-      for (let i = 0; i < 5; i++) {
-        setTimeout(() => this.attackParticles.emit(this.playerMesh.position.clone(), 20), i * 50);
-      }
+    var charDef = CHARACTERS[this.selectedChar];
+    this.attackParticles.color = new THREE.Color(charDef.color);
+    for (var pi = 0; pi < 5; pi++) {
+      (function(idx) {
+        setTimeout(function() { self.attackParticles.emit(self.playerMesh.position.clone(), 20); }, idx * 50);
+      })(pi);
     }
 
     // Massive AOE
-    const playerPos = this.playerBody.position;
-    for (const enemy of WorldBuilder.enemies) {
+    var playerPos = this.playerBody.position;
+    for (var i = WorldBuilder.enemies.length - 1; i >= 0; i--) {
+      var enemy = WorldBuilder.enemies[i];
       if (enemy.health <= 0) continue;
-      const dist = enemy.body.position.distanceTo(playerPos);
+      var dist = enemy.body.position.distanceTo(playerPos);
       if (dist < 10) {
         enemy.health -= 5;
-        const dir = new THREE.Vector3().subVectors(enemy.body.position, playerPos).normalize();
+        var dir = new THREE.Vector3().subVectors(enemy.body.position, playerPos).normalize();
         enemy.body.velocity.addScaledVector(dir, 20);
         enemy.body.velocity.y = 10;
         if (enemy.health <= 0) {
@@ -2899,8 +3280,11 @@ const Game = {
     Analytics.track('creativity', 75);
   },
 
-  collectItem(body) {
-    const item = WorldBuilder.collectibles.find(c => c.body === body);
+  collectItem: function(body) {
+    var item = null;
+    for (var i = 0; i < WorldBuilder.collectibles.length; i++) {
+      if (WorldBuilder.collectibles[i].body === body) { item = WorldBuilder.collectibles[i]; break; }
+    }
     if (!item || !item.mesh.parent) return;
 
     if (item.type === 'coin') {
@@ -2909,7 +3293,7 @@ const Game = {
       AudioSys.playCoin();
       UI.showNotification('+10 Coin!');
       Analytics.track('focus', 65);
-    } else if (item.type === 'crystal') {
+    } else {
       this.crystals++;
       this.score += CONFIG.crystalValue;
       AudioSys.playCrystal();
@@ -2923,8 +3307,20 @@ const Game = {
     this.physics.removeBody(body);
   },
 
-  update(dt) {
-    if (this.state !== 'playing' || !this.playerBody) return;
+  updateCooldownUI: function(id, current, max) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    if (current > 0) {
+      el.classList.add('active');
+      el.textContent = current.toFixed(1);
+    } else {
+      el.classList.remove('active');
+    }
+  },
+
+  /* FIX #3: Null guards in update, loop, render */
+  update: function(dt) {
+    if (this.state !== 'playing' || !this.playerBody || !this.playerMesh) return;
     this.playTime += dt;
 
     // Cooldowns
@@ -2933,20 +3329,18 @@ const Game = {
     this.ultimateCooldown = Math.max(0, this.ultimateCooldown - dt);
     this.energy = Math.min(CONFIG.maxEnergy, this.energy + dt * 3);
 
-    // Update cooldown UI
     this.updateCooldownUI('cd-atk', this.attackCooldown, 0.3);
     this.updateCooldownUI('cd-special', this.specialCooldown, 2);
     this.updateCooldownUI('cd-ultimate', this.ultimateCooldown, 8);
 
-    // Player movement
-    const speed = CONFIG.moveSpeed;
-    let moveX = 0, moveZ = 0;
+    // Movement input
+    var moveX = 0, moveZ = 0;
     if (Input.isForward()) moveZ -= 1;
     if (Input.isBackward()) moveZ += 1;
     if (Input.isLeft()) moveX -= 1;
     if (Input.isRight()) moveX += 1;
 
-    // Camera rotation
+    // Camera rotation from mouse
     if (Input.mouse.locked) {
       this.playerYaw -= Input.mouse.dx * CONFIG.cameraSensitivity;
       this.playerPitch -= Input.mouse.dy * CONFIG.cameraSensitivity;
@@ -2955,13 +3349,14 @@ const Game = {
       Input.mouse.dy = 0;
     }
 
-    // Transform movement to camera space
-    const sinYaw = Math.sin(this.playerYaw), cosYaw = Math.cos(this.playerYaw);
-    const worldX = moveX * cosYaw + moveZ * sinYaw;
-    const worldZ = -moveX * sinYaw + moveZ * cosYaw;
+    // Transform movement to world space
+    var sinYaw = Math.sin(this.playerYaw);
+    var cosYaw = Math.cos(this.playerYaw);
+    var worldX = moveX * cosYaw + moveZ * sinYaw;
+    var worldZ = -moveX * sinYaw + moveZ * cosYaw;
 
-    this.playerBody.velocity.x = worldX * speed;
-    this.playerBody.velocity.z = worldZ * speed;
+    this.playerBody.velocity.x = worldX * CONFIG.moveSpeed;
+    this.playerBody.velocity.z = worldZ * CONFIG.moveSpeed;
 
     // Jump
     if (Input.isJump() && this.playerBody.isGrounded) {
@@ -2973,94 +3368,86 @@ const Game = {
 
     // Rotate player mesh to face movement direction
     if (Math.abs(worldX) > 0.1 || Math.abs(worldZ) > 0.1) {
-      const targetYaw = Math.atan2(worldX, worldZ);
-      let diff = targetYaw - this.playerMesh.rotation.y;
+      var targetYaw = Math.atan2(worldX, worldZ);
+      var diff = targetYaw - this.playerMesh.rotation.y;
       while (diff > Math.PI) diff -= Math.PI * 2;
       while (diff < -Math.PI) diff += Math.PI * 2;
       this.playerMesh.rotation.y += diff * 8 * dt;
     }
 
-    // Animate character
-    const state = !this.playerBody.isGrounded ? 'jump' :
-                  (Math.abs(worldX) > 0.1 || Math.abs(worldZ) > 0.1) ? 'run' :
-                  this.isAttacking ? 'attack' : 'idle';
-    CharacterBuilder.animate(this.playerMesh, state, this.playTime);
+    // Character animation state
+    var animState;
+    if (!this.playerBody.isGrounded) animState = 'jump';
+    else if (Math.abs(worldX) > 0.1 || Math.abs(worldZ) > 0.1) animState = 'run';
+    else if (this.isAttacking) animState = 'attack';
+    else animState = 'idle';
+    CharacterBuilder.animate(this.playerMesh, animState, this.playTime);
 
-    // Camera follow
-    const camDist = 8;
-    const camHeight = 4;
-    const idealPos = new THREE.Vector3(
+    // Camera follow (third person)
+    var camDist = 8;
+    var camHeight = 4;
+    var idealPos = new THREE.Vector3(
       this.playerBody.position.x + Math.sin(this.playerYaw) * camDist,
       this.playerBody.position.y + camHeight + Math.sin(this.playerPitch) * camDist * 0.5,
       this.playerBody.position.z + Math.cos(this.playerYaw) * camDist
     );
     this.camera.position.lerp(idealPos, 4 * dt);
-    this.cameraTarget.lerp(this.playerBody.position.clone().add(new THREE.Vector3(0, 1.2, 0)), 6 * dt);
+    this.cameraTarget.lerp(
+      this.playerBody.position.clone().add(new THREE.Vector3(0, 1.2, 0)),
+      6 * dt
+    );
     this.camera.lookAt(this.cameraTarget);
 
     // Physics step
     this.physics.step(dt);
 
-    // Update moving platforms
-    WorldBuilder.enemies.forEach(e => {
-      if (e.body.userData && e.body.userData.origin) {
-        const ud = e.body.userData;
-        // nothing yet
-      }
-    });
-
-    // Update goal mesh
+    // Update goal mesh animation
     if (this.goalData && this.goalData.goalMesh) {
       this.goalData.goalMesh.rotation.y += dt * 2;
       this.goalData.goalMesh.position.y = 4 + Math.sin(this.playTime * 1.5) * 0.3;
     }
 
-    // Moving platform
-    if (this.goalData && this.goalData.movPlatBody) {
-      const mp = this.goalData.movPlatBody;
-      if (mp.userData && mp.userData.origin) {
-        const ud = mp.userData;
-        mp.position.x = ud.origin.x + Math.sin(this.playTime * ud.speed) * ud.range;
-      }
-    }
+    // Update moving platforms
+    WorldBuilder.updateMovingPlatforms(this.playTime);
 
     // Update enemies
     WorldBuilder.updateEnemies(dt, this.playerBody.position);
 
-    // Enemy-player collision (damage)
-    for (const enemy of WorldBuilder.enemies) {
+    // Enemy-player collision (contact damage)
+    for (var ei = 0; ei < WorldBuilder.enemies.length; ei++) {
+      var enemy = WorldBuilder.enemies[ei];
       if (enemy.health <= 0) continue;
-      const dist = enemy.body.position.distanceTo(this.playerBody.position);
-      if (dist < 1.2) {
+      var edist = enemy.body.position.distanceTo(this.playerBody.position);
+      if (edist < 1.2) {
         this.health -= dt * 15;
+        Analytics.track('focus', Math.max(30, 70 - (100 - this.health)));
         if (this.health <= 0) {
           this.health = 0;
           this.gameOver();
           return;
         }
-        Analytics.track('focus', Math.max(30, 70 - (100 - this.health)));
       }
     }
 
     // Collectible proximity
-    for (const c of WorldBuilder.collectibles) {
-      if (!c.mesh.parent) continue;
-      const dist = c.body.position.distanceTo(this.playerBody.position);
-      if (dist < 1.5) {
-        this.collectItem(c.body);
+    for (var ci = 0; ci < WorldBuilder.collectibles.length; ci++) {
+      var col = WorldBuilder.collectibles[ci];
+      if (!col.mesh.parent) continue;
+      if (col.body.position.distanceTo(this.playerBody.position) < 1.5) {
+        this.collectItem(col.body);
       }
     }
 
     // Goal check
     if (this.goalData && this.goalData.goalBody) {
-      const goalDist = this.goalData.goalBody.position.distanceTo(this.playerBody.position);
+      var goalDist = this.goalData.goalBody.position.distanceTo(this.playerBody.position);
       if (goalDist < 2) {
         this.completeLevel();
         return;
       }
     }
 
-    // Particles
+    // Ambient particles
     this.particles.emit(new THREE.Vector3(
       this.playerBody.position.x + (Math.random() - 0.5) * 30,
       5 + Math.random() * 15,
@@ -3070,32 +3457,23 @@ const Game = {
     this.attackParticles.update(dt);
     WorldBuilder.updateCollectibles(this.playTime);
 
-    // Sky time
-    if (this.skyMesh && this.skyMesh.material.uniforms) {
+    // Sky time uniform
+    if (this.skyMesh && this.skyMesh.material && this.skyMesh.material.uniforms) {
       this.skyMesh.material.uniforms.uTime.value = this.playTime;
     }
 
-    // HUD
-    UI.updateHUD({ health: this.health, energy: this.energy }, this.coins, this.crystals, this.score, this.playTime);
+    // Update HUD
+    UI.updateHUD(
+      { health: this.health, energy: this.energy },
+      this.coins, this.crystals, this.score, this.playTime
+    );
 
     // Adaptive difficulty
     this.updateAdaptiveDifficulty();
   },
 
-  updateCooldownUI(id, current, max) {
-    const el = document.getElementById(id);
-    if (!el) return;
-    if (current > 0) {
-      el.classList.add('active');
-      el.textContent = current.toFixed(1);
-    } else {
-      el.classList.remove('active');
-    }
-  },
-
-  updateAdaptiveDifficulty() {
-    // Simple adaptive difficulty based on health and score
-    const healthRatio = this.health / CONFIG.maxHealth;
+  updateAdaptiveDifficulty: function() {
+    var healthRatio = this.health / CONFIG.maxHealth;
     if (healthRatio < 0.3) {
       CONFIG.gravity = -20; // easier
       Analytics.track('memory', 70);
@@ -3107,22 +3485,24 @@ const Game = {
     }
   },
 
-  completeLevel() {
+  completeLevel: function() {
     this.state = 'complete';
-    document.exitPointerLock();
+    try { document.exitPointerLock(); } catch(e) {}
     AudioSys.playComplete();
     AudioSys.stopAmbient();
 
-    // Boost brain scores based on performance
+    // Boost brain scores
     Analytics.track('physics', Math.min(100, 50 + this.score * 0.1));
     Analytics.track('spatial', Math.min(100, 50 + this.coins * 5));
     Analytics.track('memory', Math.min(100, 60 + this.crystals * 10));
 
-    const saveData = Analytics.finishSession();
+    var saveData = Analytics.finishSession();
     saveData.coins += this.coins;
     saveData.crystals += this.crystals;
     saveData.score += this.score;
-    if (!saveData.levelsCompleted.includes(this.levelMode)) saveData.levelsCompleted.push(this.levelMode);
+    if (saveData.levelsCompleted.indexOf(this.levelMode) === -1) {
+      saveData.levelsCompleted.push(this.levelMode);
+    }
     SaveSystem.save(saveData);
 
     UI.showLevelComplete({
@@ -3131,49 +3511,46 @@ const Game = {
       coins: this.coins,
       crystals: this.crystals
     });
-    document.getElementById('game-hud').classList.add('active');
+    UI.showObjective('Level Complete!');
   },
 
-  gameOver() {
+  gameOver: function() {
     this.state = 'complete';
-    document.exitPointerLock();
+    try { document.exitPointerLock(); } catch(e) {}
     AudioSys.stopAmbient();
     Analytics.track('reflex', Math.max(20, 60 - this.playTime * 0.5));
     Analytics.finishSession();
+
     UI.showLevelComplete({
       score: this.score,
       time: this.playTime,
       coins: this.coins,
       crystals: this.crystals
     });
-    document.getElementById('game-hud').classList.add('active');
     UI.showObjective('Defeated! Try again.');
   },
 
-  render() {
-    this.renderer.render(this.scene, this.camera);
-  },
-
-  onResize() {
-    const w = window.innerWidth, h = window.innerHeight;
-    this.camera.aspect = w / h;
-    this.camera.updateProjectionMatrix();
-    this.renderer.setSize(w, h);
-  },
-
-  loop() {
-    requestAnimationFrame(() => this.loop());
-    const dt = Math.min(this.clock.getDelta(), 0.05);
-
-    // FPS counter
-    this.fpsCounter.frames++;
-    const now = performance.now();
-    if (now - this.fpsCounter.lastTime > 1000) {
-      this.fpsCounter.fps = this.fpsCounter.frames;
-      this.fpsCounter.frames = 0;
-      this.fpsCounter.lastTime = now;
+  render: function() {
+    /* FIX #3: Guard against missing renderer */
+    if (this.renderer && this.scene && this.camera) {
+      this.renderer.render(this.scene, this.camera);
     }
+  },
 
+  onResize: function() {
+    if (!this.camera || !this.renderer) return;
+    this.camera.aspect = window.innerWidth / window.innerHeight;
+    this.camera.updateProjectionMatrix();
+    this.renderer.setSize(window.innerWidth, window.innerHeight);
+  },
+
+  loop: function() {
+    requestAnimationFrame(function() { Game.loop(); });
+
+    /* FIX #3: Guard against missing Three.js objects */
+    if (!this.scene || !this.renderer || !this.camera || !this.clock) return;
+
+    var dt = Math.min(this.clock.getDelta(), 0.05);
     this.update(dt);
     this.render();
   }
@@ -3183,9 +3560,11 @@ const Game = {
    INITIALIZATION
    ============================================================ */
 function init() {
-  const loadingBar = document.getElementById('loading-bar');
-  const loadingText = document.getElementById('loading-text');
-  const messages = [
+  var loadingBar = document.getElementById('loading-bar');
+  var loadingText = document.getElementById('loading-text');
+  var loadingHint = document.getElementById('loading-hint');
+
+  var messages = [
     'Initializing Quantum Engine...',
     'Loading Character Matrix...',
     'Generating World Geometry...',
@@ -3193,33 +3572,70 @@ function init() {
     'Calibrating Physics System...',
     'Syncing Neural Networks...',
     'Preparing Brain Analytics...',
-    'Ready to Play!'
+    'Click Anywhere to Begin!'
   ];
 
-  let progress = 0;
-  const loadInterval = setInterval(() => {
+  var progress = 0;
+  var bootDone = false;
+
+  var loadInterval = setInterval(function() {
     progress += Math.random() * 15 + 5;
     if (progress > 100) progress = 100;
-    loadingBar.style.width = progress + '%';
-    const msgIndex = Math.min(messages.length - 1, Math.floor(progress / 100 * messages.length));
-    loadingText.textContent = messages[msgIndex];
 
-    if (progress >= 100) {
+    if (loadingBar) loadingBar.style.width = progress + '%';
+    var msgIndex = Math.min(messages.length - 1, Math.floor(progress / 100 * messages.length));
+    if (loadingText) loadingText.textContent = messages[msgIndex];
+
+    if (progress >= 100 && !bootDone) {
+      bootDone = true;
       clearInterval(loadInterval);
-      // Init audio context on user interaction
-      AudioSys.init();
-      Input.init();
-      Game.init();
-      Game.loop();
 
-      setTimeout(() => {
+      /* Show click-to-start hint */
+      if (loadingHint) loadingHint.classList.add('visible');
+
+      /* FIX #1: Safe input init */
+      try {
+        Input.init();
+      } catch(e) {
+        console.warn('Input init error:', e);
+      }
+
+      /* FIX #2: Safe game init — guard against missing Three.js */
+      try {
+        if (typeof THREE !== 'undefined') {
+          Game.init();
+          Game.loop();
+        } else {
+          console.warn('Three.js not loaded — menu-only mode');
+        }
+      } catch(e) {
+        console.error('Game init error:', e);
+      }
+
+      /* FIX #1: Show menu — ALWAYS runs even if game init fails */
+      try {
         UI.init();
-      }, 500);
+      } catch(e) {
+        console.error('UI init error:', e);
+      }
+
+      /* FIX #1: Deferred audio init — requires user gesture (browser policy) */
+      var startAudio = function() {
+        try {
+          AudioSys.init();
+          AudioSys.resume();
+        } catch(e) {}
+        document.removeEventListener('click', startAudio);
+        document.removeEventListener('touchstart', startAudio);
+        if (loadingHint) loadingHint.classList.remove('visible');
+      };
+      document.addEventListener('click', startAudio, { once: true });
+      document.addEventListener('touchstart', startAudio, { once: true });
     }
   }, 200);
 }
 
-// Start
+/* Start */
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', init);
 } else {
