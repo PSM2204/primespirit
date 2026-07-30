@@ -47,7 +47,7 @@
 
 <!-- ═══════════════ CONSOLIDATED STYLES ═══════════════ -->
 <style>
-:root{--bg:#060a1a;--bg-warm:#080c1f;--surface:#0d1128;--surface-alt:#111633;--elevated:#151a3a;--elevated-hi:#1a2048;--glass:rgba(15,20,50,.65);--glass-edge:rgba(255,255,255,.06);--border:rgba(255,255,255,.05);--border-mid:rgba(255,255,255,.1);--border-accent:rgba(0,198,255,.2);--text:#e8ecf4;--text-sec:#8b95ad;--text-muted:#5c6478;--accent:#00c6ff;--accent-dim:rgba(0,198,255,.15);--blue:#0070f3;--green:#00df89;--violet:#a855f7;--gold:#d3a625;--rose:#f472b6;--grad-accent:linear-gradient(135deg,var(--accent),var(--blue));--grad-hero:linear-gradient(135deg,#00c6ff,#0070f3 40%,#a855f7);--grad-glass:linear-gradient(135deg,rgba(255,255,255,.04),rgba(255,255,255,.01));--font-head:'Syne',sans-serif;--font-body:'Source Serif 4',Georgia,serif;--font-mono:'DM Mono',monospace;--header-h:78px;--radius-sm:8px;--radius-md:14px;--radius-lg:20px;--radius-xl:28px;--shadow-card:0 4px 24px rgba(0,0,0,.3),0 1px 3px rgba(0,0,0,.2);--shadow-lift:0 12px 40px rgba(0,0,0,.45),0 2px 8px rgba(0,0,0,.3);--shadow-glow:0 0 30px rgba(0,198,255,.12)}
+:root{--bg:#060a1a;--bg-warm:#080c1f;--surface:#0d1128;--surface-alt:#111633;--elevated:#151a3a;--elevated-hi:#1a2048;--glass:rgba(15,20,50,.65);--glass-edge:rgba(255,255,255,.06);--border:rgba(255,255,255,.05);--border-mid:rgba(255,255,255,.1);--border-accent:rgba(0,198,255,.2);--text:#e8ecf4;--text-sec:#8b95ad;--text-muted:#5c6478;--accent:#00c6ff;--accent-dim:rgba(0,198,255,.15);--blue:#0070f3;--green:#00df89;--violet:#a855f7;--gold:#d3a625;--rose:#f472b6;--genjutsu-red:#e6384a;--grad-accent:linear-gradient(135deg,var(--accent),var(--blue));--grad-hero:linear-gradient(135deg,#00c6ff,#0070f3 40%,#a855f7);--grad-glass:linear-gradient(135deg,rgba(255,255,255,.04),rgba(255,255,255,.01));--font-head:'Syne',sans-serif;--font-body:'Source Serif 4',Georgia,serif;--font-mono:'DM Mono',monospace;--header-h:78px;--radius-sm:8px;--radius-md:14px;--radius-lg:20px;--radius-xl:28px;--shadow-card:0 4px 24px rgba(0,0,0,.3),0 1px 3px rgba(0,0,0,.2);--shadow-lift:0 12px 40px rgba(0,0,0,.45),0 2px 8px rgba(0,0,0,.3);--shadow-glow:0 0 30px rgba(0,198,255,.12)}
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
 body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-size:1rem;line-height:1.7;overflow-x:hidden;-webkit-font-smoothing:antialiased}
@@ -121,25 +121,97 @@ header.scrolled{box-shadow:0 8px 32px rgba(0,0,0,.4);background:rgba(6,10,26,.92
 .city-trust-bar{background:linear-gradient(90deg,rgba(0,198,255,.06),rgba(0,112,243,.06));border-bottom:1px solid var(--border);padding:10px 22px;text-align:center;font-family:var(--font-mono);font-size:.76rem;color:var(--text-sec);letter-spacing:.04em}
 .city-trust-bar span{color:var(--accent)}
 
-/* Hero */
-.hero-section{position:relative;overflow:hidden;padding:120px 0 100px;min-height:88vh;display:flex;align-items:center;background:radial-gradient(ellipse 80% 60% at 25% 30%,rgba(0,198,255,.06) 0%,transparent 70%),radial-gradient(ellipse 60% 50% at 80% 70%,rgba(168,85,247,.04) 0%,transparent 70%),var(--bg)}
-.hero-section::before{content:'';position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle 400px at 15% 20%,rgba(0,198,255,.035),transparent),radial-gradient(circle 350px at 85% 75%,rgba(168,85,247,.03),transparent);animation:heroAmbient 12s ease-in-out infinite alternate}
-@keyframes heroAmbient{0%{opacity:.6}100%{opacity:1}}
-.hero-section::after{content:'';position:absolute;bottom:0;left:0;right:0;height:180px;background:linear-gradient(to bottom,transparent,var(--bg));pointer-events:none}
-.hero-content{position:relative;z-index:1;max-width:780px}
-.hero-badge{display:inline-block;padding:8px 20px;background:rgba(0,198,255,.08);border:1px solid rgba(0,198,255,.15);border-radius:50px;font-family:var(--font-mono);font-size:.78rem;color:var(--accent);letter-spacing:.06em;margin-bottom:28px;opacity:0;animation:fadeUp .6s ease forwards}
-.hero-section h1{font-size:clamp(2.4rem,5.5vw,4rem);font-weight:800;line-height:1.08;margin-bottom:24px;letter-spacing:-.02em;opacity:0;animation:fadeUp .6s ease forwards;animation-delay:.1s}
-.gradient-text{background:var(--grad-hero);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.hero-section p{font-size:1.12rem;line-height:1.75;color:var(--text-sec);margin-bottom:36px;max-width:640px;opacity:0;animation:fadeUp .6s ease forwards;animation-delay:.2s}
-.hero-section p strong{color:var(--text)}
-.hero-buttons{display:flex;flex-wrap:wrap;gap:12px;opacity:0;animation:fadeUp .6s ease forwards;animation-delay:.3s}
-.btn{display:inline-flex;align-items:center;gap:10px;padding:14px 28px;border-radius:var(--radius-sm);font-family:var(--font-head);font-weight:800;font-size:.92rem;text-decoration:none;border:none;cursor:pointer;transition:transform .25s cubic-bezier(.22,1,.36,1),box-shadow .25s,background .25s}
-.btn:hover{transform:translateY(-2px)}
-.btn-whatsapp{background:#25d366;color:#000;box-shadow:0 6px 20px rgba(37,211,102,.25)}.btn-whatsapp:hover{box-shadow:0 10px 28px rgba(37,211,102,.4);color:#000}
-.btn-primary{background:var(--grad-accent);color:#00121f;box-shadow:0 6px 20px rgba(0,198,255,.2)}.btn-primary:hover{box-shadow:0 10px 28px rgba(0,198,255,.35);color:#00121f}
-.btn-genre{background:linear-gradient(135deg,#a855f7,#0070f3);color:#fff;box-shadow:0 6px 20px rgba(168,85,247,.2)}.btn-genre:hover{box-shadow:0 10px 28px rgba(168,85,247,.35);color:#fff}
-.btn-secondary{background:rgba(255,255,255,.04);color:var(--text);border:1px solid var(--border-mid)}.btn-secondary:hover{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.18);color:#fff}
-@media(max-width:640px){.hero-section{padding:80px 0 70px;min-height:auto}.hero-buttons{gap:10px}.hero-buttons .btn{font-size:.84rem;padding:12px 20px}}
+/* ===== NEW: Genjutsu Sub-header Band (Hero) ===== */
+.subhead-band{
+  position:relative;
+  overflow:hidden;
+  padding:100px 0 110px;
+  text-align:center;
+  background:
+    radial-gradient(ellipse 70% 100% at 50% 0%, rgba(0,198,255,.06), transparent 70%),
+    var(--bg-warm);
+  border-bottom:1px solid var(--border);
+  isolation:isolate;
+}
+.genjutsu-rings{
+  position:absolute;
+  top:50%;left:50%;
+  width:640px;height:640px;
+  transform:translate(-50%,-50%);
+  pointer-events:none;
+  z-index:0;
+  opacity:.5;
+}
+.genjutsu-rings svg{width:100%;height:100%}
+.ring-outer{transform-origin:320px 320px;animation:spinCW 46s linear infinite}
+.ring-mid{transform-origin:320px 320px;animation:spinCCW 34s linear infinite}
+.ring-inner{transform-origin:320px 320px;animation:spinCW 22s linear infinite}
+@keyframes spinCW{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@keyframes spinCCW{from{transform:rotate(0deg)}to{transform:rotate(-360deg)}}
+.tomoe{animation:tomoePulse 3.2s ease-in-out infinite}
+@keyframes tomoePulse{0%,100%{opacity:.85}50%{opacity:.35}}
+
+.subhead-inner{position:relative;z-index:1;max-width:800px;margin:0 auto}
+.subhead-eyebrow{
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:var(--font-mono);font-size:.76rem;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--genjutsu-red);
+  padding:8px 20px;border:1px solid rgba(230,56,74,.25);border-radius:50px;
+  background:rgba(230,56,74,.06);
+  margin-bottom:28px;
+  opacity:0;animation:fadeUp .6s ease forwards;
+}
+.subhead-eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--genjutsu-red);box-shadow:0 0 8px var(--genjutsu-red)}
+
+.subhead-academic-era {
+  font-family: var(--font-head);
+  font-size: clamp(3rem, 7vw, 5rem);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  margin-bottom: 16px;
+  color: var(--text);
+  opacity:0;animation:fadeUp .6s ease forwards;animation-delay:.1s;
+}
+.subhead-academic-era .gradient-text {
+  background: var(--grad-hero);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 0 20px rgba(0, 198, 255, 0.3));
+}
+
+.subhead-descriptive-title {
+  font-family: var(--font-body);
+  font-size: clamp(1.1rem, 2.2vw, 1.4rem);
+  font-weight: 600;
+  color: var(--text-sec);
+  margin-bottom: 20px;
+  opacity:0;animation:fadeUp .6s ease forwards;animation-delay:.15s;
+}
+.subhead-descriptive-title .accent-word {
+  color: var(--accent);
+}
+
+.subhead-sub{
+  color:var(--text-sec);font-size:1.05rem;max-width:640px;margin:0 auto 36px auto;line-height:1.7;
+  opacity:0;animation:fadeUp .6s ease forwards;animation-delay:.2s;
+}
+.subhead-sub strong { color: var(--text); }
+
+.hero-buttons {
+  display:flex;flex-wrap:wrap;gap:12px;justify-content:center;
+  opacity:0;animation:fadeUp .6s ease forwards;animation-delay:.3s;
+}
+
+@media(prefers-reduced-motion:reduce){
+  .ring-outer,.ring-mid,.ring-inner,.tomoe{animation:none}
+}
+@media(max-width:640px){
+  .subhead-band{padding:70px 0 80px}
+  .genjutsu-rings{width:420px;height:420px}
+  .hero-buttons { justify-content: center; }
+}
 
 /* Trust Strip */
 .trust-strip{padding:48px 0;background:linear-gradient(180deg,var(--bg),var(--surface));border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
@@ -364,6 +436,14 @@ footer{background:var(--surface);border-top:1px solid var(--border);padding:72px
 @media(max-width:1024px){.footer-grid{grid-template-columns:1fr 1fr 1fr}}
 @media(max-width:768px){.footer-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:480px){.footer-grid{grid-template-columns:1fr}}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;gap:10px;padding:14px 28px;border-radius:var(--radius-sm);font-family:var(--font-head);font-weight:800;font-size:.92rem;text-decoration:none;border:none;cursor:pointer;transition:transform .25s cubic-bezier(.22,1,.36,1),box-shadow .25s,background .25s}
+.btn:hover{transform:translateY(-2px)}
+.btn-whatsapp{background:#25d366;color:#000;box-shadow:0 6px 20px rgba(37,211,102,.25)}.btn-whatsapp:hover{box-shadow:0 10px 28px rgba(37,211,102,.4);color:#000}
+.btn-primary{background:var(--grad-accent);color:#00121f;box-shadow:0 6px 20px rgba(0,198,255,.2)}.btn-primary:hover{box-shadow:0 10px 28px rgba(0,198,255,.35);color:#00121f}
+.btn-genre{background:linear-gradient(135deg,#a855f7,#0070f3);color:#fff;box-shadow:0 6px 20px rgba(168,85,247,.2)}.btn-genre:hover{box-shadow:0 10px 28px rgba(168,85,247,.35);color:#fff}
+.btn-secondary{background:rgba(255,255,255,.04);color:var(--text);border:1px solid var(--border-mid)}.btn-secondary:hover{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.18);color:#fff}
 </style>
 
 <!-- STRUCTURED DATA -->
@@ -429,20 +509,46 @@ footer{background:var(--surface);border-top:1px solid var(--border);padding:72px
 <!-- MAIN -->
 <main id="main-content">
 
-<!-- HERO -->
-<section id="hero" class="hero-section" aria-label="Introduction">
-<div class="container hero-content">
-<div class="hero-badge" aria-hidden="true">&#9889; Micro-Batches. Elite Ranks. Zero Burnout.</div>
-<h1>Enter Your <span class="gradient-text">Academic Era</span></h1>
-<p>Ditch the mass-crowd lectures. Get premium personalized online coaching for Class 6th to 12th Boards (CBSE/ICSE), NEET, JEE, CUET, IAT, and NEST &mdash; balanced with custom psychometric counseling. Now serving students across <strong>Bengaluru, Hyderabad, Bhubaneswar, Cuttack</strong> and all of India.</p>
-<div class="hero-buttons">
-<a href="https://wa.me/919700627812?text=Hi%2C%20I%20want%20to%20book%20a%20free%20demo%20class." class="btn btn-whatsapp" target="_blank" rel="noopener noreferrer"><i class="fab fa-whatsapp" aria-hidden="true"></i> Book Free Demo</a>
-<a href="primetestq/index.html" class="btn btn-primary"><i class="fas fa-space-shuttle" aria-hidden="true"></i> Free Assessment Test</a>
-<a href="genz-vibe.html" class="btn btn-genre"><i class="fas fa-wand-magic-sparkles" aria-hidden="true"></i> Discover Your Study Type</a>
-<a href="#" class="btn btn-whatsapp" onclick="launchPhysicsQuest();return false;" style="background:linear-gradient(135deg,#00df89,#0070f3);color:#fff"><i class="fas fa-atom" aria-hidden="true"></i> PrimeLab: Physics Quest</a>
-<a href="#courses" class="btn btn-secondary">Explore Micro-Batches</a>
-</div>
-</div>
+<!-- NEW GENJUTSU HERO SECTION -->
+<section id="hero" class="subhead-band" aria-label="Introduction">
+  <div class="genjutsu-rings" aria-hidden="true">
+    <svg viewBox="0 0 640 640">
+      <g class="ring-outer">
+        <circle cx="320" cy="320" r="300" fill="none" stroke="#00c6ff" stroke-opacity="0.14" stroke-width="1"/>
+        <circle cx="320" cy="20" r="4" fill="#00c6ff" fill-opacity="0.5"/>
+        <circle cx="620" cy="320" r="4" fill="#a855f7" fill-opacity="0.4"/>
+        <circle cx="320" cy="620" r="4" fill="#00c6ff" fill-opacity="0.4"/>
+      </g>
+      <g class="ring-mid">
+        <circle cx="320" cy="320" r="210" fill="none" stroke="#a855f7" stroke-opacity="0.16" stroke-width="1"/>
+      </g>
+      <g class="ring-inner">
+        <circle cx="320" cy="320" r="120" fill="none" stroke="#e6384a" stroke-opacity="0.18" stroke-width="1"/>
+        <g class="tomoe">
+          <circle cx="320" cy="210" r="6" fill="#e6384a" fill-opacity="0.55"/>
+          <circle cx="415" cy="375" r="6" fill="#e6384a" fill-opacity="0.55"/>
+          <circle cx="225" cy="375" r="6" fill="#e6384a" fill-opacity="0.55"/>
+        </g>
+      </g>
+    </svg>
+  </div>
+  <div class="container subhead-inner">
+    <div class="subhead-eyebrow" aria-hidden="true"><span class="dot"></span> Micro-Batches &middot; Elite Ranks &middot; Zero Burnout</div>
+    
+    <h1 class="subhead-academic-era">Enter Your <span class="gradient-text">Academic Era</span></h1>
+    
+    <h2 class="subhead-descriptive-title">Prime Spirit Mentors: <span class="accent-word">Online NEET &amp; JEE Coaching</span></h2>
+    
+    <p class="subhead-sub">Personalized micro-batch coaching (5&ndash;10 students) for NEET UG, JEE Mains, CUET, IAT, NEST &amp; Class 6&ndash;12 CBSE/ICSE Boards. Founded by Abhinav Kashyap. Serving <strong>Bengaluru, Hyderabad, Bhubaneswar, Cuttack</strong> &amp; all of India.</p>
+    
+    <div class="hero-buttons">
+      <a href="https://wa.me/919700627812?text=Hi%2C%20I%20want%20to%20book%20a%20free%20demo%20class." class="btn btn-whatsapp" target="_blank" rel="noopener noreferrer"><i class="fab fa-whatsapp" aria-hidden="true"></i> Book Free Demo</a>
+      <a href="primetestq/index.html" class="btn btn-primary"><i class="fas fa-space-shuttle" aria-hidden="true"></i> Free Assessment Test</a>
+      <a href="genz-vibe.html" class="btn btn-genre"><i class="fas fa-wand-magic-sparkles" aria-hidden="true"></i> Discover Your Study Type</a>
+      <a href="#" class="btn btn-whatsapp" onclick="launchPhysicsQuest();return false;" style="background:linear-gradient(135deg,#00df89,#0070f3);color:#fff"><i class="fas fa-atom" aria-hidden="true"></i> PrimeLab: Physics Quest</a>
+      <a href="#courses" class="btn btn-secondary">Explore Micro-Batches</a>
+    </div>
+  </div>
 </section>
 
 <!-- TRUST STRIP -->
@@ -764,7 +870,7 @@ footer{background:var(--surface);border-top:1px solid var(--border);padding:72px
 </div>
 <button class="back-to-top" id="backToTop" type="button" aria-label="Back to top"><i class="fas fa-arrow-up"></i></button>
 
-<!-- AUTH MODAL (Enhanced from previous structure) -->
+<!-- AUTH MODAL -->
 <div class="auth-modal-overlay" id="authModal">
 <div class="auth-modal-card" role="dialog" aria-modal="true" aria-labelledby="authModalTitle">
 <button class="close-modal-btn" id="closeAuthModal" type="button" aria-label="Close"><i class="fas fa-times"></i></button>
