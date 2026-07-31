@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Refund Policy — Prime Spirit</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f6f3ed;
+      --surface: #ffffff;
+      --accent: #1a3c34;
+      --accent-light: #2a5c4e;
+      --text-primary: #1c1c1c;
+      --text-muted: #6b6560;
+      --border: #d8d3cb;
+      --gold: #b8964e;
+      --red: #8b3a3a;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'DM Mono', monospace;
+      font-size: 14px;
+      line-height: 1.8;
+      color: var(--text-primary);
+      background: var(--bg);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    .top-bar {
+      background: var(--accent);
+      color: var(--bg);
+      padding: 10px 40px;
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .top-bar a {
+      color: var(--gold);
+      text-decoration: none;
+      transition: opacity 0.2s ease;
+    }
+    .top-bar a:hover { opacity: 0.7; }
+
+    header {
+      padding: 60px 40px 40px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    header h1 {
+      font-family: 'Instrument Serif', serif;
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 400;
+      color: var(--accent);
+      line-height: 1.1;
+      margin-bottom: 16px;
+      opacity: 0;
+      animation: fadeUp 0.7s ease forwards;
+    }
+
+    header .subtitle {
+      font-size: 13px;
+      color: var(--text-muted);
+      max-width: 560px;
+      font-weight: 300;
+      opacity: 0;
+      animation: fadeUp 0.7s ease 0.1s forwards;
+    }
+
+    .last-updated {
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      border-left: 3px solid var(--gold);
+      padding-left: 12px;
+      margin-top: 20px;
+      opacity: 0;
+      animation: fadeUp 0.7s ease 0.15s forwards;
+    }
+
+    .divider {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 40px;
+    }
+    .divider hr {
+      border: none;
+      border-top: 1px solid var(--border);
+    }
+
+    .content {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 40px 40px 80px;
+    }
+
+    .section {
+      margin-bottom: 48px;
+      opacity: 0;
+      animation: fadeUp 0.6s ease forwards;
+    }
+    .section:nth-child(1) { animation-delay: 0.2s; }
+    .section:nth-child(2) { animation-delay: 0.25s; }
+    .section:nth-child(3) { animation-delay: 0.3s; }
+    .section:nth-child(4) { animation-delay: 0.35s; }
+    .section:nth-child(5) { animation-delay: 0.4s; }
+    .section:nth-child(6) { animation-delay: 0.45s; }
+    .section:nth-child(7) { animation-delay: 0.5s; }
+    .section:nth-child(8) { animation-delay: 0.55s; }
+    .section:nth-child(9) { animation-delay: 0.6s; }
+    .section:nth-child(10) { animation-delay: 0.65s; }
+    .section:nth-child(11) { animation-delay: 0.7s; }
+    .section:nth-child(12) { animation-delay: 0.75s; }
+    .section:nth-child(13) { animation-delay: 0.8s; }
+
+    .section-number {
+      font-family: 'Instrument Serif', serif;
+      font-size: 2.5rem;
+      color: var(--gold);
+      opacity: 0.3;
+      float: left;
+      line-height: 1;
+      margin-right: 16px;
+      margin-top: 4px;
+    }
+
+    h2 {
+      font-family: 'Instrument Serif', serif;
+      font-size: 1.5rem;
+      font-weight: 400;
+      color: var(--accent);
+      margin-bottom: 16px;
+      line-height: 1.3;
+    }
+
+    h3 {
+      font-family: 'DM Mono', monospace;
+      font-size: 13px;
+      font-weight: 400;
+      color: var(--accent);
+      margin: 24px 0 10px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    p, li {
+      color: var(--text-primary);
+      font-weight: 300;
+      margin-bottom: 12px;
+    }
+
+    ul, ol {
+      padding-left: 24px;
+      margin-bottom: 12px;
+    }
+
+    li { margin-bottom: 8px; }
+    li::marker { color: var(--gold); }
+
+    strong {
+      font-weight: 400;
+      color: var(--accent);
+    }
+
+    .highlight-box {
+      background: var(--accent);
+      color: var(--bg);
+      padding: 28px 32px;
+      border-radius: 2px;
+      margin: 24px 0;
+    }
+    .highlight-box p {
+      color: var(--bg);
+      font-size: 13px;
+      margin-bottom: 8px;
+    }
+    .highlight-box p:last-child { margin-bottom: 0; }
+    .highlight-box strong {
+      color: var(--gold);
+    }
+
+    .warning-box {
+      background: var(--surface);
+      border: 1px solid var(--red);
+      border-left: 4px solid var(--red);
+      padding: 24px 28px;
+      margin: 24px 0;
+    }
+    .warning-box p {
+      font-size: 13px;
+      color: var(--red);
+      margin-bottom: 0;
+    }
+    .warning-box strong {
+      color: var(--red);
+    }
+
+    .info-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 24px 28px;
+      margin: 20px 0;
+    }
+    .info-card p {
+      font-size: 13px;
+      margin-bottom: 8px;
+    }
+    .info-card p:last-child { margin-bottom: 0; }
+
+    .consent-box {
+      background: var(--surface);
+      border: 1px solid var(--gold);
+      border-left: 4px solid var(--gold);
+      padding: 24px 28px;
+      margin: 20px 0;
+    }
+    .consent-box p {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 0;
+    }
+    .consent-box strong {
+      color: var(--gold);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0 24px;
+      font-size: 13px;
+    }
+    thead th {
+      background: var(--accent);
+      color: var(--bg);
+      font-weight: 400;
+      text-align: left;
+      padding: 12px 16px;
+      letter-spacing: 0.04em;
+      font-size: 11px;
+      text-transform: uppercase;
+    }
+    tbody td {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      font-weight: 300;
+      vertical-align: top;
+    }
+    tbody tr:last-child td { border-bottom: none; }
+    tbody tr:nth-child(even) { background: rgba(26, 60, 52, 0.02); }
+
+    .timeline {
+      position: relative;
+      padding-left: 40px;
+      margin: 24px 0;
+    }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 14px;
+      top: 0;
+      bottom: 0;
+      width: 1px;
+      background: var(--gold);
+      opacity: 0.4;
+    }
+    .timeline-item {
+      position: relative;
+      margin-bottom: 28px;
+    }
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -30px;
+      top: 6px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--gold);
+      border: 2px solid var(--bg);
+      box-shadow: 0 0 0 1px var(--gold);
+    }
+    .timeline-label {
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--gold);
+      font-weight: 400;
+      margin-bottom: 4px;
+    }
+    .timeline-text {
+      font-size: 13px;
+      color: var(--text-primary);
+      font-weight: 300;
+    }
+
+    a {
+      color: var(--accent-light);
+      text-decoration: underline;
+      text-decoration-color: var(--gold);
+      text-underline-offset: 3px;
+      transition: color 0.2s ease;
+    }
+    a:hover { color: var(--gold); }
+
+    .toc {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 32px;
+      margin-bottom: 48px;
+      opacity: 0;
+      animation: fadeUp 0.6s ease 0.18s forwards;
+    }
+    .toc h3 {
+      font-family: 'Instrument Serif', serif;
+      font-size: 1.1rem;
+      color: var(--accent);
+      margin-bottom: 16px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+    .toc ol {
+      columns: 2;
+      column-gap: 32px;
+      padding-left: 20px;
+    }
+    .toc li {
+      font-size: 12px;
+      break-inside: avoid;
+    }
+    .toc a {
+      text-decoration: none;
+      color: var(--text-muted);
+      transition: color 0.2s ease;
+    }
+    .toc a:hover { color: var(--accent); }
+
+    footer {
+      background: var(--accent);
+      color: var(--bg);
+      padding: 40px;
+      text-align: center;
+    }
+    footer p {
+      font-size: 11px;
+      color: rgba(246, 243, 237, 0.6);
+      letter-spacing: 0.08em;
+    }
+    footer a {
+      color: var(--gold);
+      text-decoration: none;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 640px) {
+      header { padding: 40px 20px 24px; }
+      .content { padding: 24px 20px 60px; }
+      .divider { padding: 0 20px; }
+      .toc ol { columns: 1; }
+      .section-number { font-size: 1.8rem; }
+      .top-bar { padding: 10px 20px; flex-direction: column; gap: 4px; }
+      table { font-size: 11px; }
+      thead th, tbody td { padding: 8px 10px; }
+      .highlight-box, .info-card, .consent-box, .warning-box { padding: 20px; }
+      .timeline { padding-left: 32px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="top-bar">
+    <span>Prime Spirit</span>
+    <a href="https://primespirit.co.in">&larr; Back to Home</a>
+  </div>
+
+  <header>
+    <h1>Refund Policy</h1>
+    <p class="subtitle">
+      We want you to be confident in your investment. This policy outlines when and how refunds are issued for our courses and services.
+    </p>
+    <div class="last-updated">Last updated: 1 August 2026</div>
+  </header>
+
+  <div class="divider"><hr></div>
+
+  <div class="content">
+
+    <div class="toc">
+      <h3>Contents</h3>
+      <ol>
+        <li><a href="#overview">Overview</a></li>
+        <li><a href="#eligibility">Refund Eligibility</a></li>
+        <li><a href="#timeline">Refund Timeline</a></li>
+        <li><a href="#courses">Course &amp; Programme Refunds</a></li>
+        <li><a href="#non-refundable">Non-Refundable Items</a></li>
+        <li><a href="#cancellation">Cancellation Policy</a></li>
+        <li><a href="#how-to">How to Request a Refund</a></li>
+        <li><a href="#processing">Refund Processing</a></li>
+        <li><a href="#exceptions">Exceptions &amp; Special Circumstances</a></li>
+        <li><a href="#chargebacks">Chargebacks &amp; Disputes</a></li>
+        <li><a href="#modifications">Modifications to Services</a></li>
+        <li><a href="#policy-changes">Changes to This Policy</a></li>
+        <li><a href="#contact">Contact Us</a></li>
+      </ol>
+    </div>
+
+    <!-- 1 -->
+    <div class="section" id="overview">
+      <div class="section-number">01</div>
+      <h2>Overview</h2>
+      <p>
+        At <strong>Prime Spirit</strong>, we are committed to delivering high-quality educational experiences. We understand that circumstances may change, and we strive to handle refund requests fairly and transparently.
+      </p>
+      <p>
+        This Refund Policy governs all purchases, enrolments, and transactions made through <strong>primespirit.co.in</strong> (the "Website"). By enrolling in any course, programme, or service offered by Prime Spirit, you agree to the terms outlined in this policy.
+      </p>
+      <div class="highlight-box">
+        <p><strong>Key Principle:</strong> Refund eligibility is determined by the type of product or service purchased, the time elapsed since purchase, and the level of content accessed. Please read this policy carefully before making a purchase.</p>
+      </div>
+    </div>
+
+    <!-- 2 -->
+    <div class="section" id="eligibility">
+      <div class="section-number">02</div>
+      <h2>Refund Eligibility</h2>
+      <p>
+        Refund eligibility depends on the category of service purchased and the circumstances of the request. The general framework is as follows:
+      </p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Service Category</th>
+            <th>Refund Window</th>
+            <th>Conditions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Self-Paced Online Courses</strong></td>
+            <td>7 days from date of purchase</td>
+            <td>Less than 25% of course content accessed</td>
+          </tr>
+          <tr>
+            <td><strong>Live / Scheduled Programmes</strong></td>
+            <td>7 days from date of purchase or before the programme start date (whichever is earlier)</td>
+            <td>No sessions attended; less than 10% of content accessed</td>
+          </tr>
+          <tr>
+            <td><strong>Workshops &amp; Bootcamps</strong></td>
+            <td>7 days from date of purchase or before the event date (whichever is earlier)</td>
+            <td>Event not yet attended</td>
+          </tr>
+          <tr>
+            <td><strong>1-on-1 Sessions / Consultations</strong></td>
+            <td>48 hours before the scheduled session</td>
+            <td>Session has not commenced</td>
+          </tr>
+          <tr>
+            <td><strong>Digital Downloads / Resources</strong></td>
+            <td>Non-refundable once downloaded</td>
+            <td>Refund only if the file is proven defective or not as described</td>
+          </tr>
+          <tr>
+            <td><strong>Subscription Plans</strong></td>
+            <td>7 days from initial purchase only</td>
+            <td>Renewal charges are non-refundable; cancellation takes effect at end of billing cycle</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="consent-box">
+        <p><strong>Note:</strong> "Content accessed" includes viewing lessons, downloading materials, attending live sessions, or submitting assignments. Access is measured at the individual account level.</p>
+      </div>
+    </div>
+
+    <!-- 3 -->
+    <div class="section" id="timeline">
+      <div class="section-number">03</div>
+      <h2>Refund Timeline</h2>
+      <p>
+        The following timeline illustrates the typical lifecycle of a refund request:
+      </p>
+
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-label">Day 0 &mdash; Purchase</div>
+          <div class="timeline-text">You enrol in a course or programme and payment is confirmed.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-label">Days 1 – 7 &mdash; Refund Window</div>
+          <div class="timeline-text">You may request a full refund, provided you meet the eligibility conditions for your service category (see Section 2).</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-label">Day 7+ &mdash; Standard Period Ends</div>
+          <div class="timeline-text">After 7 days, standard refunds are no longer available. Only exceptional circumstances (see Section 9) may qualify.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-label">Within 5 Business Days &mdash; Acknowledgement</div>
+          <div class="timeline-text">We acknowledge receipt of your refund request and may request additional information.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-label">Within 10 Business Days &mdash; Decision</div>
+          <div class="timeline-text">We review your request and communicate the decision (approved, partially approved, or denied) along with the reason.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-label">Within 5–10 Business Days After Approval &mdash; Refund Credited</div>
+          <div class="timeline-text">The refund is processed to your original payment method. Actual credit time depends on your bank or payment provider.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4 -->
+    <div class="section" id="courses">
+      <div class="section-number">04</div>
+      <h2>Course &amp; Programme Refunds</h2>
+
+      <h3>A. Full Refund</h3>
+      <p>You are eligible for a <strong>full refund (100%)</strong> if:</p>
+      <ul>
+        <li>You request the refund within the applicable refund window (see Section 2).</li>
+        <li>You have accessed less than 25% of the course content (for self-paced courses) or less than 10% (for live programmes).</li>
+        <li>You have not received a certificate of completion.</li>
+        <li>You have not violated our <a href="https://primespirit.co.in/terms.html">Terms of Use</a>.</li>
+      </ul>
+
+      <h3>B. Partial Refund</h3>
+      <p>A <strong>partial refund</strong> may be offered at our discretion if:</p>
+      <ul>
+        <li>You request a refund within the refund window but have accessed between 25%–50% of the course content.</li>
+        <li>A programme is materially different from what was described at the time of purchase.</li>
+        <li>Technical issues on our end prevented you from accessing the content for a significant portion of the refund window.</li>
+      </ul>
+      <table>
+        <thead>
+          <tr>
+            <th>Content Accessed</th>
+            <th>Refund Percentage</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Less than 25%</td>
+            <td>100% (full refund)</td>
+          </tr>
+          <tr>
+            <td>25% – 50%</td>
+            <td>50% (partial refund, case-by-case)</td>
+          </tr>
+          <tr>
+            <td>More than 50%</td>
+            <td>No refund</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>C. Course Transfers</h3>
+      <p>
+        Instead of a refund, you may request a <strong>transfer to another course or future cohort</strong> of the same programme, subject to availability. Transfer requests must be made within the refund window. Course transfers are offered at no additional charge if the new course is of equal value. If the new course has a higher price, you will be required to pay the difference.
+      </p>
+    </div>
+
+    <!-- 5 -->
+    <div class="section" id="non-refundable">
+      <div class="section-number">05</div>
+      <h2>Non-Refundable Items</h2>
+
+      <div class="warning-box">
+        <p><strong>The following items and situations are strictly non-refundable:</strong></p>
+      </div>
+
+      <ul>
+        <li><strong>Processing fees and transaction charges</strong> — payment gateway fees, convenience charges, or currency conversion fees imposed by third-party processors are non-refundable.</li>
+        <li><strong>Completed courses</strong> — courses for which a certificate of completion has been issued or where 100% of the content has been accessed.</li>
+        <li><strong>Digital downloads</strong> — e-books, PDFs, templates, or any digital resource that has been downloaded or accessed.</li>
+        <li><strong>Subscription renewals</strong> — automatic renewal charges after the initial 7-day refund period. You must cancel before the renewal date to avoid being charged.</li>
+        <li><strong>Promotional or discounted purchases</strong> — courses purchased at a special promotional price, during flash sales, or using discount codes are eligible for course transfer only, not cash refunds (unless required by applicable law).</li>
+        <li><strong>Gift purchases</strong> — courses purchased as gifts for another individual are non-refundable once the gift has been redeemed by the recipient.</li>
+        <li><strong>Violation-related terminations</strong> — accounts or access terminated due to violations of our <a href="https://primespirit.co.in/terms.html">Terms of Use</a>.</li>
+        <li><strong>Services rendered</strong> — 1-on-1 sessions, consultations, or workshops that have already been attended or delivered.</li>
+      </ul>
+    </div>
+
+    <!-- 6 -->
+    <div class="section" id="cancellation">
+      <div class="section-number">06</div>
+      <h2>Cancellation Policy</h2>
+
+      <h3>A. Cancellation by You</h3>
+      <ul>
+        <li><strong>Before the refund window expires:</strong> you may cancel your enrolment and receive a refund as per the terms in Sections 2 and 4.</li>
+        <li><strong>After the refund window expires:</strong> you may cancel your enrolment at any time, but no refund will be issued. You will retain access to the course content for the remaining duration of your enrolment period.</li>
+        <li><strong>Subscription cancellation:</strong> you may cancel your subscription at any time through your account settings or by contacting us. Cancellation takes effect at the end of the current billing cycle. You will retain access until the cycle ends.</li>
+      </ul>
+
+      <h3>B. Cancellation by Prime Spirit</h3>
+      <p>
+        We reserve the right to cancel or reschedule a course, programme, or event under the following circumstances:
+      </p>
+      <ul>
+        <li><strong>Insufficient enrolment</strong> — if a live programme does not meet the minimum number of participants, we may cancel or postpone it. In such cases, you will be offered a full refund or a transfer to the next available cohort.</li>
+        <li><strong>Instructor unavailability</strong> — if an instructor becomes unavailable due to unforeseen circumstances, we will make reasonable efforts to provide a substitute. If no suitable alternative is available, you will receive a full refund or a transfer.</li>
+        <li><strong>Force majeure</strong> — events beyond our control (natural disasters, pandemics, government restrictions, etc.) that make it impossible to deliver the service. In such cases, we will offer a credit, transfer, or refund at our discretion.</li>
+        <li><strong>Terms violation</strong> — if your account is terminated for violating our <a href="https://primespirit.co.in/terms.html">Terms of Use</a>, no refund will be issued.</li>
+      </ul>
+    </div>
+
+    <!-- 7 -->
+    <div class="section" id="how-to">
+      <div class="section-number">07</div>
+      <h2>How to Request a Refund</h2>
+      <p>
+        To request a refund, please use one of the following methods:
+      </p>
+
+      <div class="info-card">
+        <p><strong>Method 1: Email</strong></p>
+        <p>Send an email to <a href="mailto:primespiritedu@gmail.com">primespiritedu@gmail.com</a> with the subject line: <strong>"Refund Request – [Your Name] – [Course Name]"</strong></p>
+        <p style="margin-top: 12px;">Please include the following details:</p>
+        <ul style="margin-top: 8px;">
+          <li>Full name (as used during registration)</li>
+          <li>Email address associated with your account</li>
+          <li>Course or programme name</li>
+          <li>Date of purchase</li>
+          <li>Transaction ID or payment reference number</li>
+          <li>Reason for the refund request</li>
+        </ul>
+      </div>
+
+      <div class="info-card">
+        <p><strong>Method 2: Phone</strong></p>
+        <p>Call us at <a href="tel:+919700627812">+91 9700 627 812</a> during business hours (Monday – Saturday, 10:00 AM – 6:00 PM IST). Our team will guide you through the process and may ask for the details listed above.</p>
+      </div>
+
+      <div class="info-card">
+        <p><strong>Method 3: Contact Form</strong></p>
+        <p>Visit <a href="https://primespirit.co.in">primespirit.co.in</a> and use the contact form on our website. Select "Refund Request" as the subject and provide the required details.</p>
+      </div>
+
+      <p>
+        Once we receive your request, we will acknowledge it within <strong>5 business days</strong> and process it within <strong>10 business days</strong> from the date of acknowledgement.
+      </p>
+    </div>
+
+    <!-- 8 -->
+    <div class="section" id="processing">
+      <div class="section-number">08</div>
+      <h2>Refund Processing</h2>
+      <p>
+        Once a refund is approved, the following terms apply:
+      </p>
+      <ul>
+        <li><strong>Refund method:</strong> refunds are processed to the <strong>original payment method</strong> used at the time of purchase. We do not issue refunds via cash, cheque, or to a different account.</li>
+        <li><strong>Processing time:</strong> refunds are initiated within 5–10 business days of approval. The time for the amount to reflect in your account depends on your bank or payment provider and may take an additional 5–15 business days.</li>
+        <li><strong>Partial refunds:</strong> if a partial refund is approved, only the applicable percentage of the original purchase price will be refunded.</li>
+        <li><strong>Refund currency:</strong> refunds are processed in <strong>Indian Rupees (INR)</strong>. For international payments, the refunded amount may vary due to exchange rate fluctuations. Prime Spirit is not responsible for differences arising from currency conversion.</li>
+        <li><strong>Deductions:</strong> applicable payment gateway fees, transaction charges, or taxes that are non-recoverable by us may be deducted from the refund amount.</li>
+      </ul>
+
+      <div class="highlight-box">
+        <p><strong>Upon refund approval:</strong> your access to the course, programme, or service will be revoked immediately. Any downloaded materials must be deleted and may not be used further.</p>
+      </div>
+    </div>
+
+    <!-- 9 -->
+    <div class="section" id="exceptions">
+      <div class="section-number">09</div>
+      <h2>Exceptions &amp; Special Circumstances</h2>
+      <p>
+        We recognise that exceptional situations may arise. The following circumstances will be evaluated on a case-by-case basis, regardless of the standard refund window:
+      </p>
+      <ul>
+        <li><strong>Medical emergencies</strong> — if you are unable to continue a programme due to a serious medical condition, please provide a valid medical certificate. We will offer a credit, transfer, or refund at our discretion.</li>
+        <li><strong>Bereavement</strong> — in the event of the loss of an immediate family member, we will accommodate requests for course deferral or refund with appropriate documentation.</li>
+        <li><strong>Technical failures</strong> — if you are unable to access the course due to a verified technical issue on our end (not related to your device or internet connection), we will extend the refund window or provide appropriate compensation.</li>
+        <li><strong>Misrepresentation</strong> — if the course content is materially different from what was described at the time of purchase, you may be eligible for a full refund, even outside the standard window.</li>
+        <li><strong>Duplicate transactions</strong> — if you have been charged twice for the same course or service, the duplicate amount will be refunded in full after verification.</li>
+      </ul>
+      <div class="consent-box">
+        <p><strong>How to request an exception:</strong> email <a href="mailto:primespiritedu@gmail.com">primespiritedu@gmail.com</a> with the subject line <strong>"Refund Exception Request"</strong>, including a detailed explanation and any supporting documentation. We will respond within 10 business days.</p>
+      </div>
+    </div>
+
+    <!-- 10 -->
+    <div class="section" id="chargebacks">
+      <div class="section-number">10</div>
+      <h2>Chargebacks &amp; Disputes</h2>
+      <p>
+        We strongly encourage you to contact us directly before initiating a chargeback or payment dispute with your bank or payment provider. We are committed to resolving issues fairly and promptly.
+      </p>
+      <p>
+        Please note:
+      </p>
+      <ul>
+        <li>If a chargeback is filed while a refund request is being processed, we may pause the refund process until the chargeback is resolved.</li>
+        <li>Fraudulent or unwarranted chargebacks may result in the permanent suspension of your account and access to our services.</li>
+        <li>We reserve the right to provide transaction records, communication logs, and access data to the relevant financial institution or payment processor to contest unwarranted chargebacks.</li>
+      </ul>
+      <p>
+        If you believe a charge was made in error, please contact us first at <a href="mailto:primespiritedu@gmail.com">primespiritedu@gmail.com</a> or call <a href="tel:+919700627812">+91 9700 627 812</a>. We will investigate and resolve the matter as quickly as possible.
+      </p>
+    </div>
+
+    <!-- 11 -->
+    <div class="section" id="modifications">
+      <div class="section-number">11</div>
+      <h2>Modifications to Services</h2>
+      <p>
+        We continually update and improve our courses and programmes. The following changes do not qualify for a refund:
+      </p>
+      <ul>
+        <li>Minor updates to course content, including corrections, additional resources, or updated examples.</li>
+        <li>Changes to the instructor, provided the replacement instructor meets our quality standards.</li>
+        <li>Rescheduling of live sessions within a reasonable timeframe (up to 7 days), with advance notice.</li>
+        <li>Platform or interface changes that do not materially affect access to the course content.</li>
+      </ul>
+      <p>
+        However, if a material change significantly impacts the value or nature of the service you purchased, we will notify you and offer appropriate options, which may include a refund, credit, or transfer.
+      </p>
+    </div>
+
+    <!-- 12 -->
+    <div class="section" id="policy-changes">
+      <div class="section-number">12</div>
+      <h2>Changes to This Policy</h2>
+      <p>
+        We reserve the right to update or modify this Refund Policy at any time. Changes will take effect from the date they are posted on this page.
+      </p>
+      <ul>
+        <li>The "Last updated" date at the top of this page will be revised.</li>
+        <li>Material changes will be communicated via email or a prominent notice on the Website.</li>
+        <li>Refund requests already submitted before a policy change will be processed under the policy in effect at the time of purchase.</li>
+      </ul>
+      <p>
+        We encourage you to review this page before making a purchase.
+      </p>
+    </div>
+
+    <!-- 13 -->
+    <div class="section" id="contact">
+      <div class="section-number">13</div>
+      <h2>Contact Us</h2>
+      <p>
+        If you have any questions about this Refund Policy or need assistance with a refund request, please reach out to us:
+      </p>
+
+      <div class="info-card">
+        <p><strong>Prime Spirit</strong></p>
+        <p><strong>Email:</strong> <a href="mailto:primespiritedu@gmail.com">primespiritedu@gmail.com</a></p>
+        <p><strong>Phone:</strong> <a href="tel:+919700627812">+91 9700 627 812</a></p>
+        <p><strong>Business Hours:</strong> Monday – Saturday, 10:00 AM – 6:00 PM IST</p>
+        <p><strong>Address:</strong> VBHC, Bygadadenahalli, Chandapura Anekal Road, Bengaluru, Karnataka, India</p>
+      </div>
+
+      <p>
+        We aim to respond to all refund-related queries within <strong>5 business days</strong> and resolve refund requests within <strong>10 business days</strong> from acknowledgement.
+      </p>
+
+      <div class="consent-box">
+        <p><strong>Related Policies:</strong> This Refund Policy should be read in conjunction with our <a href="https://primespirit.co.in/terms.html">Terms of Use</a> and <a href="https://primespirit.co.in/privacy.html">Privacy Policy</a>.</p>
+      </div>
+
+      <p style="margin-top: 24px; font-size: 12px; color: var(--text-muted);">
+        This Refund Policy was last reviewed and updated on 1 August 2026.
+      </p>
+    </div>
+
+  </div>
+
+  <footer>
+    <p>&copy; 2026 Prime Spirit. All rights reserved. &nbsp;|&nbsp; <a href="https://primespirit.co.in">primespirit.co.in</a> &nbsp;|&nbsp; <a href="https://primespirit.co.in/terms.html">Terms of Use</a> &nbsp;|&nbsp; <a href="https://primespirit.co.in/privacy.html">Privacy Policy</a></p>
+  </footer>
+
+</body>
+</html>
