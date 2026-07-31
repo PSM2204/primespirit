@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Privacy Policy — Prime Spirit</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f6f3ed;
+      --surface: #ffffff;
+      --accent: #1a3c34;
+      --accent-light: #2a5c4e;
+      --text-primary: #1c1c1c;
+      --text-muted: #6b6560;
+      --border: #d8d3cb;
+      --gold: #b8964e;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'DM Mono', monospace;
+      font-size: 14px;
+      line-height: 1.8;
+      color: var(--text-primary);
+      background: var(--bg);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    .top-bar {
+      background: var(--accent);
+      color: var(--bg);
+      padding: 10px 40px;
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .top-bar a {
+      color: var(--gold);
+      text-decoration: none;
+      transition: opacity 0.2s ease;
+    }
+    .top-bar a:hover { opacity: 0.7; }
+
+    header {
+      padding: 60px 40px 40px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    header h1 {
+      font-family: 'Instrument Serif', serif;
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 400;
+      color: var(--accent);
+      line-height: 1.1;
+      margin-bottom: 16px;
+      opacity: 0;
+      animation: fadeUp 0.7s ease forwards;
+    }
+
+    header .subtitle {
+      font-size: 13px;
+      color: var(--text-muted);
+      max-width: 560px;
+      font-weight: 300;
+      opacity: 0;
+      animation: fadeUp 0.7s ease 0.1s forwards;
+    }
+
+    .last-updated {
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      border-left: 3px solid var(--gold);
+      padding-left: 12px;
+      margin-top: 20px;
+      opacity: 0;
+      animation: fadeUp 0.7s ease 0.15s forwards;
+    }
+
+    .divider {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 40px;
+    }
+    .divider hr {
+      border: none;
+      border-top: 1px solid var(--border);
+    }
+
+    .content {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 40px 40px 80px;
+    }
+
+    .section {
+      margin-bottom: 48px;
+      opacity: 0;
+      animation: fadeUp 0.6s ease forwards;
+    }
+    .section:nth-child(1) { animation-delay: 0.2s; }
+    .section:nth-child(2) { animation-delay: 0.25s; }
+    .section:nth-child(3) { animation-delay: 0.3s; }
+    .section:nth-child(4) { animation-delay: 0.35s; }
+    .section:nth-child(5) { animation-delay: 0.4s; }
+    .section:nth-child(6) { animation-delay: 0.45s; }
+    .section:nth-child(7) { animation-delay: 0.5s; }
+    .section:nth-child(8) { animation-delay: 0.55s; }
+    .section:nth-child(9) { animation-delay: 0.6s; }
+    .section:nth-child(10) { animation-delay: 0.65s; }
+    .section:nth-child(11) { animation-delay: 0.7s; }
+    .section:nth-child(12) { animation-delay: 0.75s; }
+    .section:nth-child(13) { animation-delay: 0.8s; }
+    .section:nth-child(14) { animation-delay: 0.85s; }
+    .section:nth-child(15) { animation-delay: 0.9s; }
+    .section:nth-child(16) { animation-delay: 0.95s; }
+
+    .section-number {
+      font-family: 'Instrument Serif', serif;
+      font-size: 2.5rem;
+      color: var(--gold);
+      opacity: 0.3;
+      float: left;
+      line-height: 1;
+      margin-right: 16px;
+      margin-top: 4px;
+    }
+
+    h2 {
+      font-family: 'Instrument Serif', serif;
+      font-size: 1.5rem;
+      font-weight: 400;
+      color: var(--accent);
+      margin-bottom: 16px;
+      line-height: 1.3;
+    }
+
+    h3 {
+      font-family: 'DM Mono', monospace;
+      font-size: 13px;
+      font-weight: 400;
+      color: var(--accent);
+      margin: 20px 0 10px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    p, li {
+      color: var(--text-primary);
+      font-weight: 300;
+      margin-bottom: 12px;
+    }
+
+    ul, ol {
+      padding-left: 24px;
+      margin-bottom: 12px;
+    }
+
+    li { margin-bottom: 8px; }
+    li::marker { color: var(--gold); }
+
+    strong {
+      font-weight: 400;
+      color: var(--accent);
+    }
+
+    .highlight-box {
+      background: var(--accent);
+      color: var(--bg);
+      padding: 28px 32px;
+      border-radius: 2px;
+      margin: 24px 0;
+    }
+    .highlight-box p {
+      color: var(--bg);
+      font-size: 13px;
+    }
+    .highlight-box strong {
+      color: var(--gold);
+    }
+
+    .info-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 24px 28px;
+      margin: 20px 0;
+    }
+    .info-card p {
+      font-size: 13px;
+      margin-bottom: 8px;
+    }
+    .info-card p:last-child { margin-bottom: 0; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0 24px;
+      font-size: 13px;
+    }
+    thead th {
+      background: var(--accent);
+      color: var(--bg);
+      font-weight: 400;
+      text-align: left;
+      padding: 12px 16px;
+      letter-spacing: 0.04em;
+      font-size: 11px;
+      text-transform: uppercase;
+    }
+    tbody td {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      font-weight: 300;
+      vertical-align: top;
+    }
+    tbody tr:last-child td { border-bottom: none; }
+    tbody tr:nth-child(even) { background: rgba(26, 60, 52, 0.02); }
+
+    a {
+      color: var(--accent-light);
+      text-decoration: underline;
+      text-decoration-color: var(--gold);
+      text-underline-offset: 3px;
+      transition: color 0.2s ease;
+    }
+    a:hover { color: var(--gold); }
+
+    .toc {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 32px;
+      margin-bottom: 48px;
+      opacity: 0;
+      animation: fadeUp 0.6s ease 0.18s forwards;
+    }
+    .toc h3 {
+      font-family: 'Instrument Serif', serif;
+      font-size: 1.1rem;
+      color: var(--accent);
+      margin-bottom: 16px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+    .toc ol {
+      columns: 2;
+      column-gap: 32px;
+      padding-left: 20px;
+    }
+    .toc li {
+      font-size: 12px;
+      break-inside: avoid;
+    }
+    .toc a {
+      text-decoration: none;
+      color: var(--text-muted);
+      transition: color 0.2s ease;
+    }
+    .toc a:hover { color: var(--accent); }
+
+    .consent-box {
+      background: var(--surface);
+      border: 1px solid var(--gold);
+      border-left: 4px solid var(--gold);
+      padding: 24px 28px;
+      margin: 20px 0;
+    }
+    .consent-box p {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+    .consent-box strong {
+      color: var(--gold);
+    }
+
+    footer {
+      background: var(--accent);
+      color: var(--bg);
+      padding: 40px;
+      text-align: center;
+    }
+    footer p {
+      font-size: 11px;
+      color: rgba(246, 243, 237, 0.6);
+      letter-spacing: 0.08em;
+    }
+    footer a {
+      color: var(--gold);
+      text-decoration: none;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 640px) {
+      header { padding: 40px 20px 24px; }
+      .content { padding: 24px 20px 60px; }
+      .divider { padding: 0 20px; }
+      .toc ol { columns: 1; }
+      .section-number { font-size: 1.8rem; }
+      .top-bar { padding: 10px 20px; flex-direction: column; gap: 4px; }
+      table { font-size: 11px; }
+      thead th, tbody td { padding: 8px 10px; }
+      .highlight-box, .info-card, .consent-box { padding: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="top-bar">
+    <span>Prime Spirit</span>
+    <a href="https://primespirit.co.in">&larr; Back to Home</a>
+  </div>
+
+  <header>
+    <h1>Privacy Policy</h1>
+    <p class="subtitle">
+      Your privacy matters to us. This policy explains what information we collect, how we use it, and the choices you have — written in clear, straightforward language.
+    </p>
+    <div class="last-updated">Last updated: 1 August 2026</div>
+  </header>
+
+  <div class="divider"><hr></div>
+
+  <div class="content">
+
+    <div class="toc">
+      <h3>Contents</h3>
+      <ol>
+        <li><a href="#who">Who We Are</a></li>
+        <li><a href="#scope">Scope of This Policy</a></li>
+        <li><a href="#collect">Information We Collect</a></li>
+        <li><a href="#how-collect">How We Collect Information</a></li>
+        <li><a href="#use">How We Use Your Information</a></li>
+        <li><a href="#legal-basis">Legal Basis for Processing</a></li>
+        <li><a href="#sharing">Information Sharing &amp; Disclosure</a></li>
+        <li><a href="#cookies">Cookies &amp; Tracking Technologies</a></li>
+        <li><a href="#retention">Data Retention</a></li>
+        <li><a href="#security">Data Security</a></li>
+        <li><a href="#rights">Your Rights</a></li>
+        <li><a href="#children">Children's Privacy</a></li>
+        <li><a href="#international">International Data Transfers</a></li>
+        <li><a href="#third-party">Third-Party Links</a></li>
+        <li><a href="#changes">Changes to This Policy</a></li>
+        <li><a href="#contact">Contact Us</a></li>
+      </ol>
+    </div>
+
+    <!-- 1 -->
+    <div class="section" id="who">
+      <div class="section-number">01</div>
+      <h2>Who We Are</h2>
+      <div class="info-card">
+        <p><strong>Prime Spirit</strong></p>
+        <p>VBHC, Bygadadenahalli, Chandapura Anekal Road</p>
+        <p>Bengaluru, Karnataka, India</p>
+        <p><strong>Email:</strong> <a href="mailto:primespiritedu@gmail.com">primespiritedu@gmail.com</a></p>
+        <p><strong>Phone:</strong> <a href="tel:+919700627812">+91 9700 627 812</a></p>
+      </div>
+      <p>
+        Prime Spirit ("we," "us," or "our") operates the website <strong>primespirit.co.in</strong> (the "Website"). We are committed to protecting the privacy and security of your personal information. This Privacy Policy describes how we collect, use, store, share, and protect your data when you visit our Website, enrol in our programmes, or otherwise interact with us.
+      </p>
+    </div>
+
+    <!-- 2 -->
+    <div class="section" id="scope">
+      <div class="section-number">02</div>
+      <h2>Scope of This Policy</h2>
+      <p>This Privacy Policy applies to:</p>
+      <ul>
+        <li>Visitors browsing the Website without creating an account.</li>
+        <li>Users who register, enrol in courses, or subscribe to our services.</li>
+        <li>Individuals who contact us via forms, email, phone, or social media.</li>
+        <li>Any personal data collected through the Website or related services.</li>
+      </ul>
+      <p>
+        This policy does not apply to information collected offline, through third-party platforms not operated by us, or by any third party whose links may appear on our Website (see <a href="#third-party">Section 14</a>).
+      </p>
+    </div>
+
+    <!-- 3 -->
+    <div class="section" id="collect">
+      <div class="section-number">03</div>
+      <h2>Information We Collect</h2>
+      <p>We collect the following categories of information:</p>
+
+      <h3>A. Personal Information (provided by you)</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Data Type</th>
+            <th>Examples</th>
+            <th>Purpose</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Identity Data</strong></td>
+            <td>Full name, date of birth, gender</td>
+            <td>Account creation, enrolment</td>
+          </tr>
+          <tr>
+            <td><strong>Contact Data</strong></td>
+            <td>Email address, phone number, postal address</td>
+            <td>Communication, service delivery</td>
+          </tr>
+          <tr>
+            <td><strong>Enrolment Data</strong></td>
+            <td>Course selections, programme preferences, educational background</td>
+            <td>Providing and personalising services</td>
+          </tr>
+          <tr>
+            <td><strong>Payment Data</strong></td>
+            <td>Billing address, transaction ID (we do not store card numbers)</td>
+            <td>Processing payments</td>
+          </tr>
+          <tr>
+            <td><strong>Communication Data</strong></td>
+            <td>Messages, feedback, enquiry details, testimonials</td>
+            <td>Customer support, service improvement</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>B. Automatically Collected Information</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Data Type</th>
+            <th>Examples</th>
+            <th>Purpose</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Device Data</strong></td>
+            <td>Browser type, operating system, device model, screen resolution</td>
+            <td>Optimising display and compatibility</td>
+          </tr>
+          <tr>
+            <td><strong>Usage Data</strong></td>
+            <td>Pages visited, time spent, click patterns, referral source</td>
+            <td>Analytics and site improvement</td>
+          </tr>
+          <tr>
+            <td><strong>Location Data</strong></td>
+            <td>IP address, approximate geographic location (city-level)</td>
+            <td>Security, localisation, analytics</td>
+          </tr>
+          <tr>
+            <td><strong>Cookie Data</strong></td>
+            <td>Session identifiers, preference tokens</td>
+            <td>Functionality and analytics (see <a href="#cookies">Section 8</a>)</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>C. Sensitive Personal Data or Information (SPDI)</h3>
+      <p>
+        Under the Information Technology (Reasonable Security Practices and Procedures and Sensitive Personal Data or Information) Rules, 2011, certain categories of data are classified as SPDI. We may collect:
+      </p>
+      <ul>
+        <li><strong>Passwords</strong> (hashed and encrypted — we never store plain-text passwords).</li>
+        <li><strong>Financial information</strong> (payment transaction records only; we do not store card numbers, CVV, or banking credentials).</li>
+      </ul>
+      <div class="consent-box">
+        <p><strong>Your Consent:</strong> By providing SPDI to us, you consent to its collection, processing, and storage in accordance with this policy. You may withdraw consent at any time by contacting us at <a href="mailto:primespiritedu@gmail.com">primespiritedu@gmail.com</a>. Withdrawal of consent may affect our ability to provide certain services to you.</p>
+      </div>
+    </div>
+
+    <!-- 4 -->
+    <div class="section" id="how-collect">
+      <div class="section-number">04</div>
+      <h2>How We Collect Information</h2>
+      <p>We collect information through the following channels:</p>
+      <ul>
+        <li><strong>Directly from you</strong> — when you fill out forms, register for an account, enrol in a course, make a payment, subscribe to our newsletter, or contact us.</li>
+        <li><strong>Automatically</strong> — through cookies, server logs, analytics tools, and similar technologies when you browse the Website.</li>
+        <li><strong>From third parties</strong> — such as payment processors confirming transaction status, or social media platforms if you interact with our pages (limited to publicly available information).</li>
+      </ul>
+      <p>
+        We do not collect information from any source without a lawful and transparent purpose.
+      </p>
+    </div>
+
+    <!-- 5 -->
+    <div class="section" id="use">
+      <div class="section-number">05</div>
+      <h2>How We Use Your Information</h2>
+      <p>We use the information we collect for the following purposes:</p>
+      <ul>
+        <li><strong>Service Delivery</strong> — to process enrolments, deliver course content, manage your account, and provide customer support.</li>
+        <li><strong>Communication</strong> — to send you transactional emails (enrolment confirmations, receipts), service updates, and respond to your enquiries.</li>
+        <li><strong>Marketing</strong> — to send newsletters, promotional offers, and information about new courses or programmes (only with your opt-in consent; you can unsubscribe at any time).</li>
+        <li><strong>Personalisation</strong> — to customise your experience on the Website and recommend relevant content or courses.</li>
+        <li><strong>Analytics &amp; Improvement</strong> — to understand how the Website is used, identify trends, and improve our content, services, and user experience.</li>
+        <li><strong>Security &amp; Fraud Prevention</strong> — to detect, prevent, and address technical issues, fraud, or unauthorised access.</li>
+        <li><strong>Legal Compliance</strong> — to comply with applicable laws, regulations, court orders, or governmental requests.</li>
+      </ul>
+
+      <div class="highlight-box">
+        <p><strong>We will never sell your personal information to third parties.</strong> Your data is used solely for the purposes described in this policy.</p>
+      </div>
+    </div>
+
+    <!-- 6 -->
+    <div class="section" id="legal-basis">
+      <div class="section-number">06</div>
+      <h2>Legal Basis for Processing</h2>
+      <p>We process your personal information based on one or more of the following legal grounds:</p>
+      <ul>
+        <li><strong>Consent</strong> — where you have given explicit consent for specific processing (e.g., marketing emails, SPDI collection).</li>
+        <li><strong>Contractual Necessity</strong> — where processing is required to fulfil our contractual obligations to you (e.g., delivering a course you enrolled in).</li>
+        <li><strong>Legitimate Interest</strong> — where processing is necessary for our legitimate business interests (e.g., improving services, preventing fraud), provided these interests do not override your fundamental rights.</li>
+        <li><strong>Legal Obligation</strong> — where processing is required to comply with applicable Indian laws and regulations.</li>
+      </ul>
+    </div>
+
+    <!-- 7 -->
+    <div class="section" id="sharing">
+      <div class="section-number">07</div>
+      <h2>Information Sharing &amp; Disclosure</h2>
+      <p>We may share your information with the following categories of recipients, strictly on a need-to-know basis:</p>
+
+      <h3>A. Service Providers</h3>
+      <p>
+        We engage trusted third-party service providers to support our operations, including:
+      </p>
+      <ul>
+        <li><strong>Payment processors</strong> — to handle secure payment transactions.</li>
+        <li><strong>Email and communication platforms</strong> — to send transactional and marketing emails.</li>
+        <li><strong>Analytics providers</strong> — to understand Website usage patterns.</li>
+        <li><strong>Hosting and cloud service providers</strong> — to store data securely.</li>
+        <li><strong>Customer support tools</strong> — to manage and respond to your enquiries.</li>
+      </ul>
+      <p>
+        These providers are contractually bound to use your information only for the purposes we specify and are required to maintain adequate security measures.
+      </p>
+
+      <h3>B. Legal Requirements</h3>
+      <p>We may disclose your information if required to do so by law or in response to:</p>
+      <ul>
+        <li>A valid court order, subpoena, or governmental request.</li>
+        <li>Enforcement of our Terms of Use.</li>
+        <li>Protection of the rights, property, or safety of Prime Spirit, our users, or the public.</li>
+      </ul>
+
+      <h3>C. Business Transfers</h3>
+      <p>
+        In the event of a merger, acquisition, reorganisation, or sale of assets, your personal information may be transferred as part of the transaction. We will notify you of any such change and any choices you may have regarding your data.
+      </p>
+
+      <h3>D. With Your Consent</h3>
+      <p>
+        We may share your information with other parties when you give us explicit consent to do so.
+      </p>
+    </div>
+
+    <!-- 8 -->
+    <div class="section" id="cookies">
+      <div class="section-number">08</div>
+      <h2>Cookies &amp; Tracking Technologies</h2>
+      <p>
+        We use cookies and similar technologies to enhance your experience on our Website. Cookies are small text files stored on your device when you visit a website.
+      </p>
+
+      <h3>Types of Cookies We Use</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Cookie Type</th>
+            <th>Purpose</th>
+            <th>Duration</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Strictly Necessary</strong></td>
+            <td>Essential for the Website to function (e.g., session management, security).</td>
+            <td>Session</td>
+          </tr>
+          <tr>
+            <td><strong>Functional</strong></td>
+            <td>Remember your preferences (e.g., language, display settings).</td>
+            <td>Up to 1 year</td>
+          </tr>
+          <tr>
+            <td><strong>Analytics</strong></td>
+            <td>Help us understand how visitors use the Website (e.g., pages visited, time spent). May use tools like Google Analytics.</td>
+            <td>Up to 2 years</td>
+          </tr>
+          <tr>
+            <td><strong>Marketing</strong></td>
+            <td>Used to deliver relevant advertisements and track campaign effectiveness.</td>
+            <td>Up to 1 year</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Managing Cookies</h3>
+      <p>
+        You can control and manage cookies through your browser settings. Most browsers allow you to:
+      </p>
+      <ul>
+        <li>View what cookies are stored on your device.</li>
+        <li>Delete all or specific cookies.</li>
+        <li>Block cookies from specific or all websites.</li>
+        <li>Block third-party cookies.</li>
+        <li>Accept all cookies.</li>
+      </ul>
+      <p>
+        Please note that disabling certain cookies may affect the functionality of the Website. For more information on managing cookies, visit your browser's help documentation.
+      </p>
+
+      <h3>Do Not Track Signals</h3>
+      <p>
+        Some browsers offer a "Do Not Track" (DNT) feature. At this time, there is no standard for how websites should respond to DNT signals. We will update this policy if a standard is adopted.
+      </p>
+    </div>
+
+    <!-- 9 -->
+    <div class="section" id="retention">
+      <div class="section-number">09</div>
+      <h2>Data Retention</h2>
+      <p>
+        We retain your personal information only for as long as necessary to fulfil the purposes outlined in this policy, unless a longer retention period is required or permitted by law.
+      </p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Data Category</th>
+            <th>Retention Period</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Account &amp; Enrolment Data</strong></td>
+            <td>Duration of your account/relationship with us, plus 3 years after last activity</td>
+          </tr>
+          <tr>
+            <td><strong>Payment &amp; Transaction Records</strong></td>
+            <td>8 years (as required under Indian tax and financial regulations)</td>
+          </tr>
+          <tr>
+            <td><strong>Communication &amp; Enquiry Data</strong></td>
+            <td>3 years from the date of last communication</td>
+          </tr>
+          <tr>
+            <td><strong>Analytics &amp; Usage Data</strong></td>
+            <td>26 months (anonymised or deleted thereafter)</td>
+          </tr>
+          <tr>
+            <td><strong>Marketing Consent Records</strong></td>
+            <td>Duration of consent, plus 3 years for compliance</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p>
+        Upon expiry of the retention period, data is securely deleted or anonymised so that it can no longer be associated with you.
+      </p>
+    </div>
+
+    <!-- 10 -->
+    <div class="section" id="security">
+      <div class="section-number">10</div>
+      <h2>Data Security</h2>
+      <p>
+        We take the security of your personal information seriously and implement reasonable security practices and procedures as required under the Information Technology Act, 2000, and the IT (SPDI) Rules, 2011.
+      </p>
+      <p>Our security measures include:</p>
+      <ul>
+        <li><strong>Encryption</strong> — data transmitted between your browser and our servers is encrypted using TLS/SSL protocols.</li>
+        <li><strong>Access Controls</strong> — access to personal data is restricted to authorised personnel on a need-to-know basis.</li>
+        <li><strong>Secure Storage</strong> — data is stored on secure servers with industry-standard protections, including firewalls and intrusion detection systems.</li>
+        <li><strong>Password Protection</strong> — user passwords are stored using cryptographic hashing algorithms and are never stored in plain text.</li>
+        <li><strong>Regular Audits</strong> — we conduct periodic reviews of our security practices and update them as necessary.</li>
+        <li><strong>Incident Response</strong> — we maintain a procedure for responding to data breaches, including notifying affected users and relevant authorities as required by law.</li>
+      </ul>
+      <div class="highlight-box">
+        <p><strong>Important:</strong> While we strive to protect your personal information, no method of transmission over the Internet or method of electronic storage is 100% secure. We cannot guarantee absolute security, but we commit to taking all reasonable steps to safeguard your data.</p>
+      </div>
+    </div>
+
+    <!-- 11 -->
+    <div class="section" id="rights">
+      <div class="section-number">11</div>
+      <h2>Your Rights</h2>
+      <p>
+        Under applicable Indian data protection laws, you have the following rights regarding your personal information:
+      </p>
+      <ul>
+        <li><strong>Right to Access</strong> — you may request a copy of the personal data we hold about you.</li>
+        <li><strong>Right to Correction</strong> — you may request that we correct any inaccurate or incomplete personal data.</li>
+        <li><strong>Right to Withdraw Consent</strong> — where processing is based on your consent, you may withdraw it at any time by contacting us. This will not affect the lawfulness of processing carried out before withdrawal.</li>
+        <li><strong>Right to Opt-Out of Marketing</strong> — you may unsubscribe from marketing communications at any time by clicking the "unsubscribe" link in any marketing email or by contacting us directly.</li>
+        <li><strong>Right to Deletion</strong> — you may request the deletion of your personal data, subject to our legal and contractual obligations to retain certain records.</li>
+        <li><strong>Right to Grievance Redressal</strong> — you have the right to lodge a complaint regarding the handling of your personal data. See <a href="#contact">Section 16</a> for contact details.</li>
+      </ul>
+
+      <h3>How to Exercise Your Rights</h3>
+      <p>
+        To exercise any of the above rights, please contact our Grievance Officer (details in <a href="#contact">Section 16</a>). We will respond to your request within <strong>30 days</strong> of receipt. We may ask you to verify your identity before processing your request.
+      </p>
+      <p>
+        There is no fee for exercising your rights, except in cases of manifestly unfounded or excessive requests, in which case we may charge a reasonable administrative fee.
+      </p>
+    </div>
+
+    <!-- 12 -->
+    <div class="section" id="children">
+      <div class="section-number">12</div>
+      <h2>Children's Privacy</h2>
+      <p>
+        Our Website and services are not directed at individuals under the age of <strong>18</strong>. We do not knowingly collect personal information from children. If you are a parent or guardian and believe that your child has provided us with personal information, please contact us immediately at <a href="mailto:primespiritedu@gmail.com">primespiritedu@gmail.com</a>.
+      </p>
+      <p>
+        If we become aware that we have collected personal data from a child without verification of parental consent, we will take steps to delete that information promptly.
+      </p>
+    </div>
+
+    <!-- 13 -->
+    <div class="section" id="international">
+      <div class="section-number">13</div>
+      <h2>International Data Transfers</h2>
+      <p>
+        Your personal information is primarily stored and processed in India. However, some of our service providers may be located outside India. In such cases, your data may be transferred to, and processed in, countries that may have different data protection laws.
+      </p>
+      <p>
+        When we transfer data internationally, we ensure that:
+      </p>
+      <ul>
+        <li>The recipient country provides adequate data protection, or</li>
+        <li>Appropriate safeguards are in place (such as contractual clauses) to ensure your data is protected to standards consistent with Indian law.</li>
+      </ul>
+      <p>
+        By using our Website, you acknowledge and consent to such transfers, where necessary and with appropriate safeguards.
+      </p>
+    </div>
+
+    <!-- 14 -->
+    <div class="section" id="third-party">
+      <div class="section-number">14</div>
+      <h2>Third-Party Links</h2>
+      <p>
+        Our Website may contain links to third-party websites, plugins, or services that are not operated by us. This includes social media platforms, payment gateways, and external resources.
+      </p>
+      <p>
+        We have no control over the content, privacy policies, or practices of any third-party websites. We strongly encourage you to review the privacy policy of every site you visit. We are not responsible for the privacy practices or content of third-party sites.
+      </p>
+    </div>
+
+    <!-- 15 -->
+    <div class="section" id="changes">
+      <div class="section-number">15</div>
+      <h2>Changes to This Policy</h2>
+      <p>
+        We may update this Privacy Policy from time to time to reflect changes in our practices, technology, legal requirements, or other factors. When we make material changes, we will:
+      </p>
+      <ul>
+        <li>Update the "Last updated" date at the top of this page.</li>
+        <li>Post a prominent notice on the Website.</li>
+        <li>Where appropriate, notify you via email.</li>
+      </ul>
+      <p>
+        We encourage you to review this page periodically. Your continued use of the Website after any changes constitutes your acceptance of the updated policy.
+      </p>
+    </div>
+
+    <!-- 16 -->
+    <div class="section" id="contact">
+      <div class="section-number">16</div>
+      <h2>Contact Us &amp; Grievance Officer</h2>
+      <p>
+        If you have any questions, concerns, or complaints about this Privacy Policy or our data practices, please contact us:
+      </p>
+
+      <div class="info-card">
+        <p><strong>General Enquiries</strong></p>
+        <p><strong>Email:</strong> <a href="mailto:primespiritedu@gmail.com">primespiritedu@gmail.com</a></p>
+        <p><strong>Phone:</strong> <a href="tel:+919700627812">+91 9700 627 812</a></p>
+        <p><strong>Address:</strong> VBHC, Bygadadenahalli, Chandapura Anekal Road, Bengaluru, Karnataka, India</p>
+      </div>
+
+      <div class="info-card">
+        <p><strong>Grievance Officer</strong></p>
+        <p>In accordance with the Information Technology Act, 2000, and the rules made thereunder, the name and contact details of our Grievance Officer are provided below:</p>
+        <p><strong>Name:</strong> [Grievance Officer Name]</p>
+        <p><strong>Email:</strong> <a href="mailto:primespiritedu@gmail.com">primespiritedu@gmail.com</a></p>
+        <p><strong>Phone:</strong> <a href="tel:+919700627812">+91 9700 627 812</a></p>
+        <p><strong>Address:</strong> VBHC, Bygadadenahalli, Chandapura Anekal Road, Bengaluru, Karnataka, India</p>
+        <p style="margin-top: 12px; font-size: 12px; color: var(--text-muted);">
+          The Grievance Officer will acknowledge your complaint within <strong>24 hours</strong> and resolve it within <strong>30 days</strong> from the date of receipt, in compliance with Indian IT laws.
+        </p>
+      </div>
+
+      <p style="margin-top: 24px; font-size: 12px; color: var(--text-muted);">
+        This Privacy Policy was last reviewed and updated on 1 August 2026.
+      </p>
+    </div>
+
+  </div>
+
+  <footer>
+    <p>&copy; 2026 Prime Spirit. All rights reserved. &nbsp;|&nbsp; <a href="https://primespirit.co.in">primespirit.co.in</a> &nbsp;|&nbsp; <a href="https://primespirit.co.in/terms.html">Terms of Use</a></p>
+  </footer>
+
+</body>
+</html>
