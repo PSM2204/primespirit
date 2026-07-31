@@ -1,0 +1,1317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Abhinav Akash — The Story Behind Prime Spirit Mentors</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@300;400;500&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+  :root {
+    --bg: #0a0908;
+    --surface: #141210;
+    --surface-alt: #1c1916;
+    --accent: #d4a53a;
+    --accent-dim: #a07e2a;
+    --accent-glow: rgba(212,165,58,0.08);
+    --text-primary: #f2ece0;
+    --text-muted: #7a7265;
+    --text-body: #b5ae9f;
+    --border: #2a2620;
+    --highlight: #e8c547;
+  }
+
+  html { scroll-behavior: smooth; font-size: 16px; }
+
+  body {
+    font-family: 'DM Mono', monospace;
+    background: var(--bg);
+    color: var(--text-body);
+    line-height: 1.8;
+    overflow-x: hidden;
+  }
+
+  body::after {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+    opacity: 0.03;
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  /* ===== NAV ===== */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 1000;
+    padding: 1.1rem 3rem;
+    display: flex; align-items: center; justify-content: space-between;
+    background: rgba(10,9,8,0.9);
+    backdrop-filter: blur(24px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800; font-size: 1.05rem;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    text-decoration: none;
+  }
+  .nav-logo span { color: var(--text-primary); }
+  .nav-links { display: flex; gap: 2rem; }
+  .nav-links a {
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+  .nav-links a:hover, .nav-links a.active { color: var(--accent); }
+
+  /* ===== HERO ===== */
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 0.75fr;
+    align-items: center;
+    padding: 8rem 4rem 4rem;
+    gap: 4rem;
+    position: relative;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background:
+      radial-gradient(ellipse at 15% 30%, rgba(212,165,58,0.05) 0%, transparent 50%),
+      radial-gradient(ellipse at 85% 70%, rgba(212,165,58,0.03) 0%, transparent 40%);
+    pointer-events: none;
+  }
+
+  .hero-text { position: relative; z-index: 2; }
+
+  .hero-overline {
+    font-size: 0.62rem;
+    text-transform: uppercase;
+    letter-spacing: 0.35em;
+    color: var(--accent);
+    margin-bottom: 2rem;
+    opacity: 0;
+    animation: fadeUp 0.7s ease 0.2s forwards;
+  }
+  .hero h1 {
+    font-family: 'Instrument Serif', serif;
+    font-size: clamp(3.2rem, 6vw, 6rem);
+    color: var(--text-primary);
+    line-height: 1;
+    margin-bottom: 0.2rem;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.4s forwards;
+  }
+  .hero h1 em { font-style: italic; color: var(--accent); }
+  .hero-aka {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    margin-bottom: 0.4rem;
+    opacity: 0;
+    animation: fadeUp 0.7s ease 0.55s forwards;
+  }
+  .hero-aka em {
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    color: var(--accent-dim);
+  }
+  .hero-creds {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    letter-spacing: 0.12em;
+    margin-bottom: 2.5rem;
+    opacity: 0;
+    animation: fadeUp 0.7s ease 0.6s forwards;
+  }
+  .hero-creds .sep { color: var(--accent-dim); margin: 0 0.6rem; }
+  .hero-quote {
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-size: 1.3rem;
+    color: var(--text-body);
+    line-height: 1.75;
+    border-left: 2px solid var(--accent-dim);
+    padding-left: 1.5rem;
+    max-width: 580px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.8s forwards;
+  }
+  .hero-quote .em-quote { color: var(--text-primary); }
+
+  .hero-stats {
+    display: flex; gap: 3rem;
+    margin-top: 3.5rem;
+    opacity: 0;
+    animation: fadeUp 0.7s ease 1s forwards;
+  }
+  .stat-num {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800; font-size: 2rem;
+    color: var(--highlight);
+    line-height: 1;
+  }
+  .stat-lbl {
+    font-size: 0.58rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--text-muted);
+    margin-top: 0.35rem;
+  }
+
+  /* ===== HERO PHOTO ===== */
+  .hero-photo-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    animation: fadeUp 1s ease 0.5s forwards;
+  }
+  .hero-photo-frame {
+    width: 100%;
+    max-width: 380px;
+    aspect-ratio: 3/4;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    background: var(--surface);
+  }
+  .hero-photo-frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    filter: grayscale(20%) contrast(1.05) brightness(0.95);
+    transition: filter 0.6s ease;
+  }
+  .hero-photo-frame:hover img {
+    filter: grayscale(0%) contrast(1) brightness(1);
+  }
+  .hero-photo-frame::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(10,9,8,0.6) 0%, transparent 40%);
+    pointer-events: none;
+  }
+  .hero-photo-name {
+    position: absolute;
+    bottom: 1.2rem;
+    left: 1.2rem;
+    z-index: 3;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--text-primary);
+  }
+  .hero-photo-title {
+    position: absolute;
+    bottom: 1.2rem;
+    right: 1.2rem;
+    z-index: 3;
+    font-size: 0.58rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--accent);
+  }
+  .photo-deco-1 {
+    position: absolute;
+    top: -12px; right: -12px;
+    width: 100px; height: 100px;
+    border: 1px solid var(--accent-dim);
+    opacity: 0.25;
+    z-index: -1;
+  }
+  .photo-deco-2 {
+    position: absolute;
+    bottom: -12px; left: -12px;
+    width: 70px; height: 70px;
+    background: var(--accent);
+    opacity: 0.04;
+    z-index: -1;
+  }
+
+  /* Placeholder shown when no photo URL is provided */
+  .photo-placeholder {
+    width: 100%; height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: var(--surface);
+  }
+  .photo-placeholder .ph-initials {
+    font-family: 'Instrument Serif', serif;
+    font-size: 5rem;
+    color: var(--accent);
+    opacity: 0.12;
+    line-height: 1;
+  }
+  .photo-placeholder .ph-text {
+    font-size: 0.62rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--text-muted);
+    margin-top: 0.8rem;
+  }
+
+  /* ===== TIMELINE STRIP ===== */
+  .timeline-strip {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(155px, 1fr));
+    gap: 0;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .tl-cell {
+    padding: 2rem 1.3rem;
+    border-right: 1px solid var(--border);
+    position: relative;
+    transition: background 0.3s ease;
+    min-height: 150px;
+  }
+  .tl-cell:last-child { border-right: none; }
+  .tl-cell:hover { background: var(--accent-glow); }
+  .tl-cell.active-cell {
+    background: var(--accent-glow);
+    border-bottom: 2px solid var(--accent);
+  }
+  .tl-year {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 0.82rem;
+    color: var(--accent);
+    margin-bottom: 0.4rem;
+  }
+  .tl-role {
+    font-family: 'Syne', sans-serif;
+    font-weight: 600;
+    font-size: 0.75rem;
+    color: var(--text-primary);
+    margin-bottom: 0.3rem;
+  }
+  .tl-desc {
+    font-size: 0.63rem;
+    color: var(--text-muted);
+    line-height: 1.55;
+  }
+  .tl-icon {
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+    opacity: 0.35;
+    color: var(--accent);
+  }
+
+  /* ===== CHAPTERS ===== */
+  .ch-section { position: relative; }
+  .ch-section::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px; height: 100%;
+    background: linear-gradient(to bottom, var(--accent-dim), transparent);
+    opacity: 0.12;
+    margin-left: 2rem;
+  }
+
+  .chapter {
+    padding: 5rem 4rem 2rem;
+    position: relative;
+  }
+  .chapter-label {
+    font-size: 0.58rem;
+    text-transform: uppercase;
+    letter-spacing: 0.35em;
+    color: var(--accent);
+    margin-bottom: 0.6rem;
+  }
+  .chapter-title {
+    font-family: 'Instrument Serif', serif;
+    font-size: clamp(2rem, 3.5vw, 3.2rem);
+    color: var(--text-primary);
+    line-height: 1.12;
+    margin-bottom: 0.6rem;
+  }
+  .chapter-title em { font-style: italic; color: var(--accent); }
+  .chapter-sub {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    max-width: 560px;
+  }
+
+  /* ===== NARRATIVE ===== */
+  .narrative {
+    padding: 1rem 4rem 4rem;
+    max-width: 760px;
+  }
+  .narrative p {
+    font-size: 0.84rem;
+    line-height: 1.95;
+    color: var(--text-body);
+    margin-bottom: 1.6rem;
+  }
+  .narrative p strong {
+    color: var(--text-primary);
+    font-weight: 500;
+  }
+  .narrative .pull-quote {
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-size: 1.15rem;
+    color: var(--text-primary);
+    line-height: 1.7;
+    border-left: 2px solid var(--accent);
+    padding: 0.5rem 0 0.5rem 1.5rem;
+    margin: 2.5rem 0;
+  }
+
+  /* ===== INLINE CHAPTER PHOTO ===== */
+  .chapter-photo {
+    float: right;
+    width: 240px;
+    margin: 0 0 1.5rem 2.5rem;
+    border: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+  .chapter-photo img {
+    width: 100%;
+    display: block;
+    filter: grayscale(15%) contrast(1.05);
+    transition: filter 0.5s ease;
+  }
+  .chapter-photo:hover img {
+    filter: grayscale(0%) contrast(1);
+  }
+  .chapter-photo::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border: 1px solid rgba(212,165,58,0.1);
+    pointer-events: none;
+  }
+  .chapter-photo .cp-caption {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    background: linear-gradient(to top, rgba(10,9,8,0.85), transparent);
+    padding: 2rem 0.8rem 0.6rem;
+    font-size: 0.58rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--accent-dim);
+  }
+
+  /* ===== STORY CARDS ===== */
+  .story-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 2.5rem;
+    margin: 2.5rem 4rem;
+    position: relative;
+    max-width: 700px;
+    opacity: 0;
+    transform: translateY(25px);
+    transition: all 0.7s ease;
+  }
+  .story-card.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .story-card::before {
+    content: '\201C';
+    font-family: 'Instrument Serif', serif;
+    font-size: 5rem;
+    color: var(--accent);
+    opacity: 0.1;
+    position: absolute;
+    top: 0.5rem; left: 1.2rem;
+    line-height: 1;
+  }
+  .story-card .sc-text {
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-size: 1.05rem;
+    color: var(--text-primary);
+    line-height: 1.75;
+    margin-bottom: 1rem;
+    padding-left: 0.3rem;
+  }
+  .story-card .sc-context {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    line-height: 1.7;
+    padding-left: 0.3rem;
+  }
+  .story-card .sc-label {
+    display: inline-block;
+    font-size: 0.58rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--accent-dim);
+    background: var(--accent-glow);
+    border: 1px solid var(--border);
+    padding: 0.3rem 0.8rem;
+    margin-top: 1rem;
+  }
+
+  /* ===== MICRO COACHING ===== */
+  .micro-section {
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 5rem 4rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .micro-section::before {
+    content: '5';
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 20rem;
+    color: var(--accent);
+    opacity: 0.025;
+    position: absolute;
+    top: -3rem; right: -2rem;
+    line-height: 1;
+  }
+  .micro-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: start;
+    max-width: 1000px;
+  }
+  .micro-narrative p {
+    font-size: 0.84rem;
+    line-height: 1.95;
+    color: var(--text-body);
+    margin-bottom: 1.5rem;
+  }
+  .micro-narrative p strong { color: var(--text-primary); font-weight: 500; }
+  .micro-highlight {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    padding: 1.8rem;
+    margin: 2rem 0;
+  }
+  .micro-highlight p {
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-size: 1.05rem;
+    color: var(--text-primary);
+    line-height: 1.7;
+    margin: 0 !important;
+  }
+
+  /* ===== COMPARISON TABLE ===== */
+  .compare-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 2rem;
+  }
+  .compare-table th {
+    font-family: 'Syne', sans-serif;
+    font-weight: 600;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--text-muted);
+    text-align: left;
+    padding: 0.8rem 1rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .compare-table td {
+    font-size: 0.75rem;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid rgba(42,38,32,0.5);
+    color: var(--text-body);
+    vertical-align: top;
+  }
+  .compare-table .col-bad { color: var(--text-muted); }
+  .compare-table .col-good { color: var(--highlight); }
+  .compare-table tr:hover td { background: var(--accent-glow); }
+
+  /* ===== FOUNDATION ===== */
+  .found-section {
+    background: linear-gradient(160deg, rgba(212,165,58,0.03) 0%, transparent 40%),
+                var(--surface-alt);
+    border-top: 1px solid var(--border);
+    padding: 5rem 4rem;
+  }
+  .found-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: start;
+    max-width: 1000px;
+  }
+  .found-narrative p {
+    font-size: 0.84rem;
+    line-height: 1.95;
+    color: var(--text-body);
+    margin-bottom: 1.5rem;
+  }
+  .found-narrative p strong { color: var(--text-primary); font-weight: 500; }
+  .found-card {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    padding: 2.5rem;
+  }
+  .found-card .fc-price {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 2.5rem;
+    color: var(--highlight);
+    line-height: 1;
+    margin-bottom: 0.3rem;
+  }
+  .found-card .fc-price span {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--accent-dim);
+  }
+  .found-card .fc-for {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    margin-bottom: 1.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .found-card ul { list-style: none; padding: 0; margin: 0 0 1.5rem; }
+  .found-card li {
+    font-size: 0.75rem;
+    color: var(--text-body);
+    padding: 0.5rem 0;
+    border-bottom: 1px solid rgba(42,38,32,0.4);
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+  }
+  .found-card li::before {
+    content: '';
+    width: 6px; height: 6px;
+    background: var(--accent);
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .found-origin {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 2px solid var(--accent-dim);
+    padding: 1.5rem;
+    margin-top: 1.5rem;
+  }
+  .found-origin p {
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-size: 0.95rem;
+    color: var(--text-primary);
+    line-height: 1.7;
+    margin: 0;
+  }
+
+  /* ===== NUMBERS ===== */
+  .numbers-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .num-cell {
+    text-align: center;
+    padding: 3rem 1.5rem;
+    border-right: 1px solid var(--border);
+    transition: background 0.3s ease;
+  }
+  .num-cell:last-child { border-right: none; }
+  .num-cell:hover { background: var(--accent-glow); }
+  .num-cell .nc-num {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800; font-size: 2.8rem;
+    color: var(--highlight);
+    line-height: 1;
+  }
+  .num-cell .nc-sfx {
+    font-family: 'Syne', sans-serif;
+    font-weight: 600; font-size: 1.2rem;
+    color: var(--accent-dim);
+  }
+  .num-cell .nc-lbl {
+    font-size: 0.6rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--text-muted);
+    margin-top: 0.6rem;
+  }
+
+  /* ===== EXAM TRACKS ===== */
+  .tracks-strip {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(155px, 1fr));
+    gap: 0;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .track-cell {
+    padding: 1.8rem 1.2rem;
+    border-right: 1px solid var(--border);
+    text-align: center;
+  }
+  .track-cell:last-child { border-right: none; }
+  .track-cell .tc-name {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 0.82rem;
+    color: var(--text-primary);
+    margin-bottom: 0.3rem;
+  }
+  .track-cell .tc-desc {
+    font-size: 0.6rem;
+    color: var(--text-muted);
+  }
+
+  /* ===== CTA ===== */
+  .cta {
+    text-align: center;
+    padding: 6rem 4rem;
+    position: relative;
+  }
+  .cta::before {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 50%;
+    transform: translateX(-50%);
+    width: 600px; height: 400px;
+    background: radial-gradient(ellipse, rgba(212,165,58,0.05) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .cta .cta-title {
+    font-family: 'Instrument Serif', serif;
+    font-size: clamp(2rem, 3.5vw, 3rem);
+    color: var(--text-primary);
+    margin-bottom: 0.8rem;
+  }
+  .cta .cta-title em { font-style: italic; color: var(--accent); }
+  .cta .cta-sub {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    max-width: 500px;
+    margin: 0 auto 2.5rem;
+  }
+  .cta-btns {
+    display: flex;
+    gap: 1.5rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .btn-gold {
+    font-family: 'Syne', sans-serif;
+    font-weight: 600;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    background: var(--accent);
+    color: var(--bg);
+    border: none;
+    padding: 1rem 2.5rem;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.3s, letter-spacing 0.3s;
+  }
+  .btn-gold:hover { background: var(--highlight); letter-spacing: 0.2em; }
+  .btn-ghost {
+    font-family: 'Syne', sans-serif;
+    font-weight: 600;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    background: transparent;
+    color: var(--text-primary);
+    border: 1px solid var(--border);
+    padding: 1rem 2.5rem;
+    cursor: pointer;
+    text-decoration: none;
+    transition: border-color 0.3s, color 0.3s;
+  }
+  .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* ===== CITIES ===== */
+  .cities-bar {
+    padding: 3rem 4rem;
+    display: flex;
+    gap: 3rem;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .cities-names {
+    font-family: 'Syne', sans-serif;
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--text-primary);
+  }
+
+  /* ===== DIVIDER ===== */
+  .section-divider {
+    width: 60px;
+    height: 1px;
+    background: var(--accent-dim);
+    margin: 0 4rem;
+    opacity: 0.4;
+  }
+
+  /* ===== FOOTER ===== */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 2.5rem 4rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  footer p { font-size: 0.62rem; color: var(--text-muted); letter-spacing: 0.08em; }
+  footer a { color: var(--accent-dim); text-decoration: none; }
+
+  /* ===== ANIMATIONS ===== */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 1024px) {
+    .hero { grid-template-columns: 1fr; padding: 7rem 2.5rem 3rem; }
+    .hero-photo-wrap { order: -1; margin-bottom: 2rem; }
+    .hero-photo-frame { max-width: 280px; }
+    .chapter, .narrative { padding-left: 2.5rem; padding-right: 2.5rem; }
+    .story-card { margin-left: 2.5rem; margin-right: 2.5rem; }
+    .micro-section, .found-section, .cta, .cities-bar { padding-left: 2.5rem; padding-right: 2.5rem; }
+    .micro-grid, .found-grid { grid-template-columns: 1fr; gap: 2rem; }
+    .timeline-strip { grid-template-columns: repeat(3, 1fr); }
+    .numbers-row { grid-template-columns: repeat(2, 1fr); }
+    .num-cell:nth-child(2) { border-right: none; }
+    .chapter-photo { float: none; width: 100%; max-width: 300px; margin: 0 auto 2rem; display: block; }
+    nav { padding: 1rem 1.5rem; }
+    footer { padding: 2rem 1.5rem; flex-direction: column; gap: 1rem; text-align: center; }
+    .section-divider { margin: 0 2.5rem; }
+  }
+  @media (max-width: 600px) {
+    .hero { padding: 6rem 1.5rem 2rem; }
+    .hero-photo-frame { max-width: 220px; }
+    .chapter, .narrative { padding-left: 1.5rem; padding-right: 1.5rem; }
+    .story-card { margin-left: 1.5rem; margin-right: 1.5rem; padding: 1.8rem; }
+    .micro-section, .found-section, .cta, .cities-bar { padding-left: 1.5rem; padding-right: 1.5rem; }
+    .timeline-strip { grid-template-columns: 1fr 1fr; }
+    .numbers-row { grid-template-columns: 1fr 1fr; }
+    .num-cell { border-right: none; border-bottom: 1px solid var(--border); }
+    .hero-stats { flex-wrap: wrap; gap: 1.5rem; }
+    .nav-links { gap: 1rem; }
+    .nav-links a { font-size: 0.58rem; }
+    footer { padding: 2rem 1.5rem; }
+    .section-divider { margin: 0 1.5rem; }
+    .compare-table td, .compare-table th { padding: 0.5rem; font-size: 0.65rem; }
+    .chapter-photo { max-width: 100%; margin-left: 0; margin-right: 0; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ==================== NAV ==================== -->
+<nav>
+  <a href="https://primespirit.co.in/" class="nav-logo">Prime <span>Spirit</span></a>
+  <div class="nav-links">
+    <a href="https://primespirit.co.in/">Home</a>
+    <a href="#story" class="active">About</a>
+    <a href="https://primespirit.co.in/#cohorts">Programs</a>
+    <a href="https://primespirit.co.in/#contact">Contact</a>
+  </div>
+</nav>
+
+<!-- ==================== HERO ==================== -->
+<section class="hero">
+  <div class="hero-text">
+    <p class="hero-overline">Founder &amp; Lead Physics Mentor — Prime Spirit Mentors</p>
+    <h1>Abhinav <em>Akash</em></h1>
+    <p class="hero-aka">Also known as <em>Abhinav Kashyap</em></p>
+    <p class="hero-creds">
+      B.Tech<span class="sep">/</span>B.Ed<span class="sep">/</span>PG<span class="sep">/</span>Ex-Vedantu
+    </p>
+    <blockquote class="hero-quote">
+      "I spent 15 months building software nobody remembers. Then I spent the next decade building students nobody will forget. <span class="em-quote">That was the better trade.</span>"
+    </blockquote>
+    <div class="hero-stats">
+      <div>
+        <div class="stat-num">10+</div>
+        <div class="stat-lbl">Years Teaching</div>
+      </div>
+      <div>
+        <div class="stat-num">1000+</div>
+        <div class="stat-lbl">Students Mentored</div>
+      </div>
+      <div>
+        <div class="stat-num">4.9</div>
+        <div class="stat-lbl">Average Rating</div>
+      </div>
+      <div>
+        <div class="stat-num">6+</div>
+        <div class="stat-lbl">Exam Tracks</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== HERO PHOTO — REPLACE src WITH YOUR IMAGE ===== -->
+  <div class="hero-photo-wrap">
+    <div class="hero-photo-frame">
+      <!--
+        =============================================
+        PHOTO SLOT 1 — HERO (MAIN PORTRAIT)
+        =============================================
+        Replace the src below with your actual photo URL or local path.
+        Examples:
+          src="https://yourdomain.com/photos/abhinav-hero.jpg"
+          src="./images/abhinav-hero.jpg"
+          src="https://i.imgur.com/yourimage.jpg"
+        Recommended: A professional headshot or teaching photo.
+        Ideal aspect ratio: 3:4 (portrait orientation).
+        =============================================
+      -->
+      <img src="https://placehold.co/380x500/141210/d4a53a?text=YOUR+PHOTO+HERE"
+           alt="Abhinav Akash — Founder & Lead Physics Mentor, Prime Spirit Mentors">
+
+      <div class="hero-photo-name">Abhinav Akash</div>
+      <div class="hero-photo-title">Physics Mentor · Since 2016</div>
+    </div>
+    <div class="photo-deco-1"></div>
+    <div class="photo-deco-2"></div>
+  </div>
+</section>
+
+<!-- ==================== TIMELINE STRIP ==================== -->
+<div class="timeline-strip">
+  <div class="tl-cell">
+    <div class="tl-icon">&diams;</div>
+    <div class="tl-year">2011 – 2015</div>
+    <div class="tl-role">B.Tech</div>
+    <div class="tl-desc">Engineering degree. The classroom felt more alive than the code editor.</div>
+  </div>
+  <div class="tl-cell">
+    <div class="tl-icon">&diams;</div>
+    <div class="tl-year">2015 – Mid 2016</div>
+    <div class="tl-role">IT Professional</div>
+    <div class="tl-desc">15 months in the corporate world. Good salary. Empty feeling.</div>
+  </div>
+  <div class="tl-cell active-cell">
+    <div class="tl-icon">&diams;</div>
+    <div class="tl-year">Dec 2016</div>
+    <div class="tl-role">First Online Class</div>
+    <div class="tl-desc">Started teaching online. Left the IT world behind for good.</div>
+  </div>
+  <div class="tl-cell">
+    <div class="tl-icon">&diams;</div>
+    <div class="tl-year">Dec 2017</div>
+    <div class="tl-role">Joined Vedantu</div>
+    <div class="tl-desc">Taught live to hundreds. Learned scale. Felt the cost of scale.</div>
+  </div>
+  <div class="tl-cell">
+    <div class="tl-icon">&diams;</div>
+    <div class="tl-year">2018 – 2020</div>
+    <div class="tl-role">Delhi Coaching Institutes</div>
+    <div class="tl-desc">Offline. Classroom dust. Blackboards. Real students, real doubts.</div>
+  </div>
+  <div class="tl-cell">
+    <div class="tl-icon">&diams;</div>
+    <div class="tl-year">2020 – 2023</div>
+    <div class="tl-role">Back Online + B.Ed &amp; PG</div>
+    <div class="tl-desc">Returned to digital with offline wisdom. Formal pedagogy training.</div>
+  </div>
+  <div class="tl-cell active-cell">
+    <div class="tl-icon">&diams;</div>
+    <div class="tl-year">2024 – Now</div>
+    <div class="tl-role">Prime Spirit Mentors</div>
+    <div class="tl-desc">Micro-batch. Personalised. 5 students max. No compromise.</div>
+  </div>
+</div>
+
+<!-- ==================== CHAPTER 1 ==================== -->
+<section class="ch-section" id="story">
+  <div class="chapter">
+    <p class="chapter-label">Chapter One</p>
+    <h2 class="chapter-title">The Engineer Who <em>Couldn't Stop Teaching</em></h2>
+    <p class="chapter-sub">B.Tech, 2011–2015. The degree said engineer. The instinct said otherwise.</p>
+  </div>
+  <div class="narrative">
+    <p>In 2011, Abhinav Akash enrolled in an engineering programme the way lakhs of Indian students do — because that's what you do after scoring well in science. There was no grand calling. No childhood dream of building bridges or writing algorithms. Just a sensible path laid out by sensible people.</p>
+    <p>But something strange happened in the lecture halls. While most students tuned out during Physics lectures or crammed derivations the night before exams, Abhinav found himself <strong>explaining those same derivations to his roommates at 2 AM</strong>. Not because they asked — but because he couldn't understand how they didn't understand. To him, Newton's laws weren't equations to memorise. They were stories about how the universe actually works. And stories should be easy to tell.</p>
+    <p>He started informally tutoring classmates. Then juniors. Then juniors of juniors. The feedback was always the same: <em>"Yaar, tu samjhata bahut achha hai"</em> — you explain really well. In India, that line is spoken casually. But for Abhinav, it planted a question that wouldn't leave: <strong>What if this is what I'm actually supposed to do?</strong></p>
+    <p>He graduated with his B.Tech in 2015. He had the degree. He had the campus placement. What he didn't have was the desire to sit behind a screen writing code for a company whose products he didn't care about. But like most 23-year-olds in India, he told himself: <em>"Let me try it. Maybe I'll grow into it."</em></p>
+  </div>
+</section>
+
+<!-- ==================== CHAPTER 2 ==================== -->
+<section class="ch-section">
+  <div class="chapter">
+    <p class="chapter-label">Chapter Two</p>
+    <h2 class="chapter-title">Fifteen Months of <em>Quiet Unhappiness</em></h2>
+    <p class="chapter-sub">The IT job. Good salary. Wrong soul.</p>
+  </div>
+  <div class="narrative">
+    <p>For fifteen months, Abhinav worked in the IT industry. He was competent. He showed up on time, completed sprints, attended stand-ups, and received the kind of polite performance reviews that mean you're doing fine but nobody will remember your name in five years.</p>
+    <p>The work wasn't terrible. That's what made it harder. Terrible is easy to walk away from. <strong>Fine is the trap.</strong> The salary was comfortable. The office had AC and free coffee. His parents were proud. His relatives stopped asking "what are you doing?" — the most dangerous question in Indian family dynamics, because silence means approval.</p>
+    <p>But every evening, after logging off, Abhinav would find himself opening Physics textbooks. Not to study — he already knew the material. He would read a chapter and think: <em>"How would I explain this to a student who's scared of this subject?"</em> He started writing notes. Teaching notes. For students who didn't exist yet. He'd scribble alternative derivations, simpler explanations, real-world analogies — on the back of office printouts, on his phone during commutes, on napkins during lunch.</p>
+    <p>His colleagues noticed. One asked him why he was always reading "school books." He laughed it off. But the answer was eating him alive: <strong>Because the fifteen hours a day I give to this company feel like borrowed time. And the thirty minutes I spend explaining Gauss's Law to myself feel like my own.</strong></p>
+    <p>In mid-2016, he quit.</p>
+    <div class="pull-quote">"My manager asked me where I was going. I said, 'To teach.' He said, 'Teach what?' I said, 'Physics.' He looked at me like I had made the worst financial decision of my life. Maybe I had. But it was the first decision that felt like mine."</div>
+  </div>
+</section>
+
+<!-- ==================== CHAPTER 3 ==================== -->
+<section class="ch-section">
+  <div class="chapter">
+    <p class="chapter-label">Chapter Three</p>
+    <h2 class="chapter-title">December 2016 — <em>The First Class</em></h2>
+    <p class="chapter-sub">No platform. No brand. Just a screen, a mic, and a student who needed help.</p>
+  </div>
+  <div class="narrative">
+    <p>Abhinav didn't start with a business plan. He started with a student. In December 2016, he began teaching online — one student at a time, through whatever tools were available. A free video call app. A shared screen. A digital whiteboard that lagged on slow connections. It was scrappy, unstructured, and deeply personal.</p>
+    <p>His first students were Class 11 and 12 board students — CBSE, ICSE — struggling with Physics. They came through word of mouth. A cousin's friend. A neighbour's daughter. A student who had failed a unit test and whose mother was "very worried." Abhinav would spend an hour explaining kinematics, then another thirty minutes just listening to the student's fears about the board exam. He didn't charge much. He didn't need to. <strong>He needed to teach.</strong></p>
+    <p>Within weeks, something clicked that no IT sprint review had ever given him: the moment a student's face changes. Not a dramatic movie moment — more like a slow dawn. The student stops squinting. The shoulders drop. The pen starts moving on its own. And then they look up and say: <em>"Sir, I think I get it now."</em></p>
+    <p>That moment. That specific, quiet, unremarkable moment — became the thing Abhinav chased for the next decade.</p>
+    <div class="pull-quote">"In IT, success meant the code compiled. In teaching, success means a 17-year-old who was terrified of electromagnetism suddenly sees the logic underneath it. One of those made me feel alive. The other didn't."</div>
+  </div>
+</section>
+
+<!-- ==================== CHAPTER 4: VEDANTU ==================== -->
+<section class="ch-section">
+  <div class="chapter">
+    <p class="chapter-label">Chapter Four</p>
+    <h2 class="chapter-title">Vedantu — <em>The Stage That Was Too Big</em></h2>
+    <p class="chapter-sub">December 2017. Hundreds of students on one screen. Millions of doubts left unasked.</p>
+  </div>
+  <div class="narrative">
+    <p>In December 2017, Abhinav joined Vedantu — one of India's fastest-growing online education platforms. It was an opportunity to reach thousands of students, to teach at a scale that solo online tutoring could never achieve. He was excited. The platform was polished, the technology was seamless, and the student numbers were exhilarating.</p>
+    <p>For a while, it felt like everything he wanted. Live classes with hundreds of students. Engagement tools. Analytics dashboards showing how many students were "active." He refined his delivery, learned to pace lessons for a mass audience, developed techniques to keep attention in a window where TikTok videos competed for the same eyeballs.</p>
+    <p>But slowly, a discomfort grew into an ache.</p>
+    <p>In a live class of 200 students, Abhinav could see the viewer count. He could see the chat scrolling. But he couldn't see <strong>the student in Patna who was crying because she'd heard this explanation three times and still didn't understand it.</strong> He couldn't see the boy in a small UP town whose internet kept disconnecting, who would watch the recording later but couldn't ask a doubt because the class was already over. He couldn't see the quiet student — the one who never types in the chat, never raises a virtual hand, never asks — who sits alone in their room pretending to understand because admitting confusion in front of 200 strangers feels worse than not knowing.</p>
+    <p>Then came the message that broke something open.</p>
+  </div>
+</section>
+
+<!-- STUDENT STORY 1 -->
+<div class="story-card">
+  <p class="sc-text">"Sir, I had a doubt during the derivation but I didn't type it because everyone would see. I'm sorry for disturbing you after class."</p>
+  <p class="sc-context">A 16-year-old student messaged Abhinav after a live Vedantu class attended by over 200 students. She apologised for "disturbing" him — because in her mind, asking a doubt was a disturbance. The system had taught her that her confusion was an inconvenience. She wasn't sorry. The system was.</p>
+  <span class="sc-label">The message that changed everything</span>
+</div>
+
+<div class="narrative">
+  <p>That message didn't just affect Abhinav. It <strong>restructured his understanding of what teaching means.</strong> Teaching isn't broadcasting. It isn't content delivery. It isn't a view count or an engagement metric. Teaching is one human being paying enough attention to another human being that the second person feels safe enough to say: <em>"I don't understand."</em></p>
+  <p>And that safety doesn't exist in a chat window with 200 other names.</p>
+  <p>He stayed at Vedantu, learned everything he could about content design, student engagement, exam patterns, and the edtech business model. But the conviction grew sharper every month: <strong>this wasn't what teaching was supposed to be.</strong></p>
+</div>
+
+<!-- ==================== CHAPTER 5: DELHI ==================== -->
+<section class="ch-section">
+  <div class="chapter">
+    <p class="chapter-label">Chapter Five</p>
+    <h2 class="chapter-title">The Delhi Classrooms — <em>Chalk Dust &amp; Truth</em></h2>
+    <p class="chapter-sub">Offline coaching institutes. Where students showed their real faces — and their real fears.</p>
+  </div>
+  <div class="narrative">
+    <p>After his online stint, Abhinav moved to offline teaching at various coaching institutes in Delhi. If Vedantu had taught him about scale, Delhi taught him about grit. These weren't polished edtech classrooms with animated diagrams and real-time polls. These were physical rooms with blackboards, dusty fans, plastic chairs, and students who had taken three buses to get there.</p>
+    <p>Here, the doubts came differently. Not typed in a chat — but whispered during the break. A student would linger after class, pretending to pack his bag slowly, and when everyone else had left, he'd say: <em>"Sir, I don't think I can do this. My father sold land so I could come to Delhi for coaching."</em></p>
+    <p>Abhinav heard versions of this story dozens of times. The student from Bihar whose family pooled money for his JEE coaching. The girl from a small town in UP whose parents defied relatives who said "why waste money on a daughter's engineering dream." The boy who worked part-time at a stationery shop to pay for his NEET prep material. These weren't abstract "aspirants" in an edtech database. <strong>They were children carrying the weight of entire families on their shoulders, sitting in a classroom hoping that Physics would be their way out.</strong></p>
+    <p>It was in Delhi that Abhinav developed something that would later define Prime Spirit: the practice of <strong>error analysis.</strong> Not just marking answers wrong — but sitting with a student and tracing the mistake back to its origin. Was it a conceptual gap? A calculation error? Did the student misread the question? Were they panicking and second-guessing correct answers? Each error was a diagnostic clue, and Abhinav treated it like one.</p>
+    <p>He also saw the dark side of mass offline coaching. Batches of 80, 100, sometimes 150 students. Teachers who came, delivered a rehearsed lecture, and left — without knowing a single student's name. Doubt counters staffed by overwhelmed assistants who gave formula sheets instead of explanations. Students who scored 200/720 in mock tests and were told to "work harder" without anyone telling them <em>what</em> to work on.</p>
+    <p>The pattern was the same, online or offline: <strong>the system was designed for efficiency, not for learning.</strong></p>
+  </div>
+</section>
+
+<!-- STUDENT STORY 2 -->
+<div class="story-card">
+  <p class="sc-text">"Sir, I scored 98 in Physics in boards. But I still don't understand what force actually is. I memorised everything. Is that okay?"</p>
+  <p class="sc-context">A Class 12 student from a CBSE school in Delhi scored near-perfect marks in Physics — and asked this question after his final exam. He had been taught to score, not to understand. Abhinav sat with him for three hours that evening and taught him Newton's three laws from scratch — not for any exam, but so that this boy could finally say he understood the subject he'd spent two years studying. Those three hours are what Prime Spirit was eventually built around.</p>
+  <span class="sc-label">The student who scored 98 but understood zero</span>
+</div>
+
+<!-- ==================== CHAPTER 6: B.Ed + PG ==================== -->
+<section class="ch-section">
+  <div class="chapter">
+    <p class="chapter-label">Chapter Six</p>
+    <h2 class="chapter-title">Learning to <em>Teach</em> — B.Ed &amp; Post Graduation</h2>
+    <p class="chapter-sub">Knowing Physics and teaching Physics are two different disciplines. Abhinav studied both.</p>
+  </div>
+  <div class="narrative">
+    <p>While building his teaching career, Abhinav simultaneously pursued a Bachelor of Education (B.Ed) and a Post Graduate degree. This wasn't credential-collecting. It was a deliberate decision to understand the mechanics of how people learn — cognitive load theory, adolescent psychology, assessment design, differentiated instruction.</p>
+    <p>"I knew Physics," Abhinav says. "But knowing Physics and teaching Physics are completely different skills. I wanted to understand why a student can solve a textbook problem but freeze in an exam. Why a student can repeat a derivation word-for-word but can't apply the same logic to a new situation. B.Ed gave me the framework for those questions."</p>
+    <p>The post-graduate work deepened his subject expertise. It also exposed him to research on educational inequality — how students from different economic backgrounds process the same information differently, not because of intelligence, but because of the invisible load they carry. A student who's worried about their family's finances doesn't have the same cognitive bandwidth as a student who isn't. <strong>Teaching without acknowledging that reality isn't teaching. It's performance.</strong></p>
+  </div>
+</section>
+
+<!-- ==================== CHAPTER 7: RETURN TO ONLINE ==================== -->
+<section class="ch-section">
+  <div class="chapter">
+    <p class="chapter-label">Chapter Seven</p>
+    <h2 class="chapter-title">Back Online — <em>With Offline Wisdom</em></h2>
+    <p class="chapter-sub">The pandemic pushed everyone online. Abhinav went back with a decade of real-world teaching under his belt.</p>
+  </div>
+  <div class="narrative">
+    <p>When the world moved online in 2020, Abhinav was uniquely prepared. He had already taught online since 2016. He already knew the tools. But now he carried something that most online teachers didn't: <strong>years of standing in physical classrooms, reading students' body language, noticing the boy in the third row who stops writing when the concept gets hard, seeing the girl who nods but whose eyes are confused.</strong></p>
+    <p>He brought that offline instinct into his online teaching. He developed what he calls "diagnostic questioning" — instead of asking "does everyone understand?", which always gets a yes, he asks specific students specific questions designed to reveal exactly where their understanding breaks. He learned to detect confusion in the silence between questions, in the speed of a typed response, in the hesitation before a student unmutes.</p>
+    <p>He also continued his B.Ed and PG studies during this period, further refining his approach. The combination of live teaching experience across hundreds of students and formal pedagogical training created something rare: <strong>a teacher who could teach the subject, diagnose the student, and redesign the approach — all in real time.</strong></p>
+  </div>
+</section>
+
+<!-- ==================== MICRO COACHING PHILOSOPHY ==================== -->
+<section class="micro-section">
+  <p class="chapter-label">The Philosophy</p>
+  <h2 class="chapter-title">Why <em>Five Students</em> Change Everything</h2>
+  <p class="chapter-sub" style="max-width:560px; font-size:0.82rem; color:var(--text-muted); margin-bottom:3rem;">Micro-batch teaching isn't a premium feature. It's a structural requirement for real learning.</p>
+
+  <div class="micro-grid">
+    <div class="micro-narrative">
+      <p>After seven years of teaching across platforms, batches, cities, and formats — from Vedantu's hundreds to Delhi's crowded classrooms to one-on-one online sessions — Abhinav arrived at a conclusion that the education industry doesn't want to hear: <strong>batch size is the single biggest determinant of whether a student actually learns.</strong></p>
+      <p>Not the teacher's qualifications. Not the quality of the study material. Not the app's UX design. Not the number of mock tests. It's how many students are in the room. Because batch size determines everything else — whether the teacher knows your name, whether your doubt gets addressed, whether your errors get tracked, whether someone notices you've been struggling with the same concept for three weeks.</p>
+      <div class="micro-highlight">
+        <p>"In a batch of 100, I'm a broadcaster. In a batch of 20, I'm a lecturer. In a batch of 5, I'm a teacher. The difference isn't semantic — it's structural. In a room of five, I can see every student's face. I can tell when someone is confused before they know it themselves. That's not talent. That's just physics — attention divides, and five doesn't divide it too far."</p>
+      </div>
+      <p>Prime Spirit was built on this principle. The <strong>Elite Track has 5 students per batch.</strong> The <strong>Advanced Track has 10.</strong> These numbers aren't arbitrary. They're the result of a decade of testing where the threshold of personalised attention breaks down. Beyond 10, you start losing the ability to track individual error patterns. Beyond 15, you stop knowing each student's specific weaknesses. Beyond 20, you're lecturing, not teaching.</p>
+      <p>Micro-batch teaching also enables something that mass coaching structurally cannot: <strong>emotional safety.</strong> In a room of five students, asking a "silly" question doesn't feel silly. Making a mistake doesn't feel humiliating. A student can say "Sir, I don't understand this" without the fear of 49 other students judging them. That emotional safety isn't a nice-to-have. <strong>It's the precondition for learning.</strong> A student who is afraid to ask will never learn what they're afraid to ask about.</p>
+    </div>
+
+    <div>
+      <table class="compare-table">
+        <tr>
+          <th>Dimension</th>
+          <th class="col-bad">Mass Coaching</th>
+          <th class="col-good">Prime Spirit</th>
+        </tr>
+        <tr>
+          <td>Batch Size</td>
+          <td class="col-bad">50 – 500</td>
+          <td class="col-good">5 – 10</td>
+        </tr>
+        <tr>
+          <td>Teacher Knows Your Name</td>
+          <td class="col-bad">Unlikely</td>
+          <td class="col-good">Guaranteed</td>
+        </tr>
+        <tr>
+          <td>Doubt Resolution</td>
+          <td class="col-bad">Chat / Doubt Counter</td>
+          <td class="col-good">Live, Immediate, Personal</td>
+        </tr>
+        <tr>
+          <td>Error Analysis</td>
+          <td class="col-bad">Generic Score Report</td>
+          <td class="col-good">1:1 Diagnostic per Student</td>
+        </tr>
+        <tr>
+          <td>Pace</td>
+          <td class="col-bad">Fixed Syllabus Speed</td>
+          <td class="col-good">Adapts to Each Student</td>
+        </tr>
+        <tr>
+          <td>Emotional Safety</td>
+          <td class="col-bad">Low (Fear of Judgment)</td>
+          <td class="col-good">High (Small, Trusted Group)</td>
+        </tr>
+        <tr>
+          <td>Mindset Support</td>
+          <td class="col-bad">Not Included</td>
+          <td class="col-good">Integrated Counselling</td>
+        </tr>
+        <tr>
+          <td>Accountability</td>
+          <td class="col-bad">Student's Own Willpower</td>
+          <td class="col-good">Teacher Tracks Weekly</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- STUDENT STORY 3 -->
+<div class="story-card">
+  <p class="sc-text">"Sir, in my old coaching, no one ever asked me why I got a question wrong. They just told me the right answer. You're the first person who asked me to explain my wrong answer. That's when I realised my problem wasn't Physics — it was how I was thinking."</p>
+  <p class="sc-context">A NEET aspirant who had scored 340/720 in her first attempt after two years at a well-known coaching chain. After joining Prime Spirit, Abhinav conducted a full error analysis of her previous mock tests and discovered that 60% of her errors were not conceptual — they were pattern errors. She had developed a habit of changing correct answers under exam pressure. Once the pattern was identified and addressed, her score jumped by over 100 marks in three months.</p>
+  <span class="sc-label">The student who didn't need more content — she needed someone to listen</span>
+</div>
+
+<!-- ==================== CHAPTER 8: PRIME SPIRIT ==================== -->
+<section class="ch-section">
+  <div class="chapter">
+    <p class="chapter-label">Chapter Eight</p>
+    <h2 class="chapter-title">Prime Spirit — <em>The Decision</em></h2>
+    <p class="chapter-sub">2024. Everything he'd learned, distilled into one conviction: teach fewer, teach deeper.</p>
+  </div>
+  <div class="narrative">
+
+    <!--
+      =============================================
+      PHOTO SLOT 2 — CHAPTER 8 (TEACHING / ACTION)
+      =============================================
+      Replace the src below with your actual photo URL or local path.
+      This photo appears floating right in the narrative text.
+      Recommended: A teaching action shot, classroom moment, or
+      informal candid. Ideally landscape or square orientation.
+      =============================================
+    -->
+    <div class="chapter-photo">
+      <img src="https://placehold.co/240x280/141210/d4a53a?text=YOUR+TEACHING+PHOTO"
+           alt="Abhinav Akash teaching">
+      <div class="cp-caption">Since 2016</div>
+    </div>
+
+    <p>By 2023, Abhinav had taught over 1,000 students. He had taught online and offline, at billion-dollar edtech platforms and in dusty Delhi coaching centres, for CBSE boards and for competitive entrance exams. He had seen every model of Indian education — and he had seen every model's failure point.</p>
+    <p>The failure point was always the same: <strong>somewhere between the teacher's intention and the student's experience, the human connection broke.</strong> Not because teachers didn't care. They did. But the structure didn't let care translate into action. A teacher who cares about 200 students equally ends up caring about none of them specifically. And specific care — the kind that tracks one student's error pattern, that adjusts the pace for one student's confusion, that notices one student hasn't submitted homework because something is wrong at home — <strong>that's the only kind of care that actually teaches.</strong></p>
+    <p>Prime Spirit Mentors was founded with a radical structural decision: <strong>5 students in the Elite Track. 10 students in the Advanced Track. No exceptions.</strong></p>
+    <p>This wasn't a marketing gimmick. It was a physics constraint applied to education. Abhinav calculated how much time he needed per student per week: diagnostic sessions, doubt resolution, error analysis, mindset check-ins, personalised assignment review. The number came to roughly 3–4 hours per student per week. With 5 students, that's 15–20 hours of deeply personalised teaching. With 10, it's 30–40 hours. Beyond that, quality degrades. Not because the teacher gets tired — but because <strong>attention is finite, and dividing it further means nobody gets enough.</strong></p>
+    <p>The name "Prime Spirit" comes from a simple belief: every student has a prime version of themselves — the version that's curious, confident, and capable. That spirit is already there. It doesn't need to be created. It needs to be uncovered. And uncovering it requires a teacher who has the time, the space, and the structural freedom to look.</p>
+  </div>
+</section>
+
+<!-- STUDENT STORY 4 -->
+<div class="story-card">
+  <p class="sc-text">"My parents spent ₹2.5 lakhs on coaching last year. I scored 89 percentile in JEE Mains. They told me to try again. This year, with Sir, I scored 98.5. The difference wasn't the money. It was that someone finally saw what I was doing wrong."</p>
+  <p class="sc-context">A JEE Mains aspirant from Hyderabad. His parents had enrolled him in one of India's most expensive coaching programmes. The content was excellent. The test series was comprehensive. But in a batch of 120 students, nobody had ever told him that he was spending 8 minutes on problems that should take 3 — not because he was slow, but because he was solving them using the wrong approach. One conversation. One correction. 9.5 percentile points.</p>
+  <span class="sc-label">₹2.5 lakhs couldn't buy what one conversation gave</span>
+</div>
+
+<!-- ==================== POONAM FOUNDATION ==================== -->
+<section class="found-section">
+  <p class="chapter-label">Giving Back</p>
+  <h2 class="chapter-title">Poonam <em>Foundation</em></h2>
+  <p class="chapter-sub" style="max-width:560px; font-size:0.82rem; color:var(--text-muted); margin-bottom:3rem;">Because a Class 6 student in a small town deserves the same quality of teaching as everyone else.</p>
+
+  <div class="found-grid">
+    <div class="found-narrative">
+      <p>In all his years of teaching, one pattern haunted Abhinav: <strong>the students who needed the best teaching were the ones who could afford it the least.</strong> By Class 11, when NEET and JEE prep begins, the gap between a student who had strong foundational teaching and one who didn't was already a canyon. Not because of intelligence — but because of access.</p>
+      <p>The Poonam Foundation exists to close that gap at the root. By offering high-quality Maths and Science coaching for Classes 6, 7, and 8 at a deliberately low price, it ensures that students build the conceptual foundation they need — <em>before</em> the competitive exam pressure begins. By the time these students reach Class 11, they won't be starting from zero. They'll be starting from strength.</p>
+      <p>This isn't CSR. This isn't charity content. The Poonam Foundation batches are taught with the same conceptual rigour as Prime Spirit's premium tracks. Because a curious 12-year-old asking why the sky is blue deserves the same quality of answer as a JEE aspirant asking about Rayleigh scattering. <strong>The question is the same. The respect for the questioner should be too.</strong></p>
+    </div>
+    <div>
+      <div class="found-card">
+        <div class="fc-price">₹999 <span>/ month</span></div>
+        <div class="fc-for">Class 6, 7, 8 &mdash; Maths &amp; Science</div>
+        <ul>
+          <li>Live interactive classes, not recordings</li>
+          <li>Concept-first teaching — same method as premium tracks</li>
+          <li>Batch size: 20 students (still small by industry standards)</li>
+          <li>Regular doubt-solving sessions</li>
+          <li>Monthly progress reports for parents</li>
+          <li>No hidden fees, no upsell traps</li>
+        </ul>
+        <div class="found-origin">
+          <p>"Poonam" is a reminder that education is not a luxury product. It's a right. Every child deserves a teacher who sees them — not their wallet.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== EXAM TRACKS ==================== -->
+<section class="chapter" style="padding-bottom:1rem;">
+  <p class="chapter-label">Coverage</p>
+  <h2 class="chapter-title"><em>Six</em> Exam Tracks. <em>One</em> Standard.</h2>
+  <p class="chapter-sub">Same personalised, micro-batch approach across every exam and board.</p>
+</section>
+
+<div class="tracks-strip">
+  <div class="track-cell">
+    <div class="tc-name">NEET UG</div>
+    <div class="tc-desc">Physics for Medical Aspirants</div>
+  </div>
+  <div class="track-cell">
+    <div class="tc-name">JEE Mains</div>
+    <div class="tc-desc">Physics for Engineering Aspirants</div>
+  </div>
+  <div class="track-cell">
+    <div class="tc-name">CUET</div>
+    <div class="tc-desc">Central University Entrance</div>
+  </div>
+  <div class="track-cell">
+    <div class="tc-name">IAT / NEST</div>
+    <div class="tc-desc">IISER &amp; NISER Entrance</div>
+  </div>
+  <div class="track-cell">
+    <div class="tc-name">CBSE Boards</div>
+    <div class="tc-desc">Class 6 – 12</div>
+  </div>
+  <div class="track-cell">
+    <div class="tc-name">ICSE Boards</div>
+    <div class="tc-desc">Class 6 – 12</div>
+  </div>
+</div>
+
+<!-- ==================== NUMBERS ==================== -->
+<div class="numbers-row">
+  <div class="num-cell">
+    <div class="nc-num">1000<span class="nc-sfx">+</span></div>
+    <div class="nc-lbl">Students Taught</div>
+  </div>
+  <div class="num-cell">
+    <div class="nc-num">10<span class="nc-sfx">+</span></div>
+    <div class="nc-lbl">Years of Teaching</div>
+  </div>
+  <div class="num-cell">
+    <div class="nc-num">5</div>
+    <div class="nc-lbl">Max Students / Elite Batch</div>
+  </div>
+  <div class="num-cell">
+    <div class="nc-num">4.9</div>
+    <div class="nc-lbl">Average Student Rating</div>
+  </div>
+</div>
+
+<!-- ==================== CITIES ==================== -->
+<div class="cities-bar">
+  <div>
+    <p class="chapter-label" style="margin-bottom:0.5rem;">Reach</p>
+    <p class="cities-names">Bengaluru · Hyderabad · Bhubaneswar · Cuttack · All India Online</p>
+  </div>
+</div>
+
+<div class="section-divider"></div>
+
+<!-- ==================== CTA ==================== -->
+<section class="cta">
+  <p class="chapter-label">Ready?</p>
+  <h2 class="cta-title">Book a <em>Free</em> Strategy Session</h2>
+  <p class="cta-sub">Talk to Abhinav directly. Understand the approach. See if it fits your learning style — no commitment required.</p>
+  <div class="cta-btns">
+    <a href="https://primespirit.co.in/#contact" class="btn-gold">Book Free Demo</a>
+    <a href="https://wa.me/919700627812" class="btn-ghost">WhatsApp +91 97006 27812</a>
+  </div>
+</section>
+
+<!-- ==================== FOOTER ==================== -->
+<footer>
+  <p>&copy; 2026 Prime Spirit Mentors. Founded by Abhinav Akash (Abhinav Kashyap).</p>
+  <p>
+    <a href="https://primespirit.co.in/">Home</a> &nbsp;&middot;&nbsp;
+    <a href="#story">About</a> &nbsp;&middot;&nbsp;
+    <a href="https://primespirit.co.in/#cohorts">Programs</a>
+  </p>
+</footer>
+
+<!-- ==================== SCROLL REVEAL ==================== -->
+<script>
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('.story-card').forEach(el => obs.observe(el));
+</script>
+
+</body>
+</html>
