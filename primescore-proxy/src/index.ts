@@ -3,21 +3,35 @@
  *
  * Supports public NTA / Digialm:
  * - HTML
+ * - HTM
  * - ASPX
  * - PDF
  *
- * Used by PrimeScore on GitHub Pages.
- *
- * URL format:
- * https://YOUR-WORKER.workers.dev/?url=ENCODED_SOURCE_URL
+ * Designed for:
+ * - NEET
+ * - JEE Main
+ * - CUET
+ * - UGC NET
  *
  * IMPORTANT:
- * This proxy does not bypass login/authentication.
- * If an NTA page requires the user's browser session,
- * use PrimeScore's "Paste HTML Source" option instead.
+ * This proxy does NOT bypass authentication, login,
+ * cookies, CAPTCHA or protected examination sessions.
+ *
+ * If an examination page requires a logged-in browser
+ * session, use PrimeScore's:
+ *   1. Upload HTML
+ *   2. Paste HTML Source
+ * options instead.
+ *
+ * URL:
+ * https://YOUR-WORKER.workers.dev/?url=ENCODED_SOURCE_URL
  */
 
-const ALLOWED_EXACT_HOSTS = new Set([
+// =====================================================
+// ALLOWED EXAMINATION DOMAINS
+// =====================================================
+
+const ALLOWED_EXACT_HOSTS = new Set<string>([
   "examinationservices.nic.in",
 
   "nta.ac.in",
@@ -30,19 +44,26 @@ const ALLOWED_EXACT_HOSTS = new Set([
 ]);
 
 
-function isAllowedHost(hostname) {
+// =====================================================
+// CHECK WHETHER TARGET DOMAIN IS ALLOWED
+// =====================================================
 
-  const host = hostname.toLowerCase();
+function isAllowedHost(hostname: string): boolean {
+
+  const host = hostname.toLowerCase().trim();
 
   // Exact NTA domains
   if (ALLOWED_EXACT_HOSTS.has(host)) {
     return true;
   }
 
-  // Digialm frequently uses CDN subdomains such as:
+  // Digialm CDN / assessment domains
+  //
+  // Examples:
   // cdn3.digialm.com
   // cdn2.digialm.com
-  // etc.
+  // per.g28.digialm.com
+  //
   if (
     host === "digialm.com" ||
     host.endsWith(".digialm.com")
@@ -54,9 +75,16 @@ function isAllowedHost(hostname) {
 }
 
 
-function corsHeaders(extra = {}) {
+// =====================================================
+// CORS HEADERS
+// =====================================================
+
+function corsHeaders(
+  extra: Record<string, string> = {}
+): Record<string, string> {
 
   return {
+
     "Access-Control-Allow-Origin": "*",
 
     "Access-Control-Allow-Methods":
@@ -79,7 +107,14 @@ function corsHeaders(extra = {}) {
 }
 
 
-function json(data, status = 200) {
+// =====================================================
+// JSON RESPONSE HELPER
+// =====================================================
+
+function json(
+  data: unknown,
+  status: number = 200
+): Response {
 
   return new Response(
     JSON.stringify(data, null, 2),
@@ -95,13 +130,19 @@ function json(data, status = 200) {
 }
 
 
+// =====================================================
+// MAIN CLOUDFLARE WORKER
+// =====================================================
+
 export default {
 
-  async fetch(request) {
+  async fetch(
+    request: Request
+  ): Promise<Response> {
 
-    // ---------------------------------------
-    // CORS preflight
-    // ---------------------------------------
+    // =================================================
+    // CORS PREFLIGHT
+    // =================================================
 
     if (request.method === "OPTIONS") {
 
@@ -113,17 +154,20 @@ export default {
     }
 
 
-    // ---------------------------------------
-    // Only GET
-    // ---------------------------------------
+    // =================================================
+    // ONLY GET REQUESTS
+    // =================================================
 
     if (request.method !== "GET") {
 
       return json(
         {
+          success: false,
+
           error:
             "Only GET requests are supported."
         },
+
         405
       );
 
@@ -132,39 +176,46 @@ export default {
 
     try {
 
+      // ===============================================
+      // READ WORKER URL
+      // ===============================================
+
       const requestUrl =
         new URL(request.url);
 
-
-      // ---------------------------------------
-      // Read target URL
-      // ---------------------------------------
 
       const target =
         requestUrl.searchParams.get("url");
 
 
+      // ===============================================
+      // URL IS REQUIRED
+      // ===============================================
+
       if (!target) {
 
         return json(
           {
+            success: false,
+
             error:
               "Missing url parameter.",
 
             usage:
               "?url=https%3A%2F%2Fexample.com%2Fpage.html"
           },
+
           400
         );
 
       }
 
 
-      // ---------------------------------------
-      // Validate target URL
-      // ---------------------------------------
+      // ===============================================
+      // PARSE TARGET URL
+      // ===============================================
 
-      let targetUrl;
+      let targetUrl: URL;
 
       try {
 
@@ -175,34 +226,44 @@ export default {
 
         return json(
           {
+            success: false,
+
             error:
               "Invalid target URL."
           },
+
           400
         );
 
       }
 
 
+      // ===============================================
+      // ONLY HTTP / HTTPS
+      // ===============================================
+
       if (
-        !["http:", "https:"]
-          .includes(targetUrl.protocol)
+        targetUrl.protocol !== "http:" &&
+        targetUrl.protocol !== "https:"
       ) {
 
         return json(
           {
+            success: false,
+
             error:
-              "Only HTTP/HTTPS target URLs are allowed."
+              "Only HTTP and HTTPS URLs are allowed."
           },
+
           400
         );
 
       }
 
 
-      // ---------------------------------------
-      // Security: allowed domains only
-      // ---------------------------------------
+      // ===============================================
+      // DOMAIN SECURITY
+      // ===============================================
 
       if (
         !isAllowedHost(
@@ -212,29 +273,44 @@ export default {
 
         return json(
           {
+            success: false,
+
             error:
-              "Target domain is not allowed by this PrimeScore proxy.",
+              "Target domain is not allowed by PrimeScore.",
+
+            target:
+              targetUrl.hostname,
 
             allowedDomains: [
+
               "examinationservices.nic.in",
+
               "nta.ac.in",
+
               "exams.nta.ac.in",
+
               "ugcnet.nta.ac.in",
+
               "neet.nta.nic.in",
+
               "jeemain.nta.nic.in",
+
               "cuet.nta.nic.in",
+
               "*.digialm.com"
+
             ]
           },
+
           403
         );
 
       }
 
 
-      // ---------------------------------------
-      // Fetch NTA / Digialm source
-      // ---------------------------------------
+      // ===============================================
+      // FETCH EXAMINATION PAGE
+      // ===============================================
 
       const upstream =
         await fetch(
@@ -248,13 +324,13 @@ export default {
             headers: {
 
               "Accept":
-                "text/html,application/xhtml+xml,application/pdf;q=0.9,*/*;q=0.8",
+                "text/html,application/xhtml+xml,application/xml,application/pdf;q=0.9,*/*;q=0.8",
 
               "Accept-Language":
                 "en-US,en;q=0.9",
 
               "User-Agent":
-                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/131 Safari/537.36"
+                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36"
 
             }
 
@@ -262,16 +338,18 @@ export default {
         );
 
 
-      // ---------------------------------------
-      // Upstream error
-      // ---------------------------------------
+      // ===============================================
+      // UPSTREAM FAILED
+      // ===============================================
 
       if (!upstream.ok) {
 
         return json(
           {
+            success: false,
+
             error:
-              "Upstream examination server returned an error.",
+              "The examination server returned an error.",
 
             status:
               upstream.status,
@@ -282,15 +360,16 @@ export default {
             source:
               targetUrl.hostname
           },
+
           upstream.status
         );
 
       }
 
 
-      // ---------------------------------------
-      // Preserve HTML/PDF content type
-      // ---------------------------------------
+      // ===============================================
+      // DETERMINE CONTENT TYPE
+      // ===============================================
 
       const contentType =
         upstream.headers.get(
@@ -299,36 +378,42 @@ export default {
         "application/octet-stream";
 
 
-      const headers =
-        corsHeaders({
-
-          "Content-Type":
-            contentType,
-
-          "X-PrimeScore-Source":
-            targetUrl.hostname
-
-        });
-
-
-      // ---------------------------------------
-      // Return source to PrimeScore
-      // ---------------------------------------
+      // ===============================================
+      // RETURN SOURCE
+      // ===============================================
 
       return new Response(
         upstream.body,
+
         {
           status:
             upstream.status,
 
-          headers
+          headers:
+            corsHeaders({
+
+              "Content-Type":
+                contentType,
+
+              "X-PrimeScore-Source":
+                targetUrl.hostname
+
+            })
+
         }
       );
 
+
     } catch (error) {
+
+      // ===============================================
+      // UNEXPECTED ERROR
+      // ===============================================
 
       return json(
         {
+          success: false,
+
           error:
             "PrimeScore proxy error.",
 
@@ -337,6 +422,7 @@ export default {
               ? error.message
               : String(error)
         },
+
         500
       );
 
