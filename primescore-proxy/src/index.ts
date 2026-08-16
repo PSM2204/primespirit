@@ -1,67 +1,347 @@
-// PrimeScore PDF Proxy — Cloudflare Worker
-const ALLOWED_ORIGIN = '*';
+/**
+ * PrimeScore CORS Proxy
+ *
+ * Supports public NTA / Digialm:
+ * - HTML
+ * - ASPX
+ * - PDF
+ *
+ * Used by PrimeScore on GitHub Pages.
+ *
+ * URL format:
+ * https://YOUR-WORKER.workers.dev/?url=ENCODED_SOURCE_URL
+ *
+ * IMPORTANT:
+ * This proxy does not bypass login/authentication.
+ * If an NTA page requires the user's browser session,
+ * use PrimeScore's "Paste HTML Source" option instead.
+ */
 
-function corsHeaders() {
+const ALLOWED_EXACT_HOSTS = new Set([
+  "examinationservices.nic.in",
+
+  "nta.ac.in",
+  "exams.nta.ac.in",
+
+  "ugcnet.nta.ac.in",
+  "neet.nta.nic.in",
+  "jeemain.nta.nic.in",
+  "cuet.nta.nic.in"
+]);
+
+
+function isAllowedHost(hostname) {
+
+  const host = hostname.toLowerCase();
+
+  // Exact NTA domains
+  if (ALLOWED_EXACT_HOSTS.has(host)) {
+    return true;
+  }
+
+  // Digialm frequently uses CDN subdomains such as:
+  // cdn3.digialm.com
+  // cdn2.digialm.com
+  // etc.
+  if (
+    host === "digialm.com" ||
+    host.endsWith(".digialm.com")
+  ) {
+    return true;
+  }
+
+  return false;
+}
+
+
+function corsHeaders(extra = {}) {
+
   return {
-    'Access-Control-Allow-Origin': ALLOWED_ORIGIN,
-    'Access-Control-Allow-Methods': 'GET, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type',
+    "Access-Control-Allow-Origin": "*",
+
+    "Access-Control-Allow-Methods":
+      "GET, OPTIONS",
+
+    "Access-Control-Allow-Headers":
+      "Content-Type",
+
+    "Access-Control-Expose-Headers":
+      "Content-Type, X-PrimeScore-Source",
+
+    "Cache-Control":
+      "no-store, no-cache, must-revalidate",
+
+    "Pragma":
+      "no-cache",
+
+    ...extra
   };
 }
 
+
+function json(data, status = 200) {
+
+  return new Response(
+    JSON.stringify(data, null, 2),
+    {
+      status,
+
+      headers: corsHeaders({
+        "Content-Type":
+          "application/json; charset=UTF-8"
+      })
+    }
+  );
+}
+
+
 export default {
+
   async fetch(request) {
-    if (request.method === 'OPTIONS') {
-      return new Response(null, { headers: corsHeaders() });
-    }
 
-    const reqUrl = new URL(request.url);
-    const target = reqUrl.searchParams.get('url');
+    // ---------------------------------------
+    // CORS preflight
+    // ---------------------------------------
 
-    if (!target) {
-      return new Response('Missing "url" query parameter, e.g. ?url=https://example.com/response.pdf', {
-        status: 400,
-        headers: corsHeaders(),
+    if (request.method === "OPTIONS") {
+
+      return new Response(null, {
+        status: 204,
+        headers: corsHeaders()
       });
+
     }
 
-    let targetUrl;
-    try {
-      targetUrl = new URL(target);
-    } catch {
-      return new Response('Invalid URL', { status: 400, headers: corsHeaders() });
-    }
-    if (targetUrl.protocol !== 'https:' && targetUrl.protocol !== 'http:') {
-      return new Response('Only http/https URLs are allowed', { status: 400, headers: corsHeaders() });
-    }
 
-    try {
-      const upstream = await fetch(targetUrl.toString(), {
-        headers: {
-          'User-Agent': 'Mozilla/5.0 (compatible; PrimeScoreProxy/1.0)',
-          'Accept': 'application/pdf,*/*',
+    // ---------------------------------------
+    // Only GET
+    // ---------------------------------------
+
+    if (request.method !== "GET") {
+
+      return json(
+        {
+          error:
+            "Only GET requests are supported."
         },
-        redirect: 'follow',
-      });
+        405
+      );
 
-      if (!upstream.ok) {
-        return new Response('Upstream server returned ' + upstream.status, {
-          status: 502,
-          headers: corsHeaders(),
-        });
+    }
+
+
+    try {
+
+      const requestUrl =
+        new URL(request.url);
+
+
+      // ---------------------------------------
+      // Read target URL
+      // ---------------------------------------
+
+      const target =
+        requestUrl.searchParams.get("url");
+
+
+      if (!target) {
+
+        return json(
+          {
+            error:
+              "Missing url parameter.",
+
+            usage:
+              "?url=https%3A%2F%2Fexample.com%2Fpage.html"
+          },
+          400
+        );
+
       }
 
-      const buf = await upstream.arrayBuffer();
-      return new Response(buf, {
-        status: 200,
-        headers: {
-          ...corsHeaders(),
-          'Content-Type': upstream.headers.get('Content-Type') || 'application/pdf',
-          'Cache-Control': 'no-store',
+
+      // ---------------------------------------
+      // Validate target URL
+      // ---------------------------------------
+
+      let targetUrl;
+
+      try {
+
+        targetUrl =
+          new URL(target);
+
+      } catch {
+
+        return json(
+          {
+            error:
+              "Invalid target URL."
+          },
+          400
+        );
+
+      }
+
+
+      if (
+        !["http:", "https:"]
+          .includes(targetUrl.protocol)
+      ) {
+
+        return json(
+          {
+            error:
+              "Only HTTP/HTTPS target URLs are allowed."
+          },
+          400
+        );
+
+      }
+
+
+      // ---------------------------------------
+      // Security: allowed domains only
+      // ---------------------------------------
+
+      if (
+        !isAllowedHost(
+          targetUrl.hostname
+        )
+      ) {
+
+        return json(
+          {
+            error:
+              "Target domain is not allowed by this PrimeScore proxy.",
+
+            allowedDomains: [
+              "examinationservices.nic.in",
+              "nta.ac.in",
+              "exams.nta.ac.in",
+              "ugcnet.nta.ac.in",
+              "neet.nta.nic.in",
+              "jeemain.nta.nic.in",
+              "cuet.nta.nic.in",
+              "*.digialm.com"
+            ]
+          },
+          403
+        );
+
+      }
+
+
+      // ---------------------------------------
+      // Fetch NTA / Digialm source
+      // ---------------------------------------
+
+      const upstream =
+        await fetch(
+          targetUrl.toString(),
+          {
+
+            method: "GET",
+
+            redirect: "follow",
+
+            headers: {
+
+              "Accept":
+                "text/html,application/xhtml+xml,application/pdf;q=0.9,*/*;q=0.8",
+
+              "Accept-Language":
+                "en-US,en;q=0.9",
+
+              "User-Agent":
+                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/131 Safari/537.36"
+
+            }
+
+          }
+        );
+
+
+      // ---------------------------------------
+      // Upstream error
+      // ---------------------------------------
+
+      if (!upstream.ok) {
+
+        return json(
+          {
+            error:
+              "Upstream examination server returned an error.",
+
+            status:
+              upstream.status,
+
+            statusText:
+              upstream.statusText,
+
+            source:
+              targetUrl.hostname
+          },
+          upstream.status
+        );
+
+      }
+
+
+      // ---------------------------------------
+      // Preserve HTML/PDF content type
+      // ---------------------------------------
+
+      const contentType =
+        upstream.headers.get(
+          "Content-Type"
+        ) ||
+        "application/octet-stream";
+
+
+      const headers =
+        corsHeaders({
+
+          "Content-Type":
+            contentType,
+
+          "X-PrimeScore-Source":
+            targetUrl.hostname
+
+        });
+
+
+      // ---------------------------------------
+      // Return source to PrimeScore
+      // ---------------------------------------
+
+      return new Response(
+        upstream.body,
+        {
+          status:
+            upstream.status,
+
+          headers
+        }
+      );
+
+    } catch (error) {
+
+      return json(
+        {
+          error:
+            "PrimeScore proxy error.",
+
+          message:
+            error instanceof Error
+              ? error.message
+              : String(error)
         },
-      });
-    } catch (err) {
-      return new Response('Fetch failed: ' + err.message, { status: 502, headers: corsHeaders() });
+        500
+      );
+
     }
-  },
+
+  }
+
 };
