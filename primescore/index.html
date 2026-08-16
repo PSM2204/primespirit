@@ -202,562 +202,326 @@
             .container { padding: 10px; }
             .stats-grid { grid-template-columns: repeat(2, 1fr); }
         }
-    </style>
+    \n        .source-area { width:100%; min-height:130px; margin-top:10px; padding:12px; border-radius:8px; border:1px solid var(--glass-border); background:rgba(17,21,34,.6); color:var(--text-bright); font-family:'Courier New',monospace; font-size:11px; resize:vertical; }\n        .source-area:focus { outline:none; border-color:var(--primary-neon); }\n</style>
 </head>
 <body>
-    <div class="container">
-        <a href="/" class="back-home"><i class="fas fa-arrow-left"></i> Back to Prime Spirit Mentors</a>
+<div class="container">
+  <a href="/" class="back-home"><i class="fas fa-arrow-left"></i> Back to Prime Spirit Mentors</a>
+  <div class="hero">
+    <span class="hero-badge">⚡ PrimeScore • Multi-Exam Exact Response Matching</span>
+    <h1>PrimeScore</h1>
+    <p>Calculate NEET, JEE Main, CUET or UGC NET scores from separate response and official answer-key sources</p>
+    <p style="font-size:.9rem">Recommended: save both pages as HTML and upload them. URL mode is optional.</p>
+    <div class="exam-tags">
+      <span class="exam-tag">NEET</span><span class="exam-tag">JEE Main</span><span class="exam-tag">CUET</span><span class="exam-tag">UGC NET</span><span class="exam-tag"><i class="fas fa-shield-halved"></i> ID Matching</span>
+    </div>
+  </div>
 
-        <div class="hero">
-            <span class="hero-badge">⚡ Free Forever • No API Keys • Works Offline</span>
-            <h1>PrimeScore</h1>
-            <p>Smart Score Calculator for NEET, JEE Main, CUET & UGC NET</p>
-            <p style="font-size:0.9rem;">Upload PDF • Paste URL • Enter Manually • Get Instant Analytics</p>
-            <div class="exam-tags">
-                <span class="exam-tag"><i class="fas fa-stethoscope"></i> NEET</span>
-                <span class="exam-tag"><i class="fas fa-cogs"></i> JEE Main</span>
-                <span class="exam-tag"><i class="fas fa-graduation-cap"></i> CUET</span>
-                <span class="exam-tag"><i class="fas fa-chalkboard-teacher"></i> UGC NET</span>
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="notice">
-                <strong>How this works:</strong> upload/fetch a PDF and PrimeScore will auto-detect answers where it can,
-                then open a review box so you confirm everything before it's scored. If the PDF is a scanned image
-                (no selectable text), OCR runs automatically — this is slower, so give it a few extra seconds per page.
-                PDF layouts vary a lot between exams and years, so treat the auto-fill as a first draft, not a final answer.
-            </div>
-            <div class="btn-row">
-                <input type="file" id="responseFile" accept=".pdf,application/pdf" class="hidden">
-                <button class="btn btn-primary" id="uploadResponseBtn">
-                    <i class="fas fa-file-pdf"></i> Upload Response PDF
-                </button>
-
-                <input type="file" id="answerFile" accept=".pdf,application/pdf" class="hidden">
-                <button class="btn btn-outline" id="uploadAnswerBtn">
-                    <i class="fas fa-key"></i> Upload Answer Key
-                </button>
-
-                <button class="btn btn-outline" id="urlBtn">
-                    <i class="fas fa-link"></i> Paste URL
-                </button>
-
-                <button class="btn btn-warning" id="manualEntryBtn">
-                    <i class="fas fa-keyboard"></i> Enter / Review Manually
-                </button>
-            </div>
-
-            <div id="urlSection" class="url-box hidden">
-                <input type="url" class="url-input" id="urlInput" placeholder="Paste official response sheet PDF URL here...">
-                <button class="btn btn-primary btn-sm" id="fetchBtn"><i class="fas fa-download"></i> Fetch</button>
-            </div>
-
-            <div id="statusMsg" class="status"></div>
-        </div>
-
-        <!-- Manual Entry / Review Modal -->
-        <div class="modal-overlay" id="manualModal">
-            <div class="modal">
-                <h3><i class="fas fa-keyboard"></i> Review &amp; Confirm Answers</h3>
-                <p style="color:var(--text-dark); margin-bottom:15px; font-size:13px;">
-                    Format is <strong>QNo:Answer</strong> (one per line), e.g.
-                    <code style="color:#00df89;">1:B 2:A 3:C 4: 5:D</code> (leave blank for unattempted).
-                    If you uploaded a PDF, this box is pre-filled with what was detected — scroll through and fix
-                    anything that looks wrong before submitting.
-                </p>
-                <div class="form-group">
-                    <label>Select Exam</label>
-                    <select id="manualExam">
-                        <option value="NEET">NEET (UG) - +4 Correct, -1 Wrong</option>
-                        <option value="JEE">JEE Main - +4 Correct, -1 Wrong</option>
-                        <option value="CUET">CUET (UG) - +5 Correct, -1 Wrong</option>
-                        <option value="UGC">UGC NET - +2 Correct, 0 Wrong</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Your Answers</label>
-                    <textarea id="manualAnswers" placeholder="1:B&#10;2:A&#10;3:C&#10;4:&#10;5:D&#10;..."></textarea>
-                    <div class="field-hint" id="answersHint"></div>
-                </div>
-                <div class="form-group">
-                    <label>Answer Key (optional, but needed for scoring)</label>
-                    <textarea id="manualAnswerKey" placeholder="1:B&#10;2:A&#10;3:D&#10;4:C&#10;5:D&#10;..."></textarea>
-                    <div class="field-hint" id="keyHint"></div>
-                </div>
-                <div style="display:flex; gap:10px;">
-                    <button class="btn btn-primary" id="submitManual" style="flex:1;">Submit &amp; Calculate</button>
-                    <button class="btn btn-outline" id="closeManual" style="flex:1;">Cancel</button>
-                </div>
-            </div>
-        </div>
-
-        <div id="dashboard" class="dashboard">
-            <div class="card">
-                <h2 style="margin-bottom:8px;"><i class="fas fa-chart-pie"></i> <span id="examTitle">Performance Dashboard</span></h2>
-                <div id="studentInfo" style="padding:10px; background:rgba(0,112,243,0.04); border-radius:8px; margin-bottom:15px; font-size:13px; border:1px solid var(--glass-border);"></div>
-
-                <div class="stats-grid">
-                    <div class="stat-box"><span class="stat-num" id="valMarks">0</span><span class="stat-label">Total Marks</span></div>
-                    <div class="stat-box"><span class="stat-num green" id="valCorrect">0</span><span class="stat-label">Correct</span></div>
-                    <div class="stat-box"><span class="stat-num red" id="valIncorrect">0</span><span class="stat-label">Incorrect</span></div>
-                    <div class="stat-box"><span class="stat-num" id="valUnattempted">0</span><span class="stat-label">Unattempted</span></div>
-                    <div class="stat-box"><span class="stat-num" id="valAccuracy">0%</span><span class="stat-label">Accuracy</span></div>
-                    <div class="stat-box"><span class="stat-num" id="valMax">0</span><span class="stat-label">Max Marks</span></div>
-                </div>
-
-                <div class="charts-row">
-                    <div class="chart-box"><h3 style="color:var(--text-dark);font-size:14px;">📊 Response Distribution</h3><canvas id="pieChart"></canvas></div>
-                    <div class="chart-box"><h3 style="color:var(--text-dark);font-size:14px;">📈 Subject Performance</h3><canvas id="barChart"></canvas></div>
-                </div>
-            </div>
-
-            <div class="card">
-                <h2 style="margin-bottom:12px;"><i class="fas fa-list-check"></i> Question Analysis</h2>
-                <div class="toolbar">
-                    <input type="text" class="search-input" id="searchInput" placeholder="🔍 Search questions...">
-                    <button class="btn btn-outline btn-sm" id="filterAll">All</button>
-                    <button class="btn btn-outline btn-sm" id="filterCorrect">✓ Correct</button>
-                    <button class="btn btn-outline btn-sm" id="filterIncorrect">✗ Incorrect</button>
-                    <button class="btn btn-primary btn-sm" id="downloadBtn"><i class="fas fa-download"></i> Report</button>
-                </div>
-                <div class="table-wrap">
-                    <table>
-                        <thead><tr><th>Q#</th><th>Your Answer</th><th>Correct</th><th>Marks</th><th>Status</th></tr></thead>
-                        <tbody id="tableBody"><tr><td colspan="5" style="text-align:center;padding:30px;color:var(--text-dark);">📄 Upload PDF, paste URL, or enter answers manually</td></tr></tbody>
-                    </table>
-                </div>
-            </div>
-
-            <div class="card feedback-card">
-                <h3 style="color:var(--primary-glow);"><i class="fas fa-robot"></i> AI-Inspired Insights</h3>
-                <div id="feedbackText" style="color:var(--text-dark);">Complete your score calculation to get personalized feedback.</div>
-            </div>
-        </div>
+  <div class="card">
+    <div class="notice">
+      <strong>Most reliable method:</strong> upload the actual HTML/source of the two NTA pages separately. PrimeScore matches the <strong>Question ID</strong> and then compares the candidate's selected <strong>Option ID</strong> with NTA's <strong>Correct Option ID</strong>. It does not guess answers from question text.
     </div>
 
-    <script>
-    (function() {
-        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    <div class="card" style="margin:0 0 15px;padding:20px;border-color:rgba(0,201,255,.18)">
+      <h3 style="color:var(--primary-glow);margin-bottom:8px">① Candidate Response / Chosen Response</h3>
+      <p style="color:var(--text-dark);font-size:12px;margin-bottom:12px">Digialm HTML containing Question ID, Option 1–4 ID, Status and Chosen Option.</p>
+      <div class="btn-row" style="justify-content:flex-start">
+        <input type="file" id="responseFile" accept=".html,.htm,.aspx,.txt,.pdf,text/html,text/plain,application/pdf" class="hidden">
+        <button class="btn btn-primary" id="uploadResponseBtn"><i class="fas fa-file-code"></i> Upload Response HTML</button>
+        <button class="btn btn-outline" id="pasteResponseBtn"><i class="fas fa-paste"></i> Paste HTML Source</button>
+      </div>
+      <div class="url-box">
+        <input type="url" class="url-input" id="responseUrl" placeholder="Paste Candidate Response / Digialm HTML URL...">
+        <button class="btn btn-primary btn-sm" id="fetchResponseBtn"><i class="fas fa-download"></i> Fetch</button>
+      </div>
+      <textarea id="responseSource" class="source-area hidden" placeholder="Paste the complete HTML source here..."></textarea>
+      <div id="responseStatus" class="status"></div>
+    </div>
 
-        // ====== CONFIG ======
-        // Browsers block cross-origin fetches to PDF URLs unless the server sends CORS headers
-        // (almost none of the exam portals do). This proxy worker fetches the PDF server-side and
-        // re-serves it with permissive CORS headers. Deploy worker.js (provided separately) to
-        // Cloudflare Workers, then put its URL here. Example, matching your PrimeBoard relay naming:
-        // 'https://primescore-proxy.primespiritmentors.workers.dev/'
-        const PDF_PROXY_URL = 'https://primescore-proxy.primespiritmentors.workers.dev/';
+    <div class="card" style="margin:0 0 15px;padding:20px;border-color:rgba(0,223,137,.18)">
+      <h3 style="color:var(--accent-glow);margin-bottom:8px">② NTA Answer Key / Provisional Answer Key</h3>
+      <p style="color:var(--text-dark);font-size:12px;margin-bottom:12px">ASPX/HTML page containing the table: SNo → Section → Question ID → Correct Option(s) → Option(s) claimed.</p>
+      <div class="btn-row" style="justify-content:flex-start">
+        <input type="file" id="answerFile" accept=".html,.htm,.aspx,.txt,.pdf,text/html,text/plain,application/pdf" class="hidden">
+        <button class="btn btn-green" id="uploadAnswerBtn"><i class="fas fa-key"></i> Upload Answer Key HTML</button>
+        <button class="btn btn-outline" id="pasteAnswerBtn"><i class="fas fa-paste"></i> Paste HTML Source</button>
+      </div>
+      <div class="url-box">
+        <input type="url" class="url-input" id="answerUrl" placeholder="Paste NTA Answer Key / ASPX URL...">
+        <button class="btn btn-green btn-sm" id="fetchAnswerBtn"><i class="fas fa-download"></i> Fetch</button>
+      </div>
+      <textarea id="answerSource" class="source-area hidden" placeholder="Paste the complete ASPX/HTML source here..."></textarea>
+      <div id="answerStatus" class="status"></div>
+    </div>
 
-        let questions = [];
-        let pieChart = null, barChart = null;
+    <div class="form-group" style="max-width:420px;margin:0 auto 15px">
+      <label>Exam / Marking Scheme</label>
+      <select id="examSelect">
+        <option value="UGC">UGC NET — +2 Correct, 0 Incorrect, 0 Unattempted</option>
+        <option value="NEET">NEET — +4 Correct, -1 Incorrect, 0 Unattempted</option>
+        <option value="JEE">JEE Main — +4 Correct, -1 Incorrect, 0 Unattempted</option>
+        <option value="CUET">CUET — +5 Correct, -1 Incorrect, 0 Unattempted</option>
+      </select>
+    </div>
 
-        const EXAMS = {
-            NEET: { n:'NEET (UG)', c:4, i:-1 },
-            JEE: { n:'JEE Main', c:4, i:-1 },
-            CUET: { n:'CUET (UG)', c:5, i:-1 },
-            UGC: { n:'UGC NET', c:2, i:0 }
-        };
+    <div class="btn-row">
+      <button class="btn btn-primary" id="calculateBtn"><i class="fas fa-calculator"></i> Calculate Exact Score</button>
+      <button class="btn btn-warning" id="manualEntryBtn"><i class="fas fa-keyboard"></i> Manual / Review</button>
+    </div>
+    <div id="statusMsg" class="status"></div>
+  </div>
 
-        function status(m, t) {
-            const e = document.getElementById('statusMsg');
-            e.textContent = m; e.className = 'status show ' + t;
+  <div class="modal-overlay" id="sourceModal">
+    <div class="modal">
+      <h3 id="sourceModalTitle"><i class="fas fa-code"></i> Paste Source</h3>
+      <p style="color:var(--text-dark);font-size:12px;margin-bottom:12px">Use Chrome: Ctrl+U → Ctrl+A → Ctrl+C, then paste here. This is recommended if URL fetching is blocked by NTA session/CORS.</p>
+      <textarea id="sourceModalText" style="min-height:260px" placeholder="Paste complete HTML source..."></textarea>
+      <div style="display:flex;gap:10px;margin-top:12px">
+        <button class="btn btn-primary" id="saveSourceBtn">Use This Source</button>
+        <button class="btn btn-outline" id="closeSourceBtn">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="manualModal">
+    <div class="modal">
+      <h3><i class="fas fa-keyboard"></i> Manual / Review</h3>
+      <div class="form-group"><label>Your Answers</label><textarea id="manualAnswers" placeholder="1:B\n2:A\n3:C"></textarea></div>
+      <div class="form-group"><label>Answer Key</label><textarea id="manualAnswerKey" placeholder="1:B\n2:A\n3:D"></textarea></div>
+      <div style="display:flex;gap:10px"><button class="btn btn-primary" id="submitManual" style="flex:1">Calculate</button><button class="btn btn-outline" id="closeManual" style="flex:1">Cancel</button></div>
+    </div>
+  </div>
+
+  <div id="dashboard" class="dashboard">
+    <div class="card">
+      <h2 style="margin-bottom:8px"><i class="fas fa-chart-pie"></i> <span id="examTitle">Performance Dashboard</span></h2>
+      <div id="studentInfo" style="padding:10px;background:rgba(0,112,243,.04);border-radius:8px;margin-bottom:15px;font-size:13px;border:1px solid var(--glass-border)"></div>
+      <div class="stats-grid">
+        <div class="stat-box"><span class="stat-num" id="valMarks">0</span><span class="stat-label">Score</span></div>
+        <div class="stat-box"><span class="stat-num green" id="valCorrect">0</span><span class="stat-label">Correct</span></div>
+        <div class="stat-box"><span class="stat-num red" id="valIncorrect">0</span><span class="stat-label">Incorrect</span></div>
+        <div class="stat-box"><span class="stat-num" id="valUnattempted">0</span><span class="stat-label">Unattempted</span></div>
+        <div class="stat-box"><span class="stat-num" id="valAccuracy">0%</span><span class="stat-label">Accuracy</span></div>
+        <div class="stat-box"><span class="stat-num" id="valMax">0</span><span class="stat-label">Max Marks</span></div>
+      </div>
+      <div class="charts-row"><div class="chart-box"><h3 style="color:var(--text-dark);font-size:14px">📊 Response Distribution</h3><canvas id="pieChart"></canvas></div><div class="chart-box"><h3 style="color:var(--text-dark);font-size:14px">📈 Section Performance</h3><canvas id="barChart"></canvas></div></div>
+    </div>
+    <div class="card">
+      <h2 style="margin-bottom:12px"><i class="fas fa-list-check"></i> Question Analysis</h2>
+      <div class="toolbar"><input type="text" class="search-input" id="searchInput" placeholder="🔍 Search questions or IDs..."><button class="btn btn-outline btn-sm" id="filterAll">All</button><button class="btn btn-outline btn-sm" id="filterCorrect">✓ Correct</button><button class="btn btn-outline btn-sm" id="filterIncorrect">✗ Incorrect</button><button class="btn btn-primary btn-sm" id="downloadBtn"><i class="fas fa-download"></i> Report</button></div>
+      <div class="table-wrap"><table><thead><tr><th>Q#</th><th>Question ID</th><th>Your Option</th><th>Selected ID</th><th>Correct ID</th><th>Marks</th><th>Status</th></tr></thead><tbody id="tableBody"><tr><td colspan="7" style="text-align:center;padding:30px;color:var(--text-dark)">Upload both sources to calculate.</td></tr></tbody></table></div>
+    </div>
+    <div class="card feedback-card"><h3 style="color:var(--primary-glow)"><i class="fas fa-robot"></i> PrimeScore Summary</h3><div id="feedbackText" style="color:var(--text-dark)">Complete your score calculation.</div></div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const PROXY='https://primescore-proxy.primespiritmentors.workers.dev/';
+  const EXAMS={
+    UGC:{n:'UGC NET',correct:2,incorrect:0,unattempted:0},
+    NEET:{n:'NEET (UG)',correct:4,incorrect:-1,unattempted:0},
+    JEE:{n:'JEE Main',correct:4,incorrect:-1,unattempted:0},
+    CUET:{n:'CUET (UG)',correct:5,incorrect:-1,unattempted:0}
+  };
+  let responseData=[],answerKey={},questions=[],pieChart=null,barChart=null,pasteTarget='response';
+  const $=id=>document.getElementById(id);
+  const clean=s=>String(s??'').replace(/\s+/g,' ').trim();
+  const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+  function setStatus(id,msg,type='info'){const e=$(id);e.textContent=msg;e.className='status show '+type;}
+  function globalStatus(msg,type='info'){setStatus('statusMsg',msg,type);}
+  function letterToNumber(v){if(v==null||v==='')return null;v=String(v).trim().toUpperCase();if(/^\d+$/.test(v))return Number(v);if(/^[A-E]$/.test(v))return 'ABCDE'.indexOf(v)+1;return null;}
+  function optionLetter(q){return q.chosenOption?('ABCDE'[q.chosenOption-1]||String(q.chosenOption)):'-';}
+  function optionIdFor(q,n){return q?.options?.[n]||null;}
+  function extractIds(s){return (String(s||'').match(/\b\d{6,}\b/g)||[]);}
+  function isNotAttempted(status){return /not\s*(answered|attempted)|unanswered|not\s*visited|not\s*attempted/i.test(String(status||''));}
+
+  // ---------- Candidate response parser: Digialm/NTA HTML ----------
+  function parseCandidateHTML(html){
+    const doc=new DOMParser().parseFromString(html,'text/html');
+    let panels=[...doc.querySelectorAll('.question-pnl')];
+    if(!panels.length) panels=[...doc.querySelectorAll('[class*="question-pnl"], .question-panel, .questionPanel')];
+    if(panels.length){
+      const out=[];
+      panels.forEach((panel,idx)=>{
+        const text=clean(panel.textContent);
+        const qNo=(text.match(/(?:Q\.?|Question\s*(?:No\.?|Number)?)\s*[:.]?\s*(\d{1,4})\b/i)||[])[1]||String(idx+1);
+        const qid=(text.match(/Question\s*ID\s*[:.]\s*(\d{6,})/i)||[])[1];
+        if(!qid)return;
+        const status=(text.match(/Status\s*[:.]\s*([^]*?)(?=Chosen\s*Option|Selected\s*Option|Given\s*Answer|$)/i)||[])[1]?.trim()||'';
+        let chosen=(text.match(/(?:Chosen|Selected)\s*Option\s*[:.]\s*(\d+)/i)||[])[1];
+        if(!chosen){const cm=text.match(/(?:Chosen|Selected)\s*Option\s*[:.]\s*([A-E])/i);if(cm)chosen=letterToNumber(cm[1]);}
+        const opts={};
+        for(let n=1;n<=5;n++){
+          const mm=text.match(new RegExp('Option\\s*'+n+'\\s*ID\\s*[:.]\\s*(\\d{6,})','i'));
+          if(mm)opts[n]=mm[1];
         }
+        // Some exams expose selected answer as an option ID instead of a number.
+        let selectedId=(text.match(/(?:Chosen|Selected)\s*(?:Option\s*)?ID\s*[:.]\s*(\d{6,})/i)||[])[1]||null;
+        if(!chosen && selectedId){for(const [n,id] of Object.entries(opts)){if(id===selectedId){chosen=Number(n);break;}}}
+        out.push({num:Number(qNo),questionId:qid,options:opts,status,chosenOption:chosen?Number(chosen):null,selectedId:selectedId||null,section:extractSection(panel)});
+      });
+      return dedupe(out);
+    }
+    return parseCandidateGeneric(doc,html);
+  }
+  function extractSection(el){
+    const t=clean(el?.textContent||'');
+    const m=t.match(/(?:Section|Subject|Paper)\s*[:.]\s*([^\n]{2,120})/i);
+    return m?clean(m[1]):'';
+  }
+  function parseCandidateGeneric(doc,html){
+    const text=typeof html==='string'?html:(doc.body?.innerText||'');const out=[];
+    const blocks=text.split(/(?=Question\s*ID\s*[:.]\s*\d{6,})/i);
+    let idx=0;
+    for(const b of blocks){
+      const qid=(b.match(/Question\s*ID\s*[:.]\s*(\d{6,})/i)||[])[1];if(!qid)continue;
+      const qNo=(b.match(/(?:Q\.?|Question\s*(?:No\.?|Number)?)\s*[:.]?\s*(\d{1,4})\b/i)||[])[1]||String(++idx);
+      const status=(b.match(/Status\s*[:.]\s*([^]*?)(?=Chosen\s*Option|Selected\s*Option|$)/i)||[])[1]?.trim()||'';
+      let chosen=(b.match(/(?:Chosen|Selected)\s*Option\s*[:.]\s*([1-5])/i)||[])[1];
+      const opts={};for(let n=1;n<=5;n++){const m=b.match(new RegExp('Option\\s*'+n+'\\s*ID\\s*[:.]\s*(\\d{6,})','i'));if(m)opts[n]=m[1];}
+      out.push({num:Number(qNo),questionId:qid,options:opts,status,chosenOption:chosen?Number(chosen):null,section:''});
+    }
+    if(!out.length)throw new Error('Could not detect candidate-response questions. Use the complete HTML source from Ctrl+U.');
+    return dedupe(out);
+  }
+  function dedupe(arr){const seen=new Set(),out=[];for(const q of arr){if(!q.questionId||seen.has(q.questionId))continue;seen.add(q.questionId);out.push(q);}return out.sort((a,b)=>a.num-b.num);}
 
-        // ===== PDF EXTRACTION (row-aware, not one giant blob) =====
-        // Groups text items by their y-coordinate so each visual row/line of the PDF becomes one
-        // string in the output array. This is what makes the parser below reliable enough to be
-        // useful — regex over a single blob of text (the old approach) can't tell a question number
-        // apart from a date, roll number, or page number.
-        //
-        // Some response sheets have no embedded text at all (scanned or screenshotted, then saved
-        // as PDF). In that case we fall back to OCR (Tesseract.js): each page is rendered to a
-        // canvas image and Tesseract reads text out of the pixels directly. This is slower and
-        // less accurate than real text extraction, so it's only used when the text layer is empty.
-        async function extractPDFLines(source, onProgress) {
-            const data = source instanceof ArrayBuffer ? new Uint8Array(source) : source;
-            const pdf = await pdfjsLib.getDocument({ data }).promise;
-            let lines = [];
-            for (let i = 1; i <= pdf.numPages; i++) {
-                const page = await pdf.getPage(i);
-                const content = await page.getTextContent();
-                const rowMap = new Map();
-                content.items.forEach(item => {
-                    const y = Math.round(item.transform[5]);
-                    if (!rowMap.has(y)) rowMap.set(y, []);
-                    rowMap.get(y).push({ x: item.transform[4], text: item.str });
-                });
-                const sortedY = Array.from(rowMap.keys()).sort((a, b) => b - a);
-                sortedY.forEach(y => {
-                    const row = rowMap.get(y).sort((a, b) => a.x - b.x).map(r => r.text).join(' ').replace(/\s+/g, ' ').trim();
-                    if (row) lines.push(row);
-                });
-            }
-            if (lines.length) return lines;
-
-            // No text layer found — fall back to OCR on rendered page images.
-            if (onProgress) onProgress('No text layer found — running OCR instead (this takes longer)...');
-            return await ocrPdfLines(pdf, onProgress);
+  // ---------- NTA answer-key parser: ASPX/HTML ----------
+  function parseAnswerKeyHTML(html){
+    const doc=new DOMParser().parseFromString(html,'text/html');
+    const map={};
+    const tables=[...doc.querySelectorAll('table')];
+    for(const table of tables){
+      const rows=[...table.querySelectorAll('tr')];
+      if(!rows.length)continue;
+      let qIdx=-1,cIdx=-1,headerRow=-1;
+      for(let i=0;i<Math.min(rows.length,10);i++){
+        const cells=[...rows[i].querySelectorAll('th,td')].map(c=>clean(c.textContent).toLowerCase());
+        const qi=cells.findIndex(x=>/question\s*id/.test(x));
+        const ci=cells.findIndex(x=>/correct\s*option/.test(x));
+        if(qi>=0&&ci>=0){qIdx=qi;cIdx=ci;headerRow=i;break;}
+      }
+      if(qIdx<0){
+        const rows2=rows.filter(r=>/question\s*id/i.test(r.textContent)&&/correct\s*option/i.test(r.textContent));
+        for(const row of rows2){
+          const cells=[...row.querySelectorAll('td,th')].map(c=>clean(c.textContent));
+          if(cells.length>=4){const q=extractIds(cells[2])[0],a=extractIds(cells[3]);if(q&&a.length)map[q]={correctIds:a,section:cells[1]||'',questionNo:Object.keys(map).length+1};}
         }
+        continue;
+      }
+      for(let i=headerRow+1;i<rows.length;i++){
+        const cells=[...rows[i].querySelectorAll('td,th')];if(cells.length<=Math.max(qIdx,cIdx))continue;
+        const qid=extractIds(cells[qIdx].textContent)[0];
+        if(!qid)continue;
+        const correctIds=extractIds(cells[cIdx].textContent);
+        const section=cells[1]?clean(cells[1].textContent):'';
+        if(correctIds.length)map[qid]={correctIds:[...new Set(correctIds)],section,questionNo:i-headerRow};
+        else if(!map[qid])map[qid]={correctIds:[],section,questionNo:i-headerRow};
+      }
+    }
+    // Fallback for ASPX label-based markup.
+    if(!Object.keys(map).length){
+      const qEls=[...doc.querySelectorAll('[id$="_lbl_QuestionNo"], [id*="lbl_QuestionNo"]')];
+      qEls.forEach((qEl,i)=>{
+        const row=qEl.closest('tr')||qEl.parentElement;
+        const txt=clean(row?.textContent||'');
+        const qid=extractIds(qEl.textContent)[0]||extractIds(txt)[0];
+        const correctEl=row?.querySelector('[id$="_lbl_RAnswer"], [id*="lbl_RAnswer"]');
+        const ids=extractIds(correctEl?.textContent||'');
+        if(qid)map[qid]={correctIds:[...new Set(ids)],section:'',questionNo:i+1};
+      });
+    }
+    if(!Object.keys(map).length)throw new Error('Could not detect NTA answer-key rows. Look for Question ID + Correct Option(s) in the HTML source.');
+    return map;
+  }
 
-        async function ocrPdfLines(pdf, onProgress) {
-            if (typeof Tesseract === 'undefined') {
-                throw new Error('OCR library failed to load — check your internet connection and try again.');
-            }
-            let lines = [];
-            for (let i = 1; i <= pdf.numPages; i++) {
-                if (onProgress) onProgress('Running OCR on page ' + i + ' of ' + pdf.numPages + '...');
+  async function extractPDFText(file){
+    const data=new Uint8Array(await file.arrayBuffer());
+    if(!window.pdfjsLib)throw new Error('PDF.js not loaded.');
+    const pdf=await pdfjsLib.getDocument({data}).promise;let lines=[];
+    for(let i=1;i<=pdf.numPages;i++){const page=await pdf.getPage(i),content=await page.getTextContent(),rm=new Map();content.items.forEach(it=>{const y=Math.round(it.transform[5]);if(!rm.has(y))rm.set(y,[]);rm.get(y).push({x:it.transform[4],text:it.str})});[...rm.keys()].sort((a,b)=>b-a).forEach(y=>{const r=rm.get(y).sort((a,b)=>a.x-b.x).map(x=>x.text).join(' ').replace(/\s+/g,' ').trim();if(r)lines.push(r);});}
+    return lines.join('\n');
+  }
+  async function parseAnyFile(file,type){
+    const name=file.name.toLowerCase();
+    if(name.endsWith('.pdf')||file.type==='application/pdf'){
+      const text=await extractPDFText(file);
+      if(type==='response')return parseCandidateGeneric(null,text);
+      return parseLegacyAnswerKeyText(text);
+    }
+    const html=await file.text();
+    return type==='response'?parseCandidateHTML(html):parseAnswerKeyHTML(html);
+  }
+  function parseLegacyAnswerKeyText(text){
+    const map={};const blocks=text.split(/(?=Question\s*(?:ID|No\.?)[\s:.-]*\d+)/i);
+    blocks.forEach((b,i)=>{const q=(b.match(/Question\s*(?:ID|No\.?)[\s:.-]*(\d{1,})/i)||[])[1];if(!q)return;const a=(b.match(/Correct\s*(?:Option|Answer)\s*[:.-]*\s*([1-5A-E])/i)||[])[1];if(a)map[q]={correctIds:[String(a)],section:'',questionNo:i};});
+    if(!Object.keys(map).length)throw new Error('This PDF answer key is not in a supported text format. Prefer NTA HTML/ASPX for exact ID matching.');
+    return map;
+  }
 
-                const page = await pdf.getPage(i);
-                // Higher scale = sharper text = better OCR accuracy, at the cost of speed.
-                const viewport = page.getViewport({ scale: 2.5 });
-                const canvas = document.createElement('canvas');
-                canvas.width = viewport.width;
-                canvas.height = viewport.height;
-                const ctx = canvas.getContext('2d');
-                await page.render({ canvasContext: ctx, viewport }).promise;
+  async function fetchSource(url){
+    if(!PROXY)throw new Error('Proxy URL is not configured.');
+    const r=await fetch(PROXY+(PROXY.includes('?')?'&':'?')+'url='+encodeURIComponent(url));
+    if(!r.ok)throw new Error('Proxy returned HTTP '+r.status);
+    const ct=(r.headers.get('content-type')||'').toLowerCase();
+    if(ct.includes('pdf'))return {kind:'pdf',data:await r.arrayBuffer()};
+    return {kind:'html',data:await r.text()};
+  }
+  async function parseFetched(src,type){
+    if(src.kind==='html')return type==='response'?parseCandidateHTML(src.data):parseAnswerKeyHTML(src.data);
+    const blob=new Blob([src.data],{type:'application/pdf'});return await parseAnyFile(blob,type);
+  }
 
-                const result = await Tesseract.recognize(canvas, 'eng', {
-                    logger: info => {
-                        if (onProgress && info.status === 'recognizing text') {
-                            onProgress('OCR page ' + i + ' of ' + pdf.numPages + ' — ' + Math.round((info.progress || 0) * 100) + '%');
-                        }
-                    }
-                });
+  function showSourceModal(target){pasteTarget=target;$('sourceModalTitle').innerHTML='<i class="fas fa-code"></i> Paste '+(target==='response'?'Candidate Response':'NTA Answer Key')+' HTML';$('sourceModalText').value=target==='response'?$('responseSource').value:$('answerSource').value;$('sourceModal').classList.add('active');}
+  function savePastedSource(){const v=$('sourceModalText').value.trim();if(!v)return globalStatus('Paste the HTML/source first.','error');try{if(pasteTarget==='response'){responseData=parseCandidateHTML(v);$('responseSource').value=v;setStatus('responseStatus','✅ Detected '+responseData.length+' candidate questions.','success');}else{answerKey=parseAnswerKeyHTML(v);$('answerSource').value=v;setStatus('answerStatus','✅ Detected '+Object.keys(answerKey).length+' answer-key entries.','success');}$('sourceModal').classList.remove('active');}catch(e){globalStatus('⚠️ '+e.message,'error');}}
 
-                // Tesseract gives line-level results with y-position, already close to the
-                // row-reconstruction we do for real text PDFs above.
-                const pageLines = (result.data.lines || [])
-                    .map(l => l.text.replace(/\s+/g, ' ').trim())
-                    .filter(Boolean);
-                lines = lines.concat(pageLines);
-            }
-            if (!lines.length) throw new Error('OCR could not read any text from this PDF. Try a higher-quality scan, or use Enter Manually.');
-            return lines;
-        }
+  $('uploadResponseBtn').onclick=()=>$('responseFile').click();
+  $('responseFile').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{responseData=await parseAnyFile(f,'response');setStatus('responseStatus','✅ Detected '+responseData.length+' candidate questions.','success');globalStatus('Candidate response loaded. Now load the official answer key.','success');}catch(err){setStatus('responseStatus','⚠️ '+err.message,'error');}e.target.value='';};
+  $('uploadAnswerBtn').onclick=()=>$('answerFile').click();
+  $('answerFile').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{answerKey=await parseAnyFile(f,'answer');setStatus('answerStatus','✅ Detected '+Object.keys(answerKey).length+' answer-key entries.','success');globalStatus('Answer key loaded. Now calculate.','success');}catch(err){setStatus('answerStatus','⚠️ '+err.message,'error');}e.target.value='';};
+  $('pasteResponseBtn').onclick=()=>showSourceModal('response');$('pasteAnswerBtn').onclick=()=>showSourceModal('answer');$('closeSourceBtn').onclick=()=>$('sourceModal').classList.remove('active');$('saveSourceBtn').onclick=savePastedSource;
+  $('fetchResponseBtn').onclick=async()=>{const u=$('responseUrl').value.trim();if(!u)return setStatus('responseStatus','Enter a response URL.','error');setStatus('responseStatus','⏳ Fetching response...','info');try{const src=await fetchSource(u);responseData=await parseFetched(src,'response');$('responseSource').value=src.kind==='html'?src.data:'';setStatus('responseStatus','✅ Detected '+responseData.length+' candidate questions.','success');}catch(e){setStatus('responseStatus','⚠️ '+e.message+' — if the page requires a browser session, use Paste HTML Source.','warning');}};
+  $('fetchAnswerBtn').onclick=async()=>{const u=$('answerUrl').value.trim();if(!u)return setStatus('answerStatus','Enter an answer-key URL.','error');setStatus('answerStatus','⏳ Fetching answer key...','info');try{const src=await fetchSource(u);answerKey=await parseFetched(src,'answer');$('answerSource').value=src.kind==='html'?src.data:'';setStatus('answerStatus','✅ Detected '+Object.keys(answerKey).length+' answer-key entries.','success');}catch(e){setStatus('answerStatus','⚠️ '+e.message+' — if the page requires a browser session, use Paste HTML Source.','warning');}};
 
-        function readFileAsArrayBuffer(file) {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onload = e => resolve(e.target.result);
-                reader.onerror = () => reject(new Error('File read failed'));
-                reader.readAsArrayBuffer(file);
-            });
-        }
+  $('calculateBtn').onclick=calculateExact;
+  function calculateExact(){
+    const exam=EXAMS[$('examSelect').value];
+    if(!responseData.length)return globalStatus('⚠️ Load the Candidate Response first.','error');
+    if(!Object.keys(answerKey).length)return globalStatus('⚠️ Load the official NTA Answer Key first.','error');
+    questions=responseData.map((q,idx)=>{
+      const key=answerKey[q.questionId];
+      const selectedId=q.selectedId || (q.chosenOption?optionIdFor(q,q.chosenOption):null);
+      const correctIds=key?.correctIds||[];
+      const attempted=!!selectedId && !isNotAttempted(q.status);
+      const correct=attempted&&correctIds.includes(selectedId);
+      const keyMissing=!key||!correctIds.length;
+      let st=attempted?(correct?'correct':'incorrect'):'unattempted';
+      if(keyMissing)st=attempted?'key-missing':'unattempted';
+      let mk=0;if(st==='correct')mk=exam.correct;else if(st==='incorrect')mk=exam.incorrect;
+      return {num:q.num||idx+1,questionId:q.questionId,yr:optionLetter(q),selectedId:selectedId||'-',ca:correctIds.length?correctIds.join(', '):'Key unavailable',st,mk,section:key?.section||q.section||''};
+    });
+    displayResults(exam);
+  }
+  function displayResults(config){
+    const cor=questions.filter(q=>q.st==='correct').length,inc=questions.filter(q=>q.st==='incorrect').length,una=questions.filter(q=>q.st==='unattempted').length,miss=questions.filter(q=>q.st==='key-missing').length;
+    const tm=questions.reduce((s,q)=>s+q.mk,0);const maxAttemptable=questions.length*config.correct;const attempted=cor+inc;const acc=attempted?(cor/attempted*100).toFixed(1):'0.0';
+    $('dashboard').classList.add('active');$('examTitle').textContent=config.n+' — Exact ID-Matched Dashboard';$('studentInfo').innerHTML='<strong>Exam:</strong> '+esc(config.n)+' | <strong>Response:</strong> '+questions.length+' | <strong>Answer key:</strong> '+Object.keys(answerKey).length+' | <strong>Key unavailable:</strong> '+miss;
+    $('valMarks').textContent=tm;$('valCorrect').textContent=cor;$('valIncorrect').textContent=inc;$('valUnattempted').textContent=una;$('valAccuracy').textContent=acc+'%';$('valMax').textContent=maxAttemptable;
+    renderTable();drawCharts(cor,inc,una,miss);genFeedback(config,cor,inc,una,miss,acc,tm,maxAttemptable);$('dashboard').scrollIntoView({behavior:'smooth'});globalStatus('✅ Score calculated by Question ID + Option ID matching.','success');
+  }
+  function renderTable(filter='all'){const tb=$('tableBody');let qs=filter==='all'?questions:questions.filter(q=>q.st===filter);if(!qs.length){tb.innerHTML='<tr><td colspan="7" style="text-align:center;padding:30px">No questions</td></tr>';return;}tb.innerHTML=qs.map(q=>{let b='<span class="badge badge-muted">○ Unattempted</span>';if(q.st==='correct')b='<span class="badge badge-success">✓ Correct</span>';else if(q.st==='incorrect')b='<span class="badge badge-danger">✗ Incorrect</span>';else if(q.st==='key-missing')b='<span class="badge badge-muted">⚠ Key unavailable</span>';return `<tr><td><strong>${q.num}</strong></td><td>${esc(q.questionId)}</td><td>${esc(q.yr)}</td><td style="font-size:11px">${esc(q.selectedId)}</td><td style="font-size:11px">${esc(q.ca)}</td><td style="font-weight:700">${q.mk>0?'+':''}${q.mk}</td><td>${b}</td></tr>`}).join('');}
+  function drawCharts(cor,inc,una,miss){if(pieChart)pieChart.destroy();if(barChart)barChart.destroy();pieChart=new Chart($('pieChart'),{type:'doughnut',data:{labels:['Correct','Incorrect','Unattempted','Key unavailable'],datasets:[{data:[cor,inc,una,miss],backgroundColor:['#10b981','#ef4444','#475569','#f59e0b'],borderColor:'#0a0e27',borderWidth:2}]},options:{responsive:true,plugins:{legend:{position:'bottom',labels:{color:'#94a3b8'}}}}});const sec={};questions.forEach(q=>{const k=q.section||'Overall';sec[k]=(sec[k]||0)+(q.st==='correct'?1:0)});const labels=Object.keys(sec);barChart=new Chart($('barChart'),{type:'bar',data:{labels:labels.length?labels:['Overall'],datasets:[{label:'Correct',data:labels.length?labels.map(x=>sec[x]):[cor],backgroundColor:'#0070F3',borderRadius:6}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{color:'#94a3b8'}},x:{ticks:{color:'#94a3b8'}}}}});}
+  function genFeedback(config,cor,inc,una,miss,acc,tm,mx){let h=`<p>🎯 <strong>Exact ID matching:</strong> Candidate selected Option ID was compared with NTA Correct Option ID for the same Question ID.</p><p>📊 <strong>${esc(config.n)}:</strong> ${tm} marks | Max from loaded questions: ${mx} | Accuracy: ${acc}% | Correct: ${cor} | Incorrect: ${inc} | Unattempted: ${una}</p>`;if(miss)h+=`<p>⚠️ ${miss} attempted question(s) had no usable correct-answer entry and were not treated as wrong.</p>`;$('feedbackText').innerHTML=h;}
 
-        // ===== NTA-STYLE ANSWER PARSING =====
-        // NTA response sheets (NEET/JEE/CUET/UGC NET) generally print each question as a labelled
-        // block containing "Question ID", "Chosen Option" and often "Correct Option" / "Status".
-        // We join all lines and split into per-question chunks on those labels, then read the
-        // option value out of each chunk. A simpler "N: letter" fallback also runs in case the
-        // sheet uses a plain table layout instead.
-        function parseNTASheet(lines) {
-            const fullText = lines.join(' \n ');
-            const responses = {};
-            const correct = {};
-
-            // Split into per-question blocks using common NTA question markers
-            const blockRe = /(?:Q(?:uestion)?\.?\s*No\.?|Question\s*ID)\s*[:.]?\s*(\d+)/gi;
-            let markers = [];
-            let m;
-            while ((m = blockRe.exec(fullText)) !== null) {
-                markers.push({ idx: m.index, num: m[1] });
-            }
-
-            if (markers.length > 3) {
-                for (let i = 0; i < markers.length; i++) {
-                    const start = markers[i].idx;
-                    const end = i + 1 < markers.length ? markers[i + 1].idx : fullText.length;
-                    const block = fullText.slice(start, end);
-
-                    // Prefer a running question counter over the raw "Question ID" (which is often
-                    // a long internal DB id, not the paper's Q number) — but if the marker itself
-                    // looks like a short/plausible question number (<=3 digits), trust it.
-                    const qNum = markers[i].num.length <= 3 ? parseInt(markers[i].num) : (i + 1);
-
-                    const chosenM = block.match(/Chosen\s*Option\s*[:.]?\s*([1-4A-D])/i);
-                    const correctM = block.match(/Correct\s*Option\s*[:.]?\s*([1-4A-D])/i);
-                    const statusM = block.match(/Status\s*[:.]?\s*(Not\s*Answered|Answered|Not\s*Attempted|Marked)/i);
-
-                    const toLetter = v => (/[1-4]/.test(v) ? 'ABCD'[parseInt(v) - 1] : v.toUpperCase());
-
-                    if (chosenM && !/not\s*answered|not\s*attempted/i.test(statusM ? statusM[1] : '')) {
-                        responses[qNum] = toLetter(chosenM[1]);
-                    } else if (!responses[qNum]) {
-                        responses[qNum] = '';
-                    }
-                    if (correctM) correct[qNum] = toLetter(correctM[1]);
-                }
-            }
-
-            // Fallback: plain "N: X" / "N. X" / "N X" table rows, one per line
-            if (Object.keys(responses).length < 3) {
-                const rowRe = /^\(?(\d{1,3})\)?[.\s:)-]+([A-D1-4])\b/i;
-                lines.forEach(line => {
-                    const mm = line.match(rowRe);
-                    if (mm) {
-                        const num = parseInt(mm[1]);
-                        let opt = mm[2].toUpperCase();
-                        if (/[1-4]/.test(opt)) opt = 'ABCD'[parseInt(opt) - 1];
-                        if (num > 0 && num <= 300 && !(num in responses)) responses[num] = opt;
-                    }
-                });
-            }
-
-            return { responses, correct };
-        }
-
-        function detectExam(lines) {
-            const text = lines.join(' ').toLowerCase();
-            if (text.includes('neet')) return 'NEET';
-            if (text.includes('jee')) return 'JEE';
-            if (text.includes('cuet')) return 'CUET';
-            if (text.includes('ugc net') || text.includes('ugc-net')) return 'UGC';
-            return null;
-        }
-
-        function mapToLines(map) {
-            return Object.keys(map).sort((a, b) => a - b).map(k => k + ':' + (map[k] || '')).join('\n');
-        }
-
-        // Merges newly-detected data into the review textareas without clobbering anything the
-        // user may have already typed/edited.
-        function mergeIntoReview(responses, correct, examGuess) {
-            const ansBox = document.getElementById('manualAnswers');
-            const keyBox = document.getElementById('manualAnswerKey');
-            if (Object.keys(responses).length && !ansBox.value.trim()) ansBox.value = mapToLines(responses);
-            if (Object.keys(correct).length && !keyBox.value.trim()) keyBox.value = mapToLines(correct);
-            if (examGuess) document.getElementById('manualExam').value = examGuess;
-            updateHints();
-            document.getElementById('manualModal').classList.add('active');
-        }
-
-        function updateHints() {
-            const a = parseManual(document.getElementById('manualAnswers').value).length;
-            const k = parseManual(document.getElementById('manualAnswerKey').value).length;
-            const aH = document.getElementById('answersHint');
-            const kH = document.getElementById('keyHint');
-            aH.textContent = a ? a + ' answers detected — scroll and check them' : 'No answers detected yet — type or paste them';
-            aH.className = 'field-hint' + (a ? ' ok' : '');
-            kH.textContent = k ? k + ' key entries detected' : 'No answer key yet — required to calculate correct/incorrect';
-            kH.className = 'field-hint' + (k ? ' ok' : '');
-        }
-        document.getElementById('manualAnswers').addEventListener('input', updateHints);
-        document.getElementById('manualAnswerKey').addEventListener('input', updateHints);
-
-        // ===== BUTTON HANDLERS =====
-
-        // Upload Response PDF
-        document.getElementById('uploadResponseBtn').addEventListener('click', () => document.getElementById('responseFile').click());
-        document.getElementById('responseFile').addEventListener('change', async function(e) {
-            const file = e.target.files[0];
-            if (!file) return;
-            status('⏳ Reading PDF and reconstructing rows...', 'info');
-            try {
-                const buf = await readFileAsArrayBuffer(file);
-                const lines = await extractPDFLines(buf, msg => status('⏳ ' + msg, 'info'));
-                const { responses, correct } = parseNTASheet(lines);
-                const exam = detectExam(lines);
-                if (!Object.keys(responses).length) {
-                    status('⚠️ Could not confidently detect answers in this PDF layout. Opening review box — please paste manually.', 'warning');
-                } else {
-                    status('✅ Detected ' + Object.keys(responses).length + ' answers. Review before calculating.', 'success');
-                }
-                mergeIntoReview(responses, correct, exam);
-            } catch (err) {
-                status('⚠️ ' + err.message, 'warning');
-            }
-            this.value = '';
-        });
-
-        // Upload Answer Key PDF
-        document.getElementById('uploadAnswerBtn').addEventListener('click', () => document.getElementById('answerFile').click());
-        document.getElementById('answerFile').addEventListener('change', async function(e) {
-            const file = e.target.files[0];
-            if (!file) return;
-            status('⏳ Reading answer key...', 'info');
-            try {
-                const buf = await readFileAsArrayBuffer(file);
-                const lines = await extractPDFLines(buf, msg => status('⏳ ' + msg, 'info'));
-                const { responses, correct } = parseNTASheet(lines);
-                // an official answer key PDF usually only has one option per question — treat
-                // whichever set is non-empty as the "correct" set
-                const keyMap = Object.keys(correct).length ? correct : responses;
-                status('✅ Detected ' + Object.keys(keyMap).length + ' key entries. Review before calculating.', 'success');
-                mergeIntoReview({}, keyMap, null);
-            } catch (err) {
-                status('⚠️ ' + err.message, 'warning');
-            }
-            this.value = '';
-        });
-
-        // Paste URL — routed through a Cloudflare Worker proxy because browsers block direct
-        // cross-origin fetches to PDFs that don't send CORS headers (true of virtually every
-        // official exam portal).
-        document.getElementById('urlBtn').addEventListener('click', () => {
-            document.getElementById('urlSection').classList.toggle('hidden');
-        });
-        document.getElementById('fetchBtn').addEventListener('click', async () => {
-            const url = document.getElementById('urlInput').value.trim();
-            if (!url) { status('⚠️ Enter a URL', 'error'); return; }
-            if (!PDF_PROXY_URL) {
-                status('⚠️ URL fetching needs a proxy worker deployed first (browsers block direct PDF fetches from other domains). See worker.js — deploy it and set PDF_PROXY_URL in the script.', 'warning');
-                return;
-            }
-            status('⏳ Fetching via proxy...', 'info');
-            try {
-                const resp = await fetch(PDF_PROXY_URL + (PDF_PROXY_URL.includes('?') ? '&' : '?') + 'url=' + encodeURIComponent(url));
-                if (!resp.ok) throw new Error('Proxy returned ' + resp.status);
-                const buf = await resp.arrayBuffer();
-                const lines = await extractPDFLines(buf, msg => status('⏳ ' + msg, 'info'));
-                const { responses, correct } = parseNTASheet(lines);
-                const exam = detectExam(lines);
-                status('✅ Fetched and detected ' + Object.keys(responses).length + ' answers. Review before calculating.', 'success');
-                mergeIntoReview(responses, correct, exam);
-            } catch (err) {
-                status('⚠️ Fetch failed: ' + err.message, 'error');
-            }
-        });
-
-        // Manual Entry / Review modal
-        document.getElementById('manualEntryBtn').addEventListener('click', () => {
-            updateHints();
-            document.getElementById('manualModal').classList.add('active');
-        });
-        document.getElementById('closeManual').addEventListener('click', () => {
-            document.getElementById('manualModal').classList.remove('active');
-        });
-        document.getElementById('submitManual').addEventListener('click', function() {
-            const examKey = document.getElementById('manualExam').value;
-            const config = EXAMS[examKey];
-            const answersRaw = document.getElementById('manualAnswers').value.trim();
-            const keyRaw = document.getElementById('manualAnswerKey').value.trim();
-
-            if (!answersRaw) { status('⚠️ Enter your answers', 'error'); return; }
-
-            const answerMap = {};
-            parseManual(keyRaw).forEach(r => { if (r.resp) answerMap[r.num] = r.resp; });
-            const responses = parseManual(answersRaw);
-
-            if (responses.length === 0) { status('⚠️ No valid answers found. Use format like: 1:B 2:A 3:C', 'error'); return; }
-
-            questions = responses.map(r => {
-                const ca = answerMap[r.num] || null;
-                let st = r.resp ? 'attempted' : 'unattempted', mk = 0;
-                if (r.resp && ca) {
-                    st = r.resp === ca ? 'correct' : 'incorrect';
-                    mk = st === 'correct' ? config.c : config.i;
-                }
-                return { num: r.num, yr: r.resp || '-', ca: ca || 'N/A', st, mk };
-            });
-
-            displayResults(config);
-            document.getElementById('manualModal').classList.remove('active');
-        });
-
-        // ===== HELPERS =====
-
-        function parseManual(text) {
-            const results = [], found = new Set();
-            const lines = text.split(/[\n,;]+/);
-            for (const line of lines) {
-                const match = line.trim().match(/^(\d{1,3})\s*[:=\s]\s*([A-Da-d]?)$/);
-                if (match) {
-                    const num = parseInt(match[1]), resp = match[2] ? match[2].toUpperCase() : '';
-                    if (num > 0 && num <= 300 && !found.has(num)) {
-                        found.add(num);
-                        results.push({ num, resp });
-                    }
-                }
-            }
-            return results.sort((a, b) => a.num - b.num);
-        }
-
-        function displayResults(config) {
-            const cor = questions.filter(q => q.st === 'correct').length;
-            const inc = questions.filter(q => q.st === 'incorrect').length;
-            const una = questions.filter(q => q.st === 'unattempted').length;
-            const tm = questions.reduce((s, q) => s + q.mk, 0);
-            const mx = questions.length * config.c;
-            const acc = questions.length ? ((cor / questions.length) * 100).toFixed(1) : 0;
-
-            document.getElementById('dashboard').classList.add('active');
-            document.getElementById('examTitle').textContent = config.n + ' - Dashboard';
-            document.getElementById('studentInfo').innerHTML = '<strong>Exam:</strong> ' + config.n + ' | <strong>Questions:</strong> ' + questions.length;
-            document.getElementById('valMarks').textContent = tm;
-            document.getElementById('valCorrect').textContent = cor;
-            document.getElementById('valIncorrect').textContent = inc;
-            document.getElementById('valUnattempted').textContent = una;
-            document.getElementById('valAccuracy').textContent = acc + '%';
-            document.getElementById('valMax').textContent = mx;
-
-            renderTable();
-            drawCharts(cor, inc, una);
-            genFeedback(cor, inc, acc, tm, mx);
-            document.getElementById('dashboard').scrollIntoView({ behavior: 'smooth' });
-            status('✅ Done! ' + questions.length + ' questions analyzed.', 'success');
-        }
-
-        function renderTable(f = 'all') {
-            const tb = document.getElementById('tableBody');
-            let qs = f === 'all' ? questions : questions.filter(q => q.st === f);
-            if (!qs.length) { tb.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:30px;">No questions</td></tr>'; return; }
-            tb.innerHTML = qs.map(q => {
-                let b = '<span class="badge badge-muted">○ Skipped</span>';
-                if (q.st === 'correct') b = '<span class="badge badge-success">✓ Correct</span>';
-                else if (q.st === 'incorrect') b = '<span class="badge badge-danger">✗ Incorrect</span>';
-                return `<tr><td><strong>${q.num}</strong></td><td>${q.yr}</td><td>${q.ca}</td><td style="font-weight:700;color:${q.mk>=0?'#10b981':'#ef4444'}">${q.mk>0?'+':''}${q.mk}</td><td>${b}</td></tr>`;
-            }).join('');
-        }
-
-        function drawCharts(cor, inc, una) {
-            if (pieChart) pieChart.destroy();
-            if (barChart) barChart.destroy();
-            pieChart = new Chart(document.getElementById('pieChart'), {
-                type: 'doughnut',
-                data: { labels: ['Correct','Incorrect','Unattempted'], datasets: [{ data: [cor, inc, una], backgroundColor: ['#10b981','#ef4444','#475569'], borderColor: '#0a0e27', borderWidth: 2 }] },
-                options: { responsive: true, plugins: { legend: { position: 'bottom', labels: { color: '#94a3b8' } } } }
-            });
-            barChart = new Chart(document.getElementById('barChart'), {
-                type: 'bar',
-                data: { labels: ['Physics','Chemistry','Bio/Maths'], datasets: [{ label: 'Correct', data: [Math.floor(cor/3), Math.floor(cor/3), cor-2*Math.floor(cor/3)], backgroundColor: ['#0070F3','#00C9FF','#00df89'], borderRadius: 6 }] },
-                options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { color: '#94a3b8' }, grid: { color: 'rgba(255,255,255,0.05)' } }, x: { ticks: { color: '#94a3b8' }, grid: { display: false } } } }
-            });
-        }
-
-        function genFeedback(cor, inc, acc, tm, mx) {
-            let h = '';
-            const a = parseFloat(acc);
-            if (a >= 85) h += '<p>🌟 <strong style="color:#00df89;">Excellent!</strong> Strong conceptual clarity.</p>';
-            else if (a >= 70) h += '<p>📘 <strong style="color:#00C9FF;">Good!</strong> Focus on weak areas.</p>';
-            else h += '<p>💪 <strong style="color:#f59e0b;">Needs work.</strong> Practice more.</p>';
-            if (inc > 10) h += '<p>⚠️ <strong style="color:#ef4444;">' + inc + ' incorrect</strong> — avoid guesswork.</p>';
-            h += '<p>📊 <strong>Accuracy:</strong> ' + acc + '% | <strong>Score:</strong> ' + tm + '/' + mx + '</p>';
-            document.getElementById('feedbackText').innerHTML = h;
-        }
-
-        // Search & Filters
-        document.getElementById('searchInput').addEventListener('input', function(e) {
-            const t = e.target.value.toLowerCase();
-            document.querySelectorAll('#tableBody tr').forEach(r => { r.style.display = r.textContent.toLowerCase().includes(t) ? '' : 'none'; });
-        });
-        document.getElementById('filterAll').addEventListener('click', () => renderTable('all'));
-        document.getElementById('filterCorrect').addEventListener('click', () => renderTable('correct'));
-        document.getElementById('filterIncorrect').addEventListener('click', () => renderTable('incorrect'));
-
-        // Download Report
-        document.getElementById('downloadBtn').addEventListener('click', () => {
-            if (!questions.length) { status('No data', 'error'); return; }
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
-            doc.setFontSize(18); doc.setTextColor(0,112,243);
-            doc.text('PrimeScore Report', 105, 20, { align: 'center' });
-            doc.setFontSize(11); doc.setTextColor(100);
-            doc.text('Prime Spirit Mentors', 105, 28, { align: 'center' });
-            doc.text('Score: ' + document.getElementById('valMarks').textContent + ' | Accuracy: ' + document.getElementById('valAccuracy').textContent, 105, 36, { align: 'center' });
-            doc.save('primescore-report.pdf');
-            status('✅ Downloaded!', 'success');
-        });
-    })();
-    </script>
+  // Manual mode remains available for legacy/non-NTA formats.
+  $('manualEntryBtn').onclick=()=>$('manualModal').classList.add('active');$('closeManual').onclick=()=>$('manualModal').classList.remove('active');
+  $('submitManual').onclick=()=>{const a=parseSimple($('manualAnswers').value),k=parseSimple($('manualAnswerKey').value);responseData=Object.keys(a).map((n,i)=>({num:Number(n),questionId:String(n),options:{},chosenOption:letterToNumber(a[n]),status:a[n]?'Answered':'Not Answered'}));answerKey={};Object.entries(k).forEach(([n,v])=>answerKey[String(n)]={correctIds:[String(v)],section:'Manual'});calculateExact();$('manualModal').classList.remove('active');};
+  function parseSimple(t){const o={};(t||'').split(/[\n,;]+/).forEach(x=>{const m=x.trim().match(/^(\d{1,4})\s*[:=\s]\s*([A-Ea-e1-5])?$/);if(m)o[m[1]]=m[2]||''});return o;}
+  $('searchInput').oninput=e=>{const t=e.target.value.toLowerCase();document.querySelectorAll('#tableBody tr').forEach(r=>r.style.display=r.textContent.toLowerCase().includes(t)?'':'none');};
+  $('filterAll').onclick=()=>renderTable('all');$('filterCorrect').onclick=()=>renderTable('correct');$('filterIncorrect').onclick=()=>renderTable('incorrect');
+  $('downloadBtn').onclick=()=>{if(!questions.length)return globalStatus('No data','error');const {jsPDF}=window.jspdf,doc=new jsPDF();const exam=EXAMS[$('examSelect').value];doc.setFontSize(18);doc.setTextColor(0,112,243);doc.text('PrimeScore '+exam.n+' Report',105,20,{align:'center'});doc.setFontSize(10);doc.setTextColor(80);doc.text('Prime Spirit Mentors',105,28,{align:'center'});doc.text('Score: '+$('valMarks').textContent+' | Accuracy: '+$('valAccuracy').textContent,105,36,{align:'center'});doc.text('Question-level ID matching was used where source IDs were available.',105,44,{align:'center'});doc.save('primescore-'+exam.n.toLowerCase().replace(/\W+/g,'-')+'-report.pdf');globalStatus('✅ Report downloaded.','success');};
+})();
+</script>
 </body>
 </html>
