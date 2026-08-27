@@ -5,10 +5,9 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=5.0">
 <meta name="theme-color" content="#02040a">
 <title>Interactive Periodic Table | Prime Spirit Free Tools</title>
-<meta name="description" content="Free interactive periodic table with all 118 elements, electron configurations, and molar mass calculator for NEET, JEE, and Board students.">
+<meta name="description" content="Free interactive periodic table with 118 elements, 3D atom models, electron configurations, and molar mass calculator for NEET, JEE, and Board students.">
 <link rel="canonical" href="https://primespirit.co.in/periodic-table.html">
 
-<!-- Fonts & Icons -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=DM+Mono:wght@400&display=swap">
@@ -21,7 +20,6 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-si
 a{color:var(--accent);text-decoration:none;transition:color .2s}a:hover{color:#fff}
 .container{max-width:1280px;margin:0 auto;padding:0 24px}
 
-/* Header */
 header{position:sticky;top:0;z-index:1000;height:var(--header-h);display:flex;align-items:center;background:rgba(2,4,10,0.95);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
 .nav-row{width:100%;display:flex;align-items:center;justify-content:space-between;gap:16px}
 .logo{display:flex;align-items:center;gap:10px;text-decoration:none;font-family:var(--font-head);font-weight:800;font-size:1.05rem;color:var(--text)}
@@ -29,20 +27,17 @@ header{position:sticky;top:0;z-index:1000;height:var(--header-h);display:flex;al
 .btn-back{display:inline-flex;align-items:center;gap:8px;padding:8px 16px;border-radius:var(--radius-sm);font-family:var(--font-head);font-weight:700;font-size:.85rem;color:var(--text-sec);border:1px solid var(--border);background:var(--surface);transition:all .2s}
 .btn-back:hover{border-color:var(--accent);color:var(--accent)}
 
-/* Hero */
 .chem-hero{text-align:center;padding:48px 0 24px}
 .chem-hero h1{font-family:var(--font-head);font-size:clamp(1.6rem,4vw,2.5rem);margin-bottom:10px}
 .chem-hero h1 span{background:var(--grad-accent);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 .chem-hero p{color:var(--text-sec);max-width:600px;margin:0 auto;font-size:clamp(0.85rem,2vw,1rem)}
 
-/* Controls */
 .controls-bar{max-width:1200px;margin:0 auto 24px;padding:0 16px;display:flex;flex-wrap:wrap;gap:12px;justify-content:center;align-items:center}
 .search-box{position:relative;flex:1;min-width:200px;max-width:400px}
 .search-box input{width:100%;padding:12px 16px 12px 42px;border-radius:var(--radius-sm);background:var(--surface);border:1px solid var(--border);color:var(--text);font-family:var(--font-body);font-size:.9rem;outline:none;transition:all .25s}
 .search-box input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(0,243,255,.1)}
 .search-box i{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--text-muted);font-size:.9rem}
 
-/* Category Filter */
 .filter-pills{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
 .filter-pill{padding:6px 12px;border-radius:50px;font-family:var(--font-mono);font-size:.7rem;font-weight:500;background:var(--surface);border:1px solid var(--border);color:var(--text-sec);cursor:pointer;transition:all .2s;white-space:nowrap}
 .filter-pill:hover{border-color:var(--border-mid);color:var(--text)}
@@ -68,7 +63,6 @@ header{position:sticky;top:0;z-index:1000;height:var(--header-h);display:flex;al
 .filter-pill[data-cat="actinide"]{border-color:rgba(251,146,60,.3)}
 .filter-pill[data-cat="actinide"].active{background:rgba(251,146,60,.9);color:#000}
 
-/* Table Container */
 .table-wrapper{overflow-x:auto;overflow-y:hidden;padding:16px;scrollbar-width:thin;scrollbar-color:var(--accent) var(--surface);-webkit-overflow-scrolling:touch}
 .table-wrapper::-webkit-scrollbar{height:8px}
 .table-wrapper::-webkit-scrollbar-track{background:var(--surface);border-radius:4px}
@@ -76,7 +70,6 @@ header{position:sticky;top:0;z-index:1000;height:var(--header-h);display:flex;al
 
 .periodic-grid{display:grid;grid-template-columns:repeat(18,minmax(48px,1fr));gap:var(--card-gap);min-width:900px;margin:0 auto;position:relative}
 
-/* Element Cards */
 .element-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:4px 2px;cursor:pointer;transition:all .2s cubic-bezier(.22,1,.36,1);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:58px;position:relative;backdrop-filter:blur(4px);user-select:none;-webkit-tap-highlight-color:transparent}
 .element-card:hover{transform:scale(1.15);z-index:20;box-shadow:0 8px 32px rgba(0,0,0,.5)}
 .element-card:active{transform:scale(1.05)}
@@ -88,7 +81,6 @@ header{position:sticky;top:0;z-index:1000;height:var(--header-h);display:flex;al
 .el-name{font-size:.45rem;color:var(--text-sec);font-family:var(--font-body);line-height:1;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:center}
 .el-mass{font-size:.5rem;color:var(--text-muted);font-family:var(--font-mono);line-height:1;margin-top:1px}
 
-/* Category Colors */
 .cat-nonmetal{border-color:rgba(0,243,255,.4)}.cat-nonmetal:hover{border-color:rgba(0,243,255,.8);box-shadow:0 0 20px rgba(0,243,255,.3)}
 .cat-noble-gas{border-color:rgba(188,19,254,.4)}.cat-noble-gas:hover{border-color:rgba(188,19,254,.8);box-shadow:0 0 20px rgba(188,19,254,.3)}
 .cat-alkali{border-color:rgba(0,255,157,.4)}.cat-alkali:hover{border-color:rgba(0,255,157,.8);box-shadow:0 0 20px rgba(0,255,157,.3)}
@@ -100,15 +92,14 @@ header{position:sticky;top:0;z-index:1000;height:var(--header-h);display:flex;al
 .cat-lanthanide{border-color:rgba(236,72,153,.4)}.cat-lanthanide:hover{border-color:rgba(236,72,153,.8);box-shadow:0 0 20px rgba(236,72,153,.3)}
 .cat-actinide{border-color:rgba(251,146,60,.4)}.cat-actinide:hover{border-color:rgba(251,146,60,.8);box-shadow:0 0 20px rgba(251,146,60,.3)}
 
-/* Separator Labels */
 .separator-row{grid-column:1/-1;display:flex;align-items:center;gap:12px;padding:12px 0 4px;color:var(--text-sec);font-family:var(--font-mono);font-size:.7rem}
 .separator-row::before,.separator-row::after{content:'';flex:1;height:1px;background:var(--border)}
 
-/* Modal */
+/* ============ MODAL ============ */
 .chem-modal-overlay{position:fixed;inset:0;z-index:100000;background:rgba(2,4,10,.92);backdrop-filter:blur(16px);display:none;align-items:center;justify-content:center;padding:16px;overflow-y:auto}
 .chem-modal-overlay.active{display:flex}
-.chem-modal-card{background:var(--elevated);border:1px solid var(--border-mid);border-radius:var(--radius-lg);padding:24px;max-width:520px;width:100%;position:relative;box-shadow:0 32px 80px rgba(0,0,0,.6),0 0 30px rgba(0,243,255,.1);animation:fadeUp .3s cubic-bezier(.22,1,.36,1);max-height:90vh;overflow-y:auto}
-.close-modal{position:absolute;top:12px;right:12px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:var(--radius-sm);background:none;border:1px solid var(--border);color:var(--text-sec);cursor:pointer;transition:all .2s}
+.chem-modal-card{background:var(--elevated);border:1px solid var(--border-mid);border-radius:var(--radius-lg);padding:24px;max-width:620px;width:100%;position:relative;box-shadow:0 32px 80px rgba(0,0,0,.6),0 0 30px rgba(0,243,255,.1);animation:fadeUp .3s cubic-bezier(.22,1,.36,1);max-height:92vh;overflow-y:auto}
+.close-modal{position:absolute;top:12px;right:12px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:var(--radius-sm);background:none;border:1px solid var(--border);color:var(--text-sec);cursor:pointer;transition:all .2s;z-index:10}
 .close-modal:hover{color:var(--text);border-color:var(--accent)}
 
 .modal-header{display:flex;align-items:center;gap:16px;margin-bottom:20px;padding-right:40px}
@@ -122,7 +113,33 @@ header{position:sticky;top:0;z-index:1000;height:var(--header-h);display:flex;al
 .chem-detail-item span{font-size:1rem;font-weight:700;color:var(--accent);font-family:var(--font-head);word-break:break-word}
 .chem-detail-item.full-width{grid-column:1/-1}
 
-/* Molar Mass Tool */
+/* ============ 3D ATOM VIEWER ============ */
+.atom-viewer-section{margin-top:24px;padding-top:24px;border-top:1px solid var(--border)}
+.atom-viewer-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:10px}
+.atom-viewer-title{font-family:var(--font-head);font-size:1.1rem;font-weight:800;display:flex;align-items:center;gap:10px}
+.atom-viewer-title i{color:var(--accent);filter:drop-shadow(0 0 6px rgba(0,243,255,.5))}
+.atom-viewer-controls{display:flex;gap:6px}
+.atom-ctrl-btn{padding:6px 12px;border-radius:var(--radius-sm);background:var(--surface);border:1px solid var(--border);color:var(--text-sec);font-family:var(--font-mono);font-size:.7rem;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:5px}
+.atom-ctrl-btn:hover{border-color:var(--accent);color:var(--accent)}
+.atom-ctrl-btn.active{background:var(--accent);color:#000;border-color:var(--accent);font-weight:700}
+
+.atom-canvas-wrap{position:relative;width:100%;aspect-ratio:1/1;max-height:400px;background:radial-gradient(circle at center,rgba(0,243,255,.04) 0%,rgba(2,4,10,.8) 70%);border:1px solid var(--border);border-radius:var(--radius-md);overflow:hidden;cursor:grab;touch-action:none}
+.atom-canvas-wrap:active{cursor:grabbing}
+.atom-canvas-wrap canvas{width:100%;height:100%;display:block}
+.atom-hint{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);font-family:var(--font-mono);font-size:.65rem;color:var(--text-muted);background:rgba(2,4,10,.7);padding:4px 10px;border-radius:50px;pointer-events:none;backdrop-filter:blur(4px);border:1px solid var(--border);white-space:nowrap}
+.shell-legend{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;justify-content:center}
+.shell-legend-item{display:flex;align-items:center;gap:5px;font-family:var(--font-mono);font-size:.7rem;color:var(--text-sec);padding:4px 10px;background:var(--surface);border:1px solid var(--border);border-radius:50px}
+.shell-dot{width:8px;height:8px;border-radius:50%;box-shadow:0 0 6px currentColor}
+
+/* CTA Banner inside modal */
+.demo-cta{margin-top:20px;padding:16px;background:linear-gradient(135deg,rgba(0,243,255,.08),rgba(188,19,254,.08));border:1px solid rgba(0,243,255,.2);border-radius:var(--radius-md);display:flex;align-items:center;gap:14px;flex-wrap:wrap;text-decoration:none;transition:all .3s}
+.demo-cta:hover{border-color:rgba(0,243,255,.5);box-shadow:0 0 20px rgba(0,243,255,.15);transform:translateY(-2px)}
+.demo-cta-icon{width:42px;height:42px;border-radius:50%;background:var(--grad-accent);display:flex;align-items:center;justify-content:center;color:#000;font-size:1.1rem;flex-shrink:0}
+.demo-cta-text{flex:1;min-width:180px}
+.demo-cta-text strong{display:block;font-family:var(--font-head);font-size:.95rem;color:var(--text);margin-bottom:2px}
+.demo-cta-text span{font-size:.8rem;color:var(--text-sec)}
+.demo-cta-btn{padding:8px 16px;border-radius:var(--radius-sm);background:#00ff9d;color:#000;font-family:var(--font-head);font-weight:700;font-size:.8rem;white-space:nowrap}
+
 .molar-tool{max-width:700px;margin:60px auto;text-align:center;padding:32px 20px;background:var(--bg-warm);border-radius:var(--radius-lg);border:1px solid var(--border)}
 .molar-input-group{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
 .molar-input-group input{flex:1;min-width:200px;padding:14px 18px;border-radius:var(--radius-sm);background:var(--surface);border:1px solid var(--border);color:var(--text);font-family:var(--font-body);font-size:1rem;outline:none;transition:all .25s}
@@ -136,13 +153,9 @@ header{position:sticky;top:0;z-index:1000;height:var(--header-h);display:flex;al
 @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
 @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
 
-/* Footer */
 footer{background:var(--bg-warm);border-top:1px solid var(--border);padding:40px 0;margin-top:80px;text-align:center}
 
-/* Responsive */
-@media(max-width:1024px){
-  .periodic-grid{grid-template-columns:repeat(18,minmax(42px,1fr))}
-}
+@media(max-width:1024px){.periodic-grid{grid-template-columns:repeat(18,minmax(42px,1fr))}}
 @media(max-width:768px){
   :root{--header-h:60px;--card-gap:3px}
   .chem-hero{padding:32px 0 16px}
@@ -155,34 +168,29 @@ footer{background:var(--bg-warm);border-top:1px solid var(--border);padding:40px
   .element-card{min-height:48px;padding:2px 1px}
   .controls-bar{gap:8px}
   .filter-pill{padding:5px 10px;font-size:.65rem}
-  .chem-modal-card{padding:20px}
-  .modal-symbol{width:60px;height:60px;font-size:2rem}
-  .modal-title h2{font-size:1.3rem}
+  .chem-modal-card{padding:18px}
+  .modal-symbol{width:56px;height:56px;font-size:1.8rem}
+  .modal-title h2{font-size:1.2rem}
   .chem-detail-grid{grid-template-columns:1fr 1fr;gap:8px}
   .molar-tool{padding:24px 16px;margin:40px auto}
   .molar-input-group{flex-direction:column}
   .molar-input-group input,.btn-calc{width:100%}
+  .atom-viewer-header{flex-direction:column;align-items:flex-start}
+  .demo-cta{flex-direction:column;text-align:center}
 }
 @media(max-width:480px){
   .periodic-grid{grid-template-columns:repeat(18,minmax(32px,1fr));min-width:600px}
   .el-sym{font-size:.75rem}
   .element-card{min-height:42px}
   .chem-detail-grid{grid-template-columns:1fr}
-  .modal-header{flex-direction:column;text-align:center}
+  .modal-header{flex-direction:column;text-align:center;padding-right:30px}
+  .atom-canvas-wrap{max-height:320px}
 }
-
-/* Print Styles */
-@media print{
-  header,footer,.controls-bar,.molar-tool,.btn-back{display:none!important}
-  body{background:#fff;color:#000}
-  .element-card{border:1px solid #ccc;background:#f9f9f9}
-  .el-sym,.el-num,.el-name,.el-mass{color:#000}
-}
+@media print{header,footer,.controls-bar,.molar-tool,.btn-back,.atom-viewer-section,.demo-cta{display:none!important}body{background:#fff;color:#000}.element-card{border:1px solid #ccc;background:#f9f9f9}.el-sym,.el-num,.el-name,.el-mass{color:#000}}
 </style>
 </head>
 <body>
 
-<!-- HEADER -->
 <header role="banner">
 <div class="container nav-row">
   <a href="/" class="logo" aria-label="Prime Spirit Home">
@@ -193,14 +201,12 @@ footer{background:var(--bg-warm);border-top:1px solid var(--border);padding:40px
 </div>
 </header>
 
-<!-- MAIN CONTENT -->
 <main id="main-content">
 <section class="chem-hero container">
   <h1>Interactive <span>Periodic Table</span></h1>
-  <p>All 118 elements with electron configurations, atomic data, and a built-in molar mass calculator. Built for NEET, JEE, and Board aspirants.</p>
+  <p>All 118 elements with 3D atom models, electron configurations, and a molar mass calculator. Built for NEET, JEE, and Board aspirants.</p>
 </section>
 
-<!-- Controls -->
 <div class="controls-bar">
   <div class="search-box">
     <i class="fas fa-search"></i>
@@ -223,12 +229,10 @@ footer{background:var(--bg-warm);border-top:1px solid var(--border);padding:40px
   </div>
 </div>
 
-<!-- Periodic Table -->
 <div class="table-wrapper">
   <div id="periodic-table" class="periodic-grid" role="grid" aria-label="Periodic Table of Elements"></div>
 </div>
 
-<!-- Molar Mass Calculator -->
 <section class="container">
   <div class="molar-tool">
     <h2 style="font-family:var(--font-head);margin-bottom:8px;font-size:clamp(1.2rem,3vw,1.6rem)"><i class="fas fa-flask" style="color:var(--accent)"></i> Molar Mass Calculator</h2>
@@ -242,7 +246,7 @@ footer{background:var(--bg-warm);border-top:1px solid var(--border);padding:40px
 </section>
 </main>
 
-<!-- DETAIL MODAL -->
+<!-- ============ MODAL WITH 3D ATOM VIEWER ============ -->
 <div id="chemModal" class="chem-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modalElName">
 <div class="chem-modal-card">
   <button class="close-modal" onclick="closeModal()" aria-label="Close modal"><i class="fas fa-times"></i></button>
@@ -262,10 +266,35 @@ footer{background:var(--bg-warm);border-top:1px solid var(--border);padding:40px
     <div class="chem-detail-item"><strong>Period</strong><span id="modalElPeriod"></span></div>
     <div class="chem-detail-item"><strong>Group</strong><span id="modalElGroup"></span></div>
   </div>
+
+  <!-- 3D ATOM VIEWER -->
+  <div class="atom-viewer-section">
+    <div class="atom-viewer-header">
+      <div class="atom-viewer-title"><i class="fas fa-atom"></i> 3D Atom Model</div>
+      <div class="atom-viewer-controls">
+        <button class="atom-ctrl-btn active" id="btnAutoRotate" onclick="toggleAutoRotate()"><i class="fas fa-sync"></i> Auto</button>
+        <button class="atom-ctrl-btn" id="btnResetView" onclick="resetAtomView()"><i class="fas fa-crosshairs"></i> Reset</button>
+      </div>
+    </div>
+    <div class="atom-canvas-wrap" id="atomCanvasWrap">
+      <canvas id="atomCanvas"></canvas>
+      <div class="atom-hint">Drag to rotate · Scroll to zoom</div>
+    </div>
+    <div class="shell-legend" id="shellLegend"></div>
+  </div>
+
+  <!-- DEMO CTA -->
+  <a href="https://wa.me/919700627812?text=Hi%2C%20I%20want%20to%20book%20a%20free%20demo%20class." class="demo-cta" target="_blank" rel="noopener noreferrer" id="demoCta">
+    <div class="demo-cta-icon"><i class="fas fa-graduation-cap"></i></div>
+    <div class="demo-cta-text">
+      <strong id="ctaTitle">Master this element with Abhinav Sir</strong>
+      <span>Micro-batch coaching · Max 5 students · Free demo class</span>
+    </div>
+    <div class="demo-cta-btn">Book Free Demo <i class="fas fa-arrow-right"></i></div>
+  </a>
 </div>
 </div>
 
-<!-- FOOTER -->
 <footer>
 <div class="container">
   <p style="color:var(--text-muted);font-size:.85rem">&copy; 2026 Prime Spirit Mentors. All rights reserved.</p>
@@ -273,14 +302,11 @@ footer{background:var(--bg-warm);border-top:1px solid var(--border);padding:40px
 </div>
 </footer>
 
-<!-- DATA & LOGIC -->
 <script>
-// Complete 118 Element Dataset
+// ============ 118 ELEMENTS DATA ============
 const elementsData = [
-  // Period 1
   {n:1,s:'H',name:'Hydrogen',m:1.008,c:'nonmetal',col:1,row:1,conf:'1s¹',phase:'Gas',block:'s',period:1,group:1},
   {n:2,s:'He',name:'Helium',m:4.0026,c:'noble-gas',col:18,row:1,conf:'1s²',phase:'Gas',block:'s',period:1,group:18},
-  // Period 2
   {n:3,s:'Li',name:'Lithium',m:6.94,c:'alkali',col:1,row:2,conf:'[He] 2s¹',phase:'Solid',block:'s',period:2,group:1},
   {n:4,s:'Be',name:'Beryllium',m:9.0122,c:'alkaline-earth',col:2,row:2,conf:'[He] 2s²',phase:'Solid',block:'s',period:2,group:2},
   {n:5,s:'B',name:'Boron',m:10.81,c:'metalloid',col:13,row:2,conf:'[He] 2s² 2p¹',phase:'Solid',block:'p',period:2,group:13},
@@ -289,7 +315,6 @@ const elementsData = [
   {n:8,s:'O',name:'Oxygen',m:15.999,c:'nonmetal',col:16,row:2,conf:'[He] 2s² 2p⁴',phase:'Gas',block:'p',period:2,group:16},
   {n:9,s:'F',name:'Fluorine',m:18.998,c:'halogen',col:17,row:2,conf:'[He] 2s² 2p⁵',phase:'Gas',block:'p',period:2,group:17},
   {n:10,s:'Ne',name:'Neon',m:20.180,c:'noble-gas',col:18,row:2,conf:'[He] 2s² 2p⁶',phase:'Gas',block:'p',period:2,group:18},
-  // Period 3
   {n:11,s:'Na',name:'Sodium',m:22.990,c:'alkali',col:1,row:3,conf:'[Ne] 3s¹',phase:'Solid',block:'s',period:3,group:1},
   {n:12,s:'Mg',name:'Magnesium',m:24.305,c:'alkaline-earth',col:2,row:3,conf:'[Ne] 3s²',phase:'Solid',block:'s',period:3,group:2},
   {n:13,s:'Al',name:'Aluminium',m:26.982,c:'post-transition',col:13,row:3,conf:'[Ne] 3s² 3p¹',phase:'Solid',block:'p',period:3,group:13},
@@ -298,7 +323,6 @@ const elementsData = [
   {n:16,s:'S',name:'Sulfur',m:32.06,c:'nonmetal',col:16,row:3,conf:'[Ne] 3s² 3p⁴',phase:'Solid',block:'p',period:3,group:16},
   {n:17,s:'Cl',name:'Chlorine',m:35.45,c:'halogen',col:17,row:3,conf:'[Ne] 3s² 3p⁵',phase:'Gas',block:'p',period:3,group:17},
   {n:18,s:'Ar',name:'Argon',m:39.948,c:'noble-gas',col:18,row:3,conf:'[Ne] 3s² 3p⁶',phase:'Gas',block:'p',period:3,group:18},
-  // Period 4
   {n:19,s:'K',name:'Potassium',m:39.098,c:'alkali',col:1,row:4,conf:'[Ar] 4s¹',phase:'Solid',block:'s',period:4,group:1},
   {n:20,s:'Ca',name:'Calcium',m:40.078,c:'alkaline-earth',col:2,row:4,conf:'[Ar] 4s²',phase:'Solid',block:'s',period:4,group:2},
   {n:21,s:'Sc',name:'Scandium',m:44.956,c:'transition',col:3,row:4,conf:'[Ar] 3d¹ 4s²',phase:'Solid',block:'d',period:4,group:3},
@@ -317,7 +341,6 @@ const elementsData = [
   {n:34,s:'Se',name:'Selenium',m:78.971,c:'nonmetal',col:16,row:4,conf:'[Ar] 3d¹⁰ 4s² 4p⁴',phase:'Solid',block:'p',period:4,group:16},
   {n:35,s:'Br',name:'Bromine',m:79.904,c:'halogen',col:17,row:4,conf:'[Ar] 3d¹⁰ 4s² 4p⁵',phase:'Liquid',block:'p',period:4,group:17},
   {n:36,s:'Kr',name:'Krypton',m:83.798,c:'noble-gas',col:18,row:4,conf:'[Ar] 3d¹⁰ 4s² 4p⁶',phase:'Gas',block:'p',period:4,group:18},
-  // Period 5
   {n:37,s:'Rb',name:'Rubidium',m:85.468,c:'alkali',col:1,row:5,conf:'[Kr] 5s¹',phase:'Solid',block:'s',period:5,group:1},
   {n:38,s:'Sr',name:'Strontium',m:87.62,c:'alkaline-earth',col:2,row:5,conf:'[Kr] 5s²',phase:'Solid',block:'s',period:5,group:2},
   {n:39,s:'Y',name:'Yttrium',m:88.906,c:'transition',col:3,row:5,conf:'[Kr] 4d¹ 5s²',phase:'Solid',block:'d',period:5,group:3},
@@ -336,10 +359,8 @@ const elementsData = [
   {n:52,s:'Te',name:'Tellurium',m:127.60,c:'metalloid',col:16,row:5,conf:'[Kr] 4d¹⁰ 5s² 5p⁴',phase:'Solid',block:'p',period:5,group:16},
   {n:53,s:'I',name:'Iodine',m:126.90,c:'halogen',col:17,row:5,conf:'[Kr] 4d¹⁰ 5s² 5p⁵',phase:'Solid',block:'p',period:5,group:17},
   {n:54,s:'Xe',name:'Xenon',m:131.29,c:'noble-gas',col:18,row:5,conf:'[Kr] 4d¹⁰ 5s² 5p⁶',phase:'Gas',block:'p',period:5,group:18},
-  // Period 6
   {n:55,s:'Cs',name:'Caesium',m:132.91,c:'alkali',col:1,row:6,conf:'[Xe] 6s¹',phase:'Solid',block:'s',period:6,group:1},
   {n:56,s:'Ba',name:'Barium',m:137.33,c:'alkaline-earth',col:2,row:6,conf:'[Xe] 6s²',phase:'Solid',block:'s',period:6,group:2},
-  // Lanthanides (57-71) - positioned in row 9
   {n:57,s:'La',name:'Lanthanum',m:138.91,c:'lanthanide',col:3,row:9,conf:'[Xe] 5d¹ 6s²',phase:'Solid',block:'f',period:6,group:3},
   {n:58,s:'Ce',name:'Cerium',m:140.12,c:'lanthanide',col:4,row:9,conf:'[Xe] 4f¹ 5d¹ 6s²',phase:'Solid',block:'f',period:6,group:'-'},
   {n:59,s:'Pr',name:'Praseodymium',m:140.91,c:'lanthanide',col:5,row:9,conf:'[Xe] 4f³ 6s²',phase:'Solid',block:'f',period:6,group:'-'},
@@ -355,7 +376,6 @@ const elementsData = [
   {n:69,s:'Tm',name:'Thulium',m:168.93,c:'lanthanide',col:15,row:9,conf:'[Xe] 4f¹³ 6s²',phase:'Solid',block:'f',period:6,group:'-'},
   {n:70,s:'Yb',name:'Ytterbium',m:173.05,c:'lanthanide',col:16,row:9,conf:'[Xe] 4f¹⁴ 6s²',phase:'Solid',block:'f',period:6,group:'-'},
   {n:71,s:'Lu',name:'Lutetium',m:174.97,c:'lanthanide',col:17,row:9,conf:'[Xe] 4f¹⁴ 5d¹ 6s²',phase:'Solid',block:'d',period:6,group:3},
-  // Continue Period 6
   {n:72,s:'Hf',name:'Hafnium',m:178.49,c:'transition',col:4,row:6,conf:'[Xe] 4f¹⁴ 5d² 6s²',phase:'Solid',block:'d',period:6,group:4},
   {n:73,s:'Ta',name:'Tantalum',m:180.95,c:'transition',col:5,row:6,conf:'[Xe] 4f¹⁴ 5d³ 6s²',phase:'Solid',block:'d',period:6,group:5},
   {n:74,s:'W',name:'Tungsten',m:183.84,c:'transition',col:6,row:6,conf:'[Xe] 4f¹⁴ 5d⁴ 6s²',phase:'Solid',block:'d',period:6,group:6},
@@ -371,10 +391,8 @@ const elementsData = [
   {n:84,s:'Po',name:'Polonium',m:209,c:'post-transition',col:16,row:6,conf:'[Xe] 4f¹⁴ 5d¹⁰ 6s² 6p⁴',phase:'Solid',block:'p',period:6,group:16},
   {n:85,s:'At',name:'Astatine',m:210,c:'halogen',col:17,row:6,conf:'[Xe] 4f¹⁴ 5d¹⁰ 6s² 6p⁵',phase:'Solid',block:'p',period:6,group:17},
   {n:86,s:'Rn',name:'Radon',m:222,c:'noble-gas',col:18,row:6,conf:'[Xe] 4f¹⁴ 5d¹⁰ 6s² 6p⁶',phase:'Gas',block:'p',period:6,group:18},
-  // Period 7
   {n:87,s:'Fr',name:'Francium',m:223,c:'alkali',col:1,row:7,conf:'[Rn] 7s¹',phase:'Solid',block:'s',period:7,group:1},
   {n:88,s:'Ra',name:'Radium',m:226,c:'alkaline-earth',col:2,row:7,conf:'[Rn] 7s²',phase:'Solid',block:'s',period:7,group:2},
-  // Actinides (89-103) - positioned in row 10
   {n:89,s:'Ac',name:'Actinium',m:227,c:'actinide',col:3,row:10,conf:'[Rn] 6d¹ 7s²',phase:'Solid',block:'f',period:7,group:3},
   {n:90,s:'Th',name:'Thorium',m:232.04,c:'actinide',col:4,row:10,conf:'[Rn] 6d² 7s²',phase:'Solid',block:'f',period:7,group:'-'},
   {n:91,s:'Pa',name:'Protactinium',m:231.04,c:'actinide',col:5,row:10,conf:'[Rn] 5f² 6d¹ 7s²',phase:'Solid',block:'f',period:7,group:'-'},
@@ -390,7 +408,6 @@ const elementsData = [
   {n:101,s:'Md',name:'Mendelevium',m:258,c:'actinide',col:15,row:10,conf:'[Rn] 5f¹³ 7s²',phase:'Solid',block:'f',period:7,group:'-'},
   {n:102,s:'No',name:'Nobelium',m:259,c:'actinide',col:16,row:10,conf:'[Rn] 5f¹⁴ 7s²',phase:'Solid',block:'f',period:7,group:'-'},
   {n:103,s:'Lr',name:'Lawrencium',m:266,c:'actinide',col:17,row:10,conf:'[Rn] 5f¹⁴ 7s² 7p¹',phase:'Solid',block:'d',period:7,group:3},
-  // Continue Period 7
   {n:104,s:'Rf',name:'Rutherfordium',m:267,c:'transition',col:4,row:7,conf:'[Rn] 5f¹⁴ 6d² 7s²',phase:'Solid',block:'d',period:7,group:4},
   {n:105,s:'Db',name:'Dubnium',m:268,c:'transition',col:5,row:7,conf:'[Rn] 5f¹⁴ 6d³ 7s²',phase:'Solid',block:'d',period:7,group:5},
   {n:106,s:'Sg',name:'Seaborgium',m:269,c:'transition',col:6,row:7,conf:'[Rn] 5f¹⁴ 6d⁴ 7s²',phase:'Solid',block:'d',period:7,group:6},
@@ -408,24 +425,19 @@ const elementsData = [
   {n:118,s:'Og',name:'Oganesson',m:294,c:'noble-gas',col:18,row:7,conf:'[Rn] 5f¹⁴ 6d¹⁰ 7s² 7p⁶',phase:'Solid',block:'p',period:7,group:18}
 ];
 
-// Render Periodic Table
+// ============ RENDER PERIODIC TABLE ============
 const grid = document.getElementById('periodic-table');
-
-// Add separator for Lanthanides
 const lanthSep = document.createElement('div');
 lanthSep.className = 'separator-row';
 lanthSep.style.gridRow = '8';
 lanthSep.innerHTML = '<span>Lanthanides (57-71)</span>';
 grid.appendChild(lanthSep);
-
-// Add separator for Actinides
 const actSep = document.createElement('div');
 actSep.className = 'separator-row';
 actSep.style.gridRow = '11';
 actSep.innerHTML = '<span>Actinides (89-103)</span>';
 grid.appendChild(actSep);
 
-// Render all elements
 elementsData.forEach(el => {
   const card = document.createElement('div');
   card.className = `element-card cat-${el.c}`;
@@ -438,37 +450,22 @@ elementsData.forEach(el => {
   card.setAttribute('data-name', el.name.toLowerCase());
   card.setAttribute('data-symbol', el.s.toLowerCase());
   card.setAttribute('data-number', el.n);
-  
-  card.innerHTML = `
-    <span class="el-num">${el.n}</span>
-    <span class="el-sym">${el.s}</span>
-    <span class="el-name">${el.name}</span>
-    <span class="el-mass">${el.m}</span>
-  `;
-  
+  card.innerHTML = `<span class="el-num">${el.n}</span><span class="el-sym">${el.s}</span><span class="el-name">${el.name}</span><span class="el-mass">${el.m}</span>`;
   card.addEventListener('click', () => openModal(el));
   card.addEventListener('keydown', (e) => { if(e.key==='Enter' || e.key===' ') { e.preventDefault(); openModal(el); }});
   grid.appendChild(card);
 });
 
-// Search Functionality
-const searchInput = document.getElementById('searchInput');
-searchInput.addEventListener('input', function() {
+// Search
+document.getElementById('searchInput').addEventListener('input', function() {
   const query = this.value.toLowerCase().trim();
-  const cards = document.querySelectorAll('.element-card');
-  
-  cards.forEach(card => {
+  document.querySelectorAll('.element-card').forEach(card => {
     const name = card.getAttribute('data-name');
     const symbol = card.getAttribute('data-symbol');
     const number = card.getAttribute('data-number');
-    
     if (!query || name.includes(query) || symbol.includes(query) || number === query) {
       card.classList.remove('dimmed');
-      if (query && (name === query || symbol === query || number === query)) {
-        card.classList.add('highlight');
-      } else {
-        card.classList.remove('highlight');
-      }
+      card.classList.toggle('highlight', !!(query && (name === query || symbol === query || number === query)));
     } else {
       card.classList.add('dimmed');
       card.classList.remove('highlight');
@@ -476,32 +473,306 @@ searchInput.addEventListener('input', function() {
   });
 });
 
-// Filter Functionality
-const filterPills = document.querySelectorAll('.filter-pill');
-filterPills.forEach(pill => {
+// Filter
+document.querySelectorAll('.filter-pill').forEach(pill => {
   pill.addEventListener('click', function() {
-    filterPills.forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
     this.classList.add('active');
-    
     const category = this.getAttribute('data-cat');
-    const cards = document.querySelectorAll('.element-card');
-    
-    cards.forEach(card => {
-      if (category === 'all' || card.getAttribute('data-category') === category) {
-        card.classList.remove('dimmed');
-      } else {
-        card.classList.add('dimmed');
-      }
+    document.querySelectorAll('.element-card').forEach(card => {
+      card.classList.toggle('dimmed', !(category === 'all' || card.getAttribute('data-category') === category));
     });
   });
 });
 
-// Modal Logic
+// ============ 3D ATOM VIEWER ============
+const canvas = document.getElementById('atomCanvas');
+const ctx = canvas.getContext('2d');
+const canvasWrap = document.getElementById('atomCanvasWrap');
+let currentElement = null;
+let rotX = 0.4, rotY = 0, zoom = 1;
+let autoRotate = true;
+let isDragging = false;
+let lastX = 0, lastY = 0;
+let animationId = null;
+let electrons = [];
+let shells = [];
+let isMobile = window.matchMedia('(max-width: 768px)').matches;
+
+// Shell colors (Prime Spirit palette)
+const shellColors = ['#00f3ff', '#00ff9d', '#bc13fe', '#ffd700', '#ff2a6d', '#0066ff', '#f09433'];
+const shellNames = ['K', 'L', 'M', 'N', 'O', 'P', 'Q'];
+
+// Parse electron configuration to shell distribution
+function getShellDistribution(atomicNum) {
+  // Aufbau principle distribution: 2, 8, 18, 32, 32, 18, 8
+  const maxPerShell = [2, 8, 18, 32, 32, 18, 8];
+  const shells = [];
+  let remaining = atomicNum;
+  for (let i = 0; i < maxPerShell.length && remaining > 0; i++) {
+    const inShell = Math.min(remaining, maxPerShell[i]);
+    shells.push(inShell);
+    remaining -= inShell;
+  }
+  return shells;
+}
+
+// Build electron positions for each shell
+function buildElectrons(shellDistribution) {
+  electrons = [];
+  shells = [];
+  shellDistribution.forEach((count, shellIdx) => {
+    if (count === 0) return;
+    const shellRadius = 40 + shellIdx * 28;
+    const tiltAngle = (shellIdx * 0.6) + 0.3; // Different tilt per shell for 3D effect
+    const shell = { radius: shellRadius, tilt: tiltAngle, color: shellColors[shellIdx % shellColors.length], name: shellNames[shellIdx], count: count };
+    shells.push(shell);
+    for (let i = 0; i < count; i++) {
+      const angle = (i / count) * Math.PI * 2 + Math.random() * 0.3;
+      const speed = 0.008 + (shellIdx * 0.002) + (Math.random() * 0.003);
+      electrons.push({
+        shellIdx: shellIdx,
+        angle: angle,
+        speed: speed,
+        radius: shellRadius,
+        tilt: tiltAngle,
+        color: shellColors[shellIdx % shellColors.length]
+      });
+    }
+  });
+}
+
+// 3D rotation helpers
+function rotatePoint(x, y, z) {
+  // Rotate around Y axis
+  const cosY = Math.cos(rotY), sinY = Math.sin(rotY);
+  let x1 = x * cosY - z * sinY;
+  let z1 = x * sinY + z * cosY;
+  // Rotate around X axis
+  const cosX = Math.cos(rotX), sinX = Math.sin(rotX);
+  let y1 = y * cosX - z1 * sinX;
+  let z2 = y * sinX + z1 * cosX;
+  return { x: x1, y: y1, z: z2 };
+}
+
+function resizeCanvas() {
+  const rect = canvasWrap.getBoundingClientRect();
+  const dpr = Math.min(window.devicePixelRatio || 1, isMobile ? 1.5 : 2);
+  canvas.width = rect.width * dpr;
+  canvas.height = rect.height * dpr;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+}
+
+function drawAtom() {
+  const rect = canvasWrap.getBoundingClientRect();
+  const w = rect.width;
+  const h = rect.height;
+  const cx = w / 2;
+  const cy = h / 2;
+  const scale = Math.min(w, h) / 320 * zoom;
+
+  ctx.clearRect(0, 0, w, h);
+
+  // Background glow
+  const bgGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, Math.min(w, h) / 2);
+  bgGrad.addColorStop(0, 'rgba(0, 243, 255, 0.06)');
+  bgGrad.addColorStop(1, 'rgba(2, 4, 10, 0)');
+  ctx.fillStyle = bgGrad;
+  ctx.fillRect(0, 0, w, h);
+
+  // Draw orbital paths (ellipses with tilt for 3D effect)
+  shells.forEach(shell => {
+    ctx.strokeStyle = shell.color + '40';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    const steps = 80;
+    for (let i = 0; i <= steps; i++) {
+      const a = (i / steps) * Math.PI * 2;
+      const x3d = Math.cos(a) * shell.radius * scale;
+      const y3d = Math.sin(a) * shell.radius * scale * 0.3; // Flatten for tilt
+      const z3d = Math.sin(a) * shell.radius * scale * 0.9;
+      const p = rotatePoint(x3d, y3d, z3d);
+      const px = cx + p.x;
+      const py = cy + p.y;
+      if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+    }
+    ctx.stroke();
+  });
+
+  // Collect all drawable items with depth for sorting
+  const drawables = [];
+
+  // Nucleus
+  drawables.push({ type: 'nucleus', z: 0 });
+
+  // Electrons
+  electrons.forEach((e, idx) => {
+    const x3d = Math.cos(e.angle) * e.radius * scale;
+    const y3d = Math.sin(e.angle) * e.radius * scale * 0.3;
+    const z3d = Math.sin(e.angle) * e.radius * scale * 0.9;
+    const p = rotatePoint(x3d, y3d, z3d);
+    drawables.push({ type: 'electron', idx: idx, x: cx + p.x, y: cy + p.y, z: p.z, color: e.color });
+  });
+
+  // Sort by depth (far to near)
+  drawables.sort((a, b) => a.z - b.z);
+
+  // Draw sorted
+  drawables.forEach(d => {
+    if (d.type === 'nucleus') {
+      // Nucleus glow
+      const nucleusR = (18 + Math.min(currentElement.n / 8, 14)) * scale;
+      const glowGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, nucleusR * 2.5);
+      glowGrad.addColorStop(0, 'rgba(0, 243, 255, 0.4)');
+      glowGrad.addColorStop(0.5, 'rgba(188, 19, 254, 0.15)');
+      glowGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+      ctx.fillStyle = glowGrad;
+      ctx.beginPath();
+      ctx.arc(cx, cy, nucleusR * 2.5, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Nucleus body
+      const nucleusGrad = ctx.createRadialGradient(cx - nucleusR * 0.3, cy - nucleusR * 0.3, 0, cx, cy, nucleusR);
+      nucleusGrad.addColorStop(0, '#ffffff');
+      nucleusGrad.addColorStop(0.3, '#00f3ff');
+      nucleusGrad.addColorStop(1, '#0066ff');
+      ctx.fillStyle = nucleusGrad;
+      ctx.beginPath();
+      ctx.arc(cx, cy, nucleusR, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Element symbol on nucleus
+      ctx.fillStyle = '#02040a';
+      ctx.font = `800 ${nucleusR * 0.9}px Syne, sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(currentElement.s, cx, cy);
+    } else {
+      // Electron
+      const size = (3 + (d.z + 100) / 100 * 2) * scale;
+      const alpha = 0.5 + (d.z + 100) / 200 * 0.5;
+      ctx.shadowBlur = 12;
+      ctx.shadowColor = d.color;
+      ctx.fillStyle = d.color;
+      ctx.globalAlpha = Math.max(0.4, Math.min(1, alpha));
+      ctx.beginPath();
+      ctx.arc(d.x, d.y, size, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.globalAlpha = 1;
+      ctx.shadowBlur = 0;
+    }
+  });
+}
+
+function animate() {
+  if (autoRotate && !isDragging) {
+    rotY += 0.005;
+  }
+  // Update electron angles
+  electrons.forEach(e => { e.angle += e.speed; });
+  drawAtom();
+  animationId = requestAnimationFrame(animate);
+}
+
+function startAnimation() {
+  if (animationId) return;
+  resizeCanvas();
+  animate();
+}
+
+function stopAnimation() {
+  if (animationId) {
+    cancelAnimationFrame(animationId);
+    animationId = null;
+  }
+}
+
+// Mouse / Touch interaction
+canvasWrap.addEventListener('mousedown', (e) => {
+  isDragging = true;
+  lastX = e.clientX;
+  lastY = e.clientY;
+});
+window.addEventListener('mousemove', (e) => {
+  if (!isDragging) return;
+  const dx = e.clientX - lastX;
+  const dy = e.clientY - lastY;
+  rotY += dx * 0.01;
+  rotX += dy * 0.01;
+  rotX = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, rotX));
+  lastX = e.clientX;
+  lastY = e.clientY;
+});
+window.addEventListener('mouseup', () => { isDragging = false; });
+
+canvasWrap.addEventListener('touchstart', (e) => {
+  isDragging = true;
+  lastX = e.touches[0].clientX;
+  lastY = e.touches[0].clientY;
+}, { passive: true });
+canvasWrap.addEventListener('touchmove', (e) => {
+  if (!isDragging) return;
+  const dx = e.touches[0].clientX - lastX;
+  const dy = e.touches[0].clientY - lastY;
+  rotY += dx * 0.01;
+  rotX += dy * 0.01;
+  rotX = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, rotX));
+  lastX = e.touches[0].clientX;
+  lastY = e.touches[0].clientY;
+}, { passive: true });
+canvasWrap.addEventListener('touchend', () => { isDragging = false; });
+
+canvasWrap.addEventListener('wheel', (e) => {
+  e.preventDefault();
+  zoom += e.deltaY * -0.001;
+  zoom = Math.max(0.5, Math.min(2, zoom));
+}, { passive: false });
+
+function toggleAutoRotate() {
+  autoRotate = !autoRotate;
+  document.getElementById('btnAutoRotate').classList.toggle('active', autoRotate);
+}
+
+function resetAtomView() {
+  rotX = 0.4;
+  rotY = 0;
+  zoom = 1;
+}
+
+// Build shell legend
+function buildShellLegend(shellDistribution) {
+  const legend = document.getElementById('shellLegend');
+  legend.innerHTML = '';
+  shellDistribution.forEach((count, idx) => {
+    if (count === 0) return;
+    const item = document.createElement('div');
+    item.className = 'shell-legend-item';
+    item.innerHTML = `<span class="shell-dot" style="background:${shellColors[idx]};color:${shellColors[idx]}"></span>${shellNames[idx]}: ${count}e⁻`;
+    legend.appendChild(item);
+  });
+}
+
+// Contextual CTA
+const ctaTopics = {
+  'nonmetal': 'Master Nonmetals & Covalent Bonding',
+  'noble-gas': 'Conquer Noble Gas Chemistry',
+  'alkali': 'Master Alkali Metals & Reactivity',
+  'alkaline-earth': 'Alkaline Earth Metals — NEET Essentials',
+  'transition': 'Dominate d-Block & Transition Metals',
+  'post-transition': 'Post-Transition Elements Mastery',
+  'metalloid': 'Metalloids & Semiconductor Chemistry',
+  'halogen': 'Halogens — JEE Favorite Topic',
+  'lanthanide': 'Lanthanides & f-Block Mastery',
+  'actinide': 'Actinides & Nuclear Chemistry'
+};
+
+// ============ MODAL LOGIC ============
 const modal = document.getElementById('chemModal');
 let lastFocusedElement = null;
 
 function openModal(el) {
   lastFocusedElement = document.activeElement;
+  currentElement = el;
   document.getElementById('modalElSym').textContent = el.s;
   document.getElementById('modalElName').textContent = el.name;
   document.getElementById('modalElCat').textContent = el.c.replace(/-/g, ' ');
@@ -512,95 +783,76 @@ function openModal(el) {
   document.getElementById('modalElBlock').textContent = el.block.toUpperCase() + '-block';
   document.getElementById('modalElPeriod').textContent = el.period;
   document.getElementById('modalElGroup').textContent = el.group;
-  
+
+  // Build 3D atom
+  const shellDist = getShellDistribution(el.n);
+  buildElectrons(shellDist);
+  buildShellLegend(shellDist);
+  rotX = 0.4; rotY = 0; zoom = 1;
+
+  // Contextual CTA
+  document.getElementById('ctaTitle').textContent = ctaTopics[el.c] || `Master ${el.name} with Abhinav Sir`;
+
   modal.classList.add('active');
   document.body.style.overflow = 'hidden';
-  
-  // Focus trap
-  setTimeout(() => {
-    document.querySelector('.close-modal').focus();
-  }, 100);
+  startAnimation();
+  setTimeout(() => document.querySelector('.close-modal').focus(), 100);
 }
 
 function closeModal() {
   modal.classList.remove('active');
   document.body.style.overflow = '';
+  stopAnimation();
   if (lastFocusedElement) lastFocusedElement.focus();
 }
 
 modal.addEventListener('click', (e) => { if(e.target === modal) closeModal(); });
-document.addEventListener('keydown', (e) => { 
-  if(e.key === 'Escape' && modal.classList.contains('active')) closeModal(); 
+document.addEventListener('keydown', (e) => { if(e.key === 'Escape' && modal.classList.contains('active')) closeModal(); });
+
+// Resize handling
+window.addEventListener('resize', () => {
+  isMobile = window.matchMedia('(max-width: 768px)').matches;
+  if (animationId) resizeCanvas();
 });
 
-// Molar Mass Calculator
+// ============ MOLAR MASS CALCULATOR ============
 function calculateMolarMass() {
   const formula = document.getElementById('molarInput').value.trim();
   const resultEl = document.getElementById('molarResult');
-  
   if (!formula) {
     resultEl.innerHTML = '<span style="color:var(--rose)">Please enter a chemical formula.</span>';
     resultEl.classList.add('active');
     return;
   }
-  
-  // Enhanced regex to handle parentheses: e.g., Ca(OH)2, Fe2(SO4)3
-  let totalMass = 0;
-  let breakdown = [];
-  let valid = true;
-  
-  // Simple parser for basic formulas (handles element symbols and counts)
+  let totalMass = 0, breakdown = [], valid = true;
   const regex = /([A-Z][a-z]*)(\d*)/g;
   let match;
-  
   while ((match = regex.exec(formula)) !== null) {
     const symbol = match[1];
     const count = match[2] === '' ? 1 : parseInt(match[2]);
     const element = elementsData.find(e => e.s === symbol);
-    
     if (element) {
       const contribution = element.m * count;
       totalMass += contribution;
       breakdown.push(`${symbol}: ${element.m} × ${count} = ${contribution.toFixed(3)}`);
     } else if (symbol !== '(' && symbol !== ')') {
       valid = false;
-      resultEl.innerHTML = `<span style="color:var(--rose)"><i class="fas fa-exclamation-triangle"></i> Unknown element: "${symbol}". Check your formula.</span>`;
+      resultEl.innerHTML = `<span style="color:var(--rose)"><i class="fas fa-exclamation-triangle"></i> Unknown element: "${symbol}".</span>`;
       resultEl.classList.add('active');
       return;
     }
   }
-  
   if (valid && totalMass > 0) {
-    resultEl.innerHTML = `
-      <div style="font-size:1.3rem;margin-bottom:12px"><strong>Total Molar Mass:</strong> ${totalMass.toFixed(3)} g/mol</div>
-      <div class="breakdown">
-        <strong>Breakdown:</strong><br>
-        ${breakdown.join('<br>')}
-      </div>
-    `;
+    resultEl.innerHTML = `<div style="font-size:1.3rem;margin-bottom:12px"><strong>Total Molar Mass:</strong> ${totalMass.toFixed(3)} g/mol</div><div class="breakdown"><strong>Breakdown:</strong><br>${breakdown.join('<br>')}</div>`;
     resultEl.classList.add('active');
   } else {
-    resultEl.innerHTML = `<span style="color:var(--rose)"><i class="fas fa-exclamation-triangle"></i> Invalid formula. Try "H2O", "C6H12O6", or "NaCl".</span>`;
+    resultEl.innerHTML = `<span style="color:var(--rose)"><i class="fas fa-exclamation-triangle"></i> Invalid formula. Try "H2O" or "NaCl".</span>`;
     resultEl.classList.add('active');
   }
 }
-
-// Enter key support
 document.getElementById('molarInput').addEventListener('keypress', function (e) {
   if (e.key === 'Enter') calculateMolarMass();
 });
-
-// Touch optimization for mobile
-if ('ontouchstart' in window) {
-  document.querySelectorAll('.element-card').forEach(card => {
-    card.addEventListener('touchstart', function() {
-      this.style.transform = 'scale(1.05)';
-    });
-    card.addEventListener('touchend', function() {
-      this.style.transform = '';
-    });
-  });
-}
 </script>
 </body>
 </html>
