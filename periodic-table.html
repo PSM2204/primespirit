@@ -2,10 +2,10 @@
 <html lang="en" dir="ltr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=5.0">
 <meta name="theme-color" content="#02040a">
 <title>Interactive Periodic Table | Prime Spirit Free Tools</title>
-<meta name="description" content="Free interactive periodic table and molar mass calculator for NEET, JEE, and Board students by Prime Spirit Mentors.">
+<meta name="description" content="Free interactive periodic table with all 118 elements, electron configurations, and molar mass calculator for NEET, JEE, and Board students.">
 <link rel="canonical" href="https://primespirit.co.in/periodic-table.html">
 
 <!-- Fonts & Icons -->
@@ -14,62 +14,170 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=DM+Mono:wght@400&display=swap">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-<!-- Prime Spirit Core Styles (Inline for consistency) -->
 <style>
-:root{--bg:#02040a;--bg-warm:#050814;--surface:rgba(10,15,30,0.6);--elevated:rgba(20,25,50,0.9);--border:rgba(255,255,255,0.06);--border-mid:rgba(255,255,255,0.12);--text:#f4f7ff;--text-sec:#a8b5d4;--text-muted:#8892b0;--accent:#00f3ff;--green:#00ff9d;--rose:#ff2a6d;--violet:#bc13fe;--grad-accent:linear-gradient(135deg,#00f3ff,#0066ff);--font-head:'Syne',sans-serif;--font-body:'Source Serif 4',Georgia,serif;--font-mono:'DM Mono',monospace;--radius-sm:8px;--radius-md:14px;--radius-lg:20px;--header-h:78px}
+:root{--bg:#02040a;--bg-warm:#050814;--surface:rgba(10,15,30,0.6);--elevated:rgba(20,25,50,0.9);--border:rgba(255,255,255,0.06);--border-mid:rgba(255,255,255,0.12);--text:#f4f7ff;--text-sec:#a8b5d4;--text-muted:#8892b0;--accent:#00f3ff;--green:#00ff9d;--rose:#ff2a6d;--violet:#bc13fe;--gold:#ffd700;--grad-accent:linear-gradient(135deg,#00f3ff,#0066ff);--font-head:'Syne',sans-serif;--font-body:'Source Serif 4',Georgia,serif;--font-mono:'DM Mono',monospace;--radius-sm:8px;--radius-md:14px;--radius-lg:20px;--header-h:78px;--card-gap:4px}
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-size:1rem;line-height:1.7;overflow-x:hidden;-webkit-font-smoothing:antialiased}
 a{color:var(--accent);text-decoration:none;transition:color .2s}a:hover{color:#fff}
 .container{max-width:1280px;margin:0 auto;padding:0 24px}
 
-/* Navigation (Simplified copy of your header) */
-header{position:sticky;top:0;z-index:1000;height:var(--header-h);display:flex;align-items:center;background:rgba(2,4,10,0.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+/* Header */
+header{position:sticky;top:0;z-index:1000;height:var(--header-h);display:flex;align-items:center;background:rgba(2,4,10,0.95);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
 .nav-row{width:100%;display:flex;align-items:center;justify-content:space-between;gap:16px}
 .logo{display:flex;align-items:center;gap:10px;text-decoration:none;font-family:var(--font-head);font-weight:800;font-size:1.05rem;color:var(--text)}
 .logo svg{width:38px;height:38px;filter:drop-shadow(0 0 8px rgba(0,243,255,0.4))}
 .btn-back{display:inline-flex;align-items:center;gap:8px;padding:8px 16px;border-radius:var(--radius-sm);font-family:var(--font-head);font-weight:700;font-size:.85rem;color:var(--text-sec);border:1px solid var(--border);background:var(--surface);transition:all .2s}
 .btn-back:hover{border-color:var(--accent);color:var(--accent)}
 
-/* Periodic Table Grid */
-.chem-hero{text-align:center;padding:60px 0 30px}
-.chem-hero h1{font-family:var(--font-head);font-size:clamp(1.8rem,4vw,2.5rem);margin-bottom:10px}
-.chem-hero h1 span{background:var(--grad-accent);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.chem-hero p{color:var(--text-sec);max-width:600px;margin:0 auto}
+/* Hero */
+.chem-hero{text-align:center;padding:48px 0 24px}
+.chem-hero h1{font-family:var(--font-head);font-size:clamp(1.6rem,4vw,2.5rem);margin-bottom:10px}
+.chem-hero h1 span{background:var(--grad-accent);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.chem-hero p{color:var(--text-sec);max-width:600px;margin:0 auto;font-size:clamp(0.85rem,2vw,1rem)}
 
-.periodic-grid{display:grid;grid-template-columns:repeat(18,minmax(42px,1fr));gap:4px;max-width:1100px;margin:0 auto;overflow-x:auto;padding:20px 10px;scrollbar-width:thin;scrollbar-color:var(--accent) var(--surface)}
-.element-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:6px 2px;cursor:pointer;transition:all .25s cubic-bezier(.22,1,.36,1);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:65px;backdrop-filter:blur(8px);position:relative}
-.element-card:hover{transform:scale(1.2);border-color:var(--accent);box-shadow:0 0 25px rgba(0,243,255,.25);z-index:20;background:var(--elevated)}
-.el-num{font-size:.65rem;color:var(--text-muted);position:absolute;top:4px;left:4px;font-family:var(--font-mono)}
-.el-sym{font-size:1.1rem;font-weight:800;color:var(--text);font-family:var(--font-head);margin-top:4px}
-.el-mass{font-size:.6rem;color:var(--text-sec);font-family:var(--font-mono)}
+/* Controls */
+.controls-bar{max-width:1200px;margin:0 auto 24px;padding:0 16px;display:flex;flex-wrap:wrap;gap:12px;justify-content:center;align-items:center}
+.search-box{position:relative;flex:1;min-width:200px;max-width:400px}
+.search-box input{width:100%;padding:12px 16px 12px 42px;border-radius:var(--radius-sm);background:var(--surface);border:1px solid var(--border);color:var(--text);font-family:var(--font-body);font-size:.9rem;outline:none;transition:all .25s}
+.search-box input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(0,243,255,.1)}
+.search-box i{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--text-muted);font-size:.9rem}
 
-/* Category Glows */
-.cat-nonmetal{border-color:rgba(0,243,255,.4)}.cat-noble-gas{border-color:rgba(188,19,254,.4)}.cat-alkali{border-color:rgba(0,255,157,.4)}
-.cat-alkaline-earth{border-color:rgba(255,215,0,.4)}.cat-metalloid{border-color:rgba(255,42,109,.4)}.cat-halogen{border-color:rgba(0,102,255,.4)}.cat-transition{border-color:rgba(168,181,212,.3)}
+/* Category Filter */
+.filter-pills{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
+.filter-pill{padding:6px 12px;border-radius:50px;font-family:var(--font-mono);font-size:.7rem;font-weight:500;background:var(--surface);border:1px solid var(--border);color:var(--text-sec);cursor:pointer;transition:all .2s;white-space:nowrap}
+.filter-pill:hover{border-color:var(--border-mid);color:var(--text)}
+.filter-pill.active{background:var(--accent);color:#000;border-color:var(--accent);font-weight:700}
+.filter-pill[data-cat="nonmetal"]{border-color:rgba(0,243,255,.3)}
+.filter-pill[data-cat="nonmetal"].active{background:rgba(0,243,255,.9);color:#000}
+.filter-pill[data-cat="noble-gas"]{border-color:rgba(188,19,254,.3)}
+.filter-pill[data-cat="noble-gas"].active{background:rgba(188,19,254,.9);color:#fff}
+.filter-pill[data-cat="alkali"]{border-color:rgba(0,255,157,.3)}
+.filter-pill[data-cat="alkali"].active{background:rgba(0,255,157,.9);color:#000}
+.filter-pill[data-cat="alkaline-earth"]{border-color:rgba(255,215,0,.3)}
+.filter-pill[data-cat="alkaline-earth"].active{background:rgba(255,215,0,.9);color:#000}
+.filter-pill[data-cat="metalloid"]{border-color:rgba(255,42,109,.3)}
+.filter-pill[data-cat="metalloid"].active{background:rgba(255,42,109,.9);color:#fff}
+.filter-pill[data-cat="halogen"]{border-color:rgba(0,102,255,.3)}
+.filter-pill[data-cat="halogen"].active{background:rgba(0,102,255,.9);color:#fff}
+.filter-pill[data-cat="transition"]{border-color:rgba(168,181,212,.3)}
+.filter-pill[data-cat="transition"].active{background:rgba(168,181,212,.9);color:#000}
+.filter-pill[data-cat="post-transition"]{border-color:rgba(139,92,246,.3)}
+.filter-pill[data-cat="post-transition"].active{background:rgba(139,92,246,.9);color:#fff}
+.filter-pill[data-cat="lanthanide"]{border-color:rgba(236,72,153,.3)}
+.filter-pill[data-cat="lanthanide"].active{background:rgba(236,72,153,.9);color:#fff}
+.filter-pill[data-cat="actinide"]{border-color:rgba(251,146,60,.3)}
+.filter-pill[data-cat="actinide"].active{background:rgba(251,146,60,.9);color:#000}
 
-/* Detail Modal */
-.chem-modal-overlay{position:fixed;inset:0;z-index:100000;background:rgba(2,4,10,.85);backdrop-filter:blur(16px);display:none;align-items:center;justify-content:center;padding:20px}
+/* Table Container */
+.table-wrapper{overflow-x:auto;overflow-y:hidden;padding:16px;scrollbar-width:thin;scrollbar-color:var(--accent) var(--surface);-webkit-overflow-scrolling:touch}
+.table-wrapper::-webkit-scrollbar{height:8px}
+.table-wrapper::-webkit-scrollbar-track{background:var(--surface);border-radius:4px}
+.table-wrapper::-webkit-scrollbar-thumb{background:var(--accent);border-radius:4px}
+
+.periodic-grid{display:grid;grid-template-columns:repeat(18,minmax(48px,1fr));gap:var(--card-gap);min-width:900px;margin:0 auto;position:relative}
+
+/* Element Cards */
+.element-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:4px 2px;cursor:pointer;transition:all .2s cubic-bezier(.22,1,.36,1);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:58px;position:relative;backdrop-filter:blur(4px);user-select:none;-webkit-tap-highlight-color:transparent}
+.element-card:hover{transform:scale(1.15);z-index:20;box-shadow:0 8px 32px rgba(0,0,0,.5)}
+.element-card:active{transform:scale(1.05)}
+.element-card.dimmed{opacity:0.15;pointer-events:none}
+.element-card.highlight{animation:pulse 1s ease infinite}
+
+.el-num{font-size:.55rem;color:var(--text-muted);position:absolute;top:2px;left:3px;font-family:var(--font-mono);line-height:1}
+.el-sym{font-size:1rem;font-weight:800;color:var(--text);font-family:var(--font-head);margin-top:2px;line-height:1.2}
+.el-name{font-size:.45rem;color:var(--text-sec);font-family:var(--font-body);line-height:1;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:center}
+.el-mass{font-size:.5rem;color:var(--text-muted);font-family:var(--font-mono);line-height:1;margin-top:1px}
+
+/* Category Colors */
+.cat-nonmetal{border-color:rgba(0,243,255,.4)}.cat-nonmetal:hover{border-color:rgba(0,243,255,.8);box-shadow:0 0 20px rgba(0,243,255,.3)}
+.cat-noble-gas{border-color:rgba(188,19,254,.4)}.cat-noble-gas:hover{border-color:rgba(188,19,254,.8);box-shadow:0 0 20px rgba(188,19,254,.3)}
+.cat-alkali{border-color:rgba(0,255,157,.4)}.cat-alkali:hover{border-color:rgba(0,255,157,.8);box-shadow:0 0 20px rgba(0,255,157,.3)}
+.cat-alkaline-earth{border-color:rgba(255,215,0,.4)}.cat-alkaline-earth:hover{border-color:rgba(255,215,0,.8);box-shadow:0 0 20px rgba(255,215,0,.3)}
+.cat-metalloid{border-color:rgba(255,42,109,.4)}.cat-metalloid:hover{border-color:rgba(255,42,109,.8);box-shadow:0 0 20px rgba(255,42,109,.3)}
+.cat-halogen{border-color:rgba(0,102,255,.4)}.cat-halogen:hover{border-color:rgba(0,102,255,.8);box-shadow:0 0 20px rgba(0,102,255,.3)}
+.cat-transition{border-color:rgba(168,181,212,.3)}.cat-transition:hover{border-color:rgba(168,181,212,.7);box-shadow:0 0 20px rgba(168,181,212,.2)}
+.cat-post-transition{border-color:rgba(139,92,246,.4)}.cat-post-transition:hover{border-color:rgba(139,92,246,.8);box-shadow:0 0 20px rgba(139,92,246,.3)}
+.cat-lanthanide{border-color:rgba(236,72,153,.4)}.cat-lanthanide:hover{border-color:rgba(236,72,153,.8);box-shadow:0 0 20px rgba(236,72,153,.3)}
+.cat-actinide{border-color:rgba(251,146,60,.4)}.cat-actinide:hover{border-color:rgba(251,146,60,.8);box-shadow:0 0 20px rgba(251,146,60,.3)}
+
+/* Separator Labels */
+.separator-row{grid-column:1/-1;display:flex;align-items:center;gap:12px;padding:12px 0 4px;color:var(--text-sec);font-family:var(--font-mono);font-size:.7rem}
+.separator-row::before,.separator-row::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* Modal */
+.chem-modal-overlay{position:fixed;inset:0;z-index:100000;background:rgba(2,4,10,.92);backdrop-filter:blur(16px);display:none;align-items:center;justify-content:center;padding:16px;overflow-y:auto}
 .chem-modal-overlay.active{display:flex}
-.chem-modal-card{background:var(--elevated);border:1px solid var(--border-mid);border-radius:var(--radius-lg);padding:32px;max-width:500px;width:100%;position:relative;box-shadow:0 32px 80px rgba(0,0,0,.6),0 0 30px rgba(0,243,255,.1);animation:fadeUp .4s cubic-bezier(.22,1,.36,1)}
-.close-modal{position:absolute;top:16px;right:16px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:var(--radius-sm);background:none;border:1px solid var(--border);color:var(--text-sec);cursor:pointer;transition:all .2s}
+.chem-modal-card{background:var(--elevated);border:1px solid var(--border-mid);border-radius:var(--radius-lg);padding:24px;max-width:520px;width:100%;position:relative;box-shadow:0 32px 80px rgba(0,0,0,.6),0 0 30px rgba(0,243,255,.1);animation:fadeUp .3s cubic-bezier(.22,1,.36,1);max-height:90vh;overflow-y:auto}
+.close-modal{position:absolute;top:12px;right:12px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:var(--radius-sm);background:none;border:1px solid var(--border);color:var(--text-sec);cursor:pointer;transition:all .2s}
 .close-modal:hover{color:var(--text);border-color:var(--accent)}
-.chem-detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:20px}
-.chem-detail-item{background:var(--surface);padding:12px;border-radius:var(--radius-sm);border:1px solid var(--border)}
-.chem-detail-item strong{display:block;font-size:.75rem;color:var(--text-muted);font-family:var(--font-mono);text-transform:uppercase;margin-bottom:4px}
-.chem-detail-item span{font-size:1.1rem;font-weight:700;color:var(--accent);font-family:var(--font-head)}
+
+.modal-header{display:flex;align-items:center;gap:16px;margin-bottom:20px;padding-right:40px}
+.modal-symbol{font-size:2.5rem;font-weight:800;font-family:var(--font-head);color:var(--accent);width:70px;height:70px;display:flex;align-items:center;justify-content:center;background:var(--surface);border:2px solid var(--border-mid);border-radius:var(--radius-md);flex-shrink:0}
+.modal-title h2{font-family:var(--font-head);font-size:1.5rem;margin-bottom:4px;line-height:1.2}
+.modal-title span{font-family:var(--font-mono);font-size:.75rem;color:var(--text-sec);text-transform:uppercase;letter-spacing:.08em}
+
+.chem-detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.chem-detail-item{background:var(--surface);padding:10px 12px;border-radius:var(--radius-sm);border:1px solid var(--border)}
+.chem-detail-item strong{display:block;font-size:.65rem;color:var(--text-muted);font-family:var(--font-mono);text-transform:uppercase;margin-bottom:3px;letter-spacing:.05em}
+.chem-detail-item span{font-size:1rem;font-weight:700;color:var(--accent);font-family:var(--font-head);word-break:break-word}
+.chem-detail-item.full-width{grid-column:1/-1}
 
 /* Molar Mass Tool */
-.molar-tool{max-width:600px;margin:60px auto;text-align:center;padding:40px 20px;background:var(--bg-warm);border-radius:var(--radius-lg);border:1px solid var(--border)}
-.molar-input-group{display:flex;gap:10px;margin-top:20px}
-.molar-input-group input{flex:1;padding:14px 18px;border-radius:var(--radius-sm);background:var(--surface);border:1px solid var(--border);color:var(--text);font-family:var(--font-body);font-size:1rem;outline:none;transition:all .25s}
-.molar-input-group input:focus{border-color:var(--accent);box-shadow:0 0 0 4px rgba(0,243,255,.1)}
-.btn-calc{padding:14px 28px;border-radius:var(--radius-sm);font-family:var(--font-head);font-weight:700;font-size:.9rem;background:var(--grad-accent);color:#000;border:none;cursor:pointer;transition:all .25s;white-space:nowrap}
+.molar-tool{max-width:700px;margin:60px auto;text-align:center;padding:32px 20px;background:var(--bg-warm);border-radius:var(--radius-lg);border:1px solid var(--border)}
+.molar-input-group{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
+.molar-input-group input{flex:1;min-width:200px;padding:14px 18px;border-radius:var(--radius-sm);background:var(--surface);border:1px solid var(--border);color:var(--text);font-family:var(--font-body);font-size:1rem;outline:none;transition:all .25s}
+.molar-input-group input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(0,243,255,.1)}
+.btn-calc{padding:14px 24px;border-radius:var(--radius-sm);font-family:var(--font-head);font-weight:700;font-size:.9rem;background:var(--grad-accent);color:#000;border:none;cursor:pointer;transition:all .25s;white-space:nowrap}
 .btn-calc:hover{transform:translateY(-2px);box-shadow:0 0 25px rgba(0,243,255,.3)}
-.molar-result{margin-top:20px;padding:20px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);font-family:var(--font-head);font-size:1.2rem;color:var(--green);display:none}
+.molar-result{margin-top:20px;padding:20px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);font-family:var(--font-head);font-size:1.1rem;color:var(--green);display:none;text-align:left}
 .molar-result.active{display:block;animation:fadeUp .3s ease}
+.molar-result .breakdown{margin-top:12px;padding-top:12px;border-top:1px solid var(--border);font-size:.85rem;color:var(--text-sec);font-family:var(--font-mono)}
 
 @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-@media(max-width:768px){.periodic-grid{grid-template-columns:repeat(18,minmax(36px,1fr))}.molar-input-group{flex-direction:column}}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+
+/* Footer */
+footer{background:var(--bg-warm);border-top:1px solid var(--border);padding:40px 0;margin-top:80px;text-align:center}
+
+/* Responsive */
+@media(max-width:1024px){
+  .periodic-grid{grid-template-columns:repeat(18,minmax(42px,1fr))}
+}
+@media(max-width:768px){
+  :root{--header-h:60px;--card-gap:3px}
+  .chem-hero{padding:32px 0 16px}
+  .chem-hero h1{font-size:1.5rem}
+  .periodic-grid{grid-template-columns:repeat(18,minmax(36px,1fr));min-width:680px}
+  .el-sym{font-size:.85rem}
+  .el-num{font-size:.5rem}
+  .el-name{display:none}
+  .el-mass{font-size:.45rem}
+  .element-card{min-height:48px;padding:2px 1px}
+  .controls-bar{gap:8px}
+  .filter-pill{padding:5px 10px;font-size:.65rem}
+  .chem-modal-card{padding:20px}
+  .modal-symbol{width:60px;height:60px;font-size:2rem}
+  .modal-title h2{font-size:1.3rem}
+  .chem-detail-grid{grid-template-columns:1fr 1fr;gap:8px}
+  .molar-tool{padding:24px 16px;margin:40px auto}
+  .molar-input-group{flex-direction:column}
+  .molar-input-group input,.btn-calc{width:100%}
+}
+@media(max-width:480px){
+  .periodic-grid{grid-template-columns:repeat(18,minmax(32px,1fr));min-width:600px}
+  .el-sym{font-size:.75rem}
+  .element-card{min-height:42px}
+  .chem-detail-grid{grid-template-columns:1fr}
+  .modal-header{flex-direction:column;text-align:center}
+}
+
+/* Print Styles */
+@media print{
+  header,footer,.controls-bar,.molar-tool,.btn-back{display:none!important}
+  body{background:#fff;color:#000}
+  .element-card{border:1px solid #ccc;background:#f9f9f9}
+  .el-sym,.el-num,.el-name,.el-mass{color:#000}
+}
 </style>
 </head>
 <body>
@@ -89,17 +197,42 @@ header{position:sticky;top:0;z-index:1000;height:var(--header-h);display:flex;al
 <main id="main-content">
 <section class="chem-hero container">
   <h1>Interactive <span>Periodic Table</span></h1>
-  <p>Explore elements, visualize atomic structures, and calculate molar mass instantly. Built for NEET, JEE, and Board aspirants.</p>
+  <p>All 118 elements with electron configurations, atomic data, and a built-in molar mass calculator. Built for NEET, JEE, and Board aspirants.</p>
 </section>
 
-<section class="container">
+<!-- Controls -->
+<div class="controls-bar">
+  <div class="search-box">
+    <i class="fas fa-search"></i>
+    <input type="text" id="searchInput" placeholder="Search by name, symbol, or number..." aria-label="Search elements">
+  </div>
+</div>
+<div class="controls-bar">
+  <div class="filter-pills" id="filterPills">
+    <button class="filter-pill active" data-cat="all">All</button>
+    <button class="filter-pill" data-cat="nonmetal">Nonmetal</button>
+    <button class="filter-pill" data-cat="noble-gas">Noble Gas</button>
+    <button class="filter-pill" data-cat="alkali">Alkali Metal</button>
+    <button class="filter-pill" data-cat="alkaline-earth">Alkaline Earth</button>
+    <button class="filter-pill" data-cat="transition">Transition Metal</button>
+    <button class="filter-pill" data-cat="post-transition">Post-Transition</button>
+    <button class="filter-pill" data-cat="metalloid">Metalloid</button>
+    <button class="filter-pill" data-cat="halogen">Halogen</button>
+    <button class="filter-pill" data-cat="lanthanide">Lanthanide</button>
+    <button class="filter-pill" data-cat="actinide">Actinide</button>
+  </div>
+</div>
+
+<!-- Periodic Table -->
+<div class="table-wrapper">
   <div id="periodic-table" class="periodic-grid" role="grid" aria-label="Periodic Table of Elements"></div>
-</section>
+</div>
 
+<!-- Molar Mass Calculator -->
 <section class="container">
   <div class="molar-tool">
-    <h2 style="font-family:var(--font-head);margin-bottom:8px"><i class="fas fa-flask" style="color:var(--accent)"></i> Molar Mass Calculator</h2>
-    <p style="color:var(--text-sec);font-size:.9rem">Enter a chemical formula (e.g., H2O, C6H12O6, Ca(OH)2)</p>
+    <h2 style="font-family:var(--font-head);margin-bottom:8px;font-size:clamp(1.2rem,3vw,1.6rem)"><i class="fas fa-flask" style="color:var(--accent)"></i> Molar Mass Calculator</h2>
+    <p style="color:var(--text-sec);font-size:.9rem">Enter a chemical formula (e.g., H2O, C6H12O6, Ca(OH)2, Fe2(SO4)3)</p>
     <div class="molar-input-group">
       <input type="text" id="molarInput" placeholder="Enter formula..." aria-label="Chemical formula">
       <button class="btn-calc" onclick="calculateMolarMass()">Calculate</button>
@@ -113,24 +246,27 @@ header{position:sticky;top:0;z-index:1000;height:var(--header-h);display:flex;al
 <div id="chemModal" class="chem-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modalElName">
 <div class="chem-modal-card">
   <button class="close-modal" onclick="closeModal()" aria-label="Close modal"><i class="fas fa-times"></i></button>
-  <div style="display:flex;align-items:center;gap:16px;margin-bottom:16px">
-    <div id="modalElSym" style="font-size:3rem;font-weight:800;font-family:var(--font-head);color:var(--accent);width:80px;height:80px;display:flex;align-items:center;justify-content:center;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md)"></div>
-    <div>
-      <h2 id="modalElName" style="font-family:var(--font-head);font-size:1.8rem;margin-bottom:4px"></h2>
-      <span id="modalElCat" style="font-family:var(--font-mono);font-size:.8rem;color:var(--text-sec);text-transform:uppercase;letter-spacing:.08em"></span>
+  <div class="modal-header">
+    <div id="modalElSym" class="modal-symbol"></div>
+    <div class="modal-title">
+      <h2 id="modalElName"></h2>
+      <span id="modalElCat"></span>
     </div>
   </div>
   <div class="chem-detail-grid">
     <div class="chem-detail-item"><strong>Atomic Number</strong><span id="modalElNum"></span></div>
     <div class="chem-detail-item"><strong>Atomic Mass</strong><span id="modalElMass"></span></div>
-    <div class="chem-detail-item"><strong>Electron Config</strong><span id="modalElConfig" style="font-size:.9rem"></span></div>
+    <div class="chem-detail-item full-width"><strong>Electron Configuration</strong><span id="modalElConfig"></span></div>
     <div class="chem-detail-item"><strong>Phase (STP)</strong><span id="modalElPhase"></span></div>
+    <div class="chem-detail-item"><strong>Block</strong><span id="modalElBlock"></span></div>
+    <div class="chem-detail-item"><strong>Period</strong><span id="modalElPeriod"></span></div>
+    <div class="chem-detail-item"><strong>Group</strong><span id="modalElGroup"></span></div>
   </div>
 </div>
 </div>
 
-<!-- FOOTER (Simplified) -->
-<footer style="background:var(--bg-warm);border-top:1px solid var(--border);padding:40px 0;margin-top:80px;text-align:center">
+<!-- FOOTER -->
+<footer>
 <div class="container">
   <p style="color:var(--text-muted);font-size:.85rem">&copy; 2026 Prime Spirit Mentors. All rights reserved.</p>
   <p style="color:var(--text-muted);font-size:.8rem;margin-top:8px"><a href="/">Home</a> &middot; <a href="/#contact">Contact</a> &middot; <a href="/privacy-policy.html">Privacy</a></p>
@@ -139,40 +275,157 @@ header{position:sticky;top:0;z-index:1000;height:var(--header-h);display:flex;al
 
 <!-- DATA & LOGIC -->
 <script>
-// Compact dataset (First 36 elements covering all major groups/periods for demo). 
-// To add all 118, simply expand this array or fetch from a public JSON API.
+// Complete 118 Element Dataset
 const elementsData = [
-  {n:1,s:'H',name:'Hydrogen',m:1.008,c:'nonmetal',col:1,row:1,conf:'1s¹',phase:'Gas'},
-  {n:2,s:'He',name:'Helium',m:4.0026,c:'noble-gas',col:18,row:1,conf:'1s²',phase:'Gas'},
-  {n:3,s:'Li',name:'Lithium',m:6.94,c:'alkali',col:1,row:2,conf:'[He] 2s¹',phase:'Solid'},
-  {n:4,s:'Be',name:'Beryllium',m:9.0122,c:'alkaline-earth',col:2,row:2,conf:'[He] 2s²',phase:'Solid'},
-  {n:5,s:'B',name:'Boron',m:10.81,c:'metalloid',col:13,row:2,conf:'[He] 2s² 2p¹',phase:'Solid'},
-  {n:6,s:'C',name:'Carbon',m:12.011,c:'nonmetal',col:14,row:2,conf:'[He] 2s² 2p²',phase:'Solid'},
-  {n:7,s:'N',name:'Nitrogen',m:14.007,c:'nonmetal',col:15,row:2,conf:'[He] 2s² 2p³',phase:'Gas'},
-  {n:8,s:'O',name:'Oxygen',m:15.999,c:'nonmetal',col:16,row:2,conf:'[He] 2s² 2p⁴',phase:'Gas'},
-  {n:9,s:'F',name:'Fluorine',m:18.998,c:'halogen',col:17,row:2,conf:'[He] 2s² 2p⁵',phase:'Gas'},
-  {n:10,s:'Ne',name:'Neon',m:20.180,c:'noble-gas',col:18,row:2,conf:'[He] 2s² 2p⁶',phase:'Gas'},
-  {n:11,s:'Na',name:'Sodium',m:22.990,c:'alkali',col:1,row:3,conf:'[Ne] 3s¹',phase:'Solid'},
-  {n:12,s:'Mg',name:'Magnesium',m:24.305,c:'alkaline-earth',col:2,row:3,conf:'[Ne] 3s²',phase:'Solid'},
-  {n:13,s:'Al',name:'Aluminium',m:26.982,c:'transition',col:13,row:3,conf:'[Ne] 3s² 3p¹',phase:'Solid'},
-  {n:14,s:'Si',name:'Silicon',m:28.085,c:'metalloid',col:14,row:3,conf:'[Ne] 3s² 3p²',phase:'Solid'},
-  {n:15,s:'P',name:'Phosphorus',m:30.974,c:'nonmetal',col:15,row:3,conf:'[Ne] 3s² 3p³',phase:'Solid'},
-  {n:16,s:'S',name:'Sulfur',m:32.06,c:'nonmetal',col:16,row:3,conf:'[Ne] 3s² 3p⁴',phase:'Solid'},
-  {n:17,s:'Cl',name:'Chlorine',m:35.45,c:'halogen',col:17,row:3,conf:'[Ne] 3s² 3p⁵',phase:'Gas'},
-  {n:18,s:'Ar',name:'Argon',m:39.948,c:'noble-gas',col:18,row:3,conf:'[Ne] 3s² 3p⁶',phase:'Gas'},
-  {n:19,s:'K',name:'Potassium',m:39.098,c:'alkali',col:1,row:4,conf:'[Ar] 4s¹',phase:'Solid'},
-  {n:20,s:'Ca',name:'Calcium',m:40.078,c:'alkaline-earth',col:2,row:4,conf:'[Ar] 4s²',phase:'Solid'},
-  {n:21,s:'Sc',name:'Scandium',m:44.956,c:'transition',col:3,row:4,conf:'[Ar] 3d¹ 4s²',phase:'Solid'},
-  {n:22,s:'Ti',name:'Titanium',m:47.867,c:'transition',col:4,row:4,conf:'[Ar] 3d² 4s²',phase:'Solid'},
-  {n:26,s:'Fe',name:'Iron',m:55.845,c:'transition',col:8,row:4,conf:'[Ar] 3d⁶ 4s²',phase:'Solid'},
-  {n:29,s:'Cu',name:'Copper',m:63.546,c:'transition',col:11,row:4,conf:'[Ar] 3d¹⁰ 4s¹',phase:'Solid'},
-  {n:30,s:'Zn',name:'Zinc',m:65.38,c:'transition',col:12,row:4,conf:'[Ar] 3d¹⁰ 4s²',phase:'Solid'},
-  {n:35,s:'Br',name:'Bromine',m:79.904,c:'halogen',col:17,row:4,conf:'[Ar] 3d¹⁰ 4s² 4p⁵',phase:'Liquid'},
-  {n:36,s:'Kr',name:'Krypton',m:83.798,c:'noble-gas',col:18,row:4,conf:'[Ar] 3d¹⁰ 4s² 4p⁶',phase:'Gas'}
+  // Period 1
+  {n:1,s:'H',name:'Hydrogen',m:1.008,c:'nonmetal',col:1,row:1,conf:'1s¹',phase:'Gas',block:'s',period:1,group:1},
+  {n:2,s:'He',name:'Helium',m:4.0026,c:'noble-gas',col:18,row:1,conf:'1s²',phase:'Gas',block:'s',period:1,group:18},
+  // Period 2
+  {n:3,s:'Li',name:'Lithium',m:6.94,c:'alkali',col:1,row:2,conf:'[He] 2s¹',phase:'Solid',block:'s',period:2,group:1},
+  {n:4,s:'Be',name:'Beryllium',m:9.0122,c:'alkaline-earth',col:2,row:2,conf:'[He] 2s²',phase:'Solid',block:'s',period:2,group:2},
+  {n:5,s:'B',name:'Boron',m:10.81,c:'metalloid',col:13,row:2,conf:'[He] 2s² 2p¹',phase:'Solid',block:'p',period:2,group:13},
+  {n:6,s:'C',name:'Carbon',m:12.011,c:'nonmetal',col:14,row:2,conf:'[He] 2s² 2p²',phase:'Solid',block:'p',period:2,group:14},
+  {n:7,s:'N',name:'Nitrogen',m:14.007,c:'nonmetal',col:15,row:2,conf:'[He] 2s² 2p³',phase:'Gas',block:'p',period:2,group:15},
+  {n:8,s:'O',name:'Oxygen',m:15.999,c:'nonmetal',col:16,row:2,conf:'[He] 2s² 2p⁴',phase:'Gas',block:'p',period:2,group:16},
+  {n:9,s:'F',name:'Fluorine',m:18.998,c:'halogen',col:17,row:2,conf:'[He] 2s² 2p⁵',phase:'Gas',block:'p',period:2,group:17},
+  {n:10,s:'Ne',name:'Neon',m:20.180,c:'noble-gas',col:18,row:2,conf:'[He] 2s² 2p⁶',phase:'Gas',block:'p',period:2,group:18},
+  // Period 3
+  {n:11,s:'Na',name:'Sodium',m:22.990,c:'alkali',col:1,row:3,conf:'[Ne] 3s¹',phase:'Solid',block:'s',period:3,group:1},
+  {n:12,s:'Mg',name:'Magnesium',m:24.305,c:'alkaline-earth',col:2,row:3,conf:'[Ne] 3s²',phase:'Solid',block:'s',period:3,group:2},
+  {n:13,s:'Al',name:'Aluminium',m:26.982,c:'post-transition',col:13,row:3,conf:'[Ne] 3s² 3p¹',phase:'Solid',block:'p',period:3,group:13},
+  {n:14,s:'Si',name:'Silicon',m:28.085,c:'metalloid',col:14,row:3,conf:'[Ne] 3s² 3p²',phase:'Solid',block:'p',period:3,group:14},
+  {n:15,s:'P',name:'Phosphorus',m:30.974,c:'nonmetal',col:15,row:3,conf:'[Ne] 3s² 3p³',phase:'Solid',block:'p',period:3,group:15},
+  {n:16,s:'S',name:'Sulfur',m:32.06,c:'nonmetal',col:16,row:3,conf:'[Ne] 3s² 3p⁴',phase:'Solid',block:'p',period:3,group:16},
+  {n:17,s:'Cl',name:'Chlorine',m:35.45,c:'halogen',col:17,row:3,conf:'[Ne] 3s² 3p⁵',phase:'Gas',block:'p',period:3,group:17},
+  {n:18,s:'Ar',name:'Argon',m:39.948,c:'noble-gas',col:18,row:3,conf:'[Ne] 3s² 3p⁶',phase:'Gas',block:'p',period:3,group:18},
+  // Period 4
+  {n:19,s:'K',name:'Potassium',m:39.098,c:'alkali',col:1,row:4,conf:'[Ar] 4s¹',phase:'Solid',block:'s',period:4,group:1},
+  {n:20,s:'Ca',name:'Calcium',m:40.078,c:'alkaline-earth',col:2,row:4,conf:'[Ar] 4s²',phase:'Solid',block:'s',period:4,group:2},
+  {n:21,s:'Sc',name:'Scandium',m:44.956,c:'transition',col:3,row:4,conf:'[Ar] 3d¹ 4s²',phase:'Solid',block:'d',period:4,group:3},
+  {n:22,s:'Ti',name:'Titanium',m:47.867,c:'transition',col:4,row:4,conf:'[Ar] 3d² 4s²',phase:'Solid',block:'d',period:4,group:4},
+  {n:23,s:'V',name:'Vanadium',m:50.942,c:'transition',col:5,row:4,conf:'[Ar] 3d³ 4s²',phase:'Solid',block:'d',period:4,group:5},
+  {n:24,s:'Cr',name:'Chromium',m:51.996,c:'transition',col:6,row:4,conf:'[Ar] 3d⁵ 4s¹',phase:'Solid',block:'d',period:4,group:6},
+  {n:25,s:'Mn',name:'Manganese',m:54.938,c:'transition',col:7,row:4,conf:'[Ar] 3d⁵ 4s²',phase:'Solid',block:'d',period:4,group:7},
+  {n:26,s:'Fe',name:'Iron',m:55.845,c:'transition',col:8,row:4,conf:'[Ar] 3d⁶ 4s²',phase:'Solid',block:'d',period:4,group:8},
+  {n:27,s:'Co',name:'Cobalt',m:58.933,c:'transition',col:9,row:4,conf:'[Ar] 3d⁷ 4s²',phase:'Solid',block:'d',period:4,group:9},
+  {n:28,s:'Ni',name:'Nickel',m:58.693,c:'transition',col:10,row:4,conf:'[Ar] 3d⁸ 4s²',phase:'Solid',block:'d',period:4,group:10},
+  {n:29,s:'Cu',name:'Copper',m:63.546,c:'transition',col:11,row:4,conf:'[Ar] 3d¹⁰ 4s¹',phase:'Solid',block:'d',period:4,group:11},
+  {n:30,s:'Zn',name:'Zinc',m:65.38,c:'transition',col:12,row:4,conf:'[Ar] 3d¹⁰ 4s²',phase:'Solid',block:'d',period:4,group:12},
+  {n:31,s:'Ga',name:'Gallium',m:69.723,c:'post-transition',col:13,row:4,conf:'[Ar] 3d¹⁰ 4s² 4p¹',phase:'Solid',block:'p',period:4,group:13},
+  {n:32,s:'Ge',name:'Germanium',m:72.630,c:'metalloid',col:14,row:4,conf:'[Ar] 3d¹⁰ 4s² 4p²',phase:'Solid',block:'p',period:4,group:14},
+  {n:33,s:'As',name:'Arsenic',m:74.922,c:'metalloid',col:15,row:4,conf:'[Ar] 3d¹⁰ 4s² 4p³',phase:'Solid',block:'p',period:4,group:15},
+  {n:34,s:'Se',name:'Selenium',m:78.971,c:'nonmetal',col:16,row:4,conf:'[Ar] 3d¹⁰ 4s² 4p⁴',phase:'Solid',block:'p',period:4,group:16},
+  {n:35,s:'Br',name:'Bromine',m:79.904,c:'halogen',col:17,row:4,conf:'[Ar] 3d¹⁰ 4s² 4p⁵',phase:'Liquid',block:'p',period:4,group:17},
+  {n:36,s:'Kr',name:'Krypton',m:83.798,c:'noble-gas',col:18,row:4,conf:'[Ar] 3d¹⁰ 4s² 4p⁶',phase:'Gas',block:'p',period:4,group:18},
+  // Period 5
+  {n:37,s:'Rb',name:'Rubidium',m:85.468,c:'alkali',col:1,row:5,conf:'[Kr] 5s¹',phase:'Solid',block:'s',period:5,group:1},
+  {n:38,s:'Sr',name:'Strontium',m:87.62,c:'alkaline-earth',col:2,row:5,conf:'[Kr] 5s²',phase:'Solid',block:'s',period:5,group:2},
+  {n:39,s:'Y',name:'Yttrium',m:88.906,c:'transition',col:3,row:5,conf:'[Kr] 4d¹ 5s²',phase:'Solid',block:'d',period:5,group:3},
+  {n:40,s:'Zr',name:'Zirconium',m:91.224,c:'transition',col:4,row:5,conf:'[Kr] 4d² 5s²',phase:'Solid',block:'d',period:5,group:4},
+  {n:41,s:'Nb',name:'Niobium',m:92.906,c:'transition',col:5,row:5,conf:'[Kr] 4d⁴ 5s¹',phase:'Solid',block:'d',period:5,group:5},
+  {n:42,s:'Mo',name:'Molybdenum',m:95.95,c:'transition',col:6,row:5,conf:'[Kr] 4d⁵ 5s¹',phase:'Solid',block:'d',period:5,group:6},
+  {n:43,s:'Tc',name:'Technetium',m:98,c:'transition',col:7,row:5,conf:'[Kr] 4d⁵ 5s²',phase:'Solid',block:'d',period:5,group:7},
+  {n:44,s:'Ru',name:'Ruthenium',m:101.07,c:'transition',col:8,row:5,conf:'[Kr] 4d⁷ 5s¹',phase:'Solid',block:'d',period:5,group:8},
+  {n:45,s:'Rh',name:'Rhodium',m:102.91,c:'transition',col:9,row:5,conf:'[Kr] 4d⁸ 5s¹',phase:'Solid',block:'d',period:5,group:9},
+  {n:46,s:'Pd',name:'Palladium',m:106.42,c:'transition',col:10,row:5,conf:'[Kr] 4d¹⁰',phase:'Solid',block:'d',period:5,group:10},
+  {n:47,s:'Ag',name:'Silver',m:107.87,c:'transition',col:11,row:5,conf:'[Kr] 4d¹⁰ 5s¹',phase:'Solid',block:'d',period:5,group:11},
+  {n:48,s:'Cd',name:'Cadmium',m:112.41,c:'transition',col:12,row:5,conf:'[Kr] 4d¹⁰ 5s²',phase:'Solid',block:'d',period:5,group:12},
+  {n:49,s:'In',name:'Indium',m:114.82,c:'post-transition',col:13,row:5,conf:'[Kr] 4d¹⁰ 5s² 5p¹',phase:'Solid',block:'p',period:5,group:13},
+  {n:50,s:'Sn',name:'Tin',m:118.71,c:'post-transition',col:14,row:5,conf:'[Kr] 4d¹⁰ 5s² 5p²',phase:'Solid',block:'p',period:5,group:14},
+  {n:51,s:'Sb',name:'Antimony',m:121.76,c:'metalloid',col:15,row:5,conf:'[Kr] 4d¹⁰ 5s² 5p³',phase:'Solid',block:'p',period:5,group:15},
+  {n:52,s:'Te',name:'Tellurium',m:127.60,c:'metalloid',col:16,row:5,conf:'[Kr] 4d¹⁰ 5s² 5p⁴',phase:'Solid',block:'p',period:5,group:16},
+  {n:53,s:'I',name:'Iodine',m:126.90,c:'halogen',col:17,row:5,conf:'[Kr] 4d¹⁰ 5s² 5p⁵',phase:'Solid',block:'p',period:5,group:17},
+  {n:54,s:'Xe',name:'Xenon',m:131.29,c:'noble-gas',col:18,row:5,conf:'[Kr] 4d¹⁰ 5s² 5p⁶',phase:'Gas',block:'p',period:5,group:18},
+  // Period 6
+  {n:55,s:'Cs',name:'Caesium',m:132.91,c:'alkali',col:1,row:6,conf:'[Xe] 6s¹',phase:'Solid',block:'s',period:6,group:1},
+  {n:56,s:'Ba',name:'Barium',m:137.33,c:'alkaline-earth',col:2,row:6,conf:'[Xe] 6s²',phase:'Solid',block:'s',period:6,group:2},
+  // Lanthanides (57-71) - positioned in row 9
+  {n:57,s:'La',name:'Lanthanum',m:138.91,c:'lanthanide',col:3,row:9,conf:'[Xe] 5d¹ 6s²',phase:'Solid',block:'f',period:6,group:3},
+  {n:58,s:'Ce',name:'Cerium',m:140.12,c:'lanthanide',col:4,row:9,conf:'[Xe] 4f¹ 5d¹ 6s²',phase:'Solid',block:'f',period:6,group:'-'},
+  {n:59,s:'Pr',name:'Praseodymium',m:140.91,c:'lanthanide',col:5,row:9,conf:'[Xe] 4f³ 6s²',phase:'Solid',block:'f',period:6,group:'-'},
+  {n:60,s:'Nd',name:'Neodymium',m:144.24,c:'lanthanide',col:6,row:9,conf:'[Xe] 4f⁴ 6s²',phase:'Solid',block:'f',period:6,group:'-'},
+  {n:61,s:'Pm',name:'Promethium',m:145,c:'lanthanide',col:7,row:9,conf:'[Xe] 4f⁵ 6s²',phase:'Solid',block:'f',period:6,group:'-'},
+  {n:62,s:'Sm',name:'Samarium',m:150.36,c:'lanthanide',col:8,row:9,conf:'[Xe] 4f⁶ 6s²',phase:'Solid',block:'f',period:6,group:'-'},
+  {n:63,s:'Eu',name:'Europium',m:151.96,c:'lanthanide',col:9,row:9,conf:'[Xe] 4f⁷ 6s²',phase:'Solid',block:'f',period:6,group:'-'},
+  {n:64,s:'Gd',name:'Gadolinium',m:157.25,c:'lanthanide',col:10,row:9,conf:'[Xe] 4f⁷ 5d¹ 6s²',phase:'Solid',block:'f',period:6,group:'-'},
+  {n:65,s:'Tb',name:'Terbium',m:158.93,c:'lanthanide',col:11,row:9,conf:'[Xe] 4f⁹ 6s²',phase:'Solid',block:'f',period:6,group:'-'},
+  {n:66,s:'Dy',name:'Dysprosium',m:162.50,c:'lanthanide',col:12,row:9,conf:'[Xe] 4f¹⁰ 6s²',phase:'Solid',block:'f',period:6,group:'-'},
+  {n:67,s:'Ho',name:'Holmium',m:164.93,c:'lanthanide',col:13,row:9,conf:'[Xe] 4f¹¹ 6s²',phase:'Solid',block:'f',period:6,group:'-'},
+  {n:68,s:'Er',name:'Erbium',m:167.26,c:'lanthanide',col:14,row:9,conf:'[Xe] 4f¹² 6s²',phase:'Solid',block:'f',period:6,group:'-'},
+  {n:69,s:'Tm',name:'Thulium',m:168.93,c:'lanthanide',col:15,row:9,conf:'[Xe] 4f¹³ 6s²',phase:'Solid',block:'f',period:6,group:'-'},
+  {n:70,s:'Yb',name:'Ytterbium',m:173.05,c:'lanthanide',col:16,row:9,conf:'[Xe] 4f¹⁴ 6s²',phase:'Solid',block:'f',period:6,group:'-'},
+  {n:71,s:'Lu',name:'Lutetium',m:174.97,c:'lanthanide',col:17,row:9,conf:'[Xe] 4f¹⁴ 5d¹ 6s²',phase:'Solid',block:'d',period:6,group:3},
+  // Continue Period 6
+  {n:72,s:'Hf',name:'Hafnium',m:178.49,c:'transition',col:4,row:6,conf:'[Xe] 4f¹⁴ 5d² 6s²',phase:'Solid',block:'d',period:6,group:4},
+  {n:73,s:'Ta',name:'Tantalum',m:180.95,c:'transition',col:5,row:6,conf:'[Xe] 4f¹⁴ 5d³ 6s²',phase:'Solid',block:'d',period:6,group:5},
+  {n:74,s:'W',name:'Tungsten',m:183.84,c:'transition',col:6,row:6,conf:'[Xe] 4f¹⁴ 5d⁴ 6s²',phase:'Solid',block:'d',period:6,group:6},
+  {n:75,s:'Re',name:'Rhenium',m:186.21,c:'transition',col:7,row:6,conf:'[Xe] 4f¹⁴ 5d⁵ 6s²',phase:'Solid',block:'d',period:6,group:7},
+  {n:76,s:'Os',name:'Osmium',m:190.23,c:'transition',col:8,row:6,conf:'[Xe] 4f¹⁴ 5d⁶ 6s²',phase:'Solid',block:'d',period:6,group:8},
+  {n:77,s:'Ir',name:'Iridium',m:192.22,c:'transition',col:9,row:6,conf:'[Xe] 4f¹⁴ 5d⁷ 6s²',phase:'Solid',block:'d',period:6,group:9},
+  {n:78,s:'Pt',name:'Platinum',m:195.08,c:'transition',col:10,row:6,conf:'[Xe] 4f¹⁴ 5d⁹ 6s¹',phase:'Solid',block:'d',period:6,group:10},
+  {n:79,s:'Au',name:'Gold',m:196.97,c:'transition',col:11,row:6,conf:'[Xe] 4f¹⁴ 5d¹⁰ 6s¹',phase:'Solid',block:'d',period:6,group:11},
+  {n:80,s:'Hg',name:'Mercury',m:200.59,c:'transition',col:12,row:6,conf:'[Xe] 4f¹⁴ 5d¹⁰ 6s²',phase:'Liquid',block:'d',period:6,group:12},
+  {n:81,s:'Tl',name:'Thallium',m:204.38,c:'post-transition',col:13,row:6,conf:'[Xe] 4f¹⁴ 5d¹⁰ 6s² 6p¹',phase:'Solid',block:'p',period:6,group:13},
+  {n:82,s:'Pb',name:'Lead',m:207.2,c:'post-transition',col:14,row:6,conf:'[Xe] 4f¹⁴ 5d¹⁰ 6s² 6p²',phase:'Solid',block:'p',period:6,group:14},
+  {n:83,s:'Bi',name:'Bismuth',m:208.98,c:'post-transition',col:15,row:6,conf:'[Xe] 4f¹⁴ 5d¹⁰ 6s² 6p³',phase:'Solid',block:'p',period:6,group:15},
+  {n:84,s:'Po',name:'Polonium',m:209,c:'post-transition',col:16,row:6,conf:'[Xe] 4f¹⁴ 5d¹⁰ 6s² 6p⁴',phase:'Solid',block:'p',period:6,group:16},
+  {n:85,s:'At',name:'Astatine',m:210,c:'halogen',col:17,row:6,conf:'[Xe] 4f¹⁴ 5d¹⁰ 6s² 6p⁵',phase:'Solid',block:'p',period:6,group:17},
+  {n:86,s:'Rn',name:'Radon',m:222,c:'noble-gas',col:18,row:6,conf:'[Xe] 4f¹⁴ 5d¹⁰ 6s² 6p⁶',phase:'Gas',block:'p',period:6,group:18},
+  // Period 7
+  {n:87,s:'Fr',name:'Francium',m:223,c:'alkali',col:1,row:7,conf:'[Rn] 7s¹',phase:'Solid',block:'s',period:7,group:1},
+  {n:88,s:'Ra',name:'Radium',m:226,c:'alkaline-earth',col:2,row:7,conf:'[Rn] 7s²',phase:'Solid',block:'s',period:7,group:2},
+  // Actinides (89-103) - positioned in row 10
+  {n:89,s:'Ac',name:'Actinium',m:227,c:'actinide',col:3,row:10,conf:'[Rn] 6d¹ 7s²',phase:'Solid',block:'f',period:7,group:3},
+  {n:90,s:'Th',name:'Thorium',m:232.04,c:'actinide',col:4,row:10,conf:'[Rn] 6d² 7s²',phase:'Solid',block:'f',period:7,group:'-'},
+  {n:91,s:'Pa',name:'Protactinium',m:231.04,c:'actinide',col:5,row:10,conf:'[Rn] 5f² 6d¹ 7s²',phase:'Solid',block:'f',period:7,group:'-'},
+  {n:92,s:'U',name:'Uranium',m:238.03,c:'actinide',col:6,row:10,conf:'[Rn] 5f³ 6d¹ 7s²',phase:'Solid',block:'f',period:7,group:'-'},
+  {n:93,s:'Np',name:'Neptunium',m:237,c:'actinide',col:7,row:10,conf:'[Rn] 5f⁴ 6d¹ 7s²',phase:'Solid',block:'f',period:7,group:'-'},
+  {n:94,s:'Pu',name:'Plutonium',m:244,c:'actinide',col:8,row:10,conf:'[Rn] 5f⁶ 7s²',phase:'Solid',block:'f',period:7,group:'-'},
+  {n:95,s:'Am',name:'Americium',m:243,c:'actinide',col:9,row:10,conf:'[Rn] 5f⁷ 7s²',phase:'Solid',block:'f',period:7,group:'-'},
+  {n:96,s:'Cm',name:'Curium',m:247,c:'actinide',col:10,row:10,conf:'[Rn] 5f⁷ 6d¹ 7s²',phase:'Solid',block:'f',period:7,group:'-'},
+  {n:97,s:'Bk',name:'Berkelium',m:247,c:'actinide',col:11,row:10,conf:'[Rn] 5f⁹ 7s²',phase:'Solid',block:'f',period:7,group:'-'},
+  {n:98,s:'Cf',name:'Californium',m:251,c:'actinide',col:12,row:10,conf:'[Rn] 5f¹⁰ 7s²',phase:'Solid',block:'f',period:7,group:'-'},
+  {n:99,s:'Es',name:'Einsteinium',m:252,c:'actinide',col:13,row:10,conf:'[Rn] 5f¹¹ 7s²',phase:'Solid',block:'f',period:7,group:'-'},
+  {n:100,s:'Fm',name:'Fermium',m:257,c:'actinide',col:14,row:10,conf:'[Rn] 5f¹² 7s²',phase:'Solid',block:'f',period:7,group:'-'},
+  {n:101,s:'Md',name:'Mendelevium',m:258,c:'actinide',col:15,row:10,conf:'[Rn] 5f¹³ 7s²',phase:'Solid',block:'f',period:7,group:'-'},
+  {n:102,s:'No',name:'Nobelium',m:259,c:'actinide',col:16,row:10,conf:'[Rn] 5f¹⁴ 7s²',phase:'Solid',block:'f',period:7,group:'-'},
+  {n:103,s:'Lr',name:'Lawrencium',m:266,c:'actinide',col:17,row:10,conf:'[Rn] 5f¹⁴ 7s² 7p¹',phase:'Solid',block:'d',period:7,group:3},
+  // Continue Period 7
+  {n:104,s:'Rf',name:'Rutherfordium',m:267,c:'transition',col:4,row:7,conf:'[Rn] 5f¹⁴ 6d² 7s²',phase:'Solid',block:'d',period:7,group:4},
+  {n:105,s:'Db',name:'Dubnium',m:268,c:'transition',col:5,row:7,conf:'[Rn] 5f¹⁴ 6d³ 7s²',phase:'Solid',block:'d',period:7,group:5},
+  {n:106,s:'Sg',name:'Seaborgium',m:269,c:'transition',col:6,row:7,conf:'[Rn] 5f¹⁴ 6d⁴ 7s²',phase:'Solid',block:'d',period:7,group:6},
+  {n:107,s:'Bh',name:'Bohrium',m:270,c:'transition',col:7,row:7,conf:'[Rn] 5f¹⁴ 6d⁵ 7s²',phase:'Solid',block:'d',period:7,group:7},
+  {n:108,s:'Hs',name:'Hassium',m:277,c:'transition',col:8,row:7,conf:'[Rn] 5f¹⁴ 6d⁶ 7s²',phase:'Solid',block:'d',period:7,group:8},
+  {n:109,s:'Mt',name:'Meitnerium',m:278,c:'transition',col:9,row:7,conf:'[Rn] 5f¹⁴ 6d⁷ 7s²',phase:'Solid',block:'d',period:7,group:9},
+  {n:110,s:'Ds',name:'Darmstadtium',m:281,c:'transition',col:10,row:7,conf:'[Rn] 5f¹⁴ 6d⁸ 7s²',phase:'Solid',block:'d',period:7,group:10},
+  {n:111,s:'Rg',name:'Roentgenium',m:282,c:'transition',col:11,row:7,conf:'[Rn] 5f¹⁴ 6d⁹ 7s²',phase:'Solid',block:'d',period:7,group:11},
+  {n:112,s:'Cn',name:'Copernicium',m:285,c:'transition',col:12,row:7,conf:'[Rn] 5f¹⁴ 6d¹⁰ 7s²',phase:'Solid',block:'d',period:7,group:12},
+  {n:113,s:'Nh',name:'Nihonium',m:286,c:'post-transition',col:13,row:7,conf:'[Rn] 5f¹⁴ 6d¹⁰ 7s² 7p¹',phase:'Solid',block:'p',period:7,group:13},
+  {n:114,s:'Fl',name:'Flerovium',m:289,c:'post-transition',col:14,row:7,conf:'[Rn] 5f¹⁴ 6d¹⁰ 7s² 7p²',phase:'Solid',block:'p',period:7,group:14},
+  {n:115,s:'Mc',name:'Moscovium',m:290,c:'post-transition',col:15,row:7,conf:'[Rn] 5f¹⁴ 6d¹⁰ 7s² 7p³',phase:'Solid',block:'p',period:7,group:15},
+  {n:116,s:'Lv',name:'Livermorium',m:293,c:'post-transition',col:16,row:7,conf:'[Rn] 5f¹⁴ 6d¹⁰ 7s² 7p⁴',phase:'Solid',block:'p',period:7,group:16},
+  {n:117,s:'Ts',name:'Tennessine',m:294,c:'halogen',col:17,row:7,conf:'[Rn] 5f¹⁴ 6d¹⁰ 7s² 7p⁵',phase:'Solid',block:'p',period:7,group:17},
+  {n:118,s:'Og',name:'Oganesson',m:294,c:'noble-gas',col:18,row:7,conf:'[Rn] 5f¹⁴ 6d¹⁰ 7s² 7p⁶',phase:'Solid',block:'p',period:7,group:18}
 ];
 
-// 1. Render Periodic Table
+// Render Periodic Table
 const grid = document.getElementById('periodic-table');
+
+// Add separator for Lanthanides
+const lanthSep = document.createElement('div');
+lanthSep.className = 'separator-row';
+lanthSep.style.gridRow = '8';
+lanthSep.innerHTML = '<span>Lanthanides (57-71)</span>';
+grid.appendChild(lanthSep);
+
+// Add separator for Actinides
+const actSep = document.createElement('div');
+actSep.className = 'separator-row';
+actSep.style.gridRow = '11';
+actSep.innerHTML = '<span>Actinides (89-103)</span>';
+grid.appendChild(actSep);
+
+// Render all elements
 elementsData.forEach(el => {
   const card = document.createElement('div');
   card.className = `element-card cat-${el.c}`;
@@ -181,67 +434,173 @@ elementsData.forEach(el => {
   card.setAttribute('role', 'gridcell');
   card.setAttribute('tabindex', '0');
   card.setAttribute('aria-label', `${el.name}, atomic number ${el.n}`);
-  card.innerHTML = `<span class="el-num">${el.n}</span><span class="el-sym">${el.s}</span><span class="el-mass">${el.m}</span>`;
+  card.setAttribute('data-category', el.c);
+  card.setAttribute('data-name', el.name.toLowerCase());
+  card.setAttribute('data-symbol', el.s.toLowerCase());
+  card.setAttribute('data-number', el.n);
+  
+  card.innerHTML = `
+    <span class="el-num">${el.n}</span>
+    <span class="el-sym">${el.s}</span>
+    <span class="el-name">${el.name}</span>
+    <span class="el-mass">${el.m}</span>
+  `;
+  
   card.addEventListener('click', () => openModal(el));
-  card.addEventListener('keydown', (e) => { if(e.key==='Enter') openModal(el); });
+  card.addEventListener('keydown', (e) => { if(e.key==='Enter' || e.key===' ') { e.preventDefault(); openModal(el); }});
   grid.appendChild(card);
 });
 
-// 2. Modal Logic
+// Search Functionality
+const searchInput = document.getElementById('searchInput');
+searchInput.addEventListener('input', function() {
+  const query = this.value.toLowerCase().trim();
+  const cards = document.querySelectorAll('.element-card');
+  
+  cards.forEach(card => {
+    const name = card.getAttribute('data-name');
+    const symbol = card.getAttribute('data-symbol');
+    const number = card.getAttribute('data-number');
+    
+    if (!query || name.includes(query) || symbol.includes(query) || number === query) {
+      card.classList.remove('dimmed');
+      if (query && (name === query || symbol === query || number === query)) {
+        card.classList.add('highlight');
+      } else {
+        card.classList.remove('highlight');
+      }
+    } else {
+      card.classList.add('dimmed');
+      card.classList.remove('highlight');
+    }
+  });
+});
+
+// Filter Functionality
+const filterPills = document.querySelectorAll('.filter-pill');
+filterPills.forEach(pill => {
+  pill.addEventListener('click', function() {
+    filterPills.forEach(p => p.classList.remove('active'));
+    this.classList.add('active');
+    
+    const category = this.getAttribute('data-cat');
+    const cards = document.querySelectorAll('.element-card');
+    
+    cards.forEach(card => {
+      if (category === 'all' || card.getAttribute('data-category') === category) {
+        card.classList.remove('dimmed');
+      } else {
+        card.classList.add('dimmed');
+      }
+    });
+  });
+});
+
+// Modal Logic
 const modal = document.getElementById('chemModal');
+let lastFocusedElement = null;
+
 function openModal(el) {
+  lastFocusedElement = document.activeElement;
   document.getElementById('modalElSym').textContent = el.s;
   document.getElementById('modalElName').textContent = el.name;
-  document.getElementById('modalElCat').textContent = el.c.replace('-', ' ');
+  document.getElementById('modalElCat').textContent = el.c.replace(/-/g, ' ');
   document.getElementById('modalElNum').textContent = el.n;
   document.getElementById('modalElMass').textContent = el.m + ' u';
   document.getElementById('modalElConfig').textContent = el.conf;
   document.getElementById('modalElPhase').textContent = el.phase;
+  document.getElementById('modalElBlock').textContent = el.block.toUpperCase() + '-block';
+  document.getElementById('modalElPeriod').textContent = el.period;
+  document.getElementById('modalElGroup').textContent = el.group;
+  
   modal.classList.add('active');
   document.body.style.overflow = 'hidden';
+  
+  // Focus trap
+  setTimeout(() => {
+    document.querySelector('.close-modal').focus();
+  }, 100);
 }
+
 function closeModal() {
   modal.classList.remove('active');
   document.body.style.overflow = '';
+  if (lastFocusedElement) lastFocusedElement.focus();
 }
-modal.addEventListener('click', (e) => { if(e.target === modal) closeModal(); });
-document.addEventListener('keydown', (e) => { if(e.key === 'Escape' && modal.classList.contains('active')) closeModal(); });
 
-// 3. Molar Mass Calculator
+modal.addEventListener('click', (e) => { if(e.target === modal) closeModal(); });
+document.addEventListener('keydown', (e) => { 
+  if(e.key === 'Escape' && modal.classList.contains('active')) closeModal(); 
+});
+
+// Molar Mass Calculator
 function calculateMolarMass() {
   const formula = document.getElementById('molarInput').value.trim();
   const resultEl = document.getElementById('molarResult');
-  if (!formula) return;
   
-  // Regex handles elements and optional counts (e.g., H2O, C6H12O6)
+  if (!formula) {
+    resultEl.innerHTML = '<span style="color:var(--rose)">Please enter a chemical formula.</span>';
+    resultEl.classList.add('active');
+    return;
+  }
+  
+  // Enhanced regex to handle parentheses: e.g., Ca(OH)2, Fe2(SO4)3
+  let totalMass = 0;
+  let breakdown = [];
+  let valid = true;
+  
+  // Simple parser for basic formulas (handles element symbols and counts)
   const regex = /([A-Z][a-z]*)(\d*)/g;
-  let match, totalMass = 0, breakdown = [], valid = true;
-
+  let match;
+  
   while ((match = regex.exec(formula)) !== null) {
     const symbol = match[1];
     const count = match[2] === '' ? 1 : parseInt(match[2]);
     const element = elementsData.find(e => e.s === symbol);
     
     if (element) {
-      totalMass += element.m * count;
-      breakdown.push(`${symbol}: ${element.m} × ${count}`);
-    } else {
-      valid = false; break;
+      const contribution = element.m * count;
+      totalMass += contribution;
+      breakdown.push(`${symbol}: ${element.m} × ${count} = ${contribution.toFixed(3)}`);
+    } else if (symbol !== '(' && symbol !== ')') {
+      valid = false;
+      resultEl.innerHTML = `<span style="color:var(--rose)"><i class="fas fa-exclamation-triangle"></i> Unknown element: "${symbol}". Check your formula.</span>`;
+      resultEl.classList.add('active');
+      return;
     }
   }
-
+  
   if (valid && totalMass > 0) {
-    resultEl.innerHTML = `<strong>Total Molar Mass:</strong> ${totalMass.toFixed(3)} g/mol<br><small style="color:var(--text-sec);font-size:0.85rem;display:block;margin-top:8px">${breakdown.join(' + ')}</small>`;
+    resultEl.innerHTML = `
+      <div style="font-size:1.3rem;margin-bottom:12px"><strong>Total Molar Mass:</strong> ${totalMass.toFixed(3)} g/mol</div>
+      <div class="breakdown">
+        <strong>Breakdown:</strong><br>
+        ${breakdown.join('<br>')}
+      </div>
+    `;
     resultEl.classList.add('active');
   } else {
-    resultEl.innerHTML = `<span style="color:var(--rose)"><i class="fas fa-exclamation-triangle"></i> Invalid formula or unknown element. Try "H2O" or "C6H12O6".</span>`;
+    resultEl.innerHTML = `<span style="color:var(--rose)"><i class="fas fa-exclamation-triangle"></i> Invalid formula. Try "H2O", "C6H12O6", or "NaCl".</span>`;
     resultEl.classList.add('active');
   }
 }
-// Allow "Enter" key to calculate
+
+// Enter key support
 document.getElementById('molarInput').addEventListener('keypress', function (e) {
   if (e.key === 'Enter') calculateMolarMass();
 });
+
+// Touch optimization for mobile
+if ('ontouchstart' in window) {
+  document.querySelectorAll('.element-card').forEach(card => {
+    card.addEventListener('touchstart', function() {
+      this.style.transform = 'scale(1.05)';
+    });
+    card.addEventListener('touchend', function() {
+      this.style.transform = '';
+    });
+  });
+}
 </script>
 </body>
 </html>
