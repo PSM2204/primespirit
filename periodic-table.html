@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="theme-color" content="#02040a">
+<title>Interactive Periodic Table | Prime Spirit Free Tools</title>
+<meta name="description" content="Free interactive periodic table and molar mass calculator for NEET, JEE, and Board students by Prime Spirit Mentors.">
+<link rel="canonical" href="https://primespirit.co.in/periodic-table.html">
+
+<!-- Fonts & Icons -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=DM+Mono:wght@400&display=swap">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<!-- Prime Spirit Core Styles (Inline for consistency) -->
+<style>
+:root{--bg:#02040a;--bg-warm:#050814;--surface:rgba(10,15,30,0.6);--elevated:rgba(20,25,50,0.9);--border:rgba(255,255,255,0.06);--border-mid:rgba(255,255,255,0.12);--text:#f4f7ff;--text-sec:#a8b5d4;--text-muted:#8892b0;--accent:#00f3ff;--green:#00ff9d;--rose:#ff2a6d;--violet:#bc13fe;--grad-accent:linear-gradient(135deg,#00f3ff,#0066ff);--font-head:'Syne',sans-serif;--font-body:'Source Serif 4',Georgia,serif;--font-mono:'DM Mono',monospace;--radius-sm:8px;--radius-md:14px;--radius-lg:20px;--header-h:78px}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-size:1rem;line-height:1.7;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+a{color:var(--accent);text-decoration:none;transition:color .2s}a:hover{color:#fff}
+.container{max-width:1280px;margin:0 auto;padding:0 24px}
+
+/* Navigation (Simplified copy of your header) */
+header{position:sticky;top:0;z-index:1000;height:var(--header-h);display:flex;align-items:center;background:rgba(2,4,10,0.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+.nav-row{width:100%;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;font-family:var(--font-head);font-weight:800;font-size:1.05rem;color:var(--text)}
+.logo svg{width:38px;height:38px;filter:drop-shadow(0 0 8px rgba(0,243,255,0.4))}
+.btn-back{display:inline-flex;align-items:center;gap:8px;padding:8px 16px;border-radius:var(--radius-sm);font-family:var(--font-head);font-weight:700;font-size:.85rem;color:var(--text-sec);border:1px solid var(--border);background:var(--surface);transition:all .2s}
+.btn-back:hover{border-color:var(--accent);color:var(--accent)}
+
+/* Periodic Table Grid */
+.chem-hero{text-align:center;padding:60px 0 30px}
+.chem-hero h1{font-family:var(--font-head);font-size:clamp(1.8rem,4vw,2.5rem);margin-bottom:10px}
+.chem-hero h1 span{background:var(--grad-accent);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.chem-hero p{color:var(--text-sec);max-width:600px;margin:0 auto}
+
+.periodic-grid{display:grid;grid-template-columns:repeat(18,minmax(42px,1fr));gap:4px;max-width:1100px;margin:0 auto;overflow-x:auto;padding:20px 10px;scrollbar-width:thin;scrollbar-color:var(--accent) var(--surface)}
+.element-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:6px 2px;cursor:pointer;transition:all .25s cubic-bezier(.22,1,.36,1);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:65px;backdrop-filter:blur(8px);position:relative}
+.element-card:hover{transform:scale(1.2);border-color:var(--accent);box-shadow:0 0 25px rgba(0,243,255,.25);z-index:20;background:var(--elevated)}
+.el-num{font-size:.65rem;color:var(--text-muted);position:absolute;top:4px;left:4px;font-family:var(--font-mono)}
+.el-sym{font-size:1.1rem;font-weight:800;color:var(--text);font-family:var(--font-head);margin-top:4px}
+.el-mass{font-size:.6rem;color:var(--text-sec);font-family:var(--font-mono)}
+
+/* Category Glows */
+.cat-nonmetal{border-color:rgba(0,243,255,.4)}.cat-noble-gas{border-color:rgba(188,19,254,.4)}.cat-alkali{border-color:rgba(0,255,157,.4)}
+.cat-alkaline-earth{border-color:rgba(255,215,0,.4)}.cat-metalloid{border-color:rgba(255,42,109,.4)}.cat-halogen{border-color:rgba(0,102,255,.4)}.cat-transition{border-color:rgba(168,181,212,.3)}
+
+/* Detail Modal */
+.chem-modal-overlay{position:fixed;inset:0;z-index:100000;background:rgba(2,4,10,.85);backdrop-filter:blur(16px);display:none;align-items:center;justify-content:center;padding:20px}
+.chem-modal-overlay.active{display:flex}
+.chem-modal-card{background:var(--elevated);border:1px solid var(--border-mid);border-radius:var(--radius-lg);padding:32px;max-width:500px;width:100%;position:relative;box-shadow:0 32px 80px rgba(0,0,0,.6),0 0 30px rgba(0,243,255,.1);animation:fadeUp .4s cubic-bezier(.22,1,.36,1)}
+.close-modal{position:absolute;top:16px;right:16px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:var(--radius-sm);background:none;border:1px solid var(--border);color:var(--text-sec);cursor:pointer;transition:all .2s}
+.close-modal:hover{color:var(--text);border-color:var(--accent)}
+.chem-detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:20px}
+.chem-detail-item{background:var(--surface);padding:12px;border-radius:var(--radius-sm);border:1px solid var(--border)}
+.chem-detail-item strong{display:block;font-size:.75rem;color:var(--text-muted);font-family:var(--font-mono);text-transform:uppercase;margin-bottom:4px}
+.chem-detail-item span{font-size:1.1rem;font-weight:700;color:var(--accent);font-family:var(--font-head)}
+
+/* Molar Mass Tool */
+.molar-tool{max-width:600px;margin:60px auto;text-align:center;padding:40px 20px;background:var(--bg-warm);border-radius:var(--radius-lg);border:1px solid var(--border)}
+.molar-input-group{display:flex;gap:10px;margin-top:20px}
+.molar-input-group input{flex:1;padding:14px 18px;border-radius:var(--radius-sm);background:var(--surface);border:1px solid var(--border);color:var(--text);font-family:var(--font-body);font-size:1rem;outline:none;transition:all .25s}
+.molar-input-group input:focus{border-color:var(--accent);box-shadow:0 0 0 4px rgba(0,243,255,.1)}
+.btn-calc{padding:14px 28px;border-radius:var(--radius-sm);font-family:var(--font-head);font-weight:700;font-size:.9rem;background:var(--grad-accent);color:#000;border:none;cursor:pointer;transition:all .25s;white-space:nowrap}
+.btn-calc:hover{transform:translateY(-2px);box-shadow:0 0 25px rgba(0,243,255,.3)}
+.molar-result{margin-top:20px;padding:20px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);font-family:var(--font-head);font-size:1.2rem;color:var(--green);display:none}
+.molar-result.active{display:block;animation:fadeUp .3s ease}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:768px){.periodic-grid{grid-template-columns:repeat(18,minmax(36px,1fr))}.molar-input-group{flex-direction:column}}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header role="banner">
+<div class="container nav-row">
+  <a href="/" class="logo" aria-label="Prime Spirit Home">
+    <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="psGrad" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#00f3ff"/><stop offset="100%" stop-color="#0066ff"/></linearGradient></defs><ellipse cx="24" cy="24" rx="22" ry="9.5" fill="none" stroke="url(#psGrad)" stroke-width="1.8" transform="rotate(-32 24 24)"/><circle cx="24" cy="24" r="13" fill="#02040a" stroke="url(#psGrad)" stroke-width="1.5"/><text x="24" y="28.5" font-family="Arial Black,sans-serif" font-size="12" font-weight="900" fill="#00f3ff" text-anchor="middle" style="filter: drop-shadow(0 0 5px #00f3ff)">PS</text><circle cx="43" cy="15" r="2.8" fill="#00f3ff" style="filter: drop-shadow(0 0 5px #00f3ff)"/></svg>
+    <span>Prime Spirit</span>
+  </a>
+  <a href="/" class="btn-back"><i class="fas fa-arrow-left"></i> Back to Home</a>
+</div>
+</header>
+
+<!-- MAIN CONTENT -->
+<main id="main-content">
+<section class="chem-hero container">
+  <h1>Interactive <span>Periodic Table</span></h1>
+  <p>Explore elements, visualize atomic structures, and calculate molar mass instantly. Built for NEET, JEE, and Board aspirants.</p>
+</section>
+
+<section class="container">
+  <div id="periodic-table" class="periodic-grid" role="grid" aria-label="Periodic Table of Elements"></div>
+</section>
+
+<section class="container">
+  <div class="molar-tool">
+    <h2 style="font-family:var(--font-head);margin-bottom:8px"><i class="fas fa-flask" style="color:var(--accent)"></i> Molar Mass Calculator</h2>
+    <p style="color:var(--text-sec);font-size:.9rem">Enter a chemical formula (e.g., H2O, C6H12O6, Ca(OH)2)</p>
+    <div class="molar-input-group">
+      <input type="text" id="molarInput" placeholder="Enter formula..." aria-label="Chemical formula">
+      <button class="btn-calc" onclick="calculateMolarMass()">Calculate</button>
+    </div>
+    <div id="molarResult" class="molar-result" aria-live="polite"></div>
+  </div>
+</section>
+</main>
+
+<!-- DETAIL MODAL -->
+<div id="chemModal" class="chem-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modalElName">
+<div class="chem-modal-card">
+  <button class="close-modal" onclick="closeModal()" aria-label="Close modal"><i class="fas fa-times"></i></button>
+  <div style="display:flex;align-items:center;gap:16px;margin-bottom:16px">
+    <div id="modalElSym" style="font-size:3rem;font-weight:800;font-family:var(--font-head);color:var(--accent);width:80px;height:80px;display:flex;align-items:center;justify-content:center;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md)"></div>
+    <div>
+      <h2 id="modalElName" style="font-family:var(--font-head);font-size:1.8rem;margin-bottom:4px"></h2>
+      <span id="modalElCat" style="font-family:var(--font-mono);font-size:.8rem;color:var(--text-sec);text-transform:uppercase;letter-spacing:.08em"></span>
+    </div>
+  </div>
+  <div class="chem-detail-grid">
+    <div class="chem-detail-item"><strong>Atomic Number</strong><span id="modalElNum"></span></div>
+    <div class="chem-detail-item"><strong>Atomic Mass</strong><span id="modalElMass"></span></div>
+    <div class="chem-detail-item"><strong>Electron Config</strong><span id="modalElConfig" style="font-size:.9rem"></span></div>
+    <div class="chem-detail-item"><strong>Phase (STP)</strong><span id="modalElPhase"></span></div>
+  </div>
+</div>
+</div>
+
+<!-- FOOTER (Simplified) -->
+<footer style="background:var(--bg-warm);border-top:1px solid var(--border);padding:40px 0;margin-top:80px;text-align:center">
+<div class="container">
+  <p style="color:var(--text-muted);font-size:.85rem">&copy; 2026 Prime Spirit Mentors. All rights reserved.</p>
+  <p style="color:var(--text-muted);font-size:.8rem;margin-top:8px"><a href="/">Home</a> &middot; <a href="/#contact">Contact</a> &middot; <a href="/privacy-policy.html">Privacy</a></p>
+</div>
+</footer>
+
+<!-- DATA & LOGIC -->
+<script>
+// Compact dataset (First 36 elements covering all major groups/periods for demo). 
+// To add all 118, simply expand this array or fetch from a public JSON API.
+const elementsData = [
+  {n:1,s:'H',name:'Hydrogen',m:1.008,c:'nonmetal',col:1,row:1,conf:'1s¹',phase:'Gas'},
+  {n:2,s:'He',name:'Helium',m:4.0026,c:'noble-gas',col:18,row:1,conf:'1s²',phase:'Gas'},
+  {n:3,s:'Li',name:'Lithium',m:6.94,c:'alkali',col:1,row:2,conf:'[He] 2s¹',phase:'Solid'},
+  {n:4,s:'Be',name:'Beryllium',m:9.0122,c:'alkaline-earth',col:2,row:2,conf:'[He] 2s²',phase:'Solid'},
+  {n:5,s:'B',name:'Boron',m:10.81,c:'metalloid',col:13,row:2,conf:'[He] 2s² 2p¹',phase:'Solid'},
+  {n:6,s:'C',name:'Carbon',m:12.011,c:'nonmetal',col:14,row:2,conf:'[He] 2s² 2p²',phase:'Solid'},
+  {n:7,s:'N',name:'Nitrogen',m:14.007,c:'nonmetal',col:15,row:2,conf:'[He] 2s² 2p³',phase:'Gas'},
+  {n:8,s:'O',name:'Oxygen',m:15.999,c:'nonmetal',col:16,row:2,conf:'[He] 2s² 2p⁴',phase:'Gas'},
+  {n:9,s:'F',name:'Fluorine',m:18.998,c:'halogen',col:17,row:2,conf:'[He] 2s² 2p⁵',phase:'Gas'},
+  {n:10,s:'Ne',name:'Neon',m:20.180,c:'noble-gas',col:18,row:2,conf:'[He] 2s² 2p⁶',phase:'Gas'},
+  {n:11,s:'Na',name:'Sodium',m:22.990,c:'alkali',col:1,row:3,conf:'[Ne] 3s¹',phase:'Solid'},
+  {n:12,s:'Mg',name:'Magnesium',m:24.305,c:'alkaline-earth',col:2,row:3,conf:'[Ne] 3s²',phase:'Solid'},
+  {n:13,s:'Al',name:'Aluminium',m:26.982,c:'transition',col:13,row:3,conf:'[Ne] 3s² 3p¹',phase:'Solid'},
+  {n:14,s:'Si',name:'Silicon',m:28.085,c:'metalloid',col:14,row:3,conf:'[Ne] 3s² 3p²',phase:'Solid'},
+  {n:15,s:'P',name:'Phosphorus',m:30.974,c:'nonmetal',col:15,row:3,conf:'[Ne] 3s² 3p³',phase:'Solid'},
+  {n:16,s:'S',name:'Sulfur',m:32.06,c:'nonmetal',col:16,row:3,conf:'[Ne] 3s² 3p⁴',phase:'Solid'},
+  {n:17,s:'Cl',name:'Chlorine',m:35.45,c:'halogen',col:17,row:3,conf:'[Ne] 3s² 3p⁵',phase:'Gas'},
+  {n:18,s:'Ar',name:'Argon',m:39.948,c:'noble-gas',col:18,row:3,conf:'[Ne] 3s² 3p⁶',phase:'Gas'},
+  {n:19,s:'K',name:'Potassium',m:39.098,c:'alkali',col:1,row:4,conf:'[Ar] 4s¹',phase:'Solid'},
+  {n:20,s:'Ca',name:'Calcium',m:40.078,c:'alkaline-earth',col:2,row:4,conf:'[Ar] 4s²',phase:'Solid'},
+  {n:21,s:'Sc',name:'Scandium',m:44.956,c:'transition',col:3,row:4,conf:'[Ar] 3d¹ 4s²',phase:'Solid'},
+  {n:22,s:'Ti',name:'Titanium',m:47.867,c:'transition',col:4,row:4,conf:'[Ar] 3d² 4s²',phase:'Solid'},
+  {n:26,s:'Fe',name:'Iron',m:55.845,c:'transition',col:8,row:4,conf:'[Ar] 3d⁶ 4s²',phase:'Solid'},
+  {n:29,s:'Cu',name:'Copper',m:63.546,c:'transition',col:11,row:4,conf:'[Ar] 3d¹⁰ 4s¹',phase:'Solid'},
+  {n:30,s:'Zn',name:'Zinc',m:65.38,c:'transition',col:12,row:4,conf:'[Ar] 3d¹⁰ 4s²',phase:'Solid'},
+  {n:35,s:'Br',name:'Bromine',m:79.904,c:'halogen',col:17,row:4,conf:'[Ar] 3d¹⁰ 4s² 4p⁵',phase:'Liquid'},
+  {n:36,s:'Kr',name:'Krypton',m:83.798,c:'noble-gas',col:18,row:4,conf:'[Ar] 3d¹⁰ 4s² 4p⁶',phase:'Gas'}
+];
+
+// 1. Render Periodic Table
+const grid = document.getElementById('periodic-table');
+elementsData.forEach(el => {
+  const card = document.createElement('div');
+  card.className = `element-card cat-${el.c}`;
+  card.style.gridColumn = el.col;
+  card.style.gridRow = el.row;
+  card.setAttribute('role', 'gridcell');
+  card.setAttribute('tabindex', '0');
+  card.setAttribute('aria-label', `${el.name}, atomic number ${el.n}`);
+  card.innerHTML = `<span class="el-num">${el.n}</span><span class="el-sym">${el.s}</span><span class="el-mass">${el.m}</span>`;
+  card.addEventListener('click', () => openModal(el));
+  card.addEventListener('keydown', (e) => { if(e.key==='Enter') openModal(el); });
+  grid.appendChild(card);
+});
+
+// 2. Modal Logic
+const modal = document.getElementById('chemModal');
+function openModal(el) {
+  document.getElementById('modalElSym').textContent = el.s;
+  document.getElementById('modalElName').textContent = el.name;
+  document.getElementById('modalElCat').textContent = el.c.replace('-', ' ');
+  document.getElementById('modalElNum').textContent = el.n;
+  document.getElementById('modalElMass').textContent = el.m + ' u';
+  document.getElementById('modalElConfig').textContent = el.conf;
+  document.getElementById('modalElPhase').textContent = el.phase;
+  modal.classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+function closeModal() {
+  modal.classList.remove('active');
+  document.body.style.overflow = '';
+}
+modal.addEventListener('click', (e) => { if(e.target === modal) closeModal(); });
+document.addEventListener('keydown', (e) => { if(e.key === 'Escape' && modal.classList.contains('active')) closeModal(); });
+
+// 3. Molar Mass Calculator
+function calculateMolarMass() {
+  const formula = document.getElementById('molarInput').value.trim();
+  const resultEl = document.getElementById('molarResult');
+  if (!formula) return;
+  
+  // Regex handles elements and optional counts (e.g., H2O, C6H12O6)
+  const regex = /([A-Z][a-z]*)(\d*)/g;
+  let match, totalMass = 0, breakdown = [], valid = true;
+
+  while ((match = regex.exec(formula)) !== null) {
+    const symbol = match[1];
+    const count = match[2] === '' ? 1 : parseInt(match[2]);
+    const element = elementsData.find(e => e.s === symbol);
+    
+    if (element) {
+      totalMass += element.m * count;
+      breakdown.push(`${symbol}: ${element.m} × ${count}`);
+    } else {
+      valid = false; break;
+    }
+  }
+
+  if (valid && totalMass > 0) {
+    resultEl.innerHTML = `<strong>Total Molar Mass:</strong> ${totalMass.toFixed(3)} g/mol<br><small style="color:var(--text-sec);font-size:0.85rem;display:block;margin-top:8px">${breakdown.join(' + ')}</small>`;
+    resultEl.classList.add('active');
+  } else {
+    resultEl.innerHTML = `<span style="color:var(--rose)"><i class="fas fa-exclamation-triangle"></i> Invalid formula or unknown element. Try "H2O" or "C6H12O6".</span>`;
+    resultEl.classList.add('active');
+  }
+}
+// Allow "Enter" key to calculate
+document.getElementById('molarInput').addEventListener('keypress', function (e) {
+  if (e.key === 'Enter') calculateMolarMass();
+});
+</script>
+</body>
+</html>
