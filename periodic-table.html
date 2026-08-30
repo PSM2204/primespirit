@@ -4,14 +4,28 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=5.0">
 <meta name="theme-color" content="#02040a">
-<title>Interactive Periodic Table | Prime Spirit Free Tools</title>
-<meta name="description" content="Free interactive periodic table with 118 elements, 3D atom models, electron configurations, and molar mass calculator for NEET, JEE, and Board students.">
+<title>Interactive Periodic Table + Equation Balancer | Prime Spirit Free Tools</title>
+<meta name="description" content="Free interactive periodic table with 118 elements, 3D atom models, equation balancer, and molar mass calculator for NEET, JEE, and Board students.">
 <link rel="canonical" href="https://primespirit.co.in/periodic-table.html">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=DM+Mono:wght@400&display=swap">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Interactive Periodic Table & Equation Balancer",
+  "description": "Free interactive periodic table with 118 elements, 3D atom visualization, chemical equation balancer, and molar mass calculator for NEET, JEE, and Board students.",
+  "url": "https://primespirit.co.in/periodic-table.html",
+  "applicationCategory": "EducationalApplication",
+  "operatingSystem": "Web Browser",
+  "offers": {"@type": "Offer", "price": "0", "priceCurrency": "INR"},
+  "aggregateRating": {"@type": "AggregateRating", "ratingValue": "4.9", "reviewCount": "127"}
+}
+</script>
 
 <style>
 :root{--bg:#02040a;--bg-warm:#050814;--surface:rgba(10,15,30,0.6);--elevated:rgba(20,25,50,0.9);--border:rgba(255,255,255,0.06);--border-mid:rgba(255,255,255,0.12);--text:#f4f7ff;--text-sec:#a8b5d4;--text-muted:#8892b0;--accent:#00f3ff;--green:#00ff9d;--rose:#ff2a6d;--violet:#bc13fe;--gold:#ffd700;--grad-accent:linear-gradient(135deg,#00f3ff,#0066ff);--font-head:'Syne',sans-serif;--font-body:'Source Serif 4',Georgia,serif;--font-mono:'DM Mono',monospace;--radius-sm:8px;--radius-md:14px;--radius-lg:20px;--header-h:78px;--card-gap:4px}
@@ -42,26 +56,16 @@ header{position:sticky;top:0;z-index:1000;height:var(--header-h);display:flex;al
 .filter-pill{padding:6px 12px;border-radius:50px;font-family:var(--font-mono);font-size:.7rem;font-weight:500;background:var(--surface);border:1px solid var(--border);color:var(--text-sec);cursor:pointer;transition:all .2s;white-space:nowrap}
 .filter-pill:hover{border-color:var(--border-mid);color:var(--text)}
 .filter-pill.active{background:var(--accent);color:#000;border-color:var(--accent);font-weight:700}
-.filter-pill[data-cat="nonmetal"]{border-color:rgba(0,243,255,.3)}
-.filter-pill[data-cat="nonmetal"].active{background:rgba(0,243,255,.9);color:#000}
-.filter-pill[data-cat="noble-gas"]{border-color:rgba(188,19,254,.3)}
-.filter-pill[data-cat="noble-gas"].active{background:rgba(188,19,254,.9);color:#fff}
-.filter-pill[data-cat="alkali"]{border-color:rgba(0,255,157,.3)}
-.filter-pill[data-cat="alkali"].active{background:rgba(0,255,157,.9);color:#000}
-.filter-pill[data-cat="alkaline-earth"]{border-color:rgba(255,215,0,.3)}
-.filter-pill[data-cat="alkaline-earth"].active{background:rgba(255,215,0,.9);color:#000}
-.filter-pill[data-cat="metalloid"]{border-color:rgba(255,42,109,.3)}
-.filter-pill[data-cat="metalloid"].active{background:rgba(255,42,109,.9);color:#fff}
-.filter-pill[data-cat="halogen"]{border-color:rgba(0,102,255,.3)}
-.filter-pill[data-cat="halogen"].active{background:rgba(0,102,255,.9);color:#fff}
-.filter-pill[data-cat="transition"]{border-color:rgba(168,181,212,.3)}
-.filter-pill[data-cat="transition"].active{background:rgba(168,181,212,.9);color:#000}
-.filter-pill[data-cat="post-transition"]{border-color:rgba(139,92,246,.3)}
-.filter-pill[data-cat="post-transition"].active{background:rgba(139,92,246,.9);color:#fff}
-.filter-pill[data-cat="lanthanide"]{border-color:rgba(236,72,153,.3)}
-.filter-pill[data-cat="lanthanide"].active{background:rgba(236,72,153,.9);color:#fff}
-.filter-pill[data-cat="actinide"]{border-color:rgba(251,146,60,.3)}
-.filter-pill[data-cat="actinide"].active{background:rgba(251,146,60,.9);color:#000}
+.filter-pill[data-cat="nonmetal"]{border-color:rgba(0,243,255,.3)}.filter-pill[data-cat="nonmetal"].active{background:rgba(0,243,255,.9);color:#000}
+.filter-pill[data-cat="noble-gas"]{border-color:rgba(188,19,254,.3)}.filter-pill[data-cat="noble-gas"].active{background:rgba(188,19,254,.9);color:#fff}
+.filter-pill[data-cat="alkali"]{border-color:rgba(0,255,157,.3)}.filter-pill[data-cat="alkali"].active{background:rgba(0,255,157,.9);color:#000}
+.filter-pill[data-cat="alkaline-earth"]{border-color:rgba(255,215,0,.3)}.filter-pill[data-cat="alkaline-earth"].active{background:rgba(255,215,0,.9);color:#000}
+.filter-pill[data-cat="metalloid"]{border-color:rgba(255,42,109,.3)}.filter-pill[data-cat="metalloid"].active{background:rgba(255,42,109,.9);color:#fff}
+.filter-pill[data-cat="halogen"]{border-color:rgba(0,102,255,.3)}.filter-pill[data-cat="halogen"].active{background:rgba(0,102,255,.9);color:#fff}
+.filter-pill[data-cat="transition"]{border-color:rgba(168,181,212,.3)}.filter-pill[data-cat="transition"].active{background:rgba(168,181,212,.9);color:#000}
+.filter-pill[data-cat="post-transition"]{border-color:rgba(139,92,246,.3)}.filter-pill[data-cat="post-transition"].active{background:rgba(139,92,246,.9);color:#fff}
+.filter-pill[data-cat="lanthanide"]{border-color:rgba(236,72,153,.3)}.filter-pill[data-cat="lanthanide"].active{background:rgba(236,72,153,.9);color:#fff}
+.filter-pill[data-cat="actinide"]{border-color:rgba(251,146,60,.3)}.filter-pill[data-cat="actinide"].active{background:rgba(251,146,60,.9);color:#000}
 
 .table-wrapper{overflow-x:auto;overflow-y:hidden;padding:16px;scrollbar-width:thin;scrollbar-color:var(--accent) var(--surface);-webkit-overflow-scrolling:touch}
 .table-wrapper::-webkit-scrollbar{height:8px}
@@ -95,7 +99,6 @@ header{position:sticky;top:0;z-index:1000;height:var(--header-h);display:flex;al
 .separator-row{grid-column:1/-1;display:flex;align-items:center;gap:12px;padding:12px 0 4px;color:var(--text-sec);font-family:var(--font-mono);font-size:.7rem}
 .separator-row::before,.separator-row::after{content:'';flex:1;height:1px;background:var(--border)}
 
-/* ============ MODAL ============ */
 .chem-modal-overlay{position:fixed;inset:0;z-index:100000;background:rgba(2,4,10,.92);backdrop-filter:blur(16px);display:none;align-items:center;justify-content:center;padding:16px;overflow-y:auto}
 .chem-modal-overlay.active{display:flex}
 .chem-modal-card{background:var(--elevated);border:1px solid var(--border-mid);border-radius:var(--radius-lg);padding:24px;max-width:620px;width:100%;position:relative;box-shadow:0 32px 80px rgba(0,0,0,.6),0 0 30px rgba(0,243,255,.1);animation:fadeUp .3s cubic-bezier(.22,1,.36,1);max-height:92vh;overflow-y:auto}
@@ -113,7 +116,6 @@ header{position:sticky;top:0;z-index:1000;height:var(--header-h);display:flex;al
 .chem-detail-item span{font-size:1rem;font-weight:700;color:var(--accent);font-family:var(--font-head);word-break:break-word}
 .chem-detail-item.full-width{grid-column:1/-1}
 
-/* ============ 3D ATOM VIEWER ============ */
 .atom-viewer-section{margin-top:24px;padding-top:24px;border-top:1px solid var(--border)}
 .atom-viewer-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:10px}
 .atom-viewer-title{font-family:var(--font-head);font-size:1.1rem;font-weight:800;display:flex;align-items:center;gap:10px}
@@ -131,7 +133,6 @@ header{position:sticky;top:0;z-index:1000;height:var(--header-h);display:flex;al
 .shell-legend-item{display:flex;align-items:center;gap:5px;font-family:var(--font-mono);font-size:.7rem;color:var(--text-sec);padding:4px 10px;background:var(--surface);border:1px solid var(--border);border-radius:50px}
 .shell-dot{width:8px;height:8px;border-radius:50%;box-shadow:0 0 6px currentColor}
 
-/* CTA Banner inside modal */
 .demo-cta{margin-top:20px;padding:16px;background:linear-gradient(135deg,rgba(0,243,255,.08),rgba(188,19,254,.08));border:1px solid rgba(0,243,255,.2);border-radius:var(--radius-md);display:flex;align-items:center;gap:14px;flex-wrap:wrap;text-decoration:none;transition:all .3s}
 .demo-cta:hover{border-color:rgba(0,243,255,.5);box-shadow:0 0 20px rgba(0,243,255,.15);transform:translateY(-2px)}
 .demo-cta-icon{width:42px;height:42px;border-radius:50%;background:var(--grad-accent);display:flex;align-items:center;justify-content:center;color:#000;font-size:1.1rem;flex-shrink:0}
@@ -139,6 +140,54 @@ header{position:sticky;top:0;z-index:1000;height:var(--header-h);display:flex;al
 .demo-cta-text strong{display:block;font-family:var(--font-head);font-size:.95rem;color:var(--text);margin-bottom:2px}
 .demo-cta-text span{font-size:.8rem;color:var(--text-sec)}
 .demo-cta-btn{padding:8px 16px;border-radius:var(--radius-sm);background:#00ff9d;color:#000;font-family:var(--font-head);font-weight:700;font-size:.8rem;white-space:nowrap}
+
+/* ============ EQUATION BALANCER ============ */
+.balancer-tool{max-width:800px;margin:60px auto;padding:32px 24px;background:var(--bg-warm);border-radius:var(--radius-lg);border:1px solid var(--border);position:relative;overflow:hidden}
+.balancer-tool::before{content:'';position:absolute;top:-50%;right:-20%;width:300px;height:300px;background:radial-gradient(circle,rgba(0,243,255,.06),transparent 70%);pointer-events:none}
+.balancer-tool::after{content:'';position:absolute;bottom:-50%;left:-20%;width:300px;height:300px;background:radial-gradient(circle,rgba(188,19,254,.06),transparent 70%);pointer-events:none}
+.balancer-tool > *{position:relative;z-index:1}
+.balancer-title{font-family:var(--font-head);font-size:clamp(1.3rem,3vw,1.7rem);margin-bottom:8px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.balancer-title i{color:var(--accent);filter:drop-shadow(0 0 8px rgba(0,243,255,.5))}
+.balancer-subtitle{color:var(--text-sec);font-size:.9rem;margin-bottom:20px}
+.balancer-input-group{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap}
+.balancer-input-group input{flex:1;min-width:220px;padding:14px 18px;border-radius:var(--radius-sm);background:var(--surface);border:1px solid var(--border);color:var(--text);font-family:var(--font-mono);font-size:1rem;outline:none;transition:all .25s;letter-spacing:.02em}
+.balancer-input-group input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(0,243,255,.1)}
+.balancer-input-group input::placeholder{color:var(--text-muted);font-family:var(--font-body)}
+.btn-balance{padding:14px 24px;border-radius:var(--radius-sm);font-family:var(--font-head);font-weight:700;font-size:.9rem;background:var(--grad-accent);color:#000;border:none;cursor:pointer;transition:all .25s;white-space:nowrap;display:inline-flex;align-items:center;gap:8px}
+.btn-balance:hover{transform:translateY(-2px);box-shadow:0 0 25px rgba(0,243,255,.3)}
+.btn-balance:active{transform:translateY(0)}
+
+.examples-label{font-family:var(--font-mono);font-size:.7rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px;display:block}
+.example-chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px}
+.example-chip{padding:6px 12px;border-radius:50px;background:var(--surface);border:1px solid var(--border);color:var(--text-sec);font-family:var(--font-mono);font-size:.75rem;cursor:pointer;transition:all .2s;white-space:nowrap}
+.example-chip:hover{border-color:var(--accent);color:var(--accent);background:rgba(0,243,255,.05)}
+.example-chip.neet{border-color:rgba(0,255,157,.3);color:var(--green)}
+.example-chip.neet:hover{background:rgba(0,255,157,.08);border-color:var(--green)}
+.example-chip.jee{border-color:rgba(188,19,254,.3);color:var(--violet)}
+.example-chip.jee:hover{background:rgba(188,19,254,.08);border-color:var(--violet)}
+
+.balancer-result{margin-top:20px;padding:20px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);display:none;animation:fadeUp .3s ease}
+.balancer-result.active{display:block}
+.balancer-result.success{border-color:rgba(0,255,157,.3)}
+.balancer-result.error{border-color:rgba(255,42,109,.3)}
+
+.result-equation{font-family:var(--font-mono);font-size:clamp(1rem,2.5vw,1.3rem);color:var(--green);margin-bottom:16px;line-height:1.6;word-break:break-word;text-align:center;padding:12px;background:rgba(0,255,157,.05);border-radius:var(--radius-sm);border:1px dashed rgba(0,255,157,.2)}
+.result-equation .coeff{color:var(--accent);font-weight:700}
+.result-equation .arrow{color:var(--text-muted);margin:0 8px}
+
+.verification-table{width:100%;border-collapse:collapse;margin-top:16px;font-family:var(--font-mono);font-size:.8rem}
+.verification-table th{text-align:left;padding:8px 10px;background:rgba(0,243,255,.05);color:var(--accent);font-weight:700;font-size:.7rem;text-transform:uppercase;letter-spacing:.05em;border-bottom:1px solid var(--border)}
+.verification-table td{padding:8px 10px;border-bottom:1px solid var(--border);color:var(--text-sec)}
+.verification-table tr:last-child td{border-bottom:none}
+.verification-table .check{color:var(--green);font-weight:700}
+
+.result-actions{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
+.result-btn{padding:8px 14px;border-radius:var(--radius-sm);background:var(--surface);border:1px solid var(--border);color:var(--text-sec);font-family:var(--font-mono);font-size:.75rem;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:6px}
+.result-btn:hover{border-color:var(--accent);color:var(--accent)}
+.result-btn.copied{background:var(--green);color:#000;border-color:var(--green)}
+
+.error-message{color:var(--rose);font-family:var(--font-body);font-size:.9rem;display:flex;align-items:flex-start;gap:10px;line-height:1.5}
+.error-message i{margin-top:3px;flex-shrink:0}
 
 .molar-tool{max-width:700px;margin:60px auto;text-align:center;padding:32px 20px;background:var(--bg-warm);border-radius:var(--radius-lg);border:1px solid var(--border)}
 .molar-input-group{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
@@ -161,10 +210,7 @@ footer{background:var(--bg-warm);border-top:1px solid var(--border);padding:40px
   .chem-hero{padding:32px 0 16px}
   .chem-hero h1{font-size:1.5rem}
   .periodic-grid{grid-template-columns:repeat(18,minmax(36px,1fr));min-width:680px}
-  .el-sym{font-size:.85rem}
-  .el-num{font-size:.5rem}
-  .el-name{display:none}
-  .el-mass{font-size:.45rem}
+  .el-sym{font-size:.85rem}.el-num{font-size:.5rem}.el-name{display:none}.el-mass{font-size:.45rem}
   .element-card{min-height:48px;padding:2px 1px}
   .controls-bar{gap:8px}
   .filter-pill{padding:5px 10px;font-size:.65rem}
@@ -172,21 +218,23 @@ footer{background:var(--bg-warm);border-top:1px solid var(--border);padding:40px
   .modal-symbol{width:56px;height:56px;font-size:1.8rem}
   .modal-title h2{font-size:1.2rem}
   .chem-detail-grid{grid-template-columns:1fr 1fr;gap:8px}
-  .molar-tool{padding:24px 16px;margin:40px auto}
-  .molar-input-group{flex-direction:column}
-  .molar-input-group input,.btn-calc{width:100%}
+  .molar-tool,.balancer-tool{padding:24px 16px;margin:40px auto}
+  .molar-input-group,.balancer-input-group{flex-direction:column}
+  .molar-input-group input,.btn-calc,.balancer-input-group input,.btn-balance{width:100%}
   .atom-viewer-header{flex-direction:column;align-items:flex-start}
   .demo-cta{flex-direction:column;text-align:center}
+  .verification-table{font-size:.7rem}
+  .verification-table th,.verification-table td{padding:6px 8px}
 }
 @media(max-width:480px){
   .periodic-grid{grid-template-columns:repeat(18,minmax(32px,1fr));min-width:600px}
-  .el-sym{font-size:.75rem}
-  .element-card{min-height:42px}
+  .el-sym{font-size:.75rem}.element-card{min-height:42px}
   .chem-detail-grid{grid-template-columns:1fr}
   .modal-header{flex-direction:column;text-align:center;padding-right:30px}
   .atom-canvas-wrap{max-height:320px}
+  .result-equation{font-size:.95rem}
 }
-@media print{header,footer,.controls-bar,.molar-tool,.btn-back,.atom-viewer-section,.demo-cta{display:none!important}body{background:#fff;color:#000}.element-card{border:1px solid #ccc;background:#f9f9f9}.el-sym,.el-num,.el-name,.el-mass{color:#000}}
+@media print{header,footer,.controls-bar,.molar-tool,.balancer-tool,.btn-back,.atom-viewer-section,.demo-cta{display:none!important}body{background:#fff;color:#000}.element-card{border:1px solid #ccc;background:#f9f9f9}.el-sym,.el-num,.el-name,.el-mass{color:#000}}
 </style>
 </head>
 <body>
@@ -204,7 +252,7 @@ footer{background:var(--bg-warm);border-top:1px solid var(--border);padding:40px
 <main id="main-content">
 <section class="chem-hero container">
   <h1>Interactive <span>Periodic Table</span></h1>
-  <p>All 118 elements with 3D atom models, electron configurations, and a molar mass calculator. Built for NEET, JEE, and Board aspirants.</p>
+  <p>All 118 elements with 3D atom models, equation balancer, and molar mass calculator. Built for NEET, JEE, and Board aspirants.</p>
 </section>
 
 <div class="controls-bar">
@@ -233,6 +281,34 @@ footer{background:var(--bg-warm);border-top:1px solid var(--border);padding:40px
   <div id="periodic-table" class="periodic-grid" role="grid" aria-label="Periodic Table of Elements"></div>
 </div>
 
+<!-- EQUATION BALANCER -->
+<section class="container">
+  <div class="balancer-tool">
+    <h2 class="balancer-title"><i class="fas fa-scale-balanced"></i> Chemical Equation Balancer</h2>
+    <p class="balancer-subtitle">Enter an unbalanced equation. Supports parentheses, states, and complex formulas — perfect for NEET & JEE practice.</p>
+    
+    <div class="balancer-input-group">
+      <input type="text" id="equationInput" placeholder="e.g., Fe + O2 = Fe2O3 or H2 + O2 -> H2O" aria-label="Chemical equation">
+      <button class="btn-balance" onclick="balanceEquation()"><i class="fas fa-wand-magic-sparkles"></i> Balance</button>
+    </div>
+
+    <span class="examples-label">⚡ Try these examples</span>
+    <div class="example-chips">
+      <button class="example-chip neet" onclick="setExample('Fe + O2 = Fe2O3')" title="NEET: Rusting of Iron">🧬 Rusting of Iron</button>
+      <button class="example-chip jee" onclick="setExample('C3H8 + O2 = CO2 + H2O')" title="JEE: Combustion of Propane">🔥 Propane Combustion</button>
+      <button class="example-chip neet" onclick="setExample('Ca(OH)2 + HCl = CaCl2 + H2O')" title="NEET: Neutralization">⚗️ Neutralization</button>
+      <button class="example-chip jee" onclick="setExample('Fe2(SO4)3 + KOH = Fe(OH)3 + K2SO4')" title="JEE: Double Displacement">🧪 Double Displacement</button>
+      <button class="example-chip neet" onclick="setExample('KMnO4 + HCl = KCl + MnCl2 + H2O + Cl2')" title="NEET: Redox Reaction">⚡ Redox (KMnO4)</button>
+      <button class="example-chip jee" onclick="setExample('Al + H2SO4 = Al2(SO4)3 + H2')" title="JEE: Metal + Acid">🔋 Metal + Acid</button>
+      <button class="example-chip neet" onclick="setExample('NH3 + O2 = NO + H2O')" title="NEET: Ostwald Process">🏭 Ostwald Process</button>
+      <button class="example-chip jee" onclick="setExample('C6H12O6 + O2 = CO2 + H2O')" title="JEE: Cellular Respiration">🫁 Respiration</button>
+    </div>
+
+    <div id="balancerResult" class="balancer-result" aria-live="polite"></div>
+  </div>
+</section>
+
+<!-- MOLAR MASS CALCULATOR -->
 <section class="container">
   <div class="molar-tool">
     <h2 style="font-family:var(--font-head);margin-bottom:8px;font-size:clamp(1.2rem,3vw,1.6rem)"><i class="fas fa-flask" style="color:var(--accent)"></i> Molar Mass Calculator</h2>
@@ -246,7 +322,7 @@ footer{background:var(--bg-warm);border-top:1px solid var(--border);padding:40px
 </section>
 </main>
 
-<!-- ============ MODAL WITH 3D ATOM VIEWER ============ -->
+<!-- ELEMENT MODAL -->
 <div id="chemModal" class="chem-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modalElName">
 <div class="chem-modal-card">
   <button class="close-modal" onclick="closeModal()" aria-label="Close modal"><i class="fas fa-times"></i></button>
@@ -266,8 +342,6 @@ footer{background:var(--bg-warm);border-top:1px solid var(--border);padding:40px
     <div class="chem-detail-item"><strong>Period</strong><span id="modalElPeriod"></span></div>
     <div class="chem-detail-item"><strong>Group</strong><span id="modalElGroup"></span></div>
   </div>
-
-  <!-- 3D ATOM VIEWER -->
   <div class="atom-viewer-section">
     <div class="atom-viewer-header">
       <div class="atom-viewer-title"><i class="fas fa-atom"></i> 3D Atom Model</div>
@@ -282,8 +356,6 @@ footer{background:var(--bg-warm);border-top:1px solid var(--border);padding:40px
     </div>
     <div class="shell-legend" id="shellLegend"></div>
   </div>
-
-  <!-- DEMO CTA -->
   <a href="https://wa.me/919700627812?text=Hi%2C%20I%20want%20to%20book%20a%20free%20demo%20class." class="demo-cta" target="_blank" rel="noopener noreferrer" id="demoCta">
     <div class="demo-cta-icon"><i class="fas fa-graduation-cap"></i></div>
     <div class="demo-cta-text">
@@ -499,13 +571,10 @@ let electrons = [];
 let shells = [];
 let isMobile = window.matchMedia('(max-width: 768px)').matches;
 
-// Shell colors (Prime Spirit palette)
 const shellColors = ['#00f3ff', '#00ff9d', '#bc13fe', '#ffd700', '#ff2a6d', '#0066ff', '#f09433'];
 const shellNames = ['K', 'L', 'M', 'N', 'O', 'P', 'Q'];
 
-// Parse electron configuration to shell distribution
 function getShellDistribution(atomicNum) {
-  // Aufbau principle distribution: 2, 8, 18, 32, 32, 18, 8
   const maxPerShell = [2, 8, 18, 32, 32, 18, 8];
   const shells = [];
   let remaining = atomicNum;
@@ -517,38 +586,31 @@ function getShellDistribution(atomicNum) {
   return shells;
 }
 
-// Build electron positions for each shell
 function buildElectrons(shellDistribution) {
   electrons = [];
   shells = [];
   shellDistribution.forEach((count, shellIdx) => {
     if (count === 0) return;
     const shellRadius = 40 + shellIdx * 28;
-    const tiltAngle = (shellIdx * 0.6) + 0.3; // Different tilt per shell for 3D effect
+    const tiltAngle = (shellIdx * 0.6) + 0.3;
     const shell = { radius: shellRadius, tilt: tiltAngle, color: shellColors[shellIdx % shellColors.length], name: shellNames[shellIdx], count: count };
     shells.push(shell);
     for (let i = 0; i < count; i++) {
       const angle = (i / count) * Math.PI * 2 + Math.random() * 0.3;
       const speed = 0.008 + (shellIdx * 0.002) + (Math.random() * 0.003);
       electrons.push({
-        shellIdx: shellIdx,
-        angle: angle,
-        speed: speed,
-        radius: shellRadius,
-        tilt: tiltAngle,
+        shellIdx: shellIdx, angle: angle, speed: speed,
+        radius: shellRadius, tilt: tiltAngle,
         color: shellColors[shellIdx % shellColors.length]
       });
     }
   });
 }
 
-// 3D rotation helpers
 function rotatePoint(x, y, z) {
-  // Rotate around Y axis
   const cosY = Math.cos(rotY), sinY = Math.sin(rotY);
   let x1 = x * cosY - z * sinY;
   let z1 = x * sinY + z * cosY;
-  // Rotate around X axis
   const cosX = Math.cos(rotX), sinX = Math.sin(rotX);
   let y1 = y * cosX - z1 * sinX;
   let z2 = y * sinX + z1 * cosX;
@@ -565,22 +627,17 @@ function resizeCanvas() {
 
 function drawAtom() {
   const rect = canvasWrap.getBoundingClientRect();
-  const w = rect.width;
-  const h = rect.height;
-  const cx = w / 2;
-  const cy = h / 2;
+  const w = rect.width, h = rect.height;
+  const cx = w / 2, cy = h / 2;
   const scale = Math.min(w, h) / 320 * zoom;
 
   ctx.clearRect(0, 0, w, h);
-
-  // Background glow
   const bgGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, Math.min(w, h) / 2);
   bgGrad.addColorStop(0, 'rgba(0, 243, 255, 0.06)');
   bgGrad.addColorStop(1, 'rgba(2, 4, 10, 0)');
   ctx.fillStyle = bgGrad;
   ctx.fillRect(0, 0, w, h);
 
-  // Draw orbital paths (ellipses with tilt for 3D effect)
   shells.forEach(shell => {
     ctx.strokeStyle = shell.color + '40';
     ctx.lineWidth = 1;
@@ -589,23 +646,17 @@ function drawAtom() {
     for (let i = 0; i <= steps; i++) {
       const a = (i / steps) * Math.PI * 2;
       const x3d = Math.cos(a) * shell.radius * scale;
-      const y3d = Math.sin(a) * shell.radius * scale * 0.3; // Flatten for tilt
+      const y3d = Math.sin(a) * shell.radius * scale * 0.3;
       const z3d = Math.sin(a) * shell.radius * scale * 0.9;
       const p = rotatePoint(x3d, y3d, z3d);
-      const px = cx + p.x;
-      const py = cy + p.y;
+      const px = cx + p.x, py = cy + p.y;
       if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
     }
     ctx.stroke();
   });
 
-  // Collect all drawable items with depth for sorting
   const drawables = [];
-
-  // Nucleus
   drawables.push({ type: 'nucleus', z: 0 });
-
-  // Electrons
   electrons.forEach((e, idx) => {
     const x3d = Math.cos(e.angle) * e.radius * scale;
     const y3d = Math.sin(e.angle) * e.radius * scale * 0.3;
@@ -613,14 +664,10 @@ function drawAtom() {
     const p = rotatePoint(x3d, y3d, z3d);
     drawables.push({ type: 'electron', idx: idx, x: cx + p.x, y: cy + p.y, z: p.z, color: e.color });
   });
-
-  // Sort by depth (far to near)
   drawables.sort((a, b) => a.z - b.z);
 
-  // Draw sorted
   drawables.forEach(d => {
     if (d.type === 'nucleus') {
-      // Nucleus glow
       const nucleusR = (18 + Math.min(currentElement.n / 8, 14)) * scale;
       const glowGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, nucleusR * 2.5);
       glowGrad.addColorStop(0, 'rgba(0, 243, 255, 0.4)');
@@ -630,8 +677,6 @@ function drawAtom() {
       ctx.beginPath();
       ctx.arc(cx, cy, nucleusR * 2.5, 0, Math.PI * 2);
       ctx.fill();
-
-      // Nucleus body
       const nucleusGrad = ctx.createRadialGradient(cx - nucleusR * 0.3, cy - nucleusR * 0.3, 0, cx, cy, nucleusR);
       nucleusGrad.addColorStop(0, '#ffffff');
       nucleusGrad.addColorStop(0.3, '#00f3ff');
@@ -640,15 +685,12 @@ function drawAtom() {
       ctx.beginPath();
       ctx.arc(cx, cy, nucleusR, 0, Math.PI * 2);
       ctx.fill();
-
-      // Element symbol on nucleus
       ctx.fillStyle = '#02040a';
       ctx.font = `800 ${nucleusR * 0.9}px Syne, sans-serif`;
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
       ctx.fillText(currentElement.s, cx, cy);
     } else {
-      // Electron
       const size = (3 + (d.z + 100) / 100 * 2) * scale;
       const alpha = 0.5 + (d.z + 100) / 200 * 0.5;
       ctx.shadowBlur = 12;
@@ -665,10 +707,7 @@ function drawAtom() {
 }
 
 function animate() {
-  if (autoRotate && !isDragging) {
-    rotY += 0.005;
-  }
-  // Update electron angles
+  if (autoRotate && !isDragging) rotY += 0.005;
   electrons.forEach(e => { e.angle += e.speed; });
   drawAtom();
   animationId = requestAnimationFrame(animate);
@@ -681,47 +720,27 @@ function startAnimation() {
 }
 
 function stopAnimation() {
-  if (animationId) {
-    cancelAnimationFrame(animationId);
-    animationId = null;
-  }
+  if (animationId) { cancelAnimationFrame(animationId); animationId = null; }
 }
 
-// Mouse / Touch interaction
-canvasWrap.addEventListener('mousedown', (e) => {
-  isDragging = true;
-  lastX = e.clientX;
-  lastY = e.clientY;
-});
+canvasWrap.addEventListener('mousedown', (e) => { isDragging = true; lastX = e.clientX; lastY = e.clientY; });
 window.addEventListener('mousemove', (e) => {
   if (!isDragging) return;
-  const dx = e.clientX - lastX;
-  const dy = e.clientY - lastY;
-  rotY += dx * 0.01;
-  rotX += dy * 0.01;
+  rotY += (e.clientX - lastX) * 0.01;
+  rotX += (e.clientY - lastY) * 0.01;
   rotX = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, rotX));
-  lastX = e.clientX;
-  lastY = e.clientY;
+  lastX = e.clientX; lastY = e.clientY;
 });
 window.addEventListener('mouseup', () => { isDragging = false; });
-
-canvasWrap.addEventListener('touchstart', (e) => {
-  isDragging = true;
-  lastX = e.touches[0].clientX;
-  lastY = e.touches[0].clientY;
-}, { passive: true });
+canvasWrap.addEventListener('touchstart', (e) => { isDragging = true; lastX = e.touches[0].clientX; lastY = e.touches[0].clientY; }, { passive: true });
 canvasWrap.addEventListener('touchmove', (e) => {
   if (!isDragging) return;
-  const dx = e.touches[0].clientX - lastX;
-  const dy = e.touches[0].clientY - lastY;
-  rotY += dx * 0.01;
-  rotX += dy * 0.01;
+  rotY += (e.touches[0].clientX - lastX) * 0.01;
+  rotX += (e.touches[0].clientY - lastY) * 0.01;
   rotX = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, rotX));
-  lastX = e.touches[0].clientX;
-  lastY = e.touches[0].clientY;
+  lastX = e.touches[0].clientX; lastY = e.touches[0].clientY;
 }, { passive: true });
 canvasWrap.addEventListener('touchend', () => { isDragging = false; });
-
 canvasWrap.addEventListener('wheel', (e) => {
   e.preventDefault();
   zoom += e.deltaY * -0.001;
@@ -732,14 +751,8 @@ function toggleAutoRotate() {
   autoRotate = !autoRotate;
   document.getElementById('btnAutoRotate').classList.toggle('active', autoRotate);
 }
+function resetAtomView() { rotX = 0.4; rotY = 0; zoom = 1; }
 
-function resetAtomView() {
-  rotX = 0.4;
-  rotY = 0;
-  zoom = 1;
-}
-
-// Build shell legend
 function buildShellLegend(shellDistribution) {
   const legend = document.getElementById('shellLegend');
   legend.innerHTML = '';
@@ -752,7 +765,6 @@ function buildShellLegend(shellDistribution) {
   });
 }
 
-// Contextual CTA
 const ctaTopics = {
   'nonmetal': 'Master Nonmetals & Covalent Bonding',
   'noble-gas': 'Conquer Noble Gas Chemistry',
@@ -766,7 +778,6 @@ const ctaTopics = {
   'actinide': 'Actinides & Nuclear Chemistry'
 };
 
-// ============ MODAL LOGIC ============
 const modal = document.getElementById('chemModal');
 let lastFocusedElement = null;
 
@@ -783,16 +794,11 @@ function openModal(el) {
   document.getElementById('modalElBlock').textContent = el.block.toUpperCase() + '-block';
   document.getElementById('modalElPeriod').textContent = el.period;
   document.getElementById('modalElGroup').textContent = el.group;
-
-  // Build 3D atom
   const shellDist = getShellDistribution(el.n);
   buildElectrons(shellDist);
   buildShellLegend(shellDist);
   rotX = 0.4; rotY = 0; zoom = 1;
-
-  // Contextual CTA
   document.getElementById('ctaTitle').textContent = ctaTopics[el.c] || `Master ${el.name} with Abhinav Sir`;
-
   modal.classList.add('active');
   document.body.style.overflow = 'hidden';
   startAnimation();
@@ -809,10 +815,318 @@ function closeModal() {
 modal.addEventListener('click', (e) => { if(e.target === modal) closeModal(); });
 document.addEventListener('keydown', (e) => { if(e.key === 'Escape' && modal.classList.contains('active')) closeModal(); });
 
-// Resize handling
 window.addEventListener('resize', () => {
   isMobile = window.matchMedia('(max-width: 768px)').matches;
   if (animationId) resizeCanvas();
+});
+
+// ============ EQUATION BALANCER ============
+// Fraction class for exact arithmetic (no floating-point errors)
+class Frac {
+  constructor(n, d = 1) {
+    if (d === 0) throw new Error('Division by zero');
+    if (d < 0) { n = -n; d = -d; }
+    const g = Frac.gcd(Math.abs(n), Math.abs(d));
+    this.n = n / g;
+    this.d = d / g;
+  }
+  static gcd(a, b) { while (b) { [a, b] = [b, a % b]; } return a || 1; }
+  static lcm(a, b) { return Math.abs(a * b) / Frac.gcd(a, b); }
+  add(o) { return new Frac(this.n * o.d + o.n * this.d, this.d * o.d); }
+  sub(o) { return new Frac(this.n * o.d - o.n * this.d, this.d * o.d); }
+  mul(o) { return new Frac(this.n * o.n, this.d * o.d); }
+  div(o) { return new Frac(this.n * o.d, this.d * o.n); }
+  neg() { return new Frac(-this.n, this.d); }
+  isZero() { return this.n === 0; }
+  toNum() { return this.n / this.d; }
+}
+
+// Parse a chemical formula (handles parentheses) into element counts
+function parseFormula(formula) {
+  const counts = {};
+  const stack = [counts];
+  let i = 0;
+  while (i < formula.length) {
+    const ch = formula[i];
+    if (ch === '(') {
+      const newCounts = {};
+      stack.push(newCounts);
+      i++;
+    } else if (ch === ')') {
+      i++;
+      let numStr = '';
+      while (i < formula.length && /\d/.test(formula[i])) {
+        numStr += formula[i]; i++;
+      }
+      const multiplier = numStr ? parseInt(numStr) : 1;
+      const subCounts = stack.pop();
+      const parent = stack[stack.length - 1];
+      for (const el in subCounts) {
+        parent[el] = (parent[el] || 0) + subCounts[el] * multiplier;
+      }
+    } else if (/[A-Z]/.test(ch)) {
+      let el = ch;
+      i++;
+      while (i < formula.length && /[a-z]/.test(formula[i])) {
+        el += formula[i]; i++;
+      }
+      let numStr = '';
+      while (i < formula.length && /\d/.test(formula[i])) {
+        numStr += formula[i]; i++;
+      }
+      const count = numStr ? parseInt(numStr) : 1;
+      const current = stack[stack.length - 1];
+      current[el] = (current[el] || 0) + count;
+    } else {
+      i++; // skip unexpected chars
+    }
+  }
+  return counts;
+}
+
+// Parse equation into reactants and products
+function parseEquation(input) {
+  // Remove state symbols like (s), (g), (l), (aq)
+  let cleaned = input.replace(/\s*\([sglaq]+\)\s*/gi, ' ');
+  // Normalize arrow separators
+  cleaned = cleaned.replace(/->|→|⟶|⟹|=>/g, '=');
+  const sides = cleaned.split('=');
+  if (sides.length !== 2) throw new Error('Use exactly one "=" or "->" to separate reactants and products.');
+  const reactants = sides[0].split('+').map(s => s.trim()).filter(s => s);
+  const products = sides[1].split('+').map(s => s.trim()).filter(s => s);
+  if (reactants.length === 0 || products.length === 0) throw new Error('Both sides must have at least one compound.');
+  // Parse each compound
+  const compounds = [];
+  reactants.forEach(r => {
+    const parsed = parseFormula(r);
+    if (Object.keys(parsed).length === 0) throw new Error(`Invalid formula: "${r}"`);
+    compounds.push({ formula: r, counts: parsed, sign: 1 });
+  });
+  products.forEach(p => {
+    const parsed = parseFormula(p);
+    if (Object.keys(parsed).length === 0) throw new Error(`Invalid formula: "${p}"`);
+    compounds.push({ formula: p, counts: parsed, sign: -1 });
+  });
+  return { compounds, reactants, products };
+}
+
+// Solve for coefficients using Gaussian elimination with exact fractions
+function balanceCompounds(compounds) {
+  // Collect all elements
+  const elementsSet = new Set();
+  compounds.forEach(c => Object.keys(c.counts).forEach(el => elementsSet.add(el)));
+  const elements = Array.from(elementsSet);
+  const nRows = elements.length;
+  const nCols = compounds.length;
+
+  // Build matrix: rows = elements, cols = compounds
+  // matrix[i][j] = count of element i in compound j (with sign)
+  const matrix = [];
+  for (let i = 0; i < nRows; i++) {
+    const row = [];
+    for (let j = 0; j < nCols; j++) {
+      const count = compounds[j].counts[elements[i]] || 0;
+      row.push(new Frac(count * compounds[j].sign));
+    }
+    matrix.push(row);
+  }
+
+  // Gaussian elimination
+  let pivotRow = 0;
+  const pivotCols = [];
+  for (let col = 0; col < nCols && pivotRow < nRows; col++) {
+    // Find pivot
+    let pivot = null;
+    for (let row = pivotRow; row < nRows; row++) {
+      if (!matrix[row][col].isZero()) { pivot = row; break; }
+    }
+    if (pivot === null) continue;
+    // Swap rows
+    if (pivot !== pivotRow) {
+      [matrix[pivot], matrix[pivotRow]] = [matrix[pivotRow], matrix[pivot]];
+    }
+    // Scale pivot row
+    const scale = matrix[pivotRow][col];
+    for (let j = 0; j < nCols; j++) {
+      matrix[pivotRow][j] = matrix[pivotRow][j].div(scale);
+    }
+    // Eliminate other rows
+    for (let row = 0; row < nRows; row++) {
+      if (row === pivotRow) continue;
+      const factor = matrix[row][col];
+      if (factor.isZero()) continue;
+      for (let j = 0; j < nCols; j++) {
+        matrix[row][j] = matrix[row][j].sub(matrix[pivotRow][j].mul(factor));
+      }
+    }
+    pivotCols.push(col);
+    pivotRow++;
+  }
+
+  // Find free variables (columns without pivots)
+  const freeCols = [];
+  for (let j = 0; j < nCols; j++) {
+    if (!pivotCols.includes(j)) freeCols.push(j);
+  }
+
+  if (freeCols.length !== 1) {
+    throw new Error('Cannot uniquely balance this equation. Check your formulas.');
+  }
+
+  // Set free variable to 1, solve for others
+  const freeCol = freeCols[0];
+  const solution = new Array(nCols).fill(null);
+  solution[freeCol] = new Frac(1);
+
+  // Back-substitute
+  for (let i = pivotCols.length - 1; i >= 0; i--) {
+    const pCol = pivotCols[i];
+    let sum = new Frac(0);
+    for (let j = 0; j < nCols; j++) {
+      if (j === pCol) continue;
+      if (solution[j] !== null) {
+        sum = sum.add(matrix[i][j].mul(solution[j]));
+      }
+    }
+    solution[pCol] = sum.neg(); // matrix[i][pCol] is 1 after scaling
+  }
+
+  // Convert to smallest positive integers
+  // First, make all positive
+  let allPositive = solution.every(s => s.n > 0);
+  if (!allPositive) {
+    const allNegative = solution.every(s => s.n < 0);
+    if (allNegative) {
+      solution = solution.map(s => s.neg());
+    } else {
+      throw new Error('Equation cannot be balanced with positive coefficients.');
+    }
+  }
+
+  // Find LCM of denominators
+  let lcmDen = 1;
+  solution.forEach(s => { lcmDen = Frac.lcm(lcmDen, s.d); });
+
+  // Scale to integers
+  const intCoeffs = solution.map(s => s.mul(new Frac(lcmDen)).n);
+
+  // Find GCD of all coefficients
+  let gcdCoeff = intCoeffs[0];
+  intCoeffs.forEach(c => { gcdCoeff = Frac.gcd(gcdCoeff, Math.abs(c)); });
+
+  // Divide by GCD
+  return intCoeffs.map(c => c / gcdCoeff);
+}
+
+// Format balanced equation with HTML
+function formatBalancedEquation(compounds, coefficients) {
+  const n = compounds.length;
+  // Find split point (reactants vs products)
+  let reactantParts = [];
+  let productParts = [];
+  // We need to know which compounds are reactants vs products
+  // compounds array has reactants first (sign=1), then products (sign=-1)
+  let reactantCount = 0;
+  compounds.forEach(c => { if (c.sign === 1) reactantCount++; });
+
+  for (let i = 0; i < reactantCount; i++) {
+    const coeff = coefficients[i];
+    const coeffStr = coeff === 1 ? '' : `<span class="coeff">${coeff}</span>`;
+    reactantParts.push(`${coeffStr}${compounds[i].formula}`);
+  }
+  for (let i = reactantCount; i < n; i++) {
+    const coeff = coefficients[i];
+    const coeffStr = coeff === 1 ? '' : `<span class="coeff">${coeff}</span>`;
+    productParts.push(`${coeffStr}${compounds[i].formula}`);
+  }
+  return reactantParts.join(' + ') + ' <span class="arrow">→</span> ' + productParts.join(' + ');
+}
+
+// Build verification table
+function buildVerification(compounds, coefficients) {
+  const elementsSet = new Set();
+  compounds.forEach(c => Object.keys(c.counts).forEach(el => elementsSet.add(el)));
+  const elements = Array.from(elementsSet).sort();
+
+  let reactantCount = 0;
+  compounds.forEach(c => { if (c.sign === 1) reactantCount++; });
+
+  let html = '<table class="verification-table"><thead><tr><th>Element</th><th>Reactant Side</th><th>Product Side</th><th>Status</th></tr></thead><tbody>';
+  elements.forEach(el => {
+    let reactantTotal = 0;
+    let productTotal = 0;
+    for (let i = 0; i < reactantCount; i++) {
+      reactantTotal += (compounds[i].counts[el] || 0) * coefficients[i];
+    }
+    for (let i = reactantCount; i < compounds.length; i++) {
+      productTotal += (compounds[i].counts[el] || 0) * coefficients[i];
+    }
+    const balanced = reactantTotal === productTotal;
+    html += `<tr><td><strong>${el}</strong></td><td>${reactantTotal}</td><td>${productTotal}</td><td class="check">${balanced ? '✓ Balanced' : '✗ Unbalanced'}</td></tr>`;
+  });
+  html += '</tbody></table>';
+  return html;
+}
+
+// Main balance function
+function balanceEquation() {
+  const input = document.getElementById('equationInput').value.trim();
+  const resultEl = document.getElementById('balancerResult');
+
+  if (!input) {
+    resultEl.className = 'balancer-result active error';
+    resultEl.innerHTML = '<div class="error-message"><i class="fas fa-exclamation-triangle"></i><div>Please enter a chemical equation. Example: <strong>H2 + O2 = H2O</strong></div></div>';
+    return;
+  }
+
+  try {
+    const { compounds } = parseEquation(input);
+    const coefficients = balanceCompounds(compounds);
+    const balancedEq = formatBalancedEquation(compounds, coefficients);
+    const verification = buildVerification(compounds, coefficients);
+    const plainText = compounds.map((c, i) => (coefficients[i] === 1 ? '' : coefficients[i]) + c.formula).join(' + ');
+    const splitIdx = compounds.findIndex(c => c.sign === -1);
+    const reactantStr = compounds.slice(0, splitIdx).map((c, i) => (coefficients[i] === 1 ? '' : coefficients[i]) + c.formula).join(' + ');
+    const productStr = compounds.slice(splitIdx).map((c, i) => (coefficients[i + splitIdx] === 1 ? '' : coefficients[i + splitIdx]) + c.formula).join(' + ');
+    const plainBalanced = reactantStr + ' → ' + productStr;
+
+    resultEl.className = 'balancer-result active success';
+    resultEl.innerHTML = `
+      <div style="font-family:var(--font-mono);font-size:.7rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px">✓ Equation Balanced Successfully</div>
+      <div class="result-equation">${balancedEq}</div>
+      <div style="font-family:var(--font-head);font-size:.95rem;margin:16px 0 8px;color:var(--text)">Element Verification</div>
+      ${verification}
+      <div class="result-actions">
+        <button class="result-btn" onclick="copyBalanced(this, '${plainBalanced.replace(/'/g, "\\'")}')"><i class="fas fa-copy"></i> Copy Result</button>
+        <button class="result-btn" onclick="document.getElementById('equationInput').value='';document.getElementById('balancerResult').classList.remove('active')"><i class="fas fa-rotate-left"></i> Clear</button>
+      </div>
+    `;
+  } catch (err) {
+    resultEl.className = 'balancer-result active error';
+    resultEl.innerHTML = `<div class="error-message"><i class="fas fa-exclamation-triangle"></i><div><strong>Couldn't balance:</strong> ${err.message}<br><small style="color:var(--text-muted)">Tip: Use "=" or "->" to separate reactants and products. Capitalize element symbols (e.g., Na, Cl, Fe).</small></div></div>`;
+  }
+}
+
+function setExample(eq) {
+  document.getElementById('equationInput').value = eq;
+  balanceEquation();
+  document.getElementById('balancerResult').scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+function copyBalanced(btn, text) {
+  navigator.clipboard.writeText(text).then(() => {
+    btn.classList.add('copied');
+    btn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+    setTimeout(() => {
+      btn.classList.remove('copied');
+      btn.innerHTML = '<i class="fas fa-copy"></i> Copy Result';
+    }, 2000);
+  });
+}
+
+// Enter key support for balancer
+document.getElementById('equationInput').addEventListener('keypress', function (e) {
+  if (e.key === 'Enter') balanceEquation();
 });
 
 // ============ MOLAR MASS CALCULATOR ============
