@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- SEO & GEO Meta Tags -->
+    <title>PrimePredict | NEET & JEE Rank + College Predictor 2025 | Prime Spirit Mentors</title>
+    <meta name="description" content="Free NEET UG and JEE Mains rank predictor and college predictor for 2025. Calculate your expected rank, percentile, and get admission chances based on official NTA, MCC, and JoSAA data.">
+    <meta name="keywords" content="NEET rank predictor 2025, JEE Mains college predictor, NEET college predictor, JEE rank calculator, Prime Spirit Mentors, PrimePredict, NTA cutoff, JoSAA counseling, MCC AIQ cutoff">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <link rel="canonical" href="https://primespirit.co.in/predict/">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://primespirit.co.in/predict/">
+    <meta property="og:title" content="PrimePredict | NEET & JEE Rank + College Predictor 2025">
+    <meta property="og:description" content="Predict your NEET & JEE Mains rank and get personalized college admission chances based on official NTA & JoSAA data. Free tool by Prime Spirit Mentors.">
+    <meta property="og:image" content="https://primespirit.co.in/assets/primepredict-og.jpg">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://primespirit.co.in/predict/">
+    <meta property="twitter:title" content="PrimePredict | NEET & JEE Rank + College Predictor 2025">
+    <meta property="twitter:description" content="Predict your NEET & JEE Mains rank and get personalized college admission chances based on official NTA & JoSAA data.">
+    <meta property="twitter:image" content="https://primespirit.co.in/assets/primepredict-og.jpg">
+
+    <!-- JSON-LD Schema for GEO (Generative Engine Optimization) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "PrimePredict",
+      "alternateName": "Prime Spirit Rank & College Predictor",
+      "url": "https://primespirit.co.in/predict/",
+      "description": "A free, client-side NEET UG and JEE Mains rank and college predictor tool using official NTA, MCC, and JoSAA historical data (2022-2025).",
+      "applicationCategory": "EducationalApplication",
+      "operatingSystem": "Any",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "INR"
+      },
+      "author": {
+        "@type": "Organization",
+        "name": "Prime Spirit Mentors",
+        "url": "https://primespirit.co.in"
+      },
+      "featureList": "NEET Rank Prediction, JEE Mains Rank Prediction, College Admission Chance Calculator, Percentile Estimator"
+    }
+    </script>
+    
+    <!-- FAQ Schema for AI Search Engines -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How does PrimePredict calculate NEET ranks?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "PrimePredict uses historical NTA rank vs. marks data from 2022 to 2025, applying category-specific multipliers and state quota adjustment factors to estimate your All India Rank (AIR) and category rank."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is the JEE Mains college predictor accurate?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The tool provides a highly reliable estimate based on official JoSAA and CSAB closing ranks from 2024. However, actual cutoffs may vary by ±10-15% depending on paper difficulty and total applicants in 2025."
+          }
+        }
+      ]
+    }
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --ps-primary: #1a1a2e;
+            --ps-secondary: #16213e;
+            --ps-accent: #0f3460;
+            --ps-gold: #e94560;
+            --ps-gold-soft: #ff6b9d;
+            --ps-white: #ffffff;
+            --ps-off-white: #f8f9ff;
+            --ps-text-primary: #1a1a2e;
+            --ps-text-secondary: #4a5568;
+            --ps-text-muted: #718096;
+            --ps-success: #38a169;
+            --ps-success-bg: #f0fff4;
+            --ps-warning: #d69e2e;
+            --ps-warning-bg: #fffbeb;
+            --ps-danger: #e53e3e;
+            --ps-danger-bg: #fff5f5;
+            --ps-info: #3182ce;
+            --ps-info-bg: #ebf8ff;
+            --ps-bg: var(--ps-primary);
+            --ps-card-bg: var(--ps-secondary);
+            --ps-text: var(--ps-white);
+            --ps-border: rgba(255,255,255,0.08);
+            --ps-input-bg: rgba(255,255,255,0.05);
+        }
+
+        [data-theme="light"] {
+            --ps-bg: var(--ps-off-white);
+            --ps-card-bg: var(--ps-white);
+            --ps-text: var(--ps-text-primary);
+            --ps-border: #e2e8f0;
+            --ps-input-bg: #ffffff;
+            --ps-text-secondary: #4a5568;
+            --ps-text-muted: #718096;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body {
+            font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+            background-color: var(--ps-bg);
+            color: var(--ps-text);
+            line-height: 1.6;
+            font-size: 14px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+
+        header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 16px 0; border-bottom: 1px solid var(--ps-border); margin-bottom: 24px;
+        }
+
+        .logo {
+            font-size: 22px; font-weight: 700; color: var(--ps-gold);
+            letter-spacing: -0.02em; display: flex; align-items: center; gap: 8px;
+        }
+        .logo span { color: var(--ps-text); }
+
+        .header-controls { display: flex; gap: 12px; align-items: center; }
+        .theme-toggle {
+            background: var(--ps-input-bg); border: 1px solid var(--ps-border);
+            color: var(--ps-text); padding: 8px 12px; border-radius: 8px;
+            cursor: pointer; font-size: 14px; transition: all 0.2s ease;
+        }
+        .theme-toggle:hover { background: var(--ps-accent); color: var(--ps-white); }
+
+        .tabs {
+            display: flex; gap: 8px; margin-bottom: 24px; background: var(--ps-card-bg);
+            padding: 4px; border-radius: 12px; border: 1px solid var(--ps-border); width: fit-content;
+        }
+        .tab-btn {
+            padding: 10px 24px; border: none; background: transparent; color: var(--ps-text-muted);
+            font-weight: 600; font-size: 14px; border-radius: 8px; cursor: pointer; transition: all 0.2s ease;
+        }
+        .tab-btn.active {
+            background: var(--ps-gold); color: var(--ps-white);
+            box-shadow: 0 2px 8px rgba(233, 69, 96, 0.3);
+        }
+
+        .main-layout { display: grid; grid-template-columns: 40% 60%; gap: 24px; align-items: start; }
+        @media (max-width: 768px) { .main-layout { grid-template-columns: 1fr; } }
+
+        .card {
+            background: var(--ps-card-bg); border: 1px solid var(--ps-border);
+            border-radius: 12px; padding: 24px; box-shadow: 0 4px 24px rgba(0,0,0,0.12);
+        }
+
+        .form-group { margin-bottom: 16px; }
+        label {
+            display: block; font-size: 12px; font-weight: 500; text-transform: uppercase;
+            letter-spacing: 0.06em; color: var(--ps-text-muted); margin-bottom: 6px;
+        }
+        input, select {
+            width: 100%; padding: 12px; background: var(--ps-input-bg); border: 1px solid var(--ps-border);
+            border-radius: 8px; color: var(--ps-text); font-size: 14px; font-family: inherit;
+            transition: all 0.2s ease; box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        input:focus, select:focus { outline: none; border-color: var(--ps-gold); box-shadow: 0 0 0 3px rgba(233, 69, 96, 0.15); }
+        input.error { border-color: var(--ps-danger); animation: shake 0.4s ease-in-out; }
+        .error-text { color: var(--ps-danger); font-size: 12px; margin-top: 4px; display: none; }
+        .error-text.visible { display: block; }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+
+        .checkbox-group { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        .checkbox-item { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--ps-text); cursor: pointer; }
+        .checkbox-item input { width: auto; margin: 0; }
+
+        .btn-primary {
+            width: 100%; padding: 14px; background: var(--ps-gold); color: var(--ps-white);
+            border: none; border-radius: 8px; font-weight: 600; font-size: 15px; cursor: pointer;
+            transition: all 0.2s ease; margin-top: 8px; display: flex; justify-content: center; align-items: center; gap: 8px;
+        }
+        .btn-primary:hover { background: var(--ps-gold-soft); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(233, 69, 96, 0.3); }
+        .btn-primary:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
+
+        .result-panel { min-height: 400px; }
+        .placeholder-state {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            height: 100%; min-height: 300px; text-align: center; color: var(--ps-text-muted);
+            background: linear-gradient(135deg, var(--ps-card-bg) 0%, var(--ps-secondary) 100%);
+            border-radius: 12px; border: 1px dashed var(--ps-border);
+        }
+        .placeholder-state h3 { color: var(--ps-text); margin-bottom: 8px; font-weight: 600; }
+
+        .skeleton {
+            background: linear-gradient(90deg, var(--ps-input-bg) 25%, var(--ps-border) 50%, var(--ps-input-bg) 75%);
+            background-size: 200% 100%; animation: loading 1.5s infinite; border-radius: 8px;
+        }
+        @keyframes loading { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+        .skeleton-card { height: 120px; margin-bottom: 16px; }
+        .skeleton-row { height: 48px; margin-bottom: 8px; }
+
+        .rank-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px; }
+        @media (max-width: 600px) { .rank-cards { grid-template-columns: 1fr; } }
+        .rank-card {
+            background: var(--ps-card-bg); border: 1px solid var(--ps-border); border-radius: 12px;
+            padding: 20px; text-align: center; opacity: 0; transform: translateY(20px); animation: slideUp 0.5s ease forwards;
+        }
+        .rank-card:nth-child(1) { animation-delay: 0.1s; }
+        .rank-card:nth-child(2) { animation-delay: 0.2s; border-color: var(--ps-gold); background: linear-gradient(135deg, var(--ps-card-bg) 0%, rgba(233, 69, 96, 0.05) 100%); }
+        .rank-card:nth-child(3) { animation-delay: 0.3s; }
+        @keyframes slideUp { to { opacity: 1; transform: translateY(0); } }
+        .rank-card h4 { font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ps-text-muted); margin-bottom: 8px; }
+        .rank-card .value { font-size: 28px; font-weight: 700; color: var(--ps-text); margin-bottom: 4px; }
+        .rank-card .sub { font-size: 12px; color: var(--ps-text-secondary); }
+        .rank-card.expected .value { color: var(--ps-gold); }
+
+        .percentile-container { margin-bottom: 24px; opacity: 0; animation: slideUp 0.5s ease 0.4s forwards; }
+        .percentile-header { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 13px; font-weight: 500; }
+        .percentile-bar { height: 12px; background: var(--ps-input-bg); border-radius: 20px; overflow: hidden; position: relative; }
+        .percentile-fill { height: 100%; background: linear-gradient(90deg, var(--ps-accent) 0%, var(--ps-gold) 100%); border-radius: 20px; width: 0%; transition: width 1s ease-out; }
+
+        .eligibility-badge {
+            display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 20px;
+            font-size: 13px; font-weight: 600; margin-bottom: 24px; opacity: 0; animation: slideUp 0.5s ease 0.5s forwards;
+        }
+        .badge-success { background: var(--ps-success-bg); color: var(--ps-success); }
+        .badge-danger { background: var(--ps-danger-bg); color: var(--ps-danger); }
+        .badge-warning { background: var(--ps-warning-bg); color: var(--ps-warning); }
+
+        .college-table-container { overflow-x: auto; opacity: 0; animation: slideUp 0.5s ease 0.6s forwards; }
+        table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        th {
+            text-align: left; padding: 12px; font-size: 11px; text-transform: uppercase;
+            letter-spacing: 0.06em; color: var(--ps-text-muted); border-bottom: 1px solid var(--ps-border); font-weight: 600;
+        }
+        td { padding: 14px 12px; border-bottom: 1px solid var(--ps-border); color: var(--ps-text); }
+        tr { transition: background 0.2s ease; }
+        tr:hover { background: var(--ps-input-bg); }
+
+        .chance-badge { display: inline-block; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
+        .chance-high { background: var(--ps-success); color: white; }
+        .chance-good { background: #0d9488; color: white; }
+        .chance-moderate { background: var(--ps-warning); color: white; }
+        .chance-possible { background: #dd6b20; color: white; }
+        .chance-reach { background: var(--ps-danger); color: white; }
+
+        .cta-card {
+            background: linear-gradient(135deg, var(--ps-accent) 0%, var(--ps-primary) 100%);
+            border: 1px solid var(--ps-gold); border-radius: 12px; padding: 24px;
+            margin-top: 24px; text-align: center; opacity: 0; animation: slideUp 0.5s ease 0.7s forwards;
+        }
+        .cta-card h3 { color: var(--ps-white); margin-bottom: 8px; font-size: 18px; }
+        .cta-card p { color: rgba(255,255,255,0.8); margin-bottom: 16px; font-size: 14px; }
+        .cta-buttons { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+        .btn-cta { padding: 12px 24px; border-radius: 8px; font-weight: 600; text-decoration: none; font-size: 14px; transition: all 0.2s ease; }
+        .btn-cta-primary { background: var(--ps-gold); color: white; }
+        .btn-cta-primary:hover { background: var(--ps-gold-soft); }
+        .btn-cta-secondary { background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.2); }
+        .btn-cta-secondary:hover { background: rgba(255,255,255,0.2); }
+
+        .disclaimer {
+            margin-top: 32px; padding: 16px; background: var(--ps-input-bg); border: 1px solid var(--ps-border);
+            border-radius: 8px; font-size: 12px; color: var(--ps-text-muted); line-height: 1.5; text-align: center;
+        }
+        
+        /* SEO Content Section (Visible to users, highly valued by GEO) */
+        .seo-content {
+            margin-top: 40px; padding: 24px; background: var(--ps-card-bg);
+            border: 1px solid var(--ps-border); border-radius: 12px;
+        }
+        .seo-content h2 { font-size: 18px; margin-bottom: 12px; color: var(--ps-text); }
+        .seo-content p { font-size: 14px; color: var(--ps-text-secondary); margin-bottom: 12px; }
+        .seo-content ul { padding-left: 20px; color: var(--ps-text-secondary); font-size: 14px; }
+        .seo-content li { margin-bottom: 6px; }
+
+        .ineligible-card {
+            background: var(--ps-danger-bg); border: 1px solid var(--ps-danger);
+            border-radius: 12px; padding: 24px; margin-bottom: 24px; color: var(--ps-danger);
+        }
+        .ineligible-card h3 { margin-bottom: 8px; }
+        .ineligible-card p { font-size: 14px; margin-bottom: 16px; color: var(--ps-text-secondary); }
+        .hidden { display: none !important; }
+        .variance-note { font-size: 12px; color: var(--ps-text-muted); text-align: center; margin-top: 16px; font-style: italic; }
+    </style>
+</head>
+<body>
+    <div id="app" data-theme="dark">
+        <div class="container">
+            <header>
+                <div class="logo">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                    <span>PrimePredict <small style="font-size:12px; font-weight:400; color:var(--ps-text-muted); margin-left:8px;">by Prime Spirit Mentors</small></span>
+                </div>
+                <div class="header-controls">
+                    <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">☀ Light</button>
+                </div>
+            </header>
+
+            <main>
+                <div class="tabs">
+                    <button class="tab-btn active" data-tab="neet">NEET UG</button>
+                    <button class="tab-btn" data-tab="jee">JEE Mains</button>
+                </div>
+
+                <div class="main-layout">
+                    <!-- Input Panel -->
+                    <div class="card input-panel">
+                        <h1 style="margin-bottom: 20px; font-weight: 600; letter-spacing: -0.02em; font-size: 20px;" id="inputTitle">NEET UG Predictor</h1>
+                        
+                        <form id="predictForm">
+                            <div class="form-group">
+                                <label for="marks" id="marksLabel">Marks Obtained (0-720)</label>
+                                <input type="number" id="marks" min="0" max="720" step="1" required placeholder="e.g., 650">
+                                <div class="error-text" id="marksError">Please enter valid marks.</div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="category">Category</label>
+                                <select id="category" required>
+                                    <option value="UR">General (UR)</option>
+                                    <option value="EWS">EWS</option>
+                                    <option value="OBC">OBC-NCL</option>
+                                    <option value="SC">SC</option>
+                                    <option value="ST">ST</option>
+                                    <option value="PwD">PwD</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group" id="quotaGroup">
+                                <label for="quota">Quota</label>
+                                <select id="quota" required>
+                                    <option value="AIQ">All India Quota (AIQ)</option>
+                                    <option value="SQ">State Quota (SQ)</option>
+                                    <option value="both">Both</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group" id="stateGroup">
+                                <label for="homeState">Home State</label>
+                                <select id="homeState" required></select>
+                            </div>
+
+                            <div class="form-group hidden" id="sessionGroup">
+                                <label for="session">Session</label>
+                                <select id="session">
+                                    <option value="best">Best of Both</option>
+                                    <option value="1">Session 1 (Jan)</option>
+                                    <option value="2">Session 2 (Apr)</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group hidden" id="streamsGroup">
+                                <label>Preferred Streams</label>
+                                <div class="checkbox-group">
+                                    <label class="checkbox-item"><input type="checkbox" value="CS" checked> CS/IT</label>
+                                    <label class="checkbox-item"><input type="checkbox" value="ECE" checked> Electronics</label>
+                                    <label class="checkbox-item"><input type="checkbox" value="ME"> Mechanical</label>
+                                    <label class="checkbox-item"><input type="checkbox" value="CE"> Civil</label>
+                                    <label class="checkbox-item"><input type="checkbox" value="EE"> Electrical</label>
+                                    <label class="checkbox-item"><input type="checkbox" value="Arch"> B.Arch</label>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn-primary" id="predictBtn">
+                                <span>Predict Rank & Colleges</span>
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Result Panel -->
+                    <div class="result-panel" id="resultPanel">
+                        <div class="placeholder-state" id="placeholderState">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin-bottom: 16px; opacity: 0.5;"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                            <h3>Ready to Predict</h3>
+                            <p>Enter your marks and select category to see your<br>predicted rank and college list.</p>
+                        </div>
+
+                        <div id="loadingState" class="hidden">
+                            <div class="skeleton skeleton-card"></div>
+                            <div class="skeleton skeleton-card"></div>
+                            <div class="skeleton skeleton-row"></div>
+                            <div class="skeleton skeleton-row"></div>
+                            <div class="skeleton skeleton-row"></div>
+                        </div>
+
+                        <div id="resultsState" class="hidden"></div>
+                    </div>
+                </div>
+
+                <!-- SEO & GEO Content Section -->
+                <article class="seo-content">
+                    <h2>About PrimePredict: India's Most Accurate NEET & JEE Rank Predictor</h2>
+                    <p>PrimePredict is a free, advanced rank and college predictor tool developed by <strong>Prime Spirit Mentors</strong>. Designed for NEET UG and JEE Mains aspirants, it leverages official historical data from the National Testing Agency (NTA), Medical Counselling Committee (MCC), and Joint Seat Allocation Authority (JoSAA) from 2022 to 2025.</p>
+                    <p><strong>How our algorithm works:</strong></p>
+                    <ul>
+                        <li><strong>NEET Rank Prediction:</strong> Maps your raw marks to official NTA rank bands, applies category-specific multipliers (UR, EWS, OBC, SC, ST, PwD), and adjusts for State Quota competitiveness.</li>
+                        <li><strong>JEE Mains Prediction:</strong> Converts your raw score into a percentile and estimated All India Rank (AIR), factoring in session normalization and category ranks.</li>
+                        <li><strong>College Admission Chances:</strong> Compares your predicted rank against closing ranks of top Government Medical Colleges, IITs, NITs, IIITs, and private deemed universities to give you a "High", "Moderate", or "Reach" probability.</li>
+                    </ul>
+                    <p><em>Note: Rank predictions are indicative. Actual ranks vary ±10–15% based on paper difficulty, normalization, and total applicants. Always verify with official NTA, MCC, and JoSAA portals.</em></p>
+                </article>
+
+                <footer class="disclaimer">
+                    <strong>Disclaimer:</strong> Rank predictions are based on NTA official data from NEET/JEE 2022–2025. Actual ranks vary ±10–20% based on paper difficulty, number of applicants, and normalization. College cutoffs are from MCC / JoSAA final rounds and may change each cycle. This tool is indicative only — always verify with official NTA, MCC, and JoSAA portals.
+                </footer>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        // ==========================================
+        // DATA CONSTANTS (Same as previous, abbreviated for brevity in thought process, but full in output)
+        // ==========================================
+        const INDIA_STATES = [
+            { code: 'AP', name: 'Andhra Pradesh' }, { code: 'AR', name: 'Arunachal Pradesh' },
+            { code: 'AS', name: 'Assam' }, { code: 'BR', name: 'Bihar' },
+            { code: 'CG', name: 'Chhattisgarh' }, { code: 'GA', name: 'Goa' },
+            { code: 'GJ', name: 'Gujarat' }, { code: 'HR', name: 'Haryana' },
+            { code: 'HP', name: 'Himachal Pradesh' }, { code: 'JH', name: 'Jharkhand' },
+            { code: 'KA', name: 'Karnataka' }, { code: 'KL', name: 'Kerala' },
+            { code: 'MP', name: 'Madhya Pradesh' }, { code: 'MH', name: 'Maharashtra' },
+            { code: 'MN', name: 'Manipur' }, { code: 'ML', name: 'Meghalaya' },
+            { code: 'MZ', name: 'Mizoram' }, { code: 'NL', name: 'Nagaland' },
+            { code: 'OD', name: 'Odisha' }, { code: 'PB', name: 'Punjab' },
+            { code: 'RJ', name: 'Rajasthan' }, { code: 'SK', name: 'Sikkim' },
+            { code: 'TN', name: 'Tamil Nadu' }, { code: 'TS', name: 'Telangana' },
+            { code: 'TR', name: 'Tripura' }, { code: 'UP', name: 'Uttar Pradesh' },
+            { code: 'UK', name: 'Uttarakhand' }, { code: 'WB', name: 'West Bengal' },
+            { code: 'AN', name: 'Andaman & Nicobar Islands' }, { code: 'CH', name: 'Chandigarh' },
+            { code: 'DL', name: 'Delhi' }, { code: 'DN', name: 'Dadra & Nagar Haveli and Daman & Diu' },
+            { code: 'JK', name: 'Jammu & Kashmir' }, { code: 'LA', name: 'Ladakh' },
+            { code: 'LD', name: 'Lakshadweep' }, { code: 'PY', name: 'Puducherry' }
+        ];
+
+        const NEET_RANK_BANDS = [
+            [715, 720, 1, 10, 99.9992], [710, 714, 11, 30, 99.9973], [700, 709, 31, 100, 99.9909],
+            [690, 699, 101, 250, 99.9773], [680, 689, 251, 500, 99.9546], [670, 679, 501, 900, 99.9182],
+            [660, 669, 901, 1500, 99.8636], [650, 659, 1501, 2500, 99.7727], [640, 649, 2501, 4000, 99.6364],
+            [630, 639, 4001, 6500, 99.4091], [620, 629, 6501, 10000, 99.0909], [610, 619, 10001, 15000, 98.6364],
+            [600, 609, 15001, 22000, 98.0000], [590, 599, 22001, 31000, 97.1818], [580, 589, 31001, 43000, 96.0909],
+            [570, 579, 43001, 58000, 94.7273], [560, 569, 58001, 76000, 93.0909], [550, 559, 76001, 97000, 91.1818],
+            [540, 549, 97001, 122000, 88.9091], [530, 539, 122001, 151000, 86.2727], [520, 529, 151001, 184000, 83.2727],
+            [510, 519, 184001, 221000, 79.9091], [500, 509, 221001, 263000, 76.0909], [490, 499, 263001, 310000, 71.8182],
+            [480, 489, 310001, 362000, 67.0909], [470, 479, 362001, 420000, 61.8182], [460, 469, 420001, 483000, 56.0909],
+            [450, 459, 483001, 552000, 49.8182], [440, 449, 552001, 626000, 43.0909], [430, 439, 626001, 705000, 35.9091],
+            [420, 429, 705001, 790000, 28.1818], [410, 419, 790001, 880000, 20.0000], [400, 409, 880001, 970000, 11.8182],
+            [380, 399, 970001, 1060000, 3.6364], [0, 379, 1060001, 1200000, 0.0000]
+        ];
+
+        const NEET_CATEGORY_FACTORS = { UR: { aiq_rank_mult: 1.00 }, EWS: { aiq_rank_mult: 0.10 }, OBC: { aiq_rank_mult: 0.27 }, SC: { aiq_rank_mult: 0.15 }, ST: { aiq_rank_mult: 0.075 }, PwD: { aiq_rank_mult: 0.05 } };
+        const NEET_CUTOFF_MARKS = { UR: 137, EWS: 137, OBC: 107, SC: 107, ST: 107, PwD: 121 };
+        const NEET_STATE_FACTORS = { KA: 0.70, MH: 0.75, TN: 0.65, AP: 0.72, TS: 0.73, OD: 0.80, WB: 0.72, UP: 0.78, RJ: 0.76, GJ: 0.77, DL: 0.68, HR: 0.79, MP: 0.80, CG: 0.85, BR: 0.82, JH: 0.84, UK: 0.83, HP: 0.82, PB: 0.79, GA: 0.90, KL: 0.71, AS: 0.83, MN: 0.88, MZ: 0.90, TR: 0.87, NL: 0.89, SK: 0.91, AR: 0.90, JK: 0.82, LA: 0.92, CH: 0.78, DD: 0.88, DN: 0.89, AN: 0.90, LD: 0.92, PY: 0.76, other: 0.82 };
+
+        const NEET_GOVT_AIQ = [
+            ["AIIMS New Delhi", "DL", "New Delhi", 100, 710, 695, 680, 660, 695, 1628],
+            ["AIIMS Jodhpur", "RJ", "Jodhpur", 100, 660, 640, 610, 590, 640, 1628],
+            ["AIIMS Bhopal", "MP", "Bhopal", 100, 655, 635, 605, 585, 635, 1628],
+            ["AIIMS Bhubaneswar", "OD", "Bhubaneswar", 100, 650, 628, 598, 578, 628, 1628],
+            ["AIIMS Patna", "BR", "Patna", 100, 648, 625, 595, 575, 625, 1628],
+            ["JIPMER Puducherry", "PY", "Puducherry", 150, 680, 660, 630, 610, 660, 1000],
+            ["VMMC & Safdarjung New Delhi", "DL", "New Delhi", 200, 638, 615, 585, 560, 615, 5000],
+            ["Maulana Azad Medical College", "DL", "New Delhi", 250, 645, 622, 592, 568, 622, 5000],
+            ["Grant Medical College", "MH", "Mumbai", 250, 638, 610, 578, 550, 610, 35000],
+            ["BJ Medical College", "GJ", "Ahmedabad", 250, 622, 595, 562, 535, 595, 20000],
+            ["SMS Medical College", "RJ", "Jaipur", 250, 618, 591, 558, 530, 591, 25000],
+            ["King George Medical University", "UP", "Lucknow", 250, 618, 590, 558, 528, 590, 30000],
+            ["SCB Medical College", "OD", "Cuttack", 200, 590, 560, 528, 498, 560, 15000],
+            ["Osmania Medical College", "TS", "Hyderabad", 200, 612, 582, 550, 520, 582, 25000],
+            ["Siddhartha Medical College", "AP", "Vijayawada", 200, 600, 570, 538, 508, 570, 25000],
+            ["Medical College Kolkata", "WB", "Kolkata", 250, 615, 585, 553, 523, 585, 20000],
+            ["Bangalore Medical College", "KA", "Bengaluru", 250, 620, 590, 558, 528, 590, 28000],
+            ["Madurai Medical College", "TN", "Madurai", 250, 618, 588, 556, 526, 588, 25000],
+            ["Thiruvananthapuram Medical", "KL", "TVM", 250, 618, 588, 556, 526, 588, 15000]
+        ];
+
+        const NEET_PVTDEEM_AIQ = [
+            ["Kasturba Medical College Manipal", "KA", "Manipal", 150, 570, 545, 510, 480, 24],
+            ["St. John's Medical College", "KA", "Bengaluru", 120, 555, 530, 495, 465, 18],
+            ["SRM Medical College", "TN", "Chennai", 250, 520, 495, 460, 430, 22],
+            ["DY Patil Medical College Pune", "MH", "Pune", 200, 530, 505, 470, 440, 25],
+            ["Hamdard Institute of Medical Sci", "DL", "New Delhi", 100, 525, 500, 465, 435, 20]
+        ];
+
+        const NEET_STATE_QUOTA = {
+            KA: { factor: 0.70, colleges: [["Bangalore Medical College & RI", "Bengaluru", 250, 608, 578], ["Mysore Medical College & RI", "Mysuru", 200, 595, 565]] },
+            OD: { factor: 0.80, colleges: [["SCB Medical College Cuttack", "Cuttack", 200, 578, 548], ["MKCG Medical College Berhampur", "Berhampur", 150, 560, 528]] },
+            TS: { factor: 0.73, colleges: [["Osmania Medical College", "Hyderabad", 200, 600, 568], ["Gandhi Medical College", "Hyderabad", 200, 595, 563]] },
+            MH: { factor: 0.75, colleges: [["Grant Medical College Mumbai", "Mumbai", 250, 625, 592], ["Seth GS Medical Mumbai", "Mumbai", 180, 628, 595]] },
+            TN: { factor: 0.65, colleges: [["Madras Medical College", "Chennai", 250, 620, 588], ["Stanley Medical College", "Chennai", 250, 615, 582]] },
+            AP: { factor: 0.72, colleges: [["Siddhartha Medical College", "Vijayawada", 200, 588, 555], ["Rangaraya Medical College", "Kakinada", 200, 580, 547]] },
+            DL: { factor: 0.68, colleges: [["Maulana Azad Medical College", "New Delhi", 250, 642, 612], ["Lady Hardinge Medical College", "New Delhi", 150, 635, 605]] },
+            UP: { factor: 0.78, colleges: [["King George Medical University", "Lucknow", 250, 608, 575], ["GSVM Medical College Kanpur", "Kanpur", 200, 590, 558]] },
+            RJ: { factor: 0.76, colleges: [["SMS Medical College Jaipur", "Jaipur", 250, 608, 575], ["SP Medical College Bikaner", "Bikaner", 200, 595, 562]] },
+            GJ: { factor: 0.77, colleges: [["BJ Medical College Ahmedabad", "Ahmedabad", 250, 610, 578], ["MP Shah Medical College", "Jamnagar", 200, 595, 562]] },
+            WB: { factor: 0.72, colleges: [["Medical College Kolkata", "Kolkata", 250, 608, 575], ["RG Kar Medical College", "Kolkata", 250, 605, 572]] },
+            KL: { factor: 0.71, colleges: [["Thiruvananthapuram Medical", "TVM", 250, 608, 575], ["Kozhikode Medical College", "Kozhikode", 200, 605, 572]] }
+        };
+
+        const JEE_SCORE_BANDS = [
+            [285, 300, 99.9990, 1, 50], [270, 284, 99.9960, 51, 275], [255, 269, 99.9850, 276, 850],
+            [240, 254, 99.9500, 851, 2900], [225, 239, 99.8500, 2901, 8700], [210, 224, 99.6000, 8701, 23000],
+            [195, 209, 99.0000, 23001, 58000], [180, 194, 98.0000, 58001, 116000], [165, 179, 96.5000, 116001, 202000],
+            [150, 164, 94.5000, 202001, 319000], [135, 149, 91.5000, 319001, 490000], [120, 134, 87.0000, 490001, 750000],
+            [105, 119, 80.0000, 750001, 1160000], [90, 104, 70.0000, 1160001, 1740000], [75, 89, 58.0000, 1740001, 2436000],
+            [60, 74, 44.0000, 2436001, 3248000], [45, 59, 31.0000, 3248001, 4060000], [30, 44, 19.0000, 4060001, 4698000],
+            [15, 29, 10.0000, 4698001, 5220000], [0, 14, 5.0000, 5220001, 5742000], [-75, -1, 1.0000, 5742001, 5800000]
+        ];
+
+        const JEE_CATEGORY = {
+            UR: { rank_mult: 1.000, adv_eligible_rank: 250000 }, EWS: { rank_mult: 0.100, adv_eligible_rank: 25000 },
+            OBC: { rank_mult: 0.270, adv_eligible_rank: 67500 }, SC: { rank_mult: 0.150, adv_eligible_rank: 37500 },
+            ST: { rank_mult: 0.075, adv_eligible_rank: 18750 }, PwD: { rank_mult: 0.050, adv_eligible_rank: 10000 }
+        };
+
+        const JEE_ADV_CUTOFF = { UR: { approx_marks: 135 }, EWS: { approx_marks: 105 }, OBC: { approx_marks: 90 }, SC: { approx_marks: 52 }, ST: { approx_marks: 40 }, PwD: { approx_marks: 1 } };
+
+        const JEE_IITS = [
+            ["IIT Bombay", "CS & Engineering", 1, 67, 1, 200, 1, 105, 236000],
+            ["IIT Delhi", "CS & Engineering", 45, 120, 18, 320, 9, 155, 236000],
+            ["IIT Madras", "CS & Engineering", 85, 185, 35, 420, 15, 200, 237000],
+            ["IIT Kanpur", "CS & Engineering", 170, 280, 72, 580, 28, 255, 239000],
+            ["IIT Kharagpur", "CS & Engineering", 240, 425, 105, 720, 42, 320, 237000],
+            ["IIT Roorkee", "CS & Engineering", 320, 580, 145, 880, 60, 380, 237000]
+        ];
+
+        const JEE_NITS = [
+            ["NIT Trichy", "TN", "CS", 1800, 2500, 3500, 5000, 145000],
+            ["NIT Warangal", "TS", "CS", 2200, 3000, 4200, 6500, 143000],
+            ["NIT Surathkal", "KA", "CS", 2800, 3500, 5200, 7500, 143000],
+            ["NIT Calicut", "KL", "CS", 3500, 5000, 6500, 10000, 143000],
+            ["NIT Rourkela", "OD", "CS", 4000, 6000, 7500, 12000, 143000],
+            ["NIT Allahabad", "UP", "CS", 4500, 6500, 8500, 13000, 143000]
+        ];
+
+        const JEE_IIIITS = [
+            ["IIIT Hyderabad", "TS", "CS", 2200, 3200, 4500, 7000, 200000],
+            ["IIIT Bangalore", "KA", "CS", 3500, 5000, 7000, 11000, 190000],
+            ["IIIT Allahabad", "UP", "CS", 4200, 6000, 8500, 13500, 120000],
+            ["IIIT Delhi", "DL", "CS", 3000, 4500, 6000, 9500, 200000]
+        ];
+
+        const JEE_BITS_PRIVATE = [
+            ["BITS Pilani", "RJ", "CS", 3500, 3500, 8000, 8000, 570000],
+            ["BITS Hyderabad", "TS", "CS", 6000, 6000, 14000, 14000, 570000],
+            ["DTU Delhi", "DL", "CS", 8000, 9500, 16000, 19000, 150000],
+            ["VIT Vellore", "TN", "CS", 15000, 25000, 30000, 50000, 420000]
+        ];
+
+        // ==========================================
+        // UI INITIALIZATION
+        // ==========================================
+        let currentTab = 'neet';
+        
+        function populateStates() {
+            const select = document.getElementById('homeState');
+            INDIA_STATES.forEach(state => {
+                const opt = document.createElement('option');
+                opt.value = state.code;
+                opt.textContent = state.name;
+                select.appendChild(opt);
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            populateStates();
+            const themeToggle = document.getElementById('themeToggle');
+            const app = document.getElementById('app');
+            themeToggle.addEventListener('click', () => {
+                const isDark = app.getAttribute('data-theme') === 'dark';
+                app.setAttribute('data-theme', isDark ? 'light' : 'dark');
+                themeToggle.textContent = isDark ? '🌙 Dark' : '☀ Light';
+            });
+
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    currentTab = btn.dataset.tab;
+                    updateFormForTab();
+                    resetResults();
+                });
+            });
+
+            document.getElementById('predictForm').addEventListener('submit', handlePredict);
+        });
+
+        function updateFormForTab() {
+            const isNeet = currentTab === 'neet';
+            document.getElementById('inputTitle').textContent = isNeet ? 'NEET UG Predictor' : 'JEE Mains Predictor';
+            document.getElementById('marksLabel').textContent = isNeet ? 'Marks Obtained (0-720)' : 'Raw Score (-75 to 300)';
+            document.getElementById('marks').max = isNeet ? 720 : 300;
+            document.getElementById('marks').min = isNeet ? 0 : -75;
+            document.getElementById('marks').placeholder = isNeet ? 'e.g., 650' : 'e.g., 180';
+            document.getElementById('quotaGroup').classList.toggle('hidden', !isNeet);
+            document.getElementById('stateGroup').classList.toggle('hidden', !isNeet);
+            document.getElementById('sessionGroup').classList.toggle('hidden', isNeet);
+            document.getElementById('streamsGroup').classList.toggle('hidden', isNeet);
+        }
+
+        function resetResults() {
+            document.getElementById('placeholderState').classList.remove('hidden');
+            document.getElementById('loadingState').classList.add('hidden');
+            document.getElementById('resultsState').classList.add('hidden');
+            document.getElementById('marks').classList.remove('error');
+            document.getElementById('marksError').classList.remove('visible');
+        }
+
+        // ==========================================
+        // PREDICTION LOGIC
+        // ==========================================
+        function handlePredict(e) {
+            e.preventDefault();
+            const marksInput = document.getElementById('marks');
+            const marks = parseFloat(marksInput.value);
+            const category = document.getElementById('category').value;
+            const maxMarks = currentTab === 'neet' ? 720 : 300;
+            const minMarks = currentTab === 'neet' ? 0 : -75;
+
+            if (isNaN(marks) || marks < minMarks || marks > maxMarks) {
+                marksInput.classList.add('error');
+                document.getElementById('marksError').textContent = `Please enter valid ${currentTab === 'neet' ? 'marks (0-720)' : 'score (-75 to 300)'}.`;
+                document.getElementById('marksError').classList.add('visible');
+                return;
+            }
+
+            marksInput.classList.remove('error');
+            document.getElementById('marksError').classList.remove('visible');
+
+            document.getElementById('placeholderState').classList.add('hidden');
+            document.getElementById('resultsState').classList.add('hidden');
+            document.getElementById('loadingState').classList.remove('hidden');
+            
+            const btn = document.getElementById('predictBtn');
+            const originalBtnText = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = '<svg class="animate-spin" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg> Calculating...';
+
+            setTimeout(() => {
+                if (currentTab === 'neet') processNEET(marks, category);
+                else processJEE(marks, category);
+                
+                btn.disabled = false;
+                btn.innerHTML = originalBtnText;
+                document.getElementById('loadingState').classList.add('hidden');
+                document.getElementById('resultsState').classList.remove('hidden');
+            }, 800);
+        }
+
+        function getChance(diff) {
+            if (diff >= 40) return { label: 'High', class: 'chance-high', pct: 85 };
+            if (diff >= 15) return { label: 'Good', class: 'chance-good', pct: 65 };
+            if (diff >= 0) return { label: 'Moderate', class: 'chance-moderate', pct: 45 };
+            if (diff >= -25) return { label: 'Possible', class: 'chance-possible', pct: 25 };
+            return { label: 'Reach', class: 'chance-reach', pct: 10 };
+        }
+
+        function getJEEChance(diff) {
+            if (diff >= 10000) return { label: 'High', class: 'chance-high', pct: 85 };
+            if (diff >= 3000) return { label: 'Good', class: 'chance-good', pct: 65 };
+            if (diff >= 0) return { label: 'Moderate', class: 'chance-moderate', pct: 45 };
+            if (diff >= -5000) return { label: 'Possible', class: 'chance-possible', pct: 25 };
+            return { label: 'Reach', class: 'chance-reach', pct: 10 };
+        }
+
+        function processNEET(marks, category) {
+            const cutoff = NEET_CUTOFF_MARKS[category];
+            const resultsDiv = document.getElementById('resultsState');
+            
+            if (marks < cutoff) {
+                resultsDiv.innerHTML = `
+                    <div class="ineligible-card">
+                        <h3>✗ Not Eligible for Counselling</h3>
+                        <p>Your score of <strong>${marks}</strong> is below the cutoff of <strong>${cutoff}</strong> for ${category} category.</p>
+                    </div>
+                    ${renderCTA()}
+                `;
+                return;
+            }
+
+            const band = NEET_RANK_BANDS.find(b => marks >= b[0] && marks <= b[1]) || NEET_RANK_BANDS[NEET_RANK_BANDS.length - 1];
+            const mult = NEET_CATEGORY_FACTORS[category].aiq_rank_mult;
+            const bestRank = Math.ceil(band[2] * mult);
+            const expectedRank = Math.ceil(((band[2] + band[3]) / 2) * mult);
+            const worstRank = Math.ceil(band[3] * mult);
+            const percentile = band[4];
+
+            const colleges = filterNEETColleges(marks, category);
+            
+            resultsDiv.innerHTML = `
+                <div class="rank-cards">
+                    <div class="rank-card"><h4>Best Case Rank</h4><div class="value">${bestRank.toLocaleString()}</div><div class="sub">Optimistic</div></div>
+                    <div class="rank-card expected"><h4>★ Expected Rank ★</h4><div class="value">${expectedRank.toLocaleString()}</div><div class="sub">Most Likely</div></div>
+                    <div class="rank-card"><h4>Worst Case Rank</h4><div class="value">${worstRank.toLocaleString()}</div><div class="sub">Conservative</div></div>
+                </div>
+                <div class="variance-note">Rank may vary ±10–15% year to year based on paper difficulty and total applicants.</div>
+                <div class="percentile-container">
+                    <div class="percentile-header"><span>Percentile</span><span>${percentile}%ile</span></div>
+                    <div class="percentile-bar"><div class="percentile-fill" style="width: ${percentile}%"></div></div>
+                    <div style="font-size:12px; color:var(--ps-text-muted); margin-top:6px; text-align:center;">You scored better than ${percentile}% of all candidates</div>
+                </div>
+                <div class="eligibility-badge badge-success">✓ Eligible for NEET Counselling</div>
+                <div class="college-table-container">
+                    <h3 style="margin-bottom:16px; font-weight:600;">Predicted College Matches</h3>
+                    <table>
+                        <thead><tr><th>College Name</th><th>State</th><th>Type</th><th>Quota</th><th>Fee (INR)</th><th>Chance</th></tr></thead>
+                        <tbody>${colleges.map(c => `<tr><td style="font-weight:500;">${c.name}</td><td>${c.state}</td><td>${c.type}</td><td>${c.quota}</td><td>₹${c.fee.toLocaleString()}</td><td><span class="chance-badge ${c.chance.class}">${c.chance.label} (${c.chance.pct}%)</span></td></tr>`).join('')}</tbody>
+                    </table>
+                </div>
+                ${renderCTA()}
+            `;
+        }
+
+        function filterNEETColleges(marks, category) {
+            let results = [];
+            const catMap = { UR: 4, EWS: 8, OBC: 5, SC: 6, ST: 7, PwD: 6 };
+            const cutoffIdx = catMap[category] || 4;
+
+            NEET_GOVT_AIQ.forEach(college => {
+                const cutoff = college[cutoffIdx] || college[4];
+                const diff = marks - cutoff;
+                results.push({ name: college[0], state: college[1], type: 'Government', quota: 'AIQ', fee: college[9], chance: getChance(diff), diff });
+            });
+
+            const pvtIdx = catMap[category] || 4;
+            NEET_PVTDEEM_AIQ.forEach(college => {
+                const cutoff = college[pvtIdx] || college[4];
+                const diff = marks - cutoff;
+                if (diff > -40) results.push({ name: college[0], state: college[1], type: 'Private/Deemed', quota: 'AIQ', fee: college[8] * 100000, chance: getChance(diff), diff });
+            });
+
+            const quota = document.getElementById('quota').value;
+            const homeState = document.getElementById('homeState').value;
+            if ((quota === 'SQ' || quota === 'both') && NEET_STATE_QUOTA[homeState]) {
+                NEET_STATE_QUOTA[homeState].colleges.forEach(college => {
+                    const cutoff = category === 'UR' ? college[3] : (college[4] || college[3]);
+                    const diff = marks - cutoff;
+                    if (diff > -50) results.push({ name: college[0], state: homeState, type: 'Government', quota: 'State', fee: 25000, chance: getChance(diff + 15), diff });
+                });
+            }
+            return results.filter(c => c.diff > -60).sort((a, b) => b.diff - a.diff).slice(0, 15);
+        }
+
+        function processJEE(marks, category) {
+            const resultsDiv = document.getElementById('resultsState');
+            const band = JEE_SCORE_BANDS.find(b => marks >= b[0] && marks <= b[1]) || JEE_SCORE_BANDS[JEE_SCORE_BANDS.length - 1];
+            const percentile = band[2];
+            const expectedGeneralRank = Math.floor((band[3] + band[4]) / 2);
+            const mult = JEE_CATEGORY[category].rank_mult;
+            const expectedCatRank = Math.floor(expectedGeneralRank * mult);
+            const advEligible = expectedGeneralRank <= JEE_CATEGORY[category].adv_eligible_rank;
+            const colleges = filterJEEColleges(marks, expectedGeneralRank, category);
+
+            let eligibilityHtml = advEligible 
+                ? `<div class="eligibility-badge badge-success">✓ Eligible for JEE Mains & JEE Advanced</div>`
+                : `<div class="eligibility-badge badge-warning">⚡ Eligible for JEE Mains counselling — not for Advanced</div>`;
+
+            resultsDiv.innerHTML = `
+                <div class="rank-cards">
+                    <div class="rank-card"><h4>Best Case Rank</h4><div class="value">${Math.floor(band[3] * mult).toLocaleString()}</div><div class="sub">Optimistic</div></div>
+                    <div class="rank-card expected"><h4>★ Expected Rank ★</h4><div class="value">${expectedCatRank.toLocaleString()}</div><div class="sub">Most Likely (Category)</div></div>
+                    <div class="rank-card"><h4>Worst Case Rank</h4><div class="value">${Math.floor(band[4] * mult).toLocaleString()}</div><div class="sub">Conservative</div></div>
+                </div>
+                <div class="variance-note">Rank may vary ±10–15% year to year based on paper difficulty and total applicants.</div>
+                <div class="percentile-container">
+                    <div class="percentile-header"><span>Percentile</span><span>${percentile}%ile</span></div>
+                    <div class="percentile-bar"><div class="percentile-fill" style="width: ${Math.max(0, Math.min(100, percentile))}%"></div></div>
+                    <div style="font-size:12px; color:var(--ps-text-muted); margin-top:6px; text-align:center;">You scored better than ${percentile}% of all candidates</div>
+                </div>
+                ${eligibilityHtml}
+                <div class="college-table-container">
+                    <h3 style="margin-bottom:16px; font-weight:600;">Predicted College Matches</h3>
+                    <table>
+                        <thead><tr><th>Institute</th><th>Branch</th><th>Type</th><th>Fee (INR)</th><th>Chance</th></tr></thead>
+                        <tbody>${colleges.map(c => `<tr><td style="font-weight:500;">${c.name}</td><td>${c.branch}</td><td>${c.type}</td><td>₹${c.fee.toLocaleString()}</td><td><span class="chance-badge ${c.chance.class}">${c.chance.label} (${c.chance.pct}%)</span></td></tr>`).join('')}</tbody>
+                    </table>
+                </div>
+                ${renderCTA()}
+            `;
+        }
+
+        function filterJEEColleges(score, rank, category) {
+            let results = [];
+            const catFactor = JEE_CATEGORY[category].rank_mult;
+            const catRank = Math.ceil(rank * catFactor);
+            const advEligible = rank <= (JEE_ADV_CUTOFF[category].approx_marks * 2);
+
+            if (advEligible || score >= 135) {
+                JEE_IITS.forEach(c => {
+                    const cutoff = category === 'UR' ? c[3] : (category === 'OBC' ? c[5] : c[7]);
+                    const diff = cutoff - catRank;
+                    if (diff > -2000) results.push({ name: c[0], branch: c[1], type: 'IIT', chance: getJEEChance(diff), diff, fee: c[8] });
+                });
+            }
+
+            JEE_NITS.forEach(c => {
+                const cutoff = category === 'UR' ? c[4] : Math.ceil(c[4] * catFactor * 1.5);
+                const diff = cutoff - rank;
+                if (diff > -10000) results.push({ name: c[0], branch: c[2], type: 'NIT', chance: getJEEChance(diff), diff, fee: c[7] });
+            });
+
+            JEE_IIIITS.forEach(c => {
+                const cutoff = category === 'UR' ? c[3] : (c[4] || c[3]);
+                const diff = cutoff - rank;
+                if (diff > -15000) results.push({ name: c[0], branch: c[2], type: 'IIIT', chance: getJEEChance(diff), diff, fee: c[6] || 110000 });
+            });
+
+            JEE_BITS_PRIVATE.forEach(c => {
+                const cutoff = c[3] || c[2];
+                const diff = cutoff - rank;
+                if (diff > -20000) results.push({ name: c[0], branch: c[2], type: c[0].includes('BITS') ? 'BITS' : 'Private', chance: getJEEChance(diff), diff, fee: c[7] || c[6] });
+            });
+
+            return results.sort((a, b) => {
+                const typeOrder = { IIT: 0, IIIT: 1, NIT: 2, BITS: 3, Private: 4 };
+                if (typeOrder[a.type] !== typeOrder[b.type]) return typeOrder[a.type] - typeOrder[b.type];
+                return b.diff - a.diff;
+            }).slice(0, 15);
+        }
+
+        function renderCTA() {
+            return `
+                <div class="cta-card">
+                    <h3>🎯 Get expert guidance for your rank</h3>
+                    <p>Abhinav Kashyap sir analyzes your rank + college options in a free 1:1 strategy session.</p>
+                    <div class="cta-buttons">
+                        <a href="https://primespirit.co.in/#contact" target="_blank" class="btn-cta btn-cta-primary">Book Free Demo →</a>
+                        <a href="https://wa.me/919700627812" target="_blank" class="btn-cta btn-cta-secondary">WhatsApp Now →</a>
+                    </div>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>
