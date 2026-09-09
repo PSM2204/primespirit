@@ -480,7 +480,13 @@ footer::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;back
 <div class="nav-item"><a href="https://primespirit.co.in/PrimeBoard/" class="nav-link" target="_blank" rel="noopener noreferrer">PrimeBoard</a></div>
 <div class="nav-item"><a href="about.html" class="nav-link">About</a></div>
 <div class="nav-item"><a href="#contact" class="nav-link">Contact</a></div>
-<div class="nav-item"><button class="nav-link nav-link--primelab" data-track="nav-primelab" onclick="launchPhysicsQuest()"><span class="lab-dot" aria-hidden="true"></span> PrimeLab</button></div>
+<div class="nav-item" data-dd="primelab">
+<button class="nav-link nav-link--primelab" aria-expanded="false"><span class="lab-dot" aria-hidden="true"></span> PrimeLab <span class="chev">&#9662;</span></button>
+<div class="dropdown">
+<a href="#" onclick="launchPhysicsQuest();return false;">Physics Quest<small>RPG-style Physics game</small></a>
+<a href="sudoku-challenge.html">Sudoku Challenge<small>Brain training puzzles</small></a>
+</div>
+</div>
 </nav>
 <div class="header-actions">
 <button class="icon-btn" id="searchToggle" type="button" aria-label="Search" aria-expanded="false"><i class="fas fa-search" aria-hidden="true"></i></button>
@@ -500,7 +506,11 @@ footer::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;back
 <a href="https://primespirit.co.in/PrimeBoard/" class="m-cta m-secondary" target="_blank" rel="noopener noreferrer">PrimeBoard</a>
 <a href="about.html" class="m-cta m-secondary">About the Founder</a>
 <a href="#contact" class="m-cta m-secondary">Contact</a>
-<button class="m-primelab" data-track="nav-mobile-primelab" onclick="launchPhysicsQuest()"><span class="lab-dot" aria-hidden="true"></span> PrimeLab</button>
+<button class="m-primelab" aria-expanded="false" onclick="toggleMobilePrimeLab()"><span class="lab-dot" aria-hidden="true"></span> PrimeLab <span class="chev" id="primelabChev">&#9662;</span></button>
+<div class="m-panel" id="mobilePrimeLabPanel">
+<a href="#" onclick="launchPhysicsQuest();return false;">Physics Quest</a>
+<a href="sudoku-challenge.html">Sudoku Challenge</a>
+</div>
 <a href="https://wa.me/919700627812?text=Hi%2C%20I%20want%20to%20book%20a%20free%20demo%20class." class="m-cta" target="_blank" rel="noopener noreferrer">Book Free Demo</a>
 </div>
 
@@ -683,9 +693,9 @@ footer::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;back
 <div aria-hidden="true" style="position:absolute;border-radius:50%;pointer-events:none;filter:blur(100px);opacity:.15;width:400px;height:400px;bottom:-100px;left:-100px;background:rgba(0,243,255,.1)"></div>
 <div class="container" style="position:relative;z-index:1">
 <span class="section-subtitle" style="background:rgba(0,255,157,.1);color:var(--green);border-color:rgba(0,255,157,.1)">Immersive Learning</span>
-<h2 id="primelab-heading">PrimeLab: Physics Quest</h2>
+<h2 id="primelab-heading">PrimeLab: Physics Quest &amp; Brain Training</h2>
 <hr class="title-line" aria-hidden="true">
-<p class="section-description" style="max-width:680px">An RPG-style educational game where you master Physics by battling scientist bosses across 11 worlds. Collect Physics Spirits, complete missions, and earn XP &mdash; all while learning real NEET &amp; JEE concepts.</p>
+<p class="section-description" style="max-width:680px">Master Physics through an immersive RPG adventure, or sharpen your logical reasoning with our interactive Sudoku Challenge. Learning meets play.</p>
 <div style="background:linear-gradient(135deg,rgba(0,255,157,.08),rgba(0,102,255,.08));border:1px solid rgba(0,255,157,.2);border-radius:var(--radius-xl);padding:48px 40px;margin-bottom:36px;display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center">
 <div>
 <div style="font-size:3.5rem;margin-bottom:16px;filter:drop-shadow(0 0 15px rgba(0,255,157,0.3))">&#128300;</div>
@@ -698,7 +708,7 @@ footer::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;back
 </div>
 <div style="display:flex;flex-wrap:wrap;gap:12px">
 <a href="#" class="btn" style="background:linear-gradient(135deg,var(--green),var(--blue));color:#000;box-shadow:0 0 25px rgba(0,255,157,0.25)" onclick="launchPhysicsQuest();return false;"><i class="fas fa-gamepad" aria-hidden="true"></i> Launch Physics Quest</a>
-<a href="#primelab" class="btn btn-secondary"><i class="fas fa-info-circle" aria-hidden="true"></i> See How It Works</a>
+<a href="sudoku-challenge.html" class="btn btn-secondary"><i class="fas fa-border-all" aria-hidden="true"></i> Play Sudoku Challenge</a>
 </div>
 </div>
 <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px">
@@ -762,13 +772,14 @@ footer::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;back
 <span class="section-subtitle">Interactive Free Tools</span>
 <h2 id="vibe-heading">GenZ Vibe Hub &amp; PrimeLab</h2>
 <hr class="title-line" aria-hidden="true">
-<p class="section-description">Psychometric quizzes to discover your study type, plus an immersive Physics RPG adventure and official rank predictors.</p>
+<p class="section-description">Psychometric quizzes to discover your study type, plus an immersive Physics RPG adventure, brain-training puzzles, and official rank predictors.</p>
 <div class="vibe-grid" style="margin-bottom:36px">
 <a href="predict.html" class="vibe-card vibe-card--mbti"><div class="vibe-icon">&#128200;</div><h3 style="color:#00f3ff">PrimePredict</h3><p>Official NEET & JEE Mains Rank + College Predictor with NTA & JoSAA data.</p><div class="vibe-meta"><span class="vibe-count">Free Tool</span><span class="vibe-tag vibe-tag--ready">Live Now</span></div></a>
 <a href="genz-vibe.html" class="vibe-card vibe-card--anime"><div class="vibe-icon">&#127914;</div><h3 style="color:#bc13fe">Anime Mind Audit</h3><p>Match your study personality to Tanjiro, Naruto, Deku, Gojo, Conan, or Levi.</p><div class="vibe-meta"><span class="vibe-count">10 Qs &middot; 3 min</span><span class="vibe-tag vibe-tag--ready">Live Now</span></div></a>
 <a href="genz-vibe.html" class="vibe-card vibe-card--hp" onclick="localStorage.setItem('ps-quiz-tab','hp')"><div class="vibe-icon">&#9889;</div><h3 style="color:#ffd700">Harry Potter Sorting</h3><p>The Sorting Hat reads your study instincts. Find your Hogwarts house.</p><div class="vibe-meta"><span class="vibe-count">20 Qs &middot; 5 min</span><span class="vibe-tag vibe-tag--ready">Live Now</span></div></a>
 <a href="genz-vibe.html" class="vibe-card vibe-card--mbti" onclick="localStorage.setItem('ps-quiz-tab','mbti')"><div class="vibe-icon">&#129504;</div><h3 style="color:#00f3ff">MBTI Study Type Quiz</h3><p>16 personality types mapped to learning styles.</p><div class="vibe-meta"><span class="vibe-count">16 types</span><span class="vibe-tag vibe-tag--soon">Coming Soon</span></div></a>
 <a href="#" class="vibe-card vibe-card--prime-lab" onclick="launchPhysicsQuest();return false;"><div class="vibe-icon">&#128300;</div><h3 style="color:#00ff9d">PrimeLab: Physics Quest</h3><p>Battle scientist bosses across 11 worlds, collect Physics Spirits, master concepts.</p><div class="vibe-meta"><span class="vibe-count">11 Worlds</span><span class="vibe-tag vibe-tag--ready">Play Free</span></div></a>
+<a href="sudoku-challenge.html" class="vibe-card vibe-card--prime-lab"><div class="vibe-icon">&#128202;</div><h3 style="color:#00ff9d">Sudoku Challenge</h3><p>Train your brain with logic puzzles. Improve problem-solving and concentration.</p><div class="vibe-meta"><span class="vibe-count">Brain Training</span><span class="vibe-tag vibe-tag--ready">Play Now</span></div></a>
 <a href="periodic-table.html" class="vibe-card vibe-card--mbti"><div class="vibe-icon">⚛️</div><h3 style="color:#00f3ff">Interactive Periodic Table</h3><p>Explore elements, visualize atomic data, and calculate molar mass instantly.</p><div class="vibe-meta"><span class="vibe-count">118 Elements</span><span class="vibe-tag vibe-tag--ready">Free Tool</span></div></a>
 </div>
 <div style="text-align:center"><a href="genz-vibe.html" class="btn-genz"><i class="fas fa-wand-magic-sparkles" aria-hidden="true"></i> Explore All Quizzes</a></div>
@@ -852,7 +863,8 @@ footer::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;back
 <div class="footer-grid">
 <div class="footer-col"><h3>Prime Spirit Mentors</h3><p>Elite micro-batch online coaching for NEET, JEE, CUET, IAT, NEST and Class 6-12 Boards. Founded by Abhinav Kashyap &mdash; B.Tech graduate and ex-Vedantu educator with 10+ years of experience.</p></div>
 <div class="footer-col"><h3>Programs</h3><ul><li><a href="#courses">Elite Micro-Batch</a></li><li><a href="#courses">Advanced Cohort</a></li><li><a href="#courses">JEE/NEET Foundation</a></li><li><a href="#courses">Board Mastery</a></li><li><a href="poonam-foundation.html">Poonam Foundation</a></li></ul></div>
-<div class="footer-col"><h3>Free Tools</h3><ul><li><a href="primescore/">PrimeScore Calculator</a></li><li><a href="primetestq/index.html">PrimeTestQ&#8482;</a></li><li><a href="predict.html">PrimePredict: Rank & College Predictor</a></li><li><a href="#quiz">Mindset Audit Quiz</a></li><li><a href="genz-vibe.html">GenZ Vibe Hub</a></li><li><a href="periodic-table.html">Interactive Periodic Table</a></li><li><a href="#notes-vault">Notes Vault</a></li><li><a href="#blog-hub">Blog</a></li></ul></div>
+<div class="footer-col"><h3>Free Tools</h3><ul><li><a href="primescore/">PrimeScore Calculator</a></li><li><a href="primetestq/index.html">PrimeTestQ&#8482;</a></li><li><a href="predict.html">PrimePredict: Rank & College Predictor</a></li><li><a href="#quiz">Mindset Audit Quiz</a></li><li><a href="genz-vibe.html">GenZ Vibe Hub</a></li><li><a href="sudoku-challenge.html">Sudoku Challenge</a></li>
+<li><a href="periodic-table.html">Interactive Periodic Table</a></li><li><a href="#notes-vault">Notes Vault</a></li><li><a href="#blog-hub">Blog</a></li></ul></div>
 <div class="footer-col"><h3>Cities We Serve</h3><ul><li><a href="city/neet-bengaluru.html">NEET Coaching Bengaluru</a></li><li><a href="city/jee-bengaluru.html">JEE Coaching Bengaluru</a></li><li><a href="city/neet-hyderabad.html">NEET Coaching Hyderabad</a></li><li><a href="city/cuet-hyderabad.html">CUET Coaching Hyderabad</a></li><li><a href="city/neet-bhubaneswar.html">NEET Coaching Bhubaneswar</a></li><li><a href="city/neet-cuttack.html">NEET Coaching Cuttack</a></li></ul></div>
 <div class="footer-col"><h3>Connect</h3><ul><li><a href="https://wa.me/919700627812" target="_blank" rel="noopener noreferrer"><i class="fab fa-whatsapp"></i> WhatsApp</a></li><li><a href="https://instagram.com/primespiritmentors" target="_blank" rel="noopener noreferrer"><i class="fab fa-instagram"></i> Instagram</a></li><li><a href="https://facebook.com/psmentors" target="_blank" rel="noopener noreferrer"><i class="fab fa-facebook"></i> Facebook</a></li><li><a href="mailto:contact@primespirit.co.in"><i class="fas fa-envelope"></i> Email</a></li><li><a href="#contact"><i class="fas fa-paper-plane"></i> Enquiry Form</a></li></ul></div>
 </div>
@@ -955,6 +967,22 @@ if(open){this.setAttribute('aria-expanded','false');p.style.height='0'}else{this
 });
 mn.querySelectorAll('a[href^="#"]').forEach(function(a){a.addEventListener('click',function(){mn.classList.remove('active');mt.classList.remove('open');mt.setAttribute('aria-expanded','false');document.body.style.overflow=''})})
 }
+
+// Toggle mobile PrimeLab panel
+window.toggleMobilePrimeLab=function(){
+var panel=document.getElementById('mobilePrimeLabPanel');
+var chev=document.getElementById('primelabChev');
+if(panel&&chev){
+var isOpen=panel.style.height&&panel.style.height!=='0px';
+if(isOpen){
+panel.style.height='0';
+chev.style.transform='rotate(0deg)';
+}else{
+panel.style.height=panel.scrollHeight+'px';
+chev.style.transform='rotate(180deg)';
+}
+}
+};
 
 var so=document.getElementById('searchOverlay'),st=document.getElementById('searchToggle'),sc=document.getElementById('searchClose'),si=document.getElementById('searchInput');
 if(st&&so){st.addEventListener('click',function(){so.classList.add('active');if(si)si.focus();document.body.style.overflow='hidden'});
