@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <meta name="theme-color" content="#101820">
+    <meta name="theme-color" content="#1a1f2e">
     <meta name="description" content="Play free online Sudoku puzzles with Easy, Medium, Hard and Expert levels. Train focus, logic and problem-solving with PrimeLab's Sudoku Challenge.">
     <meta name="keywords" content="Sudoku Challenge, Online Sudoku, Free Sudoku game, Logic game, Focus training, Brain training game, Student puzzle game, Class 6-12, NEET JEE aspirants, India, PrimeLab, Prime Spirit Mentors">
     <meta name="author" content="Prime Spirit Mentors">
@@ -75,18 +75,19 @@
 
     <style>
         :root {
-            --butter-pink: #FFD6E7;
-            --aquamarine: #7FFFD4;
-            --cream: #FFF8EF;
-            --dark-bg: #101820;
-            --dark-surface: #1a2634;
-            --glass-bg: rgba(255, 255, 255, 0.05);
-            --glass-border: rgba(127, 255, 212, 0.15);
-            --glass-highlight: rgba(255, 255, 255, 0.1);
-            --error-color: #ff6b6b;
-            --success-color: #7FFFD4;
-            --text-primary: #FFF8EF;
-            --text-secondary: rgba(255, 248, 239, 0.7);
+            /* Softer, eye-friendly color palette */
+            --butter-pink: #f4c2c2;
+            --aquamarine: #7fcdbb;
+            --cream: #f5f0e8;
+            --dark-bg: #1a1f2e;
+            --dark-surface: #242b3d;
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(127, 205, 187, 0.12);
+            --glass-highlight: rgba(255, 255, 255, 0.06);
+            --error-color: #e07a5f;
+            --success-color: #81b29a;
+            --text-primary: #f5f0e8;
+            --text-secondary: rgba(245, 240, 232, 0.65);
             --font-main: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         }
 
@@ -112,8 +113,8 @@
             flex-direction: column;
             overflow-x: hidden;
             background-image: 
-                radial-gradient(circle at 10% 20%, rgba(127, 255, 212, 0.05) 0%, transparent 40%),
-                radial-gradient(circle at 90% 80%, rgba(255, 214, 231, 0.05) 0%, transparent 40%);
+                radial-gradient(circle at 10% 20%, rgba(127, 205, 187, 0.04) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(244, 194, 194, 0.04) 0%, transparent 40%);
         }
 
         /* Accessibility: Reduced Motion */
@@ -127,7 +128,7 @@
 
         /* Typography */
         h1, h2, h3 {
-            font-weight: 700;
+            font-weight: 600;
             letter-spacing: -0.02em;
         }
 
@@ -157,12 +158,12 @@
         }
 
         .glass-button {
-            background: linear-gradient(135deg, rgba(127, 255, 212, 0.1), rgba(255, 214, 231, 0.1));
+            background: linear-gradient(135deg, rgba(127, 205, 187, 0.08), rgba(244, 194, 194, 0.08));
             border: 1px solid var(--glass-border);
             color: var(--text-primary);
             padding: 0.75rem 1.5rem;
             border-radius: 12px;
-            font-weight: 600;
+            font-weight: 500;
             cursor: pointer;
             transition: all 0.2s ease;
             font-size: 1rem;
@@ -175,10 +176,10 @@
         }
 
         .glass-button:hover, .glass-button:focus {
-            background: linear-gradient(135deg, rgba(127, 255, 212, 0.2), rgba(255, 214, 231, 0.2));
-            border-color: var(--aquamarine);
+            background: linear-gradient(135deg, rgba(127, 205, 187, 0.15), rgba(244, 194, 194, 0.15));
+            border-color: rgba(127, 205, 187, 0.3);
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(127, 255, 212, 0.15);
+            box-shadow: 0 4px 12px rgba(127, 205, 187, 0.1);
             outline: none;
         }
 
@@ -187,18 +188,18 @@
         }
 
         .glass-button.primary {
-            background: linear-gradient(135deg, var(--aquamarine), #5ce1c0);
+            background: linear-gradient(135deg, var(--aquamarine), #6ab5a5);
             color: var(--dark-bg);
             border: none;
         }
 
         .glass-button.primary:hover {
-            box-shadow: 0 4px 16px rgba(127, 255, 212, 0.4);
+            box-shadow: 0 4px 16px rgba(127, 205, 187, 0.3);
         }
 
         .glass-button.danger {
-            background: linear-gradient(135deg, rgba(255, 107, 107, 0.2), rgba(255, 107, 107, 0.1));
-            border-color: rgba(255, 107, 107, 0.3);
+            background: linear-gradient(135deg, rgba(224, 122, 95, 0.15), rgba(224, 122, 95, 0.08));
+            border-color: rgba(224, 122, 95, 0.25);
             color: var(--error-color);
         }
 
@@ -219,7 +220,7 @@
             padding: 0.25rem 0.75rem;
             border: 1px solid var(--glass-border);
             border-radius: 20px;
-            background: rgba(127, 255, 212, 0.05);
+            background: rgba(127, 205, 187, 0.05);
         }
 
         header h1 {
@@ -277,7 +278,7 @@
 
         .stat-value {
             font-size: 1.25rem;
-            font-weight: 700;
+            font-weight: 600;
             color: var(--aquamarine);
             font-variant-numeric: tabular-nums;
         }
@@ -309,8 +310,8 @@
             grid-template-columns: repeat(9, 1fr);
             grid-template-rows: repeat(9, 1fr);
             gap: 1px;
-            background: var(--aquamarine);
-            border: 2px solid var(--aquamarine);
+            background: rgba(127, 205, 187, 0.3);
+            border: 2px solid rgba(127, 205, 187, 0.4);
             border-radius: 8px;
             overflow: hidden;
             width: 100%;
@@ -318,12 +319,12 @@
         }
 
         .cell {
-            background: var(--dark-bg);
+            background: var(--dark-surface);
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: clamp(1rem, 4vw, 1.5rem);
-            font-weight: 600;
+            font-weight: 500;
             cursor: pointer;
             transition: all 0.15s ease;
             position: relative;
@@ -333,20 +334,20 @@
 
         .cell.initial {
             color: var(--text-primary);
-            font-weight: 700;
+            font-weight: 600;
         }
 
         .cell.selected {
-            background: rgba(127, 255, 212, 0.2);
-            box-shadow: inset 0 0 0 2px var(--aquamarine);
+            background: rgba(127, 205, 187, 0.18);
+            box-shadow: inset 0 0 0 2px rgba(127, 205, 187, 0.5);
         }
 
         .cell.highlighted {
-            background: rgba(127, 255, 212, 0.08);
+            background: rgba(127, 205, 187, 0.06);
         }
 
         .cell.same-number {
-            background: rgba(255, 214, 231, 0.15);
+            background: rgba(244, 194, 194, 0.12);
             color: var(--butter-pink);
         }
 
@@ -366,20 +367,20 @@
         }
 
         @keyframes glow {
-            0%, 100% { box-shadow: inset 0 0 0 0 rgba(127, 255, 212, 0); }
-            50% { box-shadow: inset 0 0 20px rgba(127, 255, 212, 0.3); }
+            0%, 100% { box-shadow: inset 0 0 0 0 rgba(127, 205, 187, 0); }
+            50% { box-shadow: inset 0 0 20px rgba(127, 205, 187, 0.2); }
         }
 
         /* 3x3 Box Borders */
         .cell:nth-child(3n) {
-            border-right: 2px solid var(--aquamarine);
+            border-right: 2px solid rgba(127, 205, 187, 0.4);
         }
         .cell:nth-child(9n) {
             border-right: none;
         }
         .cell:nth-child(n+19):nth-child(-n+27),
         .cell:nth-child(n+46):nth-child(-n+54) {
-            border-bottom: 2px solid var(--aquamarine);
+            border-bottom: 2px solid rgba(127, 205, 187, 0.4);
         }
 
         /* Notes */
@@ -398,7 +399,7 @@
             justify-content: center;
             font-size: 0.6rem;
             color: var(--text-secondary);
-            font-weight: 500;
+            font-weight: 400;
         }
 
         /* Controls */
@@ -428,8 +429,8 @@
         }
 
         .action-btn.active {
-            background: rgba(127, 255, 212, 0.2);
-            border-color: var(--aquamarine);
+            background: rgba(127, 205, 187, 0.15);
+            border-color: rgba(127, 205, 187, 0.4);
             color: var(--aquamarine);
         }
 
@@ -442,7 +443,7 @@
         .num-btn {
             aspect-ratio: 1;
             font-size: clamp(1.25rem, 4vw, 1.5rem);
-            font-weight: 600;
+            font-weight: 500;
             border-radius: 8px;
             display: flex;
             align-items: center;
@@ -489,21 +490,21 @@
             color: var(--text-primary);
             cursor: pointer;
             transition: all 0.2s;
-            font-weight: 600;
+            font-weight: 500;
         }
 
         .diff-btn:hover, .diff-btn.selected {
-            background: rgba(127, 255, 212, 0.15);
-            border-color: var(--aquamarine);
+            background: rgba(127, 205, 187, 0.12);
+            border-color: rgba(127, 205, 187, 0.35);
             color: var(--aquamarine);
         }
 
         .diff-btn.expert {
-            border-color: rgba(255, 214, 231, 0.3);
+            border-color: rgba(244, 194, 194, 0.25);
         }
         .diff-btn.expert:hover, .diff-btn.expert.selected {
-            background: rgba(255, 214, 231, 0.15);
-            border-color: var(--butter-pink);
+            background: rgba(244, 194, 194, 0.12);
+            border-color: rgba(244, 194, 194, 0.35);
             color: var(--butter-pink);
         }
 
@@ -514,7 +515,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(16, 24, 32, 0.9);
+            background: rgba(26, 31, 46, 0.92);
             backdrop-filter: blur(8px);
             display: none;
             align-items: center;
@@ -566,11 +567,11 @@
             color: var(--dark-bg);
             padding: 1rem 2rem;
             border-radius: 50px;
-            font-weight: 800;
+            font-weight: 700;
             font-size: 1.5rem;
             pointer-events: none;
             z-index: 500;
-            box-shadow: 0 10px 40px rgba(127, 255, 212, 0.4);
+            box-shadow: 0 10px 40px rgba(127, 205, 187, 0.3);
         }
 
         .streak-popup.show {
@@ -620,7 +621,7 @@
 
         /* Challenge Link Box */
         .challenge-box {
-            background: rgba(0,0,0,0.3);
+            background: rgba(0,0,0,0.25);
             border: 1px dashed var(--glass-border);
             border-radius: 8px;
             padding: 1rem;
@@ -672,7 +673,7 @@
                             <span>▶</span> Play Classic Sudoku
                         </button>
                         <button class="glass-button" onclick="app.startDailyChallenge()" style="width: 100%;">
-                            <span>📅</span> Daily Challenge
+                            <span></span> Daily Challenge
                         </button>
                         <button class="glass-button" onclick="app.showChallengeInput()" style="width: 100%;">
                             <span>⚔️</span> Challenge a Friend
@@ -735,7 +736,7 @@
                             <span>↩️</span> Undo
                         </button>
                         <button class="glass-button action-btn" id="btn-erase" onclick="app.erase()" aria-label="Erase cell">
-                            <span>⌫</span> Erase
+                            <span></span> Erase
                         </button>
                         <button class="glass-button action-btn" id="btn-notes" onclick="app.toggleNotes()" aria-label="Toggle notes mode">
                             <span>✏️</span> Notes <span id="notes-status" style="font-size: 0.7rem; opacity: 0.7;">(OFF)</span>
@@ -744,7 +745,7 @@
                             <span>💡</span> Hint
                         </button>
                         <button class="glass-button action-btn" onclick="app.pauseGame()" aria-label="Pause game">
-                            <span>⏸️</span> Pause
+                            <span>️</span> Pause
                         </button>
                     </div>
 
@@ -1359,7 +1360,7 @@
             checkStreak() {
                 if (this.state.streak === 3) this.showStreakPopup("🔥 3 Streak!");
                 if (this.state.streak === 5) this.showStreakPopup("⚡ 5 Streak! Focus!");
-                if (this.state.streak === 10) this.showStreakPopup("🌟 10 Streak! Master!");
+                if (this.state.streak === 10) this.showStreakPopup(" 10 Streak! Master!");
             },
 
             showStreakPopup(text) {
@@ -1504,7 +1505,7 @@
                     `;
                 } else if (type === 'game-complete') {
                     html = `
-                        <h2>🎉 Puzzle Complete!</h2>
+                        <h2> Puzzle Complete!</h2>
                         <div style="text-align: left; margin: 1.5rem 0; background: rgba(0,0,0,0.2); padding: 1rem; border-radius: 8px;">
                             <p>Time: <strong>${data.time}</strong></p>
                             <p>Mistakes: <strong>${data.mistakes}</strong></p>
@@ -1629,4 +1630,3 @@
     </script>
 </body>
 </html>
-
