@@ -1,0 +1,2191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Puddleberry Quest Critical Thinking Game | PrimeLab</title>
+<meta name="description" content="An interactive browser game where players solve logic, memory, planning, spatial reasoning and problem-solving challenges across 30 progressively difficult levels.">
+<meta name="keywords" content="critical thinking game, puzzle game, logic puzzles, brain training, educational game">
+<link rel="canonical" href="https://primespiritmentors.com/primelab/puddleberry-quest.html">
+<meta property="og:title" content="Puddleberry Quest: Thinking Town | PrimeLab">
+<meta property="og:description" content="Solve 30 thinking challenges with adorable mascot friends!">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://primespiritmentors.com/primelab/puddleberry-quest.html">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Puddleberry Quest: Thinking Town">
+<meta name="twitter:description" content="An interactive critical thinking game with 30 levels of puzzles.">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Game","name":"Puddleberry Quest: Thinking Town","description":"An interactive browser game with 30 thinking challenges.","genre":["Puzzle","Educational","Strategy"],"gamePlatform":"Web Browser","applicationCategory":"Game","author":{"@type":"Organization","name":"PrimeLab - Prime Spirit Mentors"}}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+--bg:#FFF8F0;--surface:#FFFFFF;--accent:#F5C469;--pink:#FFB5C2;--aqua:#7DD8C0;
+--lavender:#C4B5E0;--sky:#A8D8EA;--text:#5D4E37;--text-light:#8B7D6B;
+--shadow:0 4px 20px rgba(93,78,55,0.12);--radius:20px;
+--w1:#E8F5E9;--w2:#FFF3E0;--w3:#E8EAF6;--w4:#E3F2FD;--w5:#F3E5F5;--w6:#FCE4EC;
+}
+html,body{width:100%;height:100%;overflow:hidden;font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+h1,h2,h3,h4{font-family:'Fredoka',sans-serif}
+.screen{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .4s,transform .4s;z-index:10}
+.screen.hidden{opacity:0;pointer-events:none;transform:scale(.96)}
+.screen.active{opacity:1;pointer-events:all;transform:scale(1)}
+.btn{font-family:'Fredoka',sans-serif;font-size:1.1rem;padding:12px 28px;border:none;border-radius:50px;cursor:pointer;transition:all .2s;background:var(--accent);color:var(--text);box-shadow:var(--shadow);-webkit-user-select:none;user-select:none}
+.btn:hover{transform:translateY(-2px);box-shadow:0 6px 24px rgba(93,78,55,0.2)}
+.btn:active{transform:translateY(0)}
+.btn.secondary{background:var(--pink)}
+.btn.small{font-size:.85rem;padding:8px 18px}
+.btn.icon-btn{width:44px;height:44px;padding:0;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.3rem}
+#splash-screen{background:linear-gradient(135deg,#FFF0D4 0%,#FFE0F0 50%,#E0F4FF 100%)}
+#splash-screen .logo-area{text-align:center}
+#splash-screen h1{font-size:2.2rem;color:var(--text);margin-bottom:4px}
+#splash-screen h2{font-size:1rem;font-weight:400;color:var(--text-light);margin-bottom:6px}
+#splash-screen .subtitle{font-size:.75rem;color:var(--text-light);opacity:.7}
+#splash-canvas{width:160px;height:160px;margin-bottom:20px}
+#splash-screen .tap-hint{margin-top:30px;font-size:.9rem;color:var(--text-light);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:.4}50%{opacity:1}}
+
+#home-screen{background:linear-gradient(180deg,#FFF8F0 0%,#FFE8D6 100%)}
+#home-screen .home-inner{text-align:center;padding:20px}
+#home-screen h1{font-size:2rem;margin-bottom:2px}
+#home-screen h2{font-size:.95rem;font-weight:400;color:var(--text-light);margin-bottom:24px}
+#home-screen .home-char{margin:10px auto 20px}
+#home-screen .menu-buttons{display:flex;flex-direction:column;gap:12px;align-items:center}
+#home-screen .brand{margin-top:auto;padding:16px;font-size:.7rem;color:var(--text-light);opacity:.6}
+
+#map-screen{background:var(--bg)}
+#map-screen .map-header{position:absolute;top:0;left:0;right:0;padding:12px 16px;display:flex;align-items:center;gap:8px;z-index:5;background:rgba(255,248,240,.95);backdrop-filter:blur(8px)}
+#map-screen .map-header h3{flex:1;text-align:center;font-size:1.1rem}
+#map-scroll{position:absolute;top:56px;bottom:0;left:0;right:0;overflow-y:auto;padding:16px;-webkit-overflow-scrolling:touch}
+.world-group{margin-bottom:20px;background:var(--surface);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow)}
+.world-group h4{font-size:1rem;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.world-group h4 .dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.level-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.level-node{aspect-ratio:1;border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:'Fredoka',sans-serif;font-size:1rem;font-weight:600;border:2px solid transparent;transition:all .2s;cursor:pointer;-webkit-user-select:none;user-select:none;position:relative}
+.level-node.locked{background:#EDE8E0;color:#C4BDB2;cursor:default}
+.level-node.unlocked{background:#FFF;color:var(--text);border-color:var(--accent)}
+.level-node.completed{background:var(--aqua);color:#fff;border-color:var(--aqua)}
+.level-node .stars{font-size:.55rem;margin-top:2px;letter-spacing:1px}
+.level-node .lock{font-size:.7rem;opacity:.5}
+
+#level-intro-screen{background:rgba(255,248,240,.97);z-index:20}
+#level-intro-screen .intro-card{background:var(--surface);border-radius:var(--radius);padding:28px 24px;box-shadow:var(--shadow);text-align:center;max-width:360px;width:90%}
+#level-intro-screen .intro-card h2{font-size:1.4rem;margin-bottom:4px}
+#level-intro-screen .intro-card .level-num{font-size:.8rem;color:var(--text-light);margin-bottom:12px}
+#level-intro-screen .intro-card .desc{font-size:.9rem;color:var(--text-light);margin-bottom:8px;line-height:1.5}
+#level-intro-screen .intro-card .skill-tag{display:inline-block;background:var(--accent);color:var(--text);padding:4px 14px;border-radius:20px;font-size:.75rem;font-family:'Fredoka',sans-serif;margin-bottom:16px}
+#level-intro-screen .intro-card .chars-row{display:flex;justify-content:center;gap:12px;margin-bottom:20px}
+#level-intro-screen .intro-card .char-icon{width:50px;height:50px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.5rem}
+#level-intro-screen .intro-card .buttons{display:flex;gap:10px;justify-content:center}
+
+#game-screen{background:var(--bg)}
+#game-screen .game-header{position:absolute;top:0;left:0;right:0;height:48px;padding:0 12px;display:flex;align-items:center;gap:6px;z-index:5;background:rgba(255,248,240,.92);backdrop-filter:blur(6px)}
+#game-screen .game-header .level-label{flex:1;font-family:'Fredoka',sans-serif;font-size:.85rem;text-align:center}
+#game-screen .game-header .star-display{font-size:.7rem;color:var(--accent)}
+#game-screen .game-header .timer{font-size:.8rem;font-family:'Fredoka',sans-serif;color:var(--text-light);min-width:42px;text-align:right}
+#puzzle-area{position:absolute;top:48px;bottom:56px;left:0;right:0;overflow:auto;display:flex;flex-direction:column;align-items:center;padding:12px}
+#puzzle-canvas{border-radius:var(--radius);background:var(--surface);box-shadow:var(--shadow)}
+.puzzle-html{width:100%;max-width:500px;flex:1;display:flex;flex-direction:column;gap:10px}
+.clue-box{background:var(--surface);border-radius:14px;padding:14px;font-size:.85rem;line-height:1.6;box-shadow:0 2px 10px rgba(0,0,0,.06)}
+.clue-box .clue-label{font-family:'Fredoka',sans-serif;font-size:.75rem;color:var(--aqua);margin-bottom:4px}
+.card-row{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.puzzle-card{background:var(--surface);border:2px solid #EDE8E0;border-radius:14px;padding:12px 16px;font-size:.9rem;cursor:pointer;transition:all .2s;text-align:center;min-width:70px;-webkit-user-select:none;user-select:none}
+.puzzle-card.selected{border-color:var(--accent);background:#FFF8E7;transform:scale(1.05)}
+.puzzle-card.correct{border-color:var(--aqua);background:#E8FFF8}
+.puzzle-card.wrong{border-color:var(--pink);background:#FFF0F3;animation:shake .3s}
+.puzzle-card.disabled{opacity:.4;pointer-events:none}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+
+.game-grid{display:grid;gap:4px;margin:8px auto}
+.grid-cell{aspect-ratio:1;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;cursor:pointer;transition:all .2s;-webkit-user-select:none;user-select:none;position:relative}
+.grid-cell.empty{background:#F5F0E8}
+.grid-cell.wall{background:var(--text);opacity:.2}
+.grid-cell.start{background:var(--aqua);color:#fff}
+.grid-cell.end{background:var(--accent)}
+.grid-cell.path{background:var(--sky)}
+.grid-cell.visited{background:#D4EFFA}
+.grid-cell.highlight{background:var(--pink)}
+
+.option-row{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.option-btn{background:var(--surface);border:2px solid #EDE8E0;border-radius:12px;padding:10px 20px;font-size:.9rem;cursor:pointer;transition:all .2s;font-family:'Nunito',sans-serif}
+.option-btn:hover{border-color:var(--accent)}
+.option-btn.selected{border-color:var(--accent);background:#FFF8E7}
+
+.slot-area{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin:8px 0}
+.assign-slot{width:80px;height:90px;border:2px dashed #D4CFC5;border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:.7rem;color:var(--text-light);transition:all .2s}
+.assign-slot.filled{border-style:solid;border-color:var(--aqua);background:#E8FFF8}
+.assign-slot .slot-label{font-family:'Fredoka',sans-serif;font-size:.65rem}
+
+.resource-bar{display:flex;align-items:center;gap:8px;margin:6px 0}
+.resource-fill{height:16px;border-radius:8px;transition:width .3s;background:linear-gradient(90deg,var(--accent),var(--pink))}
+.resource-bar-bg{flex:1;height:16px;border-radius:8px;background:#EDE8E0;overflow:hidden}
+.task-card{background:var(--surface);border-radius:12px;padding:12px;margin:6px 0;display:flex;align-items:center;gap:10px;box-shadow:0 2px 8px rgba(0,0,0,.05)}
+.task-card .task-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.2rem}
+.task-card .task-info{flex:1}
+.task-card .task-info h5{font-size:.85rem}
+.task-card .task-info p{font-size:.7rem;color:var(--text-light)}
+.task-card .task-actions{display:flex;gap:4px}
+
+#game-screen .game-footer{position:absolute;bottom:0;left:0;right:0;height:56px;padding:0 12px;display:flex;align-items:center;justify-content:space-between;z-index:5;background:rgba(255,248,240,.92);backdrop-filter:blur(6px)}
+#game-screen .game-footer .hint-area{display:flex;align-items:center;gap:4px}
+.hint-text{font-size:.75rem;color:var(--text-light);max-width:200px;line-height:1.3}
+
+#complete-screen{background:rgba(255,248,240,.95);z-index:25}
+.complete-card{background:var(--surface);border-radius:var(--radius);padding:28px 24px;box-shadow:var(--shadow);text-align:center;max-width:360px;width:90%;animation:popIn .5s cubic-bezier(.17,.89,.32,1.28)}
+@keyframes popIn{from{opacity:0;transform:scale(.7)}to{opacity:1;transform:scale(1)}}
+.complete-card .big-stars{font-size:2.5rem;margin:10px 0;letter-spacing:8px}
+.complete-card h2{font-size:1.5rem;margin-bottom:6px}
+.complete-card .score-line{font-size:.85rem;color:var(--text-light);margin:2px 0}
+.complete-card .buttons{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:16px}
+
+#settings-screen{background:var(--bg);z-index:30}
+.settings-card{background:var(--surface);border-radius:var(--radius);padding:24px;box-shadow:var(--shadow);max-width:380px;width:90%;max-height:80vh;overflow-y:auto}
+.settings-card h2{font-size:1.3rem;margin-bottom:16px;text-align:center}
+.setting-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid #F0ECE5}
+.setting-row:last-child{border-bottom:none}
+.setting-row label{font-size:.9rem}
+.toggle{width:48px;height:28px;border-radius:14px;background:#D4CFC5;cursor:pointer;position:relative;transition:background .2s;border:none}
+.toggle.on{background:var(--aqua)}
+.toggle::after{content:'';position:absolute;width:22px;height:22px;border-radius:50%;background:#fff;top:3px;left:3px;transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.toggle.on::after{transform:translateX(20px)}
+
+.confetti{position:fixed;pointer-events:none;z-index:100}
+.confetti-piece{position:absolute;width:8px;height:8px;border-radius:2px;animation:confettiFall 1.5s forwards}
+@keyframes confettiFall{0%{opacity:1;transform:translateY(0) rotate(0)}100%{opacity:0;transform:translateY(400px) rotate(720deg)}}
+
+.particle{position:fixed;pointer-events:none;z-index:50;border-radius:50%;animation:particleFade 1s forwards}
+@keyframes particleFade{0%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(0) translateY(-30px)}}
+
+.char-display{display:inline-flex;align-items:center;justify-content:center;border-radius:50%;position:relative}
+.char-display canvas{border-radius:50%}
+
+@media(min-width:768px){
+  #puzzle-area{padding:20px}
+  .puzzle-html{max-width:600px}
+  .level-grid{grid-template-columns:repeat(6,1fr)}
+}
+@media(min-width:1024px){
+  #puzzle-area{padding:24px}
+  .puzzle-html{max-width:700px}
+}
+.high-contrast{--bg:#fff;--surface:#fff;--text:#000;--text-light:#333;--shadow:0 2px 8px rgba(0,0,0,.3)}
+.high-contrast .puzzle-card{border-width:3px}
+.high-contrast .btn{font-weight:700}
+.reduced-motion *,.reduced-motion *::before,.reduced-motion *::after{animation-duration:0s!important;transition-duration:0s!important}
+</style>
+</head>
+<body>
+<!-- SPLASH -->
+<div id="splash-screen" class="screen active">
+<div class="logo-area">
+<canvas id="splash-canvas" width="160" height="160"></canvas>
+<h1>Puddleberry Quest</h1>
+<h2>Thinking Town</h2>
+<p class="subtitle">A PrimeLab Game</p>
+</div>
+<p class="tap-hint">Tap anywhere to begin</p>
+</div>
+
+<!-- HOME -->
+<div id="home-screen" class="screen hidden">
+<div class="home-inner">
+<canvas id="home-char-canvas" class="home-char" width="120" height="120"></canvas>
+<h1>Puddleberry Quest</h1>
+<h2>Thinking Town</h2>
+<div class="menu-buttons">
+<button class="btn" onclick="UI.showMap()">Play</button>
+<button class="btn secondary" onclick="UI.showSettings()">Settings</button>
+</div>
+<div class="brand">PrimeLab &middot; Mind Training Lab of Prime Spirit Mentors</div>
+</div>
+</div>
+
+<!-- MAP -->
+<div id="map-screen" class="screen hidden">
+<div class="map-header">
+<button class="btn icon-btn" onclick="UI.showHome()">←</button>
+<h3>Thinking Town Map</h3>
+<div style="width:44px"></div>
+</div>
+<div id="map-scroll"></div>
+</div>
+
+<!-- LEVEL INTRO -->
+<div id="level-intro-screen" class="screen hidden">
+<div class="intro-card">
+<div class="level-num" id="intro-level-num"></div>
+<h2 id="intro-title"></h2>
+<div class="skill-tag" id="intro-skill"></div>
+<p class="desc" id="intro-desc"></p>
+<div class="chars-row" id="intro-chars"></div>
+<div class="buttons">
+<button class="btn small" onclick="UI.showMap()">Back</button>
+<button class="btn" onclick="Game.startLevel()">Start!</button>
+</div>
+</div>
+</div>
+
+<!-- GAME -->
+<div id="game-screen" class="screen hidden">
+<div class="game-header">
+<button class="btn icon-btn small" onclick="Game.pauseGame()" style="font-size:1rem">⏸</button>
+<div class="level-label" id="game-level-label"></div>
+<div class="star-display" id="game-stars"></div>
+<div class="timer" id="game-timer">0:00</div>
+<button class="btn icon-btn small" onclick="UI.showSettings()" style="font-size:1rem">⚙</button>
+</div>
+<div id="puzzle-area"></div>
+<div class="game-footer">
+<div class="hint-area">
+<button class="btn small" onclick="Game.useHint()">💡 Hint</button>
+<span class="hint-text" id="hint-text"></span>
+</div>
+<button class="btn small secondary" onclick="Game.checkSolution()">✓ Check</button>
+</div>
+</div>
+
+<!-- PAUSE OVERLAY -->
+<div id="pause-screen" class="screen hidden" style="background:rgba(0,0,0,.4);z-index:22">
+<div class="intro-card">
+<h2>Paused</h2>
+<div class="buttons" style="margin-top:16px">
+<button class="btn" onclick="Game.resumeGame()">Resume</button>
+<button class="btn small secondary" onclick="Game.restartLevel()">Restart</button>
+<button class="btn small secondary" onclick="Game.quitToMap()">Quit</button>
+</div>
+</div>
+</div>
+
+<!-- LEVEL COMPLETE -->
+<div id="complete-screen" class="screen hidden">
+<div class="complete-card">
+<h2>Well Done!</h2>
+<div class="big-stars" id="complete-stars"></div>
+<p id="complete-msg"></p>
+<div class="score-line" id="complete-score"></div>
+<div class="score-line" id="complete-time"></div>
+<div class="buttons">
+<button class="btn small" onclick="Game.nextLevel()">Next Level</button>
+<button class="btn small secondary" onclick="Game.restartLevel()">Replay</button>
+<button class="btn small secondary" onclick="Share.challenge()">📤 Challenge</button>
+<button class="btn small secondary" onclick="UI.showMap()">Map</button>
+</div>
+</div>
+</div>
+
+<!-- SETTINGS -->
+<div id="settings-screen" class="screen hidden">
+<div class="settings-card">
+<h2>Settings</h2>
+<div class="setting-row"><label>🔊 Sound Effects</label><button class="toggle" id="tog-sfx" onclick="Settings.toggle('sfx')"></button></div>
+<div class="setting-row"><label>🎵 Music</label><button class="toggle" id="tog-music" onclick="Settings.toggle('music')"></button></div>
+<div class="setting-row"><label>🗣 Voice</label><button class="toggle" id="tog-voice" onclick="Settings.toggle('voice')"></button></div>
+<div class="setting-row"><label>🔇 Mute All</label><button class="toggle" id="tog-mute" onclick="Settings.toggle('mute')"></button></div>
+<div class="setting-row"><label>🎭 Reduced Motion</label><button class="toggle" id="tog-motion" onclick="Settings.toggle('motion')"></button></div>
+<div class="setting-row"><label>🔲 High Contrast</label><button class="toggle" id="tog-contrast" onclick="Settings.toggle('contrast')"></button></div>
+<div class="setting-row"><label>🗑 Reset Progress</label><button class="btn small" onclick="Settings.resetProgress()">Reset</button></div>
+<div style="text-align:center;margin-top:16px">
+<button class="btn" onclick="UI.backFromSettings()">Done</button>
+</div>
+</div>
+</div>
+
+<div class="confetti" id="confetti-container"></div>
+
+<script>
+/* ============================================================
+   PUDDLEBERRY QUEST: THINKING TOWN
+   A PrimeLab Game by Prime Spirit Mentors
+   ============================================================ */
+
+// ============== CONFIG ==============
+const CONFIG = {
+  LEVELS_PER_WORLD: 5,
+  TOTAL_LEVELS: 30,
+  HINT_PENALTY: [0, 5, 15, 30],
+  BASE_SCORE: 1000,
+  TIME_BONUS_PER_SEC: 2,
+  MISTAKE_PENALTY: 30,
+  COLORS: {
+    cream:'#FFF0D4',honey:'#F5C469',pink:'#FFB5C2',aqua:'#7DD8C0',
+    lavender:'#C4B5E0',sky:'#A8D8EA',text:'#5D4E37',softGreen:'#B8E6C8'
+  },
+  WORLDS: [
+    {name:'Home & Garden',color:'#E8F5E9',icon:'🌱',levels:[1,5]},
+    {name:'Puzzle Village',color:'#FFF3E0',icon:'🏘',levels:[6,10]},
+    {name:'Mystery Woods',color:'#E8EAF6',icon:'🌲',levels:[11,15]},
+    {name:'Moving Skies',color:'#E3F2FD',icon:'☁️',levels:[16,20]},
+    {name:'Thinking City',color:'#F3E5F5',icon:'🏙',levels:[21,25]},
+    {name:'Thinking Tower',color:'#FCE4EC',icon:'🏰',levels:[26,30]}
+  ]
+};
+
+const CHAR_COLORS = {
+  puddleberry:'#FFF0D4',bloopi:'#B8E6F0',crumble:'#D4A574',zuzu:'#FFD080',
+  nib:'#E8A0C0',luma:'#E8E0F0',peb:'#A8C890',fizz:'#FFD060'
+};
+
+// ============== CHARACTERS ==============
+const CHARACTERS = {
+  puddleberry:{name:'Puddleberry',emoji:'🐕',desc:'Cloud puppy - gentle & curious',color:'#FFF0D4',ability:'Thinks carefully, good at most tasks',weakness:'Sometimes slow'},
+  bloopi:{name:'Bloopi',emoji:'🫧',desc:'Bubble creature - memory expert',color:'#B8E6F0',ability:'Can reveal forgotten info',weakness:'Cannot carry heavy things'},
+  crumble:{name:'Crumble',emoji:'🧱',desc:'Mole engineer - builder',color:'#D4A574',ability:'Builds and repairs',weakness:'Takes more time'},
+  zuzu:{name:'Zuzu',emoji:'🐦',desc:'Bird messenger - fast sequencer',color:'#FFD080',ability:'Fast, great at ordering',weakness:'Cannot solve logic clues'},
+  nib:{name:'Nib',emoji:'🍄',desc:'Mushroom - pattern spotter',color:'#E8A0C0',ability:'Notices hidden patterns',weakness:'Quiet, limited hints'},
+  luma:{name:'Luma',emoji:'🌙',desc:'Moon - logic & deduction',color:'#E8E0F0',ability:'Analyzes clues deeply',weakness:'Limited hint energy'},
+  peb:{name:'Peb',emoji:'🐜',desc:'Six-leg carrier - resources',color:'#A8C890',ability:'Manages supplies',weakness:'Limited capacity'},
+  fizz:{name:'Fizz',emoji:'⭐',desc:'Spinning creature - multitasker',color:'#FFD060',ability:'Handles rapid tasks',weakness:'Impulsive, can make mistakes'}
+};
+
+// ============== LEVEL DEFINITIONS ==============
+const LEVELS = [
+  // WORLD 1: Home & Garden
+  {id:1,name:"The Mixed Up Breakfast",world:1,type:'sequence',skill:'Sequencing',
+   desc:"Puddleberry's breakfast got scrambled! Put the morning routine in the right order.",
+   chars:['puddleberry','zuzu'],
+   config:{items:['☀️ Wake up','🍞 Make toast','🧃 Pour juice','🥣 Eat breakfast','🫧 Wash up'],
+   correct:[0,4,1,2,3],hint:['Start with waking up!','Washing comes before eating.','Toast is made before eating.']}},
+
+  {id:2,name:"The Missing Lantern",world:1,type:'elimination',skill:'Observation & Deduction',
+   desc:"The garden lantern has gone missing! Read the clues to find where it's hidden.",
+   chars:['puddleberry','luma'],
+   config:{options:['Under the big tree','Behind the flower pot','Inside the birdhouse','Near the pond','Behind the garden gate'],
+   clues:['It is not near water.','It is not inside anything.','It is behind something colorful.'],
+   answer:1,hint:['The pond has water.','The birdhouse is inside.','Flower pots are colorful!']}},
+
+  {id:3,name:"Crumble's Bridge",world:1,type:'gridpath',skill:'Spatial Planning',
+   desc:"Help Crumble build a path across the gap! Place bridge planks to connect both sides.",
+   chars:['crumble','puddleberry'],
+   config:{gridW:6,gridH:5,start:{x:0,y:2},end:{x:5,y:2},
+   walls:[[2,0],[2,1],[3,3],[3,4],[2,4]],
+   maxPlanks:6,hint:['Connect left to right with planks.','Watch out for the gaps!','You have 6 planks to use.']}},
+
+  {id:4,name:"Bloopi's Bubble Memory",world:1,type:'memory',skill:'Working Memory',
+   desc:"Bloopi will show you some bubbles. Remember where they are!",
+   chars:['bloopi','puddleberry'],
+   config:{gridW:4,gridH:3,count:4,showTime:3000,
+   hint:['Watch carefully!','Try to group the positions.','Remember patterns, not just spots.']}},
+
+  {id:5,name:"The Strange Garden",world:1,type:'pattern',skill:'Pattern Discovery',
+   desc:"The flowers follow a secret rule! Figure out the pattern and choose what comes next.",
+   chars:['nib','puddleberry'],
+   config:{rounds:[
+     {sequence:['🌹','🌻','🌹','🌻','🌹'],options:['🌻','🌹','🌷'],answer:0},
+     {sequence:['🌸','🌸','🌼','🌸','🌸'],options:['🌼','🌸','🌺'],answer:0},
+     {sequence:['🌷','🌻','🌷','🌻','🌷'],options:['🌷','🌻','🌹'],answer:1}
+   ],hint:['Look at what repeats!','Is there a alternation?','Count the positions.']}},
+
+  // WORLD 2: Puzzle Village
+  {id:6,name:"Delivery Confusion",world:2,type:'assignment',skill:'Constraint Reasoning',
+   desc:"Four packages need to go to four houses! Use the clues to match each delivery.",
+   chars:['zuzu','puddleberry'],
+   config:{items:['📦 Red','📦 Blue','📦 Green','📦 Yellow'],
+   slots:['🏠 House A','🏠 House B','🏠 House C','🏠 House D'],
+   clues:['Red goes to House A or B.','Blue is not next to Green.','Yellow goes to House D.','Green goes to House C.'],
+   solution:[0,3,2,1],hint:['Start with what you know for sure.','Yellow → House D is certain.','Green → House C.']}},
+
+  {id:7,name:"Three Locked Gates",world:2,type:'elimination',skill:'Deduction',
+   desc:"Only one gate leads to the garden. The others are traps! Read the signs carefully.",
+   chars:['luma','puddleberry'],
+   config:{options:['🚪 Gate 1: The safe gate is not here','🚪 Gate 2: The safe gate is here','🚪 Gate 3: The safe gate is not at Gate 1'],
+   clues:['Only one sign tells the truth.','If Gate 1\'s sign is true, the safe gate is not there.','Think about contradictions.'],
+   answer:0,hint:['If Gate 2 is telling the truth, Gate 1 and 3 must be lies.','If Gate 2 is safe, Gate 3\'s sign would also be true — contradiction!','Gate 1 is the safe one.']}},
+
+  {id:8,name:"The Shortest Picnic Route",world:2,type:'gridpath',skill:'Optimisation',
+   desc:"Find the shortest path from Puddleberry's house to the picnic spot!",
+   chars:['puddleberry','peb'],
+   config:{gridW:6,gridH:6,start:{x:0,y:0},end:{x:5,y:5},
+   walls:[[1,1],[1,2],[2,1],[3,3],[3,4],[4,3],[1,4],[4,1]],
+   maxPlanks:12,hint:['Move right and down when you can.','Avoid the blocked cells.','Diagonal-looking paths might be shorter.']}},
+
+  {id:9,name:"Zuzu's Bell Sequence",world:2,type:'sequence',skill:'Temporal Sequencing',
+   desc:"Zuzu rang the bells in a special order! Replay the exact sequence.",
+   chars:['zuzu','puddleberry'],
+   config:{items:['🔔 Bell A','🔔 Bell B','🔔 Bell C','🔔 Bell D','🔔 Bell E'],
+   correct:[2,0,4,1,3],hint:['Listen for the first bell.','The pattern goes middle, left, right...','Try to remember groups of two.']}},
+
+  {id:10,name:"The Busy Workshop",world:2,type:'assignment',skill:'Planning',
+   desc:"Each friend has a special talent. Assign the right friend to each job!",
+   chars:['puddleberry','bloopi','crumble','zuzu','nib','luma','peb','fizz'],
+   config:{items:['Build a shelf','Find hidden items','Deliver messages','Remember the recipe'],
+   slots:['🔨 Builder','🔍 Finder','🏃 Messenger','🧠 Rememberer'],
+   clues:['Crumble is the best builder.','Nib finds what others miss.','Zuzu is the fastest messenger.','Bloopi remembers everything.'],
+   solution:[2,4,3,1],hint:['Crumble builds — assign him to Builder.','Bloopi remembers — assign to Rememberer.','Zuzu runs fast — Messenger role.']}},
+
+  // WORLD 3: Mystery Woods
+  {id:11,name:"Mystery Crates",world:3,type:'elimination',skill:'Logical Inference',
+   desc:"Three crates have mystery items inside. Use the clues to figure out what's in each one!",
+   chars:['luma','puddleberry'],
+   config:{options:['🍎 Apple + 🔔 Bell + 🎨 Paint','🍎 Apple + 🎨 Paint + 🔔 Bell','🔔 Bell + 🎨 Paint + 🎁 Gift'],
+   clues:['Crate 1 has the apple.','Crate 2 does NOT have paint.','Crate 3 has the gift.'],
+   answer:0,hint:['Crate 1 must have Apple — that narrows it.','Crate 3 has Gift, so look for that option.','Only option A fits all clues.']}},
+
+  {id:12,name:"Peb's Energy Pack",world:3,type:'resource',skill:'Resource Management',
+   desc:"Peb has 10 energy points. Complete all four tasks without running out!",
+   chars:['peb','puddleberry'],
+   config:{energy:10,tasks:[
+     {name:'Climb hill',cost:3,icon:'⛰️'},{name:'Cross river',cost:4,icon:'🌊'},
+     {name:'Push rock',cost:5,icon:'🪨'},{name:'Carry supplies',cost:2,icon:'🎒'}
+   ],exact:true,targetTotal:10,
+   hint:['Each task needs exactly its cost.','All tasks must be done.','10 energy, 4 tasks — does it add up?']}},
+
+  {id:13,name:"Mirror Pond",world:3,type:'gridpath',skill:'Spatial Transformation',
+   desc:"The pond reflects everything! Navigate Puddleberry using mirror logic.",
+   chars:['puddleberry','bloopi'],
+   config:{gridW:5,gridH:5,start:{x:0,y:2},end:{x:4,y:2},
+   walls:[[2,0],[2,4],[1,1],[3,3]],
+   maxPlanks:8,hint:['Move right but think about reflections.','The middle row is clear.','Go around the obstacles.']}},
+
+  {id:14,name:"Broken Windmill",world:3,type:'chain',skill:'Cause & Effect',
+   desc:"The windmill has connected gears! Flip the right switches to make them all spin.",
+   chars:['crumble','puddleberry'],
+   config:{switches:5,connections:[[0,1],[1,2],[2,3],[1,4]],
+   target:[true,true,true,true,true],
+   initialState:[false,false,false,false,false],
+   hint:['Switching one affects connected gears.','Start from the left.','Each switch toggles itself and neighbors.']}},
+
+  {id:15,name:"Festival Teams",world:3,type:'assignment',skill:'Constraint Satisfaction',
+   desc:"Build three festival teams! Each team needs exactly two members with different skills.",
+   chars:['puddleberry','bloopi','crumble','zuzu','nib','luma','peb','fizz'],
+   config:{items:['Team Music','Team Art','Team Dance'],
+   slots:['🎵 Music ×2','🎨 Art ×2','💃 Dance ×2'],
+   clues:['Crumble and Bloopi cannot be on the same team.','Zuzu must be on Dance.','Nib is on Art.','Luma is on Music.'],
+   solution:[6,3,5,4,2,0],hint:['Fix the certain ones first: Zuzu→Dance, Nib→Art, Luma→Music.','Then fill remaining slots.','Crumble and Bloopi must be separated.']}},
+
+  // WORLD 4: Moving Skies
+  {id:16,name:"Moving Cloud Paths",world:4,type:'timing',skill:'Prediction',
+   desc:"The cloud platforms move! Tap at the right moment to hop across safely.",
+   chars:['puddleberry','fizz'],
+   config:{platforms:5,correctTiming:[1,3,0,2,4],
+   hint:['Watch the first platform carefully.','Timing is everything!','Count the positions as they move.']}},
+
+  {id:17,name:"Secret Soup",world:4,type:'pattern',skill:'Rule Learning',
+   desc:"The soup needs the right ingredients! Discover the secret combination rule.",
+   chars:['nib','puddleberry'],
+   config:{rounds:[
+     {sequence:['🔴','🟡','🟢','🔴','🟡'],options:['🟢','🔴','🟡'],answer:0},
+     {sequence:['🔵','🔵','🔴','🔵','🔵'],options:['🔴','🔵','🟢'],answer:0},
+     {sequence:['🟡','🟢','🟢','🟡','🟢'],options:['🟡','🟢','🔴'],answer:0},
+     {sequence:['🔴','🟡','🔵','🔴','🟡'],options:['🔵','🔴','🟢'],answer:0}
+   ],hint:['Look at every third position.','The pattern repeats every 3 items.','Position 3, 6, 9... are the same.']}},
+
+  {id:18,name:"Night Market Memory",world:4,type:'memory',skill:'Advanced Memory',
+   desc:"Remember the items AND their positions at the Night Market!",
+   chars:['bloopi','puddleberry'],
+   config:{gridW:4,gridH:4,count:6,showTime:4000,
+   hint:['The grid is bigger this time!','Group items mentally by rows.','Look for corner positions first.']}},
+
+  {id:19,name:"The Treasure Orchard",world:4,type:'elimination',skill:'Deduction',
+   desc:"Treasure is buried under one of five trees! Use clues to eliminate wrong spots.",
+   chars:['luma','puddleberry'],
+   config:{options:['🌳 Oak','🌳 Pine','🌳 Maple','🌳 Cherry','🌳 Willow'],
+   clues:['It is not under the tallest tree (Pine).','It is not next to the Oak.','It is under a tree with a fruit.','Cherry is the only fruit tree here.'],
+   answer:3,hint:['Pine is eliminated by clue 1.','Maple and Willow are not fruit trees.','Cherry is the only fruit tree!']}},
+
+  {id:20,name:"Five Problems, One Team",world:4,type:'assignment',skill:'Strategic Planning',
+   desc:"Five problems at once! Each friend can only solve certain problems.",
+   chars:['puddleberry','bloopi','crumble','zuzu','nib','luma','peb','fizz'],
+   config:{items:['Fix wall','Find key','Deliver note','Decode message','Carry box'],
+   slots:['🔨 Fix','🔍 Find','🏃 Deliver','🧩 Decode','📦 Carry'],
+   clues:['Only Crumble can fix the wall.','Bloopi finds the key.','Zuzu delivers the note.','Luma decodes. Peb carries.'],
+   solution:[2,1,3,5,6],hint:['Each character has one specialty.','Match the ability to the task.','Crumble→Fix, Bloopi→Find, etc.']}},
+
+  // WORLD 5: Thinking City
+  {id:21,name:"Crossing Traffic",world:5,type:'gridpath',skill:'Planning Ahead',
+   desc:"Three friends need to cross the busy square! Plan paths that don't collide.",
+   chars:['puddleberry','zuzu','fizz'],
+   config:{gridW:6,gridH:6,start:{x:0,y:0},end:{x:5,y:5},
+   walls:[[1,2],[2,2],[3,3],[4,1],[2,4]],
+   maxPlanks:14,hint:['Plan the full path before placing.','Leave room for later steps.','Think about bottlenecks.']}},
+
+  {id:22,name:"Power Garden",world:5,type:'resource',skill:'Optimisation',
+   desc:"Distribute 15 power units to four garden zones. Each needs a minimum amount!",
+   chars:['crumble','peb'],
+   config:{energy:15,tasks:[
+     {name:'Fountain',cost:4,icon:'⛲'},{name:'Lights',cost:5,icon:'💡'},
+     {name:'Heater',cost:6,icon:'🔥'},{name:'Music',cost:3,icon:'🎵'}
+   ],exact:false,targetTotal:18,
+   hint:['All zones need power.','Can you give each zone enough with 15 total?','Some zones can share or reduce.']}},
+
+  {id:23,name:"Rotating Shadows",world:5,type:'pattern',skill:'Spatial Reasoning',
+   desc:"Shapes cast different shadows when rotated! Match the shape to its shadow.",
+   chars:['nib','luma'],
+   config:{rounds:[
+     {sequence:['⬜','⬜↻','⬜↻↻','⬜↻↻↻'],options:['⬜↻↻↻↻','⬜↻↻','⬜'],answer:0},
+     {sequence:['△','△↻','△↻↻'],options:['△↻↻↻','△↻','△'],answer:0},
+     {sequence:['⬟','⬟↻','⬟↻↻','⬟↻↻↻','⬟↻↻↻↻'],options:['⬟↻↻↻↻↻','⬟↻↻↻','⬟'],answer:0}
+   ],hint:['Each step is a 90° rotation.','What comes after 4 rotations?','A full rotation brings it back!']}},
+
+  {id:24,name:"The Silent Bakery",world:5,type:'elimination',skill:'Evidence-Based Reasoning',
+   desc:"Something happened at the bakery last night! Figure out who did what using the clues.",
+   chars:['luma','puddleberry'],
+   config:{options:['Puddleberry baked cookies','Bloopi baked a cake','Crumble baked bread','Zuzu baked muffins','Nib baked a pie'],
+   clues:['The baker wore a hat (Crumble).','The item was round (pie).','Nib always bakes pies.'],
+   answer:4,hint:['Crumble wears a hat — but does he bake?','The round item narrows it down.','Nib bakes pies — and pie is round!']}},
+
+  {id:25,name:"Storm Emergency",world:5,type:'priority',skill:'Decision Making Under Pressure',
+   desc:"A storm is coming! Handle the emergencies in the right priority order!",
+   chars:['puddleberry','fizz','peb','zuzu'],
+   config:{items:['🏠 Board windows','🐱 Rescue cat','📦 Move supplies inside','🚪 Secure door','🔔 Ring warning bell'],
+   correct:[4,1,0,3,2],hint:['Safety first — warn everyone!','Then rescue those in danger.','Protect property last.']}},
+
+  // WORLD 6: Thinking Tower
+  {id:26,name:"The Four Solution Problem",world:6,type:'resource',skill:'Optimisation',
+   desc:"Multiple solutions work — but find the one that uses the LEAST resources!",
+   chars:['luma','peb','puddleberry'],
+   config:{energy:8,tasks:[
+     {name:'Path A: Direct',cost:8,icon:'➡️'},{name:'Path B: Around',cost:6,icon:'↪️'},
+     {name:'Path C: Underground',cost:5,icon:'⬇️'},{name:'Path D: Bridge',cost:4,icon:'🌉'}
+   ],exact:true,targetTotal:4,
+   hint:['Only one path is needed.','Which uses the least energy?','The bridge path uses only 4!']}},
+
+  {id:27,name:"Memory Tower",world:6,type:'memory',skill:'High-Level Memory',
+   desc:"Three floors of memory challenges! Complete all three to climb the tower.",
+   chars:['bloopi','puddleberry'],
+   config:{gridW:5,gridH:4,count:8,showTime:3500,
+   hint:['More items this time!','Try to create a story with the positions.','Focus on the edges and corners.']}},
+
+  {id:28,name:"Consequence Chain",world:6,type:'chain',skill:'Strategic Foresight',
+   desc:"Every switch affects others! Plan several moves ahead to solve the chain.",
+   chars:['luma','crumble','puddleberry'],
+   config:{switches:6,connections:[[0,1],[1,2],[2,3],[3,4],[4,5],[0,5],[1,4]],
+   target:[true,true,true,true,true,true],
+   initialState:[false,true,false,true,false,false],
+   hint:['Map out all connections first.','Some switches affect non-adjacent ones.','Work backwards from the target state.']}},
+
+  {id:29,name:"Town in Trouble",world:6,type:'gridpath',skill:'Systems Thinking',
+   desc:"The town has blocked paths everywhere! Find the route through the maze.",
+   chars:['puddleberry','crumble','zuzu','fizz'],
+   config:{gridW:7,gridH:7,start:{x:0,y:3},end:{x:6,y:3},
+   walls:[[1,1],[1,2],[1,5],[2,3],[3,0],[3,1],[3,5],[4,3],[4,4],[5,1],[5,2],[5,5],[5,6]],
+   maxPlanks:20,hint:['The maze has bottlenecks.','Try to find the widest corridors.','Plan your full route before placing.']}},
+
+  {id:30,name:"The Great Thinking Challenge",world:6,type:'mega',skill:'All Skills Combined',
+   desc:"The ultimate challenge! Solve three stages combining memory, logic, and planning!",
+   chars:['puddleberry','bloopi','crumble','zuzu','nib','luma','peb','fizz'],
+   config:{stages:[
+     {type:'memory',gridW:3,gridH:3,count:4,showTime:2500,label:'Stage 1: Remember'},
+     {type:'pattern',rounds:[{sequence:['🔴','🟡','🔵','🔴','🟡'],options:['🔵','🔴','🟡'],answer:0}],label:'Stage 2: Pattern'},
+     {type:'sequence',items:['🔔 First','🔔 Second','🔔 Third','🔔 Fourth','🔔 Fifth'],correct:[0,1,2,3,4],label:'Stage 3: Order'}
+   ],hint:['Stage 1: Remember the pattern.','Stage 2: Find what repeats.','Stage 3: Put them in order.']}},
+];
+
+// ============== SOUND SYSTEM ==============
+const Sound = {
+  ctx: null,
+  muted: false,
+  sfxOn: true,
+  musicOn: false,
+  voiceOn: true,
+  init() {
+    try { this.ctx = new (window.AudioContext || window.webkitAudioContext)(); }
+    catch(e) { console.log('No Web Audio'); }
+  },
+  resume() { if (this.ctx && this.ctx.state === 'suspended') this.ctx.resume(); },
+  playTone(freq, dur, type, vol) {
+    if (this.muted || !this.sfxOn || !this.ctx) return;
+    this.resume();
+    const o = this.ctx.createOscillator();
+    const g = this.ctx.createGain();
+    o.type = type || 'sine';
+    o.frequency.value = freq;
+    g.gain.setValueAtTime(vol || 0.1, this.ctx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + dur);
+    o.connect(g);
+    g.connect(this.ctx.destination);
+    o.start();
+    o.stop(this.ctx.currentTime + dur);
+  },
+  click() { this.playTone(800, 0.08, 'sine', 0.06); },
+  correct() {
+    this.playTone(523, 0.12, 'sine', 0.08);
+    setTimeout(() => this.playTone(659, 0.12, 'sine', 0.08), 100);
+    setTimeout(() => this.playTone(784, 0.2, 'sine', 0.08), 200);
+  },
+  wrong() { this.playTone(200, 0.2, 'square', 0.06); },
+  complete() {
+    const notes = [523,587,659,698,784,880,988,1047];
+    notes.forEach((n,i) => setTimeout(() => this.playTone(n, 0.15, 'sine', 0.06), i*80));
+  },
+  hint() { this.playTone(600, 0.15, 'triangle', 0.06); setTimeout(() => this.playTone(800, 0.15, 'triangle', 0.06), 120); },
+  voice(char, text) {
+    if (this.muted || !this.voiceOn || !this.ctx) return;
+    this.resume();
+    const pitches = {puddleberry:400,bloopi:700,crumble:250,zuzu:550,nib:450,luma:350,peb:300,fizz:800};
+    const p = pitches[char] || 400;
+    const syllables = Math.min(text.length / 3, 8);
+    for (let i = 0; i < syllables; i++) {
+      setTimeout(() => {
+        const o = this.ctx.createOscillator();
+        const g = this.ctx.createGain();
+        o.type = 'sine';
+        o.frequency.value = p + Math.random() * 100 - 50;
+        g.gain.setValueAtTime(0.04, this.ctx.currentTime);
+        g.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.06);
+        o.connect(g); g.connect(this.ctx.destination);
+        o.start(); o.stop(this.ctx.currentTime + 0.06);
+      }, i * 70);
+    }
+  }
+};
+
+// ============== SAVE SYSTEM ==============
+const Save = {
+  KEY: 'puddleberry_quest_save',
+  data: null,
+  init() {
+    try {
+      const d = localStorage.getItem(this.KEY);
+      this.data = d ? JSON.parse(d) : this.defaultData();
+    } catch(e) { this.data = this.defaultData(); }
+  },
+  defaultData() {
+    return { levels: {}, totalStars: 0, totalPoints: 0, settings: {sfx:true,music:false,voice:true,mute:false,motion:false,contrast:false} };
+  },
+  persist() {
+    try { localStorage.setItem(this.KEY, JSON.stringify(this.data)); } catch(e) {}
+  },
+  completeLevel(id, stars, score, time) {
+    const prev = this.data.levels[id];
+    if (!prev || stars > prev.stars || (stars === prev.stars && score > prev.score)) {
+      this.data.levels[id] = { stars, score, time, completed: true };
+    }
+    this.data.totalStars = Object.values(this.data.levels).reduce((s,l) => s + l.stars, 0);
+    this.data.totalPoints = Object.values(this.data.levels).reduce((s,l) => s + l.score, 0);
+    this.persist();
+  },
+  isUnlocked(id) {
+    if (id === 1) return true;
+    return !!this.data.levels[id - 1]?.completed;
+  },
+  getLevelData(id) { return this.data.levels[id] || null; },
+  reset() {
+    this.data = this.defaultData();
+    this.persist();
+  }
+};
+
+// ============== PARTICLE SYSTEM ==============
+const Particles = {
+  items: [],
+  emit(x, y, count, colors, type) {
+    for (let i = 0; i < count; i++) {
+      this.items.push({
+        x, y,
+        vx: (Math.random() - 0.5) * 6,
+        vy: -Math.random() * 4 - 2,
+        size: Math.random() * 6 + 3,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        life: 1,
+        decay: 0.015 + Math.random() * 0.01,
+        shape: type || (Math.random() > 0.5 ? 'circle' : 'star')
+      });
+    }
+  },
+  update() {
+    this.items = this.items.filter(p => {
+      p.x += p.vx;
+      p.y += p.vy;
+      p.vy += 0.08;
+      p.life -= p.decay;
+      return p.life > 0;
+    });
+  },
+  draw(ctx) {
+    this.items.forEach(p => {
+      ctx.globalAlpha = p.life;
+      ctx.fillStyle = p.color;
+      if (p.shape === 'star') {
+        this.drawStar(ctx, p.x, p.y, p.size);
+      } else {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    });
+    ctx.globalAlpha = 1;
+  },
+  drawStar(ctx, x, y, r) {
+    ctx.beginPath();
+    for (let i = 0; i < 5; i++) {
+      const a = (i * 4 * Math.PI / 5) - Math.PI / 2;
+      const ax = x + Math.cos(a) * r;
+      const ay = y + Math.sin(a) * r;
+      i === 0 ? ctx.moveTo(ax, ay) : ctx.lineTo(ax, ay);
+    }
+    ctx.closePath();
+    ctx.fill();
+  }
+};
+
+// ============== CONFETTI ==============
+function showConfetti() {
+  const container = document.getElementById('confetti-container');
+  container.innerHTML = '';
+  const colors = ['#FFB5C2','#7DD8C0','#F5C469','#C4B5E0','#A8D8EA','#FFD060'];
+  for (let i = 0; i < 50; i++) {
+    const el = document.createElement('div');
+    el.className = 'confetti-piece';
+    el.style.left = Math.random() * 100 + 'vw';
+    el.style.top = -10 + 'px';
+    el.style.background = colors[Math.floor(Math.random() * colors.length)];
+    el.style.animationDelay = Math.random() * 0.5 + 's';
+    el.style.animationDuration = (1 + Math.random()) + 's';
+    el.style.width = (6 + Math.random() * 6) + 'px';
+    el.style.height = (6 + Math.random() * 6) + 'px';
+    el.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+    container.appendChild(el);
+  }
+  setTimeout(() => container.innerHTML = '', 2500);
+}
+
+// ============== CHARACTER DRAWING ==============
+const CharDraw = {
+  draw(ctx, type, x, y, size, frame) {
+    ctx.save();
+    ctx.translate(x, y);
+    const s = size / 80;
+    const breathe = Math.sin((frame || 0) * 0.04) * 2 * s;
+    const blink = Math.floor((frame || 0) / 80) % 20 === 0;
+
+    switch(type) {
+      case 'puddleberry': this.drawPuddleberry(ctx, s, breathe, blink, frame); break;
+      case 'bloopi': this.drawBloopi(ctx, s, breathe, blink, frame); break;
+      case 'crumble': this.drawCrumble(ctx, s, breathe, blink, frame); break;
+      case 'zuzu': this.drawZuzu(ctx, s, breathe, blink, frame); break;
+      case 'nib': this.drawNib(ctx, s, breathe, blink, frame); break;
+      case 'luma': this.drawLuma(ctx, s, breathe, blink, frame); break;
+      case 'peb': this.drawPeb(ctx, s, breathe, blink, frame); break;
+      case 'fizz': this.drawFizz(ctx, s, breathe, blink, frame); break;
+    }
+    ctx.restore();
+  },
+
+  drawPuddleberry(ctx, s, b, blink, f) {
+    // Pear body
+    ctx.fillStyle = '#FFF0D4';
+    ctx.beginPath();
+    ctx.moveTo(0, (-20+b)*s);
+    ctx.bezierCurveTo(22*s,(-22+b)*s,28*s,10*s,24*s,28*s);
+    ctx.quadraticCurveTo(18*s,38*s,0,38*s);
+    ctx.quadraticCurveTo(-18*s,38*s,-24*s,28*s);
+    ctx.bezierCurveTo(-28*s,10*s,-22*s,(-22+b)*s,0,(-20+b)*s);
+    ctx.fill();
+    // Honey belly
+    ctx.fillStyle = '#F5E6C8';
+    ctx.beginPath();
+    ctx.ellipse(0, 18*s, 14*s, 12*s, 0, 0, Math.PI*2);
+    ctx.fill();
+    // Leaf ears
+    ctx.fillStyle = '#F0D5A0';
+    for (let side of [-1,1]) {
+      ctx.beginPath();
+      ctx.moveTo(side*8*s, (-18+b)*s);
+      ctx.quadraticCurveTo(side*16*s,(-32+b)*s,side*6*s,(-36+b)*s);
+      ctx.quadraticCurveTo(side*2*s,(-28+b)*s,side*8*s,(-18+b)*s);
+      ctx.fill();
+    }
+    // Eyes
+    ctx.fillStyle = '#3D2E17';
+    if (blink) {
+      for (let side of [-1,1]) {
+        ctx.beginPath();
+        ctx.moveTo((side*7-3)*s, (-4+b)*s);
+        ctx.lineTo((side*7+3)*s, (-4+b)*s);
+        ctx.lineWidth = 1.5*s;
+        ctx.strokeStyle = '#3D2E17';
+        ctx.stroke();
+      }
+    } else {
+      for (let side of [-1,1]) {
+        ctx.beginPath();
+        ctx.ellipse(side*7*s, (-4+b)*s, 4.5*s, 5.5*s, 0, 0, Math.PI*2);
+        ctx.fill();
+        ctx.fillStyle = '#fff';
+        ctx.beginPath();
+        ctx.arc((side*7+1.5)*s, (-6+b)*s, 1.8*s, 0, Math.PI*2);
+        ctx.fill();
+        ctx.fillStyle = '#3D2E17';
+      }
+    }
+    // Nose
+    ctx.fillStyle = '#E8A090';
+    ctx.beginPath();
+    ctx.moveTo(0, 2*s);
+    ctx.lineTo(-2.5*s, 6*s);
+    ctx.lineTo(2.5*s, 6*s);
+    ctx.closePath();
+    ctx.fill();
+    // Comma cheeks
+    ctx.fillStyle = '#FFB5C2';
+    ctx.globalAlpha = 0.6;
+    for (let side of [-1,1]) {
+      ctx.beginPath();
+      ctx.arc(side*12*s, 4*s, 4*s, 0, Math.PI*2);
+      ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+    // Star hair clip
+    ctx.fillStyle = '#7DD8C0';
+    ctx.save();
+    ctx.translate(-10*s, (-16+b)*s);
+    ctx.rotate(f*0.02);
+    this.drawStarShape(ctx, 4*s);
+    ctx.restore();
+    // Cloud tail
+    ctx.fillStyle = '#F5F0E8';
+    ctx.globalAlpha = 0.8;
+    const tailY = 30*s;
+    const qmark = Math.sin(f*0.06) > 0.7;
+    ctx.beginPath();
+    if (qmark) {
+      ctx.arc(18*s, tailY-4*s, 4*s, 0, Math.PI*2);
+      ctx.arc(20*s, tailY+2*s, 3.5*s, 0, Math.PI*2);
+      ctx.arc(16*s, tailY-10*s, 3*s, 0, Math.PI*2);
+    } else {
+      ctx.arc(16*s, tailY, 4*s, 0, Math.PI*2);
+      ctx.arc(22*s, tailY-2*s, 3*s, 0, Math.PI*2);
+      ctx.arc(20*s, tailY+3*s, 3.5*s, 0, Math.PI*2);
+    }
+    ctx.fill();
+    ctx.globalAlpha = 1;
+  },
+
+  drawBloopi(ctx, s, b, blink, f) {
+    // Bubble body
+    const grad = ctx.createRadialGradient(0,(-2+b)*s,2*s,0,0,28*s);
+    grad.addColorStop(0,'#E0F4FF');
+    grad.addColorStop(0.7,'#B8E6F0');
+    grad.addColorStop(1,'#90D0E8');
+    ctx.fillStyle = grad;
+    ctx.beginPath();
+    ctx.arc(0, (-2+b)*s, 26*s, 0, Math.PI*2);
+    ctx.fill();
+    // Shine
+    ctx.fillStyle = 'rgba(255,255,255,0.5)';
+    ctx.beginPath();
+    ctx.ellipse(-8*s, (-12+b)*s, 6*s, 10*s, -0.3, 0, Math.PI*2);
+    ctx.fill();
+    // Eyes
+    ctx.fillStyle = '#2D5070';
+    if (!blink) {
+      for (let side of [-1,1]) {
+        ctx.beginPath();
+        ctx.arc(side*8*s, (-4+b)*s, 3.5*s, 0, Math.PI*2);
+        ctx.fill();
+        ctx.fillStyle='#fff';
+        ctx.beginPath();ctx.arc((side*8+1)*s,(-5.5+b)*s,1.5*s,0,Math.PI*2);ctx.fill();
+        ctx.fillStyle='#2D5070';
+      }
+    } else {
+      ctx.strokeStyle='#2D5070';ctx.lineWidth=1.5*s;
+      for (let side of [-1,1]) {
+        ctx.beginPath();ctx.arc(side*8*s,(-4+b)*s,3*s,0.1,Math.PI-0.1);ctx.stroke();
+      }
+    }
+    // Mouth
+    ctx.strokeStyle='#2D5070';ctx.lineWidth=1.5*s;
+    ctx.beginPath();ctx.arc(0,(6+b)*s,5*s,0.2,Math.PI-0.2);ctx.stroke();
+    // Small bubbles
+    ctx.fillStyle='rgba(200,230,255,0.5)';
+    for(let i=0;i<3;i++){
+      const bx=(Math.sin(f*0.03+i*2.1)*18)*s;
+      const by=(-30+b-Math.abs(Math.cos(f*0.02+i))*10)*s;
+      ctx.beginPath();ctx.arc(bx,by,(2+i)*s,0,Math.PI*2);ctx.fill();
+    }
+  },
+
+  drawCrumble(ctx, s, b, blink, f) {
+    // Square body
+    ctx.fillStyle = '#D4A574';
+    const r = 8*s;
+    const w = 24*s, h = 28*s;
+    const bx = -w/2, by = (-12+b)*s;
+    ctx.beginPath();
+    ctx.moveTo(bx+r, by);
+    ctx.lineTo(bx+w-r, by);ctx.quadraticCurveTo(bx+w,by,bx+w,by+r);
+    ctx.lineTo(bx+w, by+h-r);ctx.quadraticCurveTo(bx+w,by+h,bx+w-r,by+h);
+    ctx.lineTo(bx+r, by+h);ctx.quadraticCurveTo(bx,by+h,bx,by+h-r);
+    ctx.lineTo(bx, by+r);ctx.quadraticCurveTo(bx,by,bx+r,by);
+    ctx.fill();
+    // Hard hat
+    ctx.fillStyle = '#FFD080';
+    ctx.beginPath();
+    ctx.ellipse(0, (-14+b)*s, 20*s, 8*s, 0, Math.PI, 0);
+    ctx.fill();
+    ctx.fillRect(-22*s, (-14+b)*s, 44*s, 4*s);
+    // Eyes
+    ctx.fillStyle = '#3D2E17';
+    if (!blink) {
+      for (let side of [-1,1]) {
+        ctx.beginPath();ctx.arc(side*7*s, (0+b)*s, 3*s,0,Math.PI*2);ctx.fill();
+      }
+    } else {
+      ctx.strokeStyle='#3D2E17';ctx.lineWidth=1.5*s;
+      for (let side of [-1,1]) {
+        ctx.beginPath();ctx.moveTo((side*7-3)*s,(0+b)*s);ctx.lineTo((side*7+3)*s,(0+b)*s);ctx.stroke();
+      }
+    }
+    // Buck teeth
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(-3*s,(8+b)*s,2.5*s,5*s);
+    ctx.fillRect(0.5*s,(8+b)*s,2.5*s,5*s);
+    ctx.strokeStyle='#D4A574';ctx.lineWidth=0.5*s;
+    ctx.strokeRect(-3*s,(8+b)*s,2.5*s,5*s);
+    ctx.strokeRect(0.5*s,(8+b)*s,2.5*s,5*s);
+    // Wrench
+    ctx.fillStyle='#888';
+    ctx.save();ctx.rotate(Math.sin(f*0.05)*0.2);
+    ctx.fillRect(18*s,(-8+b)*s,3*s,16*s);
+    ctx.fillRect(14*s,(6+b)*s,12*s,3*s);
+    ctx.restore();
+  },
+
+  drawZuzu(ctx, s, b, blink, f) {
+    // Long legs
+    ctx.strokeStyle='#FFB060';ctx.lineWidth=3*s;
+    for(let side of [-1,1]){
+      ctx.beginPath();ctx.moveTo(side*8*s,20*s);ctx.lineTo(side*10*s,38*s);ctx.stroke();
+      ctx.beginPath();ctx.arc(side*10*s,39*s,3*s,0,Math.PI*2);ctx.fillStyle='#FFB060';ctx.fill();
+    }
+    // Body
+    ctx.fillStyle='#FFD080';
+    ctx.beginPath();ctx.ellipse(0,(-4+b)*s,18*s,22*s,0,0,Math.PI*2);ctx.fill();
+    // Belly
+    ctx.fillStyle='#FFF0D4';
+    ctx.beginPath();ctx.ellipse(0,(8+b)*s,12*s,12*s,0,0,Math.PI*2);ctx.fill();
+    // Wings
+    for(let side of [-1,1]){
+      ctx.fillStyle='#FFC060';
+      ctx.save();ctx.translate(side*16*s,(-8+b)*s);ctx.rotate(side*0.3+Math.sin(f*0.08)*0.15*side);
+      ctx.beginPath();ctx.ellipse(side*6*s,0,8*s,14*s,side*0.2,0,Math.PI*2);ctx.fill();
+      ctx.restore();
+    }
+    // Head
+    ctx.fillStyle='#FFD080';
+    ctx.beginPath();ctx.arc(0,(-22+b)*s,12*s,0,Math.PI*2);ctx.fill();
+    // Beak
+    ctx.fillStyle='#FF8844';
+    ctx.beginPath();ctx.moveTo(0,(-18+b)*s);ctx.lineTo(6*s,(-14+b)*s);ctx.lineTo(0,(-12+b)*s);ctx.closePath();ctx.fill();
+    // Eyes
+    ctx.fillStyle='#3D2E17';
+    if(!blink){for(let side of [-1,1]){ctx.beginPath();ctx.arc(side*5*s,(-24+b)*s,2.5*s,0,Math.PI*2);ctx.fill();}}
+    else{ctx.strokeStyle='#3D2E17';ctx.lineWidth=1.5*s;for(let side of [-1,1]){ctx.beginPath();ctx.arc(side*5*s,(-24+b)*s,2*s,0.1,Math.PI-0.1);ctx.stroke();}}
+    // Bell
+    ctx.fillStyle='#F5C469';
+    ctx.beginPath();ctx.arc(0,(-8+b)*s,4*s,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#E0A030';
+    ctx.beginPath();ctx.arc(0,(-6+b)*s,1.5*s,0,Math.PI*2);ctx.fill();
+  },
+
+  drawNib(ctx, s, b, blink, f) {
+    // Mushroom cap
+    ctx.fillStyle='#E8A0C0';
+    ctx.beginPath();ctx.ellipse(0,(-14+b)*s,24*s,16*s,0,Math.PI,0);ctx.fill();
+    // Spots
+    ctx.fillStyle='#FFD0E0';
+    ctx.beginPath();ctx.arc(-8*s,(-22+b)*s,4*s,0,Math.PI*2);ctx.fill();
+    ctx.beginPath();ctx.arc(6*s,(-20+b)*s,3*s,0,Math.PI*2);ctx.fill();
+    ctx.beginPath();ctx.arc(0*s,(-26+b)*s,2.5*s,0,Math.PI*2);ctx.fill();
+    // Stem body
+    ctx.fillStyle='#FFF0E8';
+    ctx.beginPath();ctx.moveTo(-12*s,(-14+b)*s);ctx.lineTo(-10*s,20*s);
+    ctx.quadraticCurveTo(0,26*s,10*s,20*s);ctx.lineTo(12*s,(-14+b)*s);
+    ctx.quadraticCurveTo(0,(-10+b)*s,-12*s,(-14+b)*s);ctx.fill();
+    // Eyes
+    ctx.fillStyle='#4D3050';
+    if(!blink){for(let side of [-1,1]){ctx.beginPath();ctx.arc(side*5*s,(0+b)*s,3*s,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#fff';ctx.beginPath();ctx.arc((side*5+1)*s,(-1+b)*s,1.2*s,0,Math.PI*2);ctx.fill();ctx.fillStyle='#4D3050';}}
+    // Tiny arms
+    ctx.strokeStyle='#FFF0E8';ctx.lineWidth=3*s;ctx.lineCap='round';
+    ctx.beginPath();ctx.moveTo(-12*s,(6+b)*s);ctx.lineTo(-18*s,(12+b)*s);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(12*s,(6+b)*s);ctx.lineTo(18*s,(12+b)*s);ctx.stroke();
+  },
+
+  drawLuma(ctx, s, b, blink, f) {
+    // Moon glow
+    ctx.fillStyle='rgba(255,240,200,0.2)';
+    ctx.beginPath();ctx.arc(0,(0+b)*s,32*s,0,Math.PI*2);ctx.fill();
+    // Crescent body
+    ctx.fillStyle='#E8E0F0';
+    ctx.beginPath();ctx.arc(0,(0+b)*s,24*s,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#FFF8F0';
+    ctx.beginPath();ctx.arc(10*s,(-6+b)*s,20*s,0,Math.PI*2);ctx.fill();
+    // Face area
+    ctx.fillStyle='#F0E8FF';
+    ctx.beginPath();ctx.arc(-4*s,(0+b)*s,18*s,0,Math.PI*2);ctx.fill();
+    // Sleepy eyes
+    ctx.fillStyle='#6B5090';
+    if(!blink){for(let side of [-1,1]){ctx.beginPath();ctx.ellipse(side*5*s,(-2+b)*s,3*s,2*s,0,0,Math.PI*2);ctx.fill();
+    ctx.strokeStyle='#6B5090';ctx.lineWidth=1*s;ctx.beginPath();ctx.moveTo((side*5-4)*s,(-5+b)*s);ctx.lineTo((side*5+4)*s,(-5+b)*s);ctx.stroke();}}
+    // Blush
+    ctx.fillStyle='#E0C0E8';ctx.globalAlpha=0.4;
+    ctx.beginPath();ctx.arc(-9*s,(4+b)*s,4*s,0,Math.PI*2);ctx.fill();
+    ctx.beginPath();ctx.arc(5*s,(4+b)*s,4*s,0,Math.PI*2);ctx.fill();
+    ctx.globalAlpha=1;
+    // Stars
+    ctx.fillStyle='#F5C469';
+    for(let i=0;i<3;i++){
+      const angle=f*0.02+i*2.1;
+      const dist=(28+Math.sin(f*0.04+i)*4)*s;
+      ctx.save();ctx.translate(Math.cos(angle)*dist,(Math.sin(angle)*dist+(0+b)*s));
+      ctx.rotate(f*0.05+i);this.drawStarShape(ctx,3*s);ctx.restore();
+    }
+  },
+
+  drawPeb(ctx, s, b, blink, f) {
+    // Six legs
+    ctx.strokeStyle='#80A060';ctx.lineWidth=2.5*s;ctx.lineCap='round';
+    for(let i=0;i<3;i++){
+      const lx=(-14+i*14)*s;
+      const ly=(16+b)*s;
+      const wobble=Math.sin(f*0.08+i*1.5)*3*s;
+      ctx.beginPath();ctx.moveTo(lx,ly);ctx.lineTo(lx-6*s+wobble,ly+12*s);ctx.stroke();
+      ctx.beginPath();ctx.moveTo(lx,ly);ctx.lineTo(lx+6*s+wobble,ly+12*s);ctx.stroke();
+    }
+    // Body
+    ctx.fillStyle='#A8C890';
+    ctx.beginPath();ctx.ellipse(0,(2+b)*s,20*s,16*s,0,0,Math.PI*2);ctx.fill();
+    // Belly
+    ctx.fillStyle='#C8E0B0';
+    ctx.beginPath();ctx.ellipse(0,(6+b)*s,12*s,10*s,0,0,Math.PI*2);ctx.fill();
+    // Backpack
+    ctx.fillStyle='#7DAA50';
+    const bpx=0, bpy=(-14+b)*s;
+    ctx.beginPath();ctx.roundRect(bpx-10*s,bpy,20*s,14*s,4*s);ctx.fill();
+    ctx.fillStyle='#6D9940';ctx.fillRect(bpx-6*s,bpy+2*s,12*s,3*s);
+    // Antennae
+    ctx.strokeStyle='#80A060';ctx.lineWidth=1.5*s;
+    for(let side of [-1,1]){
+      ctx.beginPath();ctx.moveTo(side*6*s,(-12+b)*s);
+      ctx.quadraticCurveTo(side*12*s,(-24+b)*s,side*8*s,(-28+b)*s);
+      ctx.stroke();
+      ctx.fillStyle='#B8D8A0';ctx.beginPath();ctx.arc(side*8*s,(-28+b)*s,2.5*s,0,Math.PI*2);ctx.fill();
+    }
+    // Eyes
+    ctx.fillStyle='#3D5020';
+    if(!blink){for(let side of [-1,1]){ctx.beginPath();ctx.arc(side*6*s,(-2+b)*s,2.5*s,0,Math.PI*2);ctx.fill();}}
+    // Determined mouth
+    ctx.strokeStyle='#3D5020';ctx.lineWidth=1.5*s;
+    ctx.beginPath();ctx.moveTo(-3*s,(6+b)*s);ctx.lineTo(3*s,(6+b)*s);ctx.stroke();
+  },
+
+  drawFizz(ctx, s, b, blink, f) {
+    // Spin effect
+    const spin = f * 0.08;
+    // Rays
+    ctx.fillStyle='rgba(255,208,96,0.3)';
+    for(let i=0;i<8;i++){
+      const a=spin+i*Math.PI/4;
+      ctx.beginPath();
+      ctx.moveTo(Math.cos(a)*12*s,Math.sin(a)*12*s);
+      ctx.lineTo(Math.cos(a)*30*s,Math.sin(a)*30*s);
+      ctx.lineWidth=4*s;ctx.strokeStyle='rgba(255,208,96,0.3)';ctx.stroke();
+    }
+    // Star body
+    ctx.fillStyle='#FFD060';
+    ctx.save();ctx.rotate(spin*0.3);
+    ctx.beginPath();
+    for(let i=0;i<5;i++){
+      const a1=i*Math.PI*2/5-Math.PI/2;
+      const a2=a1+Math.PI/5;
+      ctx.lineTo(Math.cos(a1)*22*s,Math.sin(a1)*22*s);
+      ctx.lineTo(Math.cos(a2)*10*s,Math.sin(a2)*10*s);
+    }
+    ctx.closePath();ctx.fill();
+    ctx.restore();
+    // Face
+    ctx.fillStyle='#FFF0D4';
+    ctx.beginPath();ctx.arc(0,(0+b)*s,14*s,0,Math.PI*2);ctx.fill();
+    // Excited eyes
+    ctx.fillStyle='#8B5000';
+    for(let side of [-1,1]){
+      ctx.beginPath();ctx.arc(side*4*s,(-3+b)*s,3*s,0,Math.PI*2);ctx.fill();
+      ctx.fillStyle='#fff';ctx.beginPath();ctx.arc((side*4+1)*s,(-4+b)*s,1.2*s,0,Math.PI*2);ctx.fill();
+      ctx.fillStyle='#8B5000';
+    }
+    // Big smile
+    ctx.strokeStyle='#8B5000';ctx.lineWidth=1.5*s;
+    ctx.beginPath();ctx.arc(0,(3+b)*s,6*s,0.1,Math.PI-0.1);ctx.stroke();
+    // Energy particles
+    ctx.fillStyle='#FFB020';
+    for(let i=0;i<4;i++){
+      const a=f*0.05+i*1.57;
+      const r=(28+Math.sin(f*0.07+i)*4)*s;
+      ctx.beginPath();ctx.arc(Math.cos(a)*r,Math.sin(a)*r,2*s,0,Math.PI*2);ctx.fill();
+    }
+  },
+
+  drawStarShape(ctx, r) {
+    ctx.beginPath();
+    for(let i=0;i<5;i++){
+      const a1=i*Math.PI*2/5-Math.PI/2;
+      const a2=a1+Math.PI/5;
+      ctx.lineTo(Math.cos(a1)*r,Math.sin(a1)*r);
+      ctx.lineTo(Math.cos(a2)*r*0.4,Math.sin(a2)*r*0.4);
+    }
+    ctx.closePath();ctx.fill();
+  }
+};
+
+// ============== SETTINGS ==============
+const Settings = {
+  toggle(key) {
+    const s = Save.data.settings;
+    if (key === 'mute') { s.mute = !s.mute; Sound.muted = s.mute; }
+    else { s[key] = !s[key]; }
+    if (key === 'sfx') Sound.sfxOn = s.sfx;
+    if (key === 'music') Sound.musicOn = s.music;
+    if (key === 'voice') Sound.voiceOn = s.voice;
+    if (key === 'motion') document.body.classList.toggle('reduced-motion', s.motion);
+    if (key === 'contrast') document.body.classList.toggle('high-contrast', s.contrast);
+    Save.persist();
+    this.updateToggles();
+  },
+  updateToggles() {
+    const s = Save.data.settings;
+    ['sfx','music','voice','mute','motion','contrast'].forEach(k => {
+      const el = document.getElementById('tog-' + k);
+      if (el) el.classList.toggle('on', !!s[k]);
+    });
+  },
+  applyAll() {
+    const s = Save.data.settings;
+    Sound.muted = s.mute; Sound.sfxOn = s.sfx; Sound.musicOn = s.music; Sound.voiceOn = s.voice;
+    document.body.classList.toggle('reduced-motion', s.motion);
+    document.body.classList.toggle('high-contrast', s.contrast);
+  },
+  resetProgress() {
+    if (confirm('Reset all progress? This cannot be undone.')) {
+      Save.reset();
+      UI.buildMap();
+    }
+  }
+};
+
+// ============== SHARE ==============
+const Share = {
+  challenge() {
+    const lvl = Game.currentLevel;
+    const ld = Save.getLevelData(lvl);
+    const stars = ld ? ld.stars : 0;
+    const msg = `I completed Level ${lvl} of Puddleberry Quest with ${'⭐'.repeat(stars)}! Can you solve it more efficiently?`;
+    const url = window.location.origin + window.location.pathname + '?challenge=' + lvl;
+    if (navigator.share) {
+      navigator.share({title:'Puddleberry Quest Challenge',text:msg,url:url}).catch(()=>{});
+    } else if (navigator.clipboard) {
+      navigator.clipboard.writeText(msg + ' ' + url).then(() => alert('Challenge link copied!')).catch(() => {});
+    }
+  }
+};
+
+// ============== UI ==============
+const UI = {
+  currentScreen: 'splash',
+  animFrame: 0,
+  splashCanvas: null,
+  splashCtx: null,
+
+  init() {
+    this.splashCanvas = document.getElementById('splash-canvas');
+    this.splashCtx = this.splashCanvas.getContext('2d');
+    this.drawSplashChar();
+    this.drawHomeChar();
+
+    const params = new URLSearchParams(window.location.search);
+    const challenge = params.get('challenge');
+    if (challenge) {
+      const lvl = parseInt(challenge);
+      if (lvl >= 1 && lvl <= 30) {
+        setTimeout(() => this.showLevelIntro(lvl), 500);
+      }
+    }
+  },
+
+  drawSplashChar() {
+    const ctx = this.splashCtx;
+    const draw = () => {
+      this.animFrame++;
+      ctx.clearRect(0,0,160,160);
+      CharDraw.draw(ctx, 'puddleberry', 80, 90, 90, this.animFrame);
+      if (this.currentScreen === 'splash') requestAnimationFrame(draw);
+    };
+    draw();
+  },
+
+  drawHomeChar() {
+    const canvas = document.getElementById('home-char-canvas');
+    const ctx = canvas.getContext('2d');
+    const draw = () => {
+      this.animFrame++;
+      ctx.clearRect(0,0,120,120);
+      CharDraw.draw(ctx, 'puddleberry', 60, 65, 70, this.animFrame);
+      if (this.currentScreen === 'home') requestAnimationFrame(draw);
+    };
+    draw();
+  },
+
+  showScreen(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(id + '-screen').classList.add('active');
+    this.currentScreen = id;
+  },
+
+  showHome() { Sound.click(); this.showScreen('home'); this.drawHomeChar(); },
+  showMap() { Sound.click(); this.buildMap(); this.showScreen('map'); },
+  showSettings() { Sound.click(); Settings.updateToggles(); this.showScreen('settings'); },
+  backFromSettings() {
+    Sound.click();
+    if (Game.currentLevel && Game.isPlaying) this.showScreen('game');
+    else if (this.prevScreen) this.showScreen(this.prevScreen);
+    else this.showHome();
+  },
+
+  showLevelIntro(id) {
+    Sound.click();
+    const level = LEVELS.find(l => l.id === id);
+    if (!level) return;
+    document.getElementById('intro-level-num').textContent = `Level ${level.id} · World ${level.world}`;
+    document.getElementById('intro-title').textContent = level.name;
+    document.getElementById('intro-skill').textContent = level.skill;
+    document.getElementById('intro-desc').textContent = level.desc;
+    const charsRow = document.getElementById('intro-chars');
+    charsRow.innerHTML = '';
+    level.chars.forEach(c => {
+      const canvas = document.createElement('canvas');
+      canvas.width = 50; canvas.height = 50;
+      canvas.style.borderRadius = '50%';
+      canvas.style.background = CHAR_COLORS[c] || '#eee';
+      const cx = canvas.getContext('2d');
+      CharDraw.draw(cx, c, 25, 28, 35, 0);
+      charsRow.appendChild(canvas);
+    });
+    Game.pendingLevel = id;
+    this.prevScreen = 'map';
+    this.showScreen('level-intro');
+  },
+
+  buildMap() {
+    const scroll = document.getElementById('map-scroll');
+    scroll.innerHTML = '';
+    CONFIG.WORLDS.forEach((world, wi) => {
+      const group = document.createElement('div');
+      group.className = 'world-group';
+      group.style.background = world.color;
+      group.innerHTML = `<h4><span class="dot" style="background:${world.color === '#E8F5E9' ? '#66BB6A' : '#F5C469'}"></span>${world.icon} ${world.name}</h4>`;
+      const grid = document.createElement('div');
+      grid.className = 'level-grid';
+      for (let i = world.levels[0]; i <= world.levels[1]; i++) {
+        const node = document.createElement('div');
+        node.className = 'level-node';
+        const ld = Save.getLevelData(i);
+        const unlocked = Save.isUnlocked(i);
+        if (ld && ld.completed) {
+          node.classList.add('completed');
+          node.innerHTML = `${i}<div class="stars">${'⭐'.repeat(ld.stars)}</div>`;
+        } else if (unlocked) {
+          node.classList.add('unlocked');
+          node.textContent = i;
+        } else {
+          node.classList.add('locked');
+          node.innerHTML = `${i}<div class="lock">🔒</div>`;
+        }
+        if (unlocked) {
+          node.addEventListener('click', () => this.showLevelIntro(i));
+        }
+        grid.appendChild(node);
+      }
+      group.appendChild(grid);
+      scroll.appendChild(group);
+    });
+    // Stats
+    const stats = document.createElement('div');
+    stats.style.cssText = 'text-align:center;padding:12px;font-size:.8rem;color:var(--text-light)';
+    stats.innerHTML = `⭐ ${Save.data.totalStars} stars · 💡 ${Save.data.totalPoints} points`;
+    scroll.appendChild(stats);
+  }
+};
+
+// ============== PUZZLE ENGINES ==============
+const Engines = {};
+
+// --- SEQUENCE ENGINE ---
+Engines.sequence = {
+  selected: null,
+  items: [],
+  original: [],
+  init(config, container) {
+    this.selected = null;
+    this.items = [...config.items];
+    this.original = [...config.items];
+    // Shuffle
+    for (let i = this.items.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [this.items[i], this.items[j]] = [this.items[j], this.items[i]];
+    }
+    // Make sure it's not already correct
+    if (JSON.stringify(this.items) === JSON.stringify(this.original)) {
+      [this.items[0], this.items[1]] = [this.items[1], this.items[0]];
+    }
+    this.render(container, config);
+  },
+  render(container, config) {
+    let html = '<div class="clue-box"><div class="clue-label">📋 Task</div>Put the items in the correct order. Tap two items to swap them.</div>';
+    html += '<div class="card-row" style="margin-top:12px">';
+    this.items.forEach((item, i) => {
+      html += `<div class="puzzle-card seq-card" data-idx="${i}" onclick="Engines.sequence.tap(${i})">${item}</div>`;
+    });
+    html += '</div>';
+    container.innerHTML = html;
+  },
+  tap(idx) {
+    Sound.click();
+    const cards = document.querySelectorAll('.seq-card');
+    if (this.selected === null) {
+      this.selected = idx;
+      cards[idx].classList.add('selected');
+    } else {
+      if (this.selected !== idx) {
+        [this.items[this.selected], this.items[idx]] = [this.items[idx], this.items[this.selected]];
+      }
+      cards[this.selected].classList.remove('selected');
+      this.selected = null;
+      this.render(document.getElementById('puzzle-area'), Game.currentConfig);
+      this.updateCardColors();
+    }
+  },
+  updateCardColors() {
+    const config = Game.currentConfig;
+    const cards = document.querySelectorAll('.seq-card');
+    cards.forEach((card, i) => {
+      if (this.items[i] === config.items[config.correct[i]]) {
+        card.classList.add('correct');
+      }
+    });
+  },
+  check(config) {
+    for (let i = 0; i < config.items.length; i++) {
+      if (this.items[i] !== config.items[config.correct[i]]) return false;
+    }
+    return true;
+  },
+  cleanup() { this.selected = null; }
+};
+
+// --- ELIMINATION ENGINE ---
+Engines.elimination = {
+  eliminated: new Set(),
+  selected: -1,
+  init(config, container) {
+    this.eliminated = new Set();
+    this.selected = -1;
+    this.render(container, config);
+  },
+  render(container, config) {
+    let html = '<div class="clue-box"><div class="clue-label">🔍 Clues</div>';
+    config.clues.forEach(c => { html += `<p>• ${c}</p>`; });
+    html += '</div><div class="card-row" style="margin-top:12px">';
+    config.options.forEach((opt, i) => {
+      const cls = this.eliminated.has(i) ? 'puzzle-card disabled' : this.selected === i ? 'puzzle-card selected' : 'puzzle-card';
+      html += `<div class="${cls}" onclick="Engines.elimination.tap(${i})" style="min-width:120px">${opt}</div>`;
+    });
+    html += '</div>';
+    html += '<div style="text-align:center;margin-top:8px"><button class="btn small secondary" onclick="Engines.elimination.toggleElim()">Toggle Eliminate Mode</button></div>';
+    container.innerHTML = html;
+  },
+  elimMode: false,
+  toggleElim() { this.elimMode = !this.elimMode; },
+  tap(idx) {
+    Sound.click();
+    if (this.elimMode) {
+      if (this.eliminated.has(idx)) this.eliminated.delete(idx);
+      else this.eliminated.add(idx);
+    } else {
+      this.selected = idx;
+    }
+    this.render(document.getElementById('puzzle-area'), Game.currentConfig);
+  },
+  check(config) { return this.selected === config.answer; },
+  cleanup() { this.eliminated = new Set(); this.selected = -1; this.elimMode = false; }
+};
+
+// --- GRID PATH ENGINE ---
+Engines.gridpath = {
+  grid: [],
+  path: [],
+  init(config, container) {
+    this.grid = [];
+    this.path = [];
+    for (let y = 0; y < config.gridH; y++) {
+      this.grid[y] = [];
+      for (let x = 0; x < config.gridW; x++) {
+        this.grid[y][x] = 'empty';
+      }
+    }
+    if (config.walls) config.walls.forEach(([x,y]) => { if(this.grid[y]) this.grid[y][x] = 'wall'; });
+    this.grid[config.start.y][config.start.x] = 'start';
+    this.grid[config.end.y][config.end.x] = 'end';
+    this.render(container, config);
+  },
+  render(container, config) {
+    const cellSize = Math.min(Math.floor(300 / config.gridW), 60);
+    let html = `<div class="clue-box"><div class="clue-label">🗺️ Path</div>Tap cells to build a path from start to end. Planks: ${config.maxPlanks}</div>`;
+    html += `<div class="game-grid" style="grid-template-columns:repeat(${config.gridW},${cellSize}px);width:fit-content;margin:12px auto">`;
+    for (let y = 0; y < config.gridH; y++) {
+      for (let x = 0; x < config.gridW; x++) {
+        const cell = this.grid[y][x];
+        const inPath = this.path.some(p => p.x === x && p.y === y);
+        let cls = 'grid-cell ' + cell;
+        if (inPath && cell === 'empty') cls = 'grid-cell path';
+        let content = '';
+        if (cell === 'start') content = '🏠';
+        else if (cell === 'end') content = '🧺';
+        else if (cell === 'wall') content = '⬛';
+        else if (inPath) content = '🪵';
+        html += `<div class="${cls}" style="width:${cellSize}px;height:${cellSize}px;font-size:${cellSize*0.5}px" onclick="Engines.gridpath.tap(${x},${y})">${content}</div>`;
+      }
+    }
+    html += '</div>';
+    html += '<div style="text-align:center"><button class="btn small secondary" onclick="Engines.gridpath.clearPath()">Clear Path</button></div>';
+    container.innerHTML = html;
+  },
+  tap(x, y) {
+    Sound.click();
+    const cell = this.grid[y][x];
+    if (cell === 'wall') return;
+    const existIdx = this.path.findIndex(p => p.x === x && p.y === y);
+    if (existIdx >= 0) {
+      this.path.splice(existIdx);
+    } else {
+      this.path.push({x, y});
+    }
+    this.render(document.getElementById('puzzle-area'), Game.currentConfig);
+  },
+  clearPath() { this.path = []; this.render(document.getElementById('puzzle-area'), Game.currentConfig); },
+  check(config) {
+    if (this.path.length === 0 || this.path.length > config.maxPlanks) return false;
+    if (this.path[0].x !== config.start.x || this.path[0].y !== config.start.y) return false;
+    const last = this.path[this.path.length - 1];
+    if (last.x !== config.end.x || last.y !== config.end.y) return false;
+    // Check adjacency
+    for (let i = 1; i < this.path.length; i++) {
+      const dx = Math.abs(this.path[i].x - this.path[i-1].x);
+      const dy = Math.abs(this.path[i].y - this.path[i-1].y);
+      if (dx + dy !== 1) return false;
+    }
+    return true;
+  },
+  cleanup() { this.grid = []; this.path = []; }
+};
+
+// --- MEMORY ENGINE ---
+Engines.memory = {
+  revealed: [],
+  playerSelections: [],
+  showPhase: true,
+  timer: null,
+  init(config, container) {
+    this.revealed = [];
+    this.playerSelections = [];
+    this.showPhase = true;
+    // Place items randomly
+    const positions = [];
+    for (let y = 0; y < config.gridH; y++)
+      for (let x = 0; x < config.gridW; x++)
+        positions.push({x, y});
+    for (let i = positions.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [positions[i], positions[j]] = [positions[j], positions[i]];
+    }
+    this.revealed = positions.slice(0, config.count);
+    this.renderShow(container, config);
+    clearTimeout(this.timer);
+    this.timer = setTimeout(() => {
+      this.showPhase = false;
+      this.renderHide(container, config);
+    }, config.showTime);
+  },
+  renderShow(container, config) {
+    const cellSize = Math.min(Math.floor(300 / config.gridW), 60);
+    let html = `<div class="clue-box"><div class="clue-label">👀 Remember!</div>Memorize the highlighted cells!</div>`;
+    html += `<div class="game-grid" style="grid-template-columns:repeat(${config.gridW},${cellSize}px);width:fit-content;margin:12px auto">`;
+    for (let y = 0; y < config.gridH; y++) {
+      for (let x = 0; x < config.gridW; x++) {
+        const highlighted = this.revealed.some(r => r.x === x && r.y === y);
+        const cls = highlighted ? 'grid-cell highlight' : 'grid-cell empty';
+        html += `<div class="${cls}" style="width:${cellSize}px;height:${cellSize}px;font-size:${cellSize*0.5}px">${highlighted ? '✨' : ''}</div>`;
+      }
+    }
+    html += '</div>';
+    container.innerHTML = html;
+  },
+  renderHide(container, config) {
+    const cellSize = Math.min(Math.floor(300 / config.gridW), 60);
+    let html = `<div class="clue-box"><div class="clue-label">🧠 Your Turn!</div>Tap the cells that were highlighted!</div>`;
+    html += `<div class="game-grid" style="grid-template-columns:repeat(${config.gridW},${cellSize}px);width:fit-content;margin:12px auto">`;
+    for (let y = 0; y < config.gridH; y++) {
+      for (let x = 0; x < config.gridW; x++) {
+        const selected = this.playerSelections.some(s => s.x === x && s.y === y);
+        const cls = selected ? 'grid-cell highlight' : 'grid-cell empty';
+        html += `<div class="${cls}" style="width:${cellSize}px;height:${cellSize}px" onclick="Engines.memory.tap(${x},${y})"></div>`;
+      }
+    }
+    html += '</div>';
+    container.innerHTML = html;
+  },
+  tap(x, y) {
+    Sound.click();
+    const idx = this.playerSelections.findIndex(s => s.x === x && s.y === y);
+    if (idx >= 0) this.playerSelections.splice(idx, 1);
+    else this.playerSelections.push({x, y});
+    this.renderHide(document.getElementById('puzzle-area'), Game.currentConfig);
+  },
+  check(config) {
+    if (this.playerSelections.length !== this.revealed.length) return false;
+    return this.revealed.every(r => this.playerSelections.some(s => s.x === r.x && s.y === r.y));
+  },
+  cleanup() { clearTimeout(this.timer); this.revealed = []; this.playerSelections = []; }
+};
+
+// --- PATTERN ENGINE ---
+Engines.pattern = {
+  round: 0,
+  selected: -1,
+  init(config, container) {
+    this.round = 0;
+    this.selected = -1;
+    this.renderRound(container, config);
+  },
+  renderRound(container, config) {
+    const r = config.rounds[this.round];
+    if (!r) return;
+    let html = `<div class="clue-box"><div class="clue-label">🧩 Pattern (${this.round+1}/${config.rounds.length})</div>What comes next in the sequence?</div>`;
+    html += '<div class="card-row" style="margin:12px 0">';
+    r.sequence.forEach(item => {
+      html += `<div class="puzzle-card" style="pointer-events:none;font-size:1.5rem;min-width:45px;padding:10px">${item}</div>`;
+    });
+    html += '<div class="puzzle-card" style="pointer-events:none;font-size:1.5rem;min-width:45px;padding:10px;border-style:dashed">?</div>';
+    html += '</div>';
+    html += '<div class="card-row">';
+    r.options.forEach((opt, i) => {
+      const cls = this.selected === i ? 'puzzle-card selected' : 'puzzle-card';
+      html += `<div class="${cls}" style="font-size:1.5rem;min-width:55px;padding:12px" onclick="Engines.pattern.select(${i})">${opt}</div>`;
+    });
+    html += '</div>';
+    container.innerHTML = html;
+  },
+  select(i) {
+    Sound.click();
+    this.selected = i;
+    const config = Game.currentConfig;
+    const r = config.rounds[this.round];
+    if (i === r.answer) {
+      Sound.correct();
+      this.round++;
+      this.selected = -1;
+      if (this.round >= config.rounds.length) {
+        Game.onPuzzleSolved();
+        return;
+      }
+      setTimeout(() => this.renderRound(document.getElementById('puzzle-area'), config), 400);
+    } else {
+      Sound.wrong();
+      Game.mistakes++;
+      this.selected = -1;
+      setTimeout(() => this.renderRound(document.getElementById('puzzle-area'), config), 400);
+    }
+  },
+  check(config) { return this.round >= config.rounds.length; },
+  cleanup() { this.round = 0; this.selected = -1; }
+};
+
+// --- ASSIGNMENT ENGINE ---
+Engines.assignment = {
+  assignments: [],
+  dragging: -1,
+  init(config, container) {
+    this.assignments = new Array(config.slots.length).fill(-1);
+    this.dragging = -1;
+    this.render(container, config);
+  },
+  render(container, config) {
+    let html = '<div class="clue-box"><div class="clue-label">📋 Clues</div>';
+    config.clues.forEach(c => { html += `<p>• ${c}</p>`; });
+    html += '</div>';
+    html += '<div style="margin:12px 0"><strong>Assign:</strong></div>';
+    html += '<div class="card-row">';
+    config.items.forEach((item, i) => {
+      const assigned = this.assignments.includes(i);
+      const cls = assigned ? 'puzzle-card disabled' : this.dragging === i ? 'puzzle-card selected' : 'puzzle-card';
+      html += `<div class="${cls}" onclick="Engines.assignment.pickItem(${i})" style="min-width:100px">${item}</div>`;
+    });
+    html += '</div>';
+    html += '<div class="slot-area" style="margin-top:12px">';
+    config.slots.forEach((slot, i) => {
+      const a = this.assignments[i];
+      const filled = a >= 0;
+      html += `<div class="assign-slot ${filled ? 'filled' : ''}" onclick="Engines.assignment.placeSlot(${i})">`;
+      html += `<div class="slot-label">${slot}</div>`;
+      if (filled) html += `<div style="font-size:.85rem">${config.items[a]}</div>`;
+      html += '</div>';
+    });
+    html += '</div>';
+    container.innerHTML = html;
+  },
+  pickItem(i) {
+    Sound.click();
+    this.dragging = this.dragging === i ? -1 : i;
+    this.render(document.getElementById('puzzle-area'), Game.currentConfig);
+  },
+  placeSlot(i) {
+    Sound.click();
+    if (this.dragging >= 0) {
+      // Remove from other slot
+      const prev = this.assignments.indexOf(this.dragging);
+      if (prev >= 0) this.assignments[prev] = -1;
+      this.assignments[i] = this.dragging;
+      this.dragging = -1;
+    } else {
+      this.assignments[i] = -1;
+    }
+    this.render(document.getElementById('puzzle-area'), Game.currentConfig);
+  },
+  check(config) {
+    for (let i = 0; i < config.solution.length; i++) {
+      if (this.assignments[i] !== config.solution[i]) return false;
+    }
+    return true;
+  },
+  cleanup() { this.assignments = []; this.dragging = -1; }
+};
+
+// --- RESOURCE ENGINE ---
+Engines.resource = {
+  allocations: [],
+  init(config, container) {
+    this.allocations = config.tasks.map(t => 0);
+    this.render(container, config);
+  },
+  render(container, config) {
+    const used = this.allocations.reduce((s,v) => s+v, 0);
+    const remaining = config.energy - used;
+    let html = `<div class="clue-box"><div class="clue-label">⚡ Energy</div>Allocate ${config.energy} energy points across all tasks. ${config.exact ? 'Use exactly all energy!' : 'Give each task at least its minimum.'}</div>`;
+    html += `<div style="text-align:center;font-size:1.2rem;font-family:Fredoka;margin:8px 0">Remaining: <strong>${remaining}</strong> / ${config.energy}</div>`;
+    config.tasks.forEach((task, i) => {
+      html += '<div class="task-card">';
+      html += `<div class="task-icon" style="background:var(--accent)">${task.icon}</div>`;
+      html += `<div class="task-info"><h5>${task.name}</h5><p>Minimum: ${task.cost} energy</p></div>`;
+      html += `<div class="task-actions">`;
+      html += `<button class="btn small" onclick="Engines.resource.adj(${i},-1)" style="padding:6px 12px">-</button>`;
+      html += `<span style="font-family:Fredoka;min-width:24px;text-align:center">${this.allocations[i]}</span>`;
+      html += `<button class="btn small" onclick="Engines.resource.adj(${i},1)" style="padding:6px 12px">+</button>`;
+      html += '</div></div>';
+    });
+    container.innerHTML = html;
+  },
+  adj(i, delta) {
+    Sound.click();
+    const newVal = this.allocations[i] + delta;
+    if (newVal < 0) return;
+    const config = Game.currentConfig;
+    const used = this.allocations.reduce((s,v) => s+v, 0) + delta;
+    if (used > config.energy) return;
+    this.allocations[i] = newVal;
+    this.render(document.getElementById('puzzle-area'), config);
+  },
+  check(config) {
+    if (config.exact) {
+      const total = this.allocations.reduce((s,v) => s+v, 0);
+      if (total !== config.targetTotal) return false;
+    }
+    for (let i = 0; i < config.tasks.length; i++) {
+      if (this.allocations[i] < config.tasks[i].cost) return false;
+    }
+    return true;
+  },
+  cleanup() { this.allocations = []; }
+};
+
+// --- CHAIN ENGINE ---
+Engines.chain = {
+  states: [],
+  init(config, container) {
+    this.states = [...config.initialState];
+    this.render(container, config);
+  },
+  render(container, config) {
+    let html = '<div class="clue-box"><div class="clue-label">⚙️ Chain Reaction</div>Tap switches to toggle them. Connected switches also toggle! Get all green.</div>';
+    html += '<div style="display:flex;flex-wrap:wrap;gap:16px;justify-content:center;margin:16px 0">';
+    this.states.forEach((on, i) => {
+      const color = on ? 'var(--aqua)' : '#D4CFC5';
+      const icon = on ? '🟢' : '🔴';
+      html += `<div style="display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer" onclick="Engines.chain.tap(${i})">`;
+      html += `<div style="width:50px;height:50px;border-radius:50%;background:${color};display:flex;align-items:center;justify-content:center;font-size:1.3rem;transition:all .3s;border:3px solid ${on ? '#5CC4A8' : '#BBB'}">${icon}</div>`;
+      html += `<span style="font-size:.7rem;font-family:Fredoka">Switch ${i+1}</span>`;
+      html += '</div>';
+    });
+    html += '</div>';
+    // Draw connections
+    html += '<div style="text-align:center;font-size:.75rem;color:var(--text-light)">Connections: ';
+    config.connections.forEach(([a,b]) => {
+      html += `${a+1}↔${b+1} `;
+    });
+    html += '</div>';
+    container.innerHTML = html;
+  },
+  tap(i) {
+    Sound.click();
+    const config = Game.currentConfig;
+    // Toggle self
+    this.states[i] = !this.states[i];
+    // Toggle connected
+    config.connections.forEach(([a,b]) => {
+      if (a === i) this.states[b] = !this.states[b];
+      if (b === i) this.states[a] = !this.states[a];
+    });
+    this.render(document.getElementById('puzzle-area'), config);
+  },
+  check(config) {
+    for (let i = 0; i < config.target.length; i++) {
+      if (this.states[i] !== config.target[i]) return false;
+    }
+    return true;
+  },
+  cleanup() { this.states = []; }
+};
+
+// --- TIMING ENGINE ---
+Engines.timing = {
+  positions: [],
+  tapped: [],
+  phase: 'watch',
+  step: 0,
+  interval: null,
+  init(config, container) {
+    this.tapped = [];
+    this.phase = 'watch';
+    this.step = 0;
+    this.positions = config.correctTiming.map(() => 0);
+    this.renderWatch(container, config);
+    clearInterval(this.interval);
+    let tick = 0;
+    this.interval = setInterval(() => {
+      tick++;
+      this.positions = this.positions.map((_, i) => tick % (i + 2));
+      if (this.phase === 'watch') this.renderWatch(document.getElementById('puzzle-area'), config);
+      if (tick > 15) {
+        clearInterval(this.interval);
+        this.phase = 'tap';
+        this.renderTap(document.getElementById('puzzle-area'), config);
+      }
+    }, 300);
+  },
+  renderWatch(container, config) {
+    let html = '<div class="clue-box"><div class="clue-label">👁️ Watch!</div>Watch the platforms move. Remember when each one is in position!</div>';
+    html += '<div style="display:flex;gap:10px;justify-content:center;margin:16px 0">';
+    config.correctTiming.forEach((_, i) => {
+      const pos = this.positions[i] || 0;
+      const highlight = pos === 0;
+      html += `<div style="width:50px;height:50px;border-radius:12px;background:${highlight ? 'var(--accent)' : 'var(--surface)'};border:2px solid ${highlight ? 'var(--honey)' : '#ddd'};display:flex;align-items:center;justify-content:center;font-size:1.5rem;transition:all .2s">${highlight ? '☁️' : '·'}</div>`;
+    });
+    html += '</div>';
+    container.innerHTML = html;
+  },
+  renderTap(container, config) {
+    let html = '<div class="clue-box"><div class="clue-label">👆 Your Turn!</div>Tap each platform when you think it\'s in the right position! Tap them in order 1-5.</div>';
+    html += '<div style="display:flex;gap:10px;justify-content:center;margin:16px 0">';
+    for (let i = 0; i < 5; i++) {
+      const done = this.tapped.length > i;
+      html += `<div style="width:50px;height:50px;border-radius:12px;background:${done ? 'var(--aqua)' : 'var(--surface)'};border:2px solid ${done ? '#5CC4A8' : 'var(--accent)'};display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1.2rem" onclick="Engines.timing.tapPlatform(${i})">${done ? '✓' : (i+1)}</div>`;
+    }
+    html += '</div>';
+    container.innerHTML = html;
+  },
+  tapPlatform(i) {
+    Sound.click();
+    if (this.tapped.includes(i)) return;
+    this.tapped.push(i);
+    this.renderTap(document.getElementById('puzzle-area'), Game.currentConfig);
+  },
+  check(config) {
+    if (this.tapped.length < config.correctTiming.length) return false;
+    return this.tapped.every((t, i) => t === config.correctTiming[i]);
+  },
+  cleanup() { clearInterval(this.interval); this.positions = []; this.tapped = []; }
+};
+
+// --- PRIORITY ENGINE ---
+Engines.priority = {
+  playerOrder: [],
+  init(config, container) {
+    this.playerOrder = [];
+    this.render(container, config);
+  },
+  render(container, config) {
+    let html = '<div class="clue-box"><div class="clue-label">🚨 Priority!</div>Tap the tasks in the correct priority order (most urgent first)!</div>';
+    html += '<div class="card-row" style="margin-top:12px">';
+    config.items.forEach((item, i) => {
+      const done = this.playerOrder.includes(i);
+      const cls = done ? 'puzzle-card disabled' : 'puzzle-card';
+      html += `<div class="${cls}" onclick="Engines.priority.tap(${i})" style="min-width:140px">${item}</div>`;
+    });
+    html += '</div>';
+    if (this.playerOrder.length > 0) {
+      html += '<div style="margin-top:12px;text-align:center"><strong>Your order:</strong> ';
+      this.playerOrder.forEach((idx, i) => {
+        html += `${i+1}. ${config.items[idx]}${i < this.playerOrder.length-1 ? ' → ' : ''}`;
+      });
+      html += '</div>';
+    }
+    html += '<div style="text-align:center;margin-top:8px"><button class="btn small secondary" onclick="Engines.priority.reset()">Reset</button></div>';
+    container.innerHTML = html;
+  },
+  tap(i) {
+    Sound.click();
+    if (this.playerOrder.includes(i)) return;
+    this.playerOrder.push(i);
+    this.render(document.getElementById('puzzle-area'), Game.currentConfig);
+  },
+  reset() {
+    this.playerOrder = [];
+    this.render(document.getElementById('puzzle-area'), Game.currentConfig);
+  },
+  check(config) {
+    if (this.playerOrder.length !== config.correct.length) return false;
+    return this.playerOrder.every((v, i) => v === config.correct[i]);
+  },
+  cleanup() { this.playerOrder = []; }
+};
+
+// --- MEGA ENGINE (Level 30) ---
+Engines.mega = {
+  stage: 0,
+  subEngine: null,
+  solved: [],
+  init(config, container) {
+    this.stage = 0;
+    this.solved = [];
+    this.startStage(container, config);
+  },
+  startStage(container, config) {
+    const stage = config.stages[this.stage];
+    if (!stage) return;
+    let html = `<div class="clue-box"><div class="clue-label">🏆 ${stage.label}</div>Stage ${this.stage+1} of ${config.stages.length}</div>`;
+    html += '<div id="mega-stage"></div>';
+    container.innerHTML = html;
+    const subContainer = document.getElementById('mega-stage');
+    switch(stage.type) {
+      case 'memory':
+        this.subEngine = Object.create(Engines.memory);
+        this.subEngine.init(stage, subContainer);
+        break;
+      case 'pattern':
+        this.subEngine = Object.create(Engines.pattern);
+        this.subEngine.init(stage, subContainer);
+        break;
+      case 'sequence':
+        this.subEngine = Object.create(Engines.sequence);
+        this.subEngine.init(stage, subContainer);
+        break;
+    }
+  },
+  checkStage() {
+    const config = Game.currentConfig;
+    const stage = config.stages[this.stage];
+    if (!this.subEngine) return false;
+    return this.subEngine.check(stage);
+  },
+  advanceStage() {
+    this.solved.push(this.stage);
+    this.stage++;
+    const config = Game.currentConfig;
+    if (this.stage >= config.stages.length) {
+      return true; // All done
+    }
+    this.startStage(document.getElementById('puzzle-area'), config);
+    return false;
+  },
+  check(config) {
+    return this.stage >= config.stages.length;
+  },
+  cleanup() {
+    if (this.subEngine && this.subEngine.cleanup) this.subEngine.cleanup();
+    this.stage = 0;
+    this.solved = [];
+    this.subEngine = null;
+  }
+};
+
+// ============== GAME CONTROLLER ==============
+const Game = {
+  currentLevel: null,
+  currentConfig: null,
+  currentType: null,
+  pendingLevel: null,
+  isPlaying: false,
+  isPaused: false,
+  startTime: 0,
+  elapsed: 0,
+  mistakes: 0,
+  hintsUsed: 0,
+  timerInterval: null,
+  frame: 0,
+  animId: null,
+
+  startLevel() {
+    Sound.click();
+    Sound.resume();
+    const id = this.pendingLevel;
+    if (!id) return;
+    const level = LEVELS.find(l => l.id === id);
+    if (!level) return;
+
+    this.currentLevel = id;
+    this.currentConfig = level.config;
+    this.currentType = level.type;
+    this.isPlaying = true;
+    this.isPaused = false;
+    this.startTime = Date.now();
+    this.elapsed = 0;
+    this.mistakes = 0;
+    this.hintsUsed = 0;
+    this.frame = 0;
+
+    document.getElementById('game-level-label').textContent = `Lv.${id}: ${level.name}`;
+    document.getElementById('game-stars').textContent = '⭐⭐⭐';
+    document.getElementById('hint-text').textContent = '';
+    document.getElementById('game-timer').textContent = '0:00';
+
+    UI.showScreen('game');
+    this.initPuzzle(level);
+    this.startTimer();
+    this.startAnimLoop();
+  },
+
+  initPuzzle(level) {
+    const container = document.getElementById('puzzle-area');
+    switch(level.type) {
+      case 'sequence': Engines.sequence.init(level.config, container); break;
+      case 'elimination': Engines.elimination.init(level.config, container); break;
+      case 'gridpath': Engines.gridpath.init(level.config, container); break;
+      case 'memory': Engines.memory.init(level.config, container); break;
+      case 'pattern': Engines.pattern.init(level.config, container); break;
+      case 'assignment': Engines.assignment.init(level.config, container); break;
+      case 'resource': Engines.resource.init(level.config, container); break;
+      case 'chain': Engines.chain.init(level.config, container); break;
+      case 'timing': Engines.timing.init(level.config, container); break;
+      case 'priority': Engines.priority.init(level.config, container); break;
+      case 'mega': Engines.mega.init(level.config, container); break;
+    }
+  },
+
+  startTimer() {
+    clearInterval(this.timerInterval);
+    this.timerInterval = setInterval(() => {
+      if (!this.isPlaying || this.isPaused) return;
+      this.elapsed = Math.floor((Date.now() - this.startTime) / 1000);
+      const m = Math.floor(this.elapsed / 60);
+      const s = this.elapsed % 60;
+      document.getElementById('game-timer').textContent = `${m}:${s.toString().padStart(2,'0')}`;
+    }, 500);
+  },
+
+  startAnimLoop() {
+    const loop = () => {
+      this.frame++;
+      Particles.update();
+      this.animId = requestAnimationFrame(loop);
+    };
+    loop();
+  },
+
+  checkSolution() {
+    Sound.click();
+    const level = LEVELS.find(l => l.id === this.currentLevel);
+    if (!level) return;
+
+    let engine;
+    switch(level.type) {
+      case 'sequence': engine = Engines.sequence; break;
+      case 'elimination': engine = Engines.elimination; break;
+      case 'gridpath': engine = Engines.gridpath; break;
+      case 'memory': engine = Engines.memory; break;
+      case 'pattern': engine = Engines.pattern; break;
+      case 'assignment': engine = Engines.assignment; break;
+      case 'resource': engine = Engines.resource; break;
+      case 'chain': engine = Engines.chain; break;
+      case 'timing': engine = Engines.timing; break;
+      case 'priority': engine = Engines.priority; break;
+      case 'mega': engine = Engines.mega; break;
+    }
+
+    if (engine && engine.check(level.config)) {
+      this.onPuzzleSolved();
+    } else {
+      this.mistakes++;
+      Sound.wrong();
+      // Visual shake
+      const area = document.getElementById('puzzle-area');
+      area.style.animation = 'none';
+      area.offsetHeight;
+      area.style.animation = 'shake .3s';
+    }
+  },
+
+  onPuzzleSolved() {
+    this.isPlaying = false;
+    clearInterval(this.timerInterval);
+    cancelAnimationFrame(this.animId);
+    Sound.complete();
+    showConfetti();
+
+    // Calculate score
+    const timeScore = Math.max(0, 1000 - this.elapsed * CONFIG.TIME_BONUS_PER_SEC);
+    const mistakeDeduction = this.mistakes * CONFIG.MISTAKE_PENALTY;
+    const hintDeduction = CONFIG.HINT_PENALTY[this.hintsUsed] || 0;
+    const rawScore = Math.max(0, timeScore - mistakeDeduction - hintDeduction);
+
+    let stars = 1;
+    if (rawScore >= 800) stars = 3;
+    else if (rawScore >= 500) stars = 2;
+
+    Save.completeLevel(this.currentLevel, stars, rawScore, this.elapsed);
+
+    // Show complete screen
+    document.getElementById('complete-stars').textContent = '⭐'.repeat(stars) + '☆'.repeat(3 - stars);
+    document.getElementById('complete-msg').textContent = stars === 3 ? 'Perfect! Amazing thinking!' : stars === 2 ? 'Great job! Almost perfect!' : 'Well done! Try again for more stars!';
+    document.getElementById('complete-score').textContent = `Score: ${rawScore} points`;
+    document.getElementById('complete-time').textContent = `Time: ${this.elapsed}s · Mistakes: ${this.mistakes} · Hints: ${this.hintsUsed}`;
+
+    setTimeout(() => UI.showScreen('complete'), 800);
+  },
+
+  useHint() {
+    Sound.hint();
+    const level = LEVELS.find(l => l.id === this.currentLevel);
+    if (!level) return;
+    const hints = level.config.hint;
+    if (!hints) return;
+    this.hintsUsed = Math.min(this.hintsUsed + 1, hints.length);
+    document.getElementById('hint-text').textContent = hints[this.hintsUsed - 1];
+    // Update star display
+    if (this.hintsUsed >= 3) document.getElementById('game-stars').textContent = '⭐☆☆';
+    else if (this.hintsUsed >= 2) document.getElementById('game-stars').textContent = '⭐⭐☆';
+    else if (this.hintsUsed >= 1) document.getElementById('game-stars').textContent = '⭐⭐⭐';
+    Sound.voice('luma', hints[this.hintsUsed - 1]);
+  },
+
+  pauseGame() {
+    this.isPaused = true;
+    this.elapsed = Math.floor((Date.now() - this.startTime) / 1000);
+    document.getElementById('pause-screen').classList.remove('hidden');
+    document.getElementById('pause-screen').classList.add('active');
+  },
+
+  resumeGame() {
+    this.isPaused = false;
+    this.startTime = Date.now() - this.elapsed * 1000;
+    document.getElementById('pause-screen').classList.add('hidden');
+    document.getElementById('pause-screen').classList.remove('active');
+  },
+
+  restartLevel() {
+    Sound.click();
+    document.getElementById('pause-screen').classList.add('hidden');
+    document.getElementById('pause-screen').classList.remove('active');
+    this.cleanupPuzzle();
+    this.pendingLevel = this.currentLevel;
+    this.startLevel();
+  },
+
+  nextLevel() {
+    Sound.click();
+    this.cleanupPuzzle();
+    const next = this.currentLevel + 1;
+    if (next <= CONFIG.TOTAL_LEVELS) {
+      this.pendingLevel = next;
+      this.startLevel();
+    } else {
+      UI.showMap();
+    }
+  },
+
+  quitToMap() {
+    Sound.click();
+    this.isPlaying = false;
+    clearInterval(this.timerInterval);
+    cancelAnimationFrame(this.animId);
+    this.cleanupPuzzle();
+    document.getElementById('pause-screen').classList.add('hidden');
+    document.getElementById('pause-screen').classList.remove('active');
+    UI.showMap();
+  },
+
+  cleanupPuzzle() {
+    Object.values(Engines).forEach(e => { if (e.cleanup) e.cleanup(); });
+  }
+};
+
+// ============== INITIALIZATION ==============
+function init() {
+  Save.init();
+  Settings.applyAll();
+  Sound.init();
+  UI.init();
+
+  // Splash click handler
+  document.getElementById('splash-screen').addEventListener('click', () => {
+    Sound.resume();
+    Sound.click();
+    UI.showHome();
+  });
+
+  // Keyboard support
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      if (Game.isPlaying && !Game.isPaused) Game.pauseGame();
+      else if (Game.isPaused) Game.resumeGame();
+    }
+  });
+
+  // Handle visibility change
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden && Game.isPlaying && !Game.isPaused) {
+      Game.pauseGame();
+    }
+  });
+
+  // Auto-advance splash
+  setTimeout(() => {
+    if (UI.currentScreen === 'splash') {
+      // Keep showing splash until user taps
+    }
+  }, 3000);
+}
+
+// CanvasRenderingContext2D polyfill for roundRect
+if (!CanvasRenderingContext2D.prototype.roundRect) {
+  CanvasRenderingContext2D.prototype.roundRect = function(x, y, w, h, r) {
+    if (typeof r === 'number') r = [r];
+    const tl = r[0] || 0;
+    this.moveTo(x + tl, y);
+    this.lineTo(x + w - tl, y);
+    this.quadraticCurveTo(x + w, y, x + w, y + tl);
+    this.lineTo(x + w, y + h - tl);
+    this.quadraticCurveTo(x + w, y + h, x + w - tl, y + h);
+    this.lineTo(x + tl, y + h);
+    this.quadraticCurveTo(x, y + h, x, y + h - tl);
+    this.lineTo(x, y + tl);
+    this.quadraticCurveTo(x, y, x + tl, y);
+    this.closePath();
+    return this;
+  };
+}
+
+// Start
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
