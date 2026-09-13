@@ -1,0 +1,1444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#1a1f2e">
+    <meta name="description" content="Train deductive reasoning with Logic Grid Challenge. Solve multi-clue puzzles like Einstein's Riddle. Free brain training from PrimeLab.">
+    <meta name="keywords" content="Logic Grid Puzzle, Deductive Reasoning, Einstein's Riddle, Critical Thinking, Brain Training, PrimeLab, Logic Puzzles">
+    <meta name="author" content="Prime Spirit Mentors">
+    <meta name="robots" content="index, follow">
+    
+    <link rel="canonical" href="https://primespirit.co.in/logic-grid-challenge.html">
+    
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://primespirit.co.in/logic-grid-challenge.html">
+    <meta property="og:title" content="Logic Grid Challenge | Deductive Reasoning Puzzles | PrimeLab">
+    <meta property="og:description" content="Master deductive reasoning with multi-clue logic puzzles. Train critical thinking with PrimeLab's Logic Grid Challenge.">
+    
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://primespirit.co.in/logic-grid-challenge.html">
+    <meta property="twitter:title" content="Logic Grid Challenge | PrimeLab">
+    <meta property="twitter:description" content="Train deductive reasoning with multi-clue logic puzzles.">
+    
+    <title>Logic Grid Challenge | Deductive Reasoning Puzzles | PrimeLab</title>
+    
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "PrimeLab Logic Grid Challenge",
+      "url": "https://primespirit.co.in/logic-grid-challenge.html",
+      "description": "Free logic grid puzzle game for training deductive reasoning and critical thinking. Features multi-clue deduction puzzles.",
+      "applicationCategory": "Game",
+      "operatingSystem": "Any",
+      "browserRequirements": "Requires JavaScript. Requires modern web browser.",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "INR"
+      },
+      "author": {
+        "@type": "Organization",
+        "name": "Prime Spirit Mentors",
+        "url": "https://primespirit.co.in"
+      }
+    }
+    </script>
+
+    <style>
+        :root {
+            --butter-pink: #f4c2c2;
+            --aquamarine: #7fcdbb;
+            --cream: #f5f0e8;
+            --dark-bg: #1a1f2e;
+            --dark-surface: #242b3d;
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(127, 205, 187, 0.12);
+            --glass-highlight: rgba(255, 255, 255, 0.06);
+            --error-color: #e07a5f;
+            --success-color: #81b29a;
+            --text-primary: #f5f0e8;
+            --text-secondary: rgba(245, 240, 232, 0.65);
+            --font-main: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html {
+            font-size: 16px;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--dark-bg);
+            color: var(--text-primary);
+            min-height: 100vh;
+            min-height: 100dvh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(127, 205, 187, 0.04) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(244, 194, 194, 0.04) 0%, transparent 40%);
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        h1, h2, h3 {
+            font-weight: 600;
+            letter-spacing: -0.02em;
+        }
+
+        .text-aquamarine { color: var(--aquamarine); }
+        .text-pink { color: var(--butter-pink); }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 1rem;
+            padding-bottom: calc(1rem + env(safe-area-inset-bottom));
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .glass-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        }
+
+        .glass-button {
+            background: linear-gradient(135deg, rgba(127, 205, 187, 0.08), rgba(244, 194, 194, 0.08));
+            border: 1px solid var(--glass-border);
+            color: var(--text-primary);
+            padding: 0.75rem 1.5rem;
+            border-radius: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 1rem;
+            min-height: 48px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            touch-action: manipulation;
+        }
+
+        .glass-button:hover, .glass-button:focus {
+            background: linear-gradient(135deg, rgba(127, 205, 187, 0.15), rgba(244, 194, 194, 0.15));
+            border-color: rgba(127, 205, 187, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(127, 205, 187, 0.1);
+            outline: none;
+        }
+
+        .glass-button:active {
+            transform: translateY(0);
+        }
+
+        .glass-button.primary {
+            background: linear-gradient(135deg, var(--aquamarine), #6ab5a5);
+            color: var(--dark-bg);
+            border: none;
+        }
+
+        .glass-button.primary:hover {
+            box-shadow: 0 4px 16px rgba(127, 205, 187, 0.3);
+        }
+
+        .glass-button.danger {
+            background: linear-gradient(135deg, rgba(224, 122, 95, 0.15), rgba(224, 122, 95, 0.08));
+            border-color: rgba(224, 122, 95, 0.25);
+            color: var(--error-color);
+        }
+
+        header {
+            text-align: center;
+            padding: 1.5rem 0;
+        }
+
+        .brand-badge {
+            display: inline-block;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            padding: 0.25rem 0.75rem;
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            background: rgba(127, 205, 187, 0.05);
+        }
+
+        header h1 {
+            font-size: clamp(1.75rem, 5vw, 2.5rem);
+            background: linear-gradient(135deg, var(--cream), var(--aquamarine));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.25rem;
+        }
+
+        header p {
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        .screen {
+            display: none;
+            flex-direction: column;
+            gap: 1.5rem;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .screen.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            padding: 1rem;
+        }
+
+        .stat-box {
+            text-align: center;
+            min-width: 80px;
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .stat-value {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--aquamarine);
+            font-variant-numeric: tabular-nums;
+        }
+
+        .puzzle-info {
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .puzzle-info h3 {
+            color: var(--butter-pink);
+            margin-bottom: 0.5rem;
+        }
+
+        .puzzle-info p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 0.5rem;
+        }
+
+        .clue-list {
+            max-height: 200px;
+            overflow-y: auto;
+            margin-top: 0.5rem;
+        }
+
+        .clue-item {
+            padding: 0.5rem;
+            margin-bottom: 0.25rem;
+            background: rgba(127, 205, 187, 0.05);
+            border-radius: 6px;
+            font-size: 0.9rem;
+            border-left: 3px solid var(--aquamarine);
+        }
+
+        .clue-item.solved {
+            opacity: 0.5;
+            border-left-color: var(--success-color);
+            text-decoration: line-through;
+        }
+
+        .grid-container {
+            overflow-x: auto;
+            padding: 1rem;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .logic-grid {
+            display: grid;
+            gap: 1px;
+            background: rgba(127, 205, 187, 0.3);
+            border: 2px solid rgba(127, 205, 187, 0.4);
+            border-radius: 8px;
+            margin: 0 auto;
+        }
+
+        .grid-cell {
+            background: var(--dark-surface);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            user-select: none;
+            font-size: 0.875rem;
+            font-weight: 500;
+            min-height: 44px;
+            position: relative;
+        }
+
+        .grid-cell.header {
+            background: rgba(127, 205, 187, 0.15);
+            font-weight: 600;
+            color: var(--aquamarine);
+            cursor: default;
+        }
+
+        .grid-cell.category-label {
+            background: rgba(244, 194, 194, 0.1);
+            color: var(--butter-pink);
+            font-weight: 600;
+            cursor: default;
+        }
+
+        .grid-cell.interactive:hover {
+            background: rgba(127, 205, 187, 0.1);
+        }
+
+        .grid-cell.interactive:active {
+            transform: scale(0.95);
+        }
+
+        .grid-cell.marked-x::after {
+            content: '✗';
+            color: var(--error-color);
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .grid-cell.marked-check::after {
+            content: '✓';
+            color: var(--success-color);
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .grid-cell.highlighted {
+            background: rgba(127, 205, 187, 0.2);
+        }
+
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .mode-selector {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .difficulty-selector {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+
+        .diff-btn {
+            padding: 1rem;
+            text-align: center;
+            border-radius: 12px;
+            border: 1px solid var(--glass-border);
+            background: var(--glass-bg);
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+
+        .diff-btn:hover, .diff-btn.selected {
+            background: rgba(127, 205, 187, 0.12);
+            border-color: rgba(127, 205, 187, 0.35);
+            color: var(--aquamarine);
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(26, 31, 46, 0.92);
+            backdrop-filter: blur(8px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 1rem;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-content {
+            background: var(--dark-surface);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 2rem;
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-content h2 {
+            margin-bottom: 1rem;
+            color: var(--aquamarine);
+        }
+
+        .modal-content p {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .modal-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .legend {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            padding: 0.75rem;
+            background: var(--glass-bg);
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .legend-x {
+            color: var(--error-color);
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .legend-check {
+            color: var(--success-color);
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem 1rem;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            border-top: 1px solid var(--glass-border);
+            margin-top: auto;
+        }
+
+        footer a {
+            color: var(--aquamarine);
+            text-decoration: none;
+            margin: 0 0.5rem;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        .hidden { display: none !important; }
+
+        .challenge-box {
+            background: rgba(0,0,0,0.25);
+            border: 1px dashed var(--glass-border);
+            border-radius: 8px;
+            padding: 1rem;
+            word-break: break-all;
+            font-family: monospace;
+            font-size: 0.875rem;
+            color: var(--aquamarine);
+            margin: 1rem 0;
+            cursor: pointer;
+        }
+
+        .solution-display {
+            text-align: left;
+            margin: 1rem 0;
+            padding: 1rem;
+            background: rgba(129, 178, 154, 0.1);
+            border-radius: 8px;
+            border-left: 4px solid var(--success-color);
+        }
+
+        .solution-item {
+            padding: 0.25rem 0;
+            color: var(--text-primary);
+        }
+
+        @media (max-width: 600px) {
+            .grid-cell {
+                min-height: 36px;
+                font-size: 0.75rem;
+            }
+            .difficulty-selector {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <div class="brand-badge">PrimeLab • Mind Training Lab</div>
+            <h1>Logic Grid Challenge</h1>
+            <p>Master Deductive Reasoning. Solve Multi-Clue Puzzles.</p>
+        </header>
+
+        <main>
+            <section id="landing-screen" class="screen active">
+                <div class="glass-panel" style="padding: 1.5rem;">
+                    <h2 style="margin-bottom: 1rem; text-align: center;">Choose Puzzle</h2>
+                    <div class="mode-selector">
+                        <button class="glass-button primary" onclick="app.showDifficultySelect()" style="width: 100%;">
+                            <span>▶</span> New Logic Puzzle
+                        </button>
+                        <button class="glass-button" onclick="app.startDailyChallenge()" style="width: 100%;">
+                            <span>📅</span> Daily Challenge
+                        </button>
+                        <button class="glass-button" onclick="app.showChallengeInput()" style="width: 100%;">
+                            <span>⚔️</span> Challenge a Friend
+                        </button>
+                    </div>
+
+                    <div id="difficulty-select" class="hidden" style="margin-top: 1.5rem;">
+                        <h3 style="text-align: center; margin-bottom: 0.5rem; color: var(--text-secondary);">Select Difficulty</h3>
+                        <div class="difficulty-selector">
+                            <button class="diff-btn" onclick="app.startGame('easy')">
+                                <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">🔰</div>
+                                <div>Easy<br><small>3×3 Grid</small></div>
+                            </button>
+                            <button class="diff-btn" onclick="app.startGame('medium')">
+                                <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">🎯</div>
+                                <div>Medium<br><small>4×4 Grid</small></div>
+                            </button>
+                            <button class="diff-btn" onclick="app.startGame('hard')">
+                                <div style="font-size: 1.5rem; margin-bottom: 0.5rem;"></div>
+                                <div>Hard<br><small>5×5 Grid</small></div>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-panel" style="padding: 1.5rem; margin-top: 1rem;">
+                    <h3 style="margin-bottom: 0.75rem; color: var(--butter-pink);">How to Solve</h3>
+                    <p style="color: var(--text-secondary); font-size: 0.9rem; line-height: 1.6;">
+                        <strong>1.</strong> Read all clues carefully<br>
+                        <strong>2.</strong> Mark ✗ for impossible matches<br>
+                        <strong>3.</strong> Mark ✓ for confirmed matches<br>
+                        <strong>4.</strong> Use deduction to fill the grid<br>
+                        <strong>5.</strong> Complete all matches to solve!
+                    </p>
+                    <button class="glass-button" onclick="app.showModal('how-to-play')" style="width: 100%; margin-top: 1rem; font-size: 0.9rem;">
+                        View Example & Tutorial
+                    </button>
+                </div>
+            </section>
+
+            <section id="game-screen" class="screen">
+                <div class="game-header glass-panel">
+                    <div class="stat-box">
+                        <div class="stat-label">Time</div>
+                        <div class="stat-value" id="timer-display">00:00</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label">Progress</div>
+                        <div class="stat-value" id="progress-display">0%</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label">Hints</div>
+                        <div class="stat-value" id="hints-display">3</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label">Score</div>
+                        <div class="stat-value" id="score-display">0</div>
+                    </div>
+                </div>
+
+                <div class="glass-panel puzzle-info">
+                    <h3 id="puzzle-title">Puzzle Title</h3>
+                    <p id="puzzle-question">Question goes here...</p>
+                    <div class="clue-list" id="clue-list"></div>
+                </div>
+
+                <div class="legend">
+                    <div class="legend-item">
+                        <span class="legend-x"></span>
+                        <span>Not a match</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-check">✓</span>
+                        <span>Confirmed match</span>
+                    </div>
+                    <div class="legend-item">
+                        <span>Tap cell to cycle: Empty → ✗ → ✓ → Empty</span>
+                    </div>
+                </div>
+
+                <div class="grid-container">
+                    <div class="logic-grid" id="logic-grid"></div>
+                </div>
+
+                <div class="controls">
+                    <button class="glass-button" onclick="app.undo()">↩️ Undo</button>
+                    <button class="glass-button" onclick="app.clearCell()"> Clear Cell</button>
+                    <button class="glass-button" onclick="app.giveHint()"> Hint</button>
+                    <button class="glass-button" onclick="app.validateProgress()">✓ Validate</button>
+                    <button class="glass-button" onclick="app.pauseGame()">⏸️ Pause</button>
+                </div>
+
+                <button class="glass-button danger" onclick="app.quitGame()" style="width: 100%; margin: 0 1rem 1rem;">
+                    Quit to Menu
+                </button>
+            </section>
+        </main>
+
+        <footer>
+            <p><strong>PrimeLab</strong> • Mind Training Lab by Prime Spirit Mentors</p>
+            <p style="margin-top: 0.5rem;">
+                <a href="https://primespirit.co.in">Home</a> • 
+                <a href="https://primespirit.co.in">PrimeLab</a> • 
+                <a href="https://primespirit.co.in/logic-grid-challenge.html">Logic Grid Challenge</a>
+            </p>
+            <p style="margin-top: 1rem; font-size: 0.75rem; opacity: 0.6;">
+                © Prime Spirit Mentors | Abhinav Kashyap
+            </p>
+        </footer>
+    </div>
+
+    <div id="modal-overlay" class="modal-overlay" onclick="if(event.target === this) app.closeModal()">
+        <div class="modal-content" id="modal-content"></div>
+    </div>
+
+    <script>
+        const PUZZLES = {
+            easy: [
+                {
+                    title: "The Coffee Shop",
+                    question: "Three friends ordered different drinks at different times. Who ordered what and when?",
+                    categories: {
+                        "Person": ["Alice", "Bob", "Carol"],
+                        "Drink": ["Coffee", "Tea", "Juice"],
+                        "Time": ["9 AM", "10 AM", "11 AM"]
+                    },
+                    clues: [
+                        "Alice didn't order coffee",
+                        "The person who ordered tea came at 10 AM",
+                        "Bob came before the person who ordered juice",
+                        "Carol didn't come at 9 AM",
+                        "The coffee drinker came at 11 AM"
+                    ],
+                    solution: [
+                        { Person: "Alice", Drink: "Juice", Time: "9 AM" },
+                        { Person: "Bob", Drink: "Tea", Time: "10 AM" },
+                        { Person: "Carol", Drink: "Coffee", Time: "11 AM" }
+                    ]
+                },
+                {
+                    title: "Pet Owners",
+                    question: "Three people have different pets and live on different floors. Match them correctly.",
+                    categories: {
+                        "Person": ["David", "Emma", "Frank"],
+                        "Pet": ["Dog", "Cat", "Fish"],
+                        "Floor": ["1st", "2nd", "3rd"]
+                    },
+                    clues: [
+                        "David doesn't have a dog",
+                        "The cat owner lives on the 2nd floor",
+                        "Emma lives above the dog owner",
+                        "Frank doesn't live on the 3rd floor",
+                        "The fish owner lives on the 1st floor"
+                    ],
+                    solution: [
+                        { Person: "David", Pet: "Fish", Floor: "1st" },
+                        { Person: "Emma", Pet: "Cat", Floor: "2nd" },
+                        { Person: "Frank", Pet: "Dog", Floor: "3rd" }
+                    ]
+                }
+            ],
+            medium: [
+                {
+                    title: "The Book Club",
+                    question: "Four book club members read different genres in different months. Who read what and when?",
+                    categories: {
+                        "Member": ["Grace", "Henry", "Ivy", "Jack"],
+                        "Genre": ["Mystery", "Romance", "Sci-Fi", "History"],
+                        "Month": ["Jan", "Feb", "Mar", "Apr"]
+                    },
+                    clues: [
+                        "Grace didn't read Mystery",
+                        "The Romance book was read in February",
+                        "Henry read before the Sci-Fi book",
+                        "Ivy read in March",
+                        "Jack didn't read History",
+                        "The Mystery book was read after the History book",
+                        "Grace read in April"
+                    ],
+                    solution: [
+                        { Member: "Grace", Genre: "Sci-Fi", Month: "Apr" },
+                        { Member: "Henry", Genre: "History", Month: "Jan" },
+                        { Member: "Ivy", Genre: "Romance", Month: "Mar" },
+                        { Member: "Jack", Genre: "Mystery", Month: "Feb" }
+                    ]
+                }
+            ],
+            hard: [
+                {
+                    title: "The Restaurant Week",
+                    question: "Five restaurants were visited on different days, serving different cuisines, with different ratings. Match them all!",
+                    categories: {
+                        "Restaurant": ["Bistro", "Café", "Diner", "Grill", "Sushi"],
+                        "Day": ["Mon", "Tue", "Wed", "Thu", "Fri"],
+                        "Cuisine": ["Italian", "French", "American", "Japanese", "Mexican"],
+                        "Rating": ["3★", "4★", "5★", "4★", "5★"]
+                    },
+                    clues: [
+                        "The Italian restaurant was visited on Wednesday",
+                        "Bistro has a higher rating than the Monday restaurant",
+                        "Sushi was visited after the Japanese cuisine",
+                        "The 5★ rating was given on Friday",
+                        "Café serves French cuisine",
+                        "The Diner was visited before the American restaurant",
+                        "Thursday's restaurant has 4★",
+                        "Grill doesn't serve Mexican"
+                    ],
+                    solution: [
+                        { Restaurant: "Bistro", Day: "Tue", Cuisine: "Italian", Rating: "5★" },
+                        { Restaurant: "Café", Day: "Mon", Cuisine: "French", Rating: "4★" },
+                        { Restaurant: "Diner", Day: "Wed", Cuisine: "American", Rating: "3★" },
+                        { Restaurant: "Grill", Day: "Thu", Cuisine: "Mexican", Rating: "4★" },
+                        { Restaurant: "Sushi", Day: "Fri", Cuisine: "Japanese", Rating: "5★" }
+                    ]
+                }
+            ]
+        };
+
+        const app = {
+            state: {
+                puzzle: null,
+                grid: [],
+                categories: [],
+                timer: 0,
+                timerInterval: null,
+                isPaused: false,
+                hints: 3,
+                score: 0,
+                history: [],
+                mode: 'classic',
+                difficulty: 'medium',
+                selectedCell: null
+            },
+
+            init() {
+                const params = new URLSearchParams(window.location.search);
+                const challenge = params.get('challenge');
+                const daily = params.get('daily');
+                
+                if (challenge) {
+                    this.loadChallenge(challenge);
+                } else if (daily) {
+                    this.startDailyChallenge();
+                } else {
+                    this.showScreen('landing-screen');
+                }
+
+                document.addEventListener('keydown', (e) => this.handleKeyboard(e));
+            },
+
+            showScreen(id) {
+                document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+                document.getElementById(id).classList.add('active');
+                window.scrollTo(0, 0);
+            },
+
+            showDifficultySelect() {
+                const el = document.getElementById('difficulty-select');
+                el.classList.toggle('hidden');
+            },
+
+            startGame(difficulty, mode = 'classic', puzzleIndex = null) {
+                this.state.difficulty = difficulty;
+                this.state.mode = mode;
+                this.state.timer = 0;
+                this.state.hints = 3;
+                this.state.score = 0;
+                this.state.history = [];
+                this.state.isPaused = false;
+
+                const puzzles = PUZZLES[difficulty];
+                const puzzle = puzzleIndex !== null ? puzzles[puzzleIndex] : puzzles[Math.floor(Math.random() * puzzles.length)];
+                
+                this.state.puzzle = JSON.parse(JSON.stringify(puzzle));
+                this.initializeGrid();
+                this.renderGrid();
+                this.renderClues();
+                this.updateStats();
+                this.showScreen('game-screen');
+                this.startTimer();
+            },
+
+            initializeGrid() {
+                const categories = this.state.puzzle.categories;
+                this.state.categories = Object.keys(categories);
+                const categoryNames = Object.values(categories);
+                
+                const totalSize = categoryNames.reduce((sum, arr) => sum + arr.length, 0);
+                this.state.grid = Array(totalSize).fill(null).map(() => Array(totalSize).fill(0));
+            },
+
+            renderGrid() {
+                const grid = document.getElementById('logic-grid');
+                grid.innerHTML = '';
+                
+                const categoryNames = Object.values(this.state.puzzle.categories);
+                const categoryKeys = Object.keys(this.state.puzzle.categories);
+                
+                const totalSize = categoryNames.reduce((sum, arr) => sum + arr.length, 0) + categoryKeys.length;
+                
+                grid.style.gridTemplateColumns = `repeat(${totalSize}, minmax(60px, 1fr))`;
+
+                for (let row = 0; row < totalSize; row++) {
+                    for (let col = 0; col < totalSize; col++) {
+                        const cell = document.createElement('div');
+                        cell.className = 'grid-cell';
+                        
+                        const rowCategory = this.getCategoryForRow(row);
+                        const colCategory = this.getCategoryForCol(col);
+                        
+                        if (rowCategory === null || colCategory === null) {
+                            cell.classList.add('header');
+                            const item = this.getHeaderItem(row, col);
+                            if (item) cell.textContent = item;
+                        } else if (rowCategory === colCategory) {
+                            cell.classList.add('category-label');
+                            cell.textContent = rowCategory;
+                        } else {
+                            cell.classList.add('interactive');
+                            cell.dataset.row = row;
+                            cell.dataset.col = col;
+                            
+                            const value = this.state.grid[row][col];
+                            if (value === -1) cell.classList.add('marked-x');
+                            else if (value === 1) cell.classList.add('marked-check');
+                            
+                            cell.addEventListener('click', () => this.handleCellClick(row, col));
+                        }
+                        
+                        grid.appendChild(cell);
+                    }
+                }
+            },
+
+            getCategoryForRow(row) {
+                const categoryKeys = Object.keys(this.state.puzzle.categories);
+                let offset = categoryKeys.length;
+                for (let i = 0; i < categoryKeys.length; i++) {
+                    const cat = categoryKeys[i];
+                    const size = this.state.puzzle.categories[cat].length;
+                    if (row >= offset && row < offset + size) return cat;
+                    offset += size;
+                }
+                return null;
+            },
+
+            getCategoryForCol(col) {
+                return this.getCategoryForRow(col);
+            },
+
+            getHeaderItem(row, col) {
+                const categoryKeys = Object.keys(this.state.puzzle.categories);
+                
+                if (row < categoryKeys.length) {
+                    if (col < categoryKeys.length) return '';
+                    const colCat = categoryKeys[col - categoryKeys.length];
+                    return colCat;
+                }
+                
+                if (col < categoryKeys.length) {
+                    const rowCat = categoryKeys[row - categoryKeys.length];
+                    return rowCat;
+                }
+                
+                const rowCatIndex = row - categoryKeys.length;
+                const colCatIndex = col - categoryKeys.length;
+                
+                let offset = 0;
+                for (let cat of categoryKeys) {
+                    const size = this.state.puzzle.categories[cat].length;
+                    if (rowCatIndex >= offset && rowCatIndex < offset + size) {
+                        return this.state.puzzle.categories[cat][rowCatIndex - offset];
+                    }
+                    offset += size;
+                }
+                
+                return '';
+            },
+
+            handleCellClick(row, col) {
+                if (this.state.isPaused) return;
+                
+                this.state.history.push({
+                    row, col,
+                    prevValue: this.state.grid[row][col]
+                });
+                
+                this.state.grid[row][col] = (this.state.grid[row][col] + 1) % 3 - 1;
+                
+                this.renderGrid();
+                this.checkAutoDeductions();
+                this.updateProgress();
+                AudioController.playSelect();
+            },
+
+            checkAutoDeductions() {
+                const size = this.state.grid.length;
+                let changed = true;
+                
+                while (changed) {
+                    changed = false;
+                    
+                    for (let row = 0; row < size; row++) {
+                        for (let col = 0; col < size; col++) {
+                            if (this.state.grid[row][col] === 1) {
+                                for (let i = 0; i < size; i++) {
+                                    if (i !== col && this.state.grid[row][i] === 0) {
+                                        this.state.grid[row][i] = -1;
+                                        changed = true;
+                                    }
+                                    if (i !== row && this.state.grid[i][col] === 0) {
+                                        this.state.grid[i][col] = -1;
+                                        changed = true;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+
+            renderClues() {
+                const clueList = document.getElementById('clue-list');
+                clueList.innerHTML = this.state.puzzle.clues.map((clue, i) => 
+                    `<div class="clue-item" id="clue-${i}">${i + 1}. ${clue}</div>`
+                ).join('');
+            },
+
+            updateProgress() {
+                const solution = this.buildSolutionFromGrid();
+                if (!solution) {
+                    document.getElementById('progress-display').textContent = '0%';
+                    return;
+                }
+                
+                const totalPairs = this.state.puzzle.clues.length;
+                let solved = 0;
+                
+                this.state.puzzle.clues.forEach((clue, i) => {
+                    if (this.isClueSatisfied(clue, solution)) {
+                        solved++;
+                        document.getElementById(`clue-${i}`).classList.add('solved');
+                    }
+                });
+                
+                const progress = Math.round((solved / totalPairs) * 100);
+                document.getElementById('progress-display').textContent = `${progress}%`;
+                
+                if (progress === 100 && solution.length > 0) {
+                    setTimeout(() => this.gameOver(true), 500);
+                }
+            },
+
+            buildSolutionFromGrid() {
+                const categories = Object.keys(this.state.puzzle.categories);
+                const solution = [];
+                
+                for (let i = 0; i < this.state.puzzle.categories[categories[0]].length; i++) {
+                    const item = {};
+                    let valid = true;
+                    
+                    for (let cat of categories) {
+                        const items = this.state.puzzle.categories[cat];
+                        let found = false;
+                        
+                        for (let j = 0; j < items.length; j++) {
+                            const row = this.getRowIndex(categories[0], i);
+                            const col = this.getColumnIndex(cat, j);
+                            
+                            if (this.state.grid[row][col] === 1) {
+                                item[cat] = items[j];
+                                found = true;
+                                break;
+                            }
+                        }
+                        
+                        if (!found) {
+                            valid = false;
+                            break;
+                        }
+                    }
+                    
+                    if (valid) solution.push(item);
+                }
+                
+                return solution.length === this.state.puzzle.categories[categories[0]].length ? solution : null;
+            },
+
+            getRowIndex(category, index) {
+                const categories = Object.keys(this.state.puzzle.categories);
+                let offset = categories.length;
+                for (let cat of categories) {
+                    if (cat === category) return offset + index;
+                    offset += this.state.puzzle.categories[cat].length;
+                }
+                return -1;
+            },
+
+            getColumnIndex(category, index) {
+                return this.getRowIndex(category, index);
+            },
+
+            isClueSatisfied(clue, solution) {
+                return true;
+            },
+
+            undo() {
+                if (this.state.history.length === 0 || this.state.isPaused) return;
+                const last = this.state.history.pop();
+                this.state.grid[last.row][last.col] = last.prevValue;
+                this.renderGrid();
+                AudioController.playSelect();
+            },
+
+            clearCell() {
+                if (!this.state.selectedCell || this.state.isPaused) return;
+                const { row, col } = this.state.selectedCell;
+                this.state.history.push({
+                    row, col,
+                    prevValue: this.state.grid[row][col]
+                });
+                this.state.grid[row][col] = 0;
+                this.renderGrid();
+            },
+
+            giveHint() {
+                if (this.state.hints <= 0 || this.state.isPaused) return;
+                
+                const solution = this.state.puzzle.solution[0];
+                const categories = Object.keys(this.state.puzzle.categories);
+                
+                for (let item of solution) {
+                    for (let cat1 of categories) {
+                        for (let cat2 of categories) {
+                            if (cat1 === cat2) continue;
+                            
+                            const row = this.getRowIndex(cat1, this.state.puzzle.categories[cat1].indexOf(item[cat1]));
+                            const col = this.getColumnIndex(cat2, this.state.puzzle.categories[cat2].indexOf(item[cat2]));
+                            
+                            if (this.state.grid[row][col] !== 1) {
+                                this.state.hints--;
+                                this.state.grid[row][col] = 1;
+                                this.state.score = Math.max(0, this.state.score - 50);
+                                this.state.timer += 30;
+                                this.renderGrid();
+                                this.updateStats();
+                                AudioController.playCorrect();
+                                return;
+                            }
+                        }
+                    }
+                }
+            },
+
+            validateProgress() {
+                const solution = this.buildSolutionFromGrid();
+                if (solution) {
+                    AudioController.playCorrect();
+                    alert('Looking good! Keep going!');
+                } else {
+                    AudioController.playError();
+                    alert('Some matches might be incorrect. Double-check your deductions.');
+                }
+            },
+
+            startTimer() {
+                this.stopTimer();
+                this.state.isPaused = false;
+                this.state.timerInterval = setInterval(() => {
+                    if (!this.state.isPaused) {
+                        this.state.timer++;
+                        this.updateStats();
+                    }
+                }, 1000);
+            },
+
+            stopTimer() {
+                if (this.state.timerInterval) {
+                    clearInterval(this.state.timerInterval);
+                    this.state.timerInterval = null;
+                }
+            },
+
+            pauseGame() {
+                this.state.isPaused = true;
+                this.showModal('paused', {});
+            },
+
+            resumeGame() {
+                this.state.isPaused = false;
+                this.closeModal();
+            },
+
+            quitGame() {
+                this.stopTimer();
+                window.history.replaceState({}, document.title, window.location.pathname);
+                this.showScreen('landing-screen');
+            },
+
+            updateStats() {
+                document.getElementById('timer-display').textContent = this.formatTime(this.state.timer);
+                document.getElementById('hints-display').textContent = this.state.hints;
+                document.getElementById('score-display').textContent = this.state.score.toLocaleString();
+            },
+
+            formatTime(seconds) {
+                const m = Math.floor(seconds / 60).toString().padStart(2, '0');
+                const s = (seconds % 60).toString().padStart(2, '0');
+                return `${m}:${s}`;
+            },
+
+            gameOver(won) {
+                this.stopTimer();
+                AudioController.playComplete();
+                
+                if (won) {
+                    const timeStr = this.formatTime(this.state.timer);
+                    this.state.score = Math.max(1000 - this.state.timer * 2, 100) + (this.state.hints * 100);
+                    
+                    if (this.state.mode === 'daily') {
+                        const today = new Date().toISOString().split('T')[0];
+                        localStorage.setItem(`daily_logic_${today}`, timeStr);
+                    }
+                    
+                    this.showModal('game-complete', {
+                        time: timeStr,
+                        score: this.state.score,
+                        hints: 3 - this.state.hints
+                    });
+                }
+            },
+
+            startDailyChallenge() {
+                const today = new Date().toISOString().split('T')[0];
+                const completed = localStorage.getItem(`daily_logic_${today}`);
+                
+                if (completed) {
+                    this.showModal('daily-completed', { time: completed });
+                    return;
+                }
+                
+                const seed = stringToSeed(`daily_logic_${today}`);
+                const rng = mulberry32(seed);
+                const diff = ['easy', 'medium', 'hard'][Math.floor(rng() * 3)];
+                const puzzles = PUZZLES[diff];
+                const index = Math.floor(rng() * puzzles.length);
+                
+                this.startGame(diff, 'daily', index);
+            },
+
+            createChallenge() {
+                const data = {
+                    difficulty: this.state.difficulty,
+                    puzzleIndex: 0
+                };
+                const json = JSON.stringify(data);
+                const base64 = btoa(json).replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
+                const url = `${window.location.origin}${window.location.pathname}?challenge=${base64}`;
+                
+                this.showModal('challenge-share', { url });
+            },
+
+            loadChallenge(encoded) {
+                try {
+                    const base64 = encoded.replace(/-/g, '+').replace(/_/g, '/');
+                    const json = atob(base64);
+                    const data = JSON.parse(json);
+                    
+                    if (!data.difficulty) throw new Error('Invalid');
+                    
+                    this.state.mode = 'challenge';
+                    this.startGame(data.difficulty, 'challenge', data.puzzleIndex || 0);
+                    this.showModal('challenge-started', { difficulty: data.difficulty });
+                } catch (e) {
+                    alert('Invalid challenge link.');
+                    window.history.replaceState({}, document.title, window.location.pathname);
+                    this.showScreen('landing-screen');
+                }
+            },
+
+            showChallengeInput() {
+                const url = prompt("Paste your friend's challenge link:");
+                if (url) {
+                    try {
+                        const urlObj = new URL(url);
+                        const challenge = urlObj.searchParams.get('challenge');
+                        if (challenge) {
+                            window.history.replaceState({}, document.title, `${window.location.pathname}?challenge=${challenge}`);
+                            this.loadChallenge(challenge);
+                        }
+                    } catch (e) {
+                        alert('Invalid URL.');
+                    }
+                }
+            },
+
+            handleKeyboard(e) {
+                if (this.state.isPaused || !document.getElementById('game-screen').classList.contains('active')) return;
+                
+                if (e.key >= '1' && e.key <= '3') {
+                    const num = parseInt(e.key);
+                    if (this.state.selectedCell) {
+                        this.state.grid[this.state.selectedCell.row][this.state.selectedCell.col] = num === 1 ? -1 : num === 2 ? 1 : 0;
+                        this.renderGrid();
+                    }
+                }
+            },
+
+            showModal(type, data = {}) {
+                const overlay = document.getElementById('modal-overlay');
+                const content = document.getElementById('modal-content');
+                
+                let html = '';
+                if (type === 'how-to-play') {
+                    html = `
+                        <h2>How to Solve Logic Grids</h2>
+                        <p><strong>Example:</strong> "Alice doesn't like coffee" means mark  where Alice and Coffee meet.</p>
+                        <p><strong>Strategy:</strong></p>
+                        <ul style="text-align: left; color: var(--text-secondary); line-height: 1.8;">
+                            <li>Start with direct clues (A = B or A ≠ B)</li>
+                            <li>Use process of elimination</li>
+                            <li>If A = B and B = C, then A = C</li>
+                            <li>If A = B and B ≠ C, then A ≠ C</li>
+                            <li>Look for "only one left" situations</li>
+                        </ul>
+                        <div class="modal-actions">
+                            <button class="glass-button primary" onclick="app.closeModal()">Got it!</button>
+                        </div>
+                    `;
+                } else if (type === 'paused') {
+                    html = `
+                        <h2>Game Paused</h2>
+                        <p>Take a break. Your timer is stopped.</p>
+                        <div class="modal-actions">
+                            <button class="glass-button primary" onclick="app.resumeGame()">Continue</button>
+                            <button class="glass-button danger" onclick="app.quitGame()">Quit</button>
+                        </div>
+                    `;
+                } else if (type === 'game-complete') {
+                    html = `
+                        <h2>🎉 Puzzle Solved!</h2>
+                        <div style="text-align: left; margin: 1.5rem 0; background: rgba(0,0,0,0.2); padding: 1rem; border-radius: 8px;">
+                            <p>Time: <strong>${data.time}</strong></p>
+                            <p>Hints Used: <strong>${data.hints}</strong></p>
+                            <p>Score: <strong style="color: var(--aquamarine); font-size: 1.2rem;">${data.score.toLocaleString()}</strong></p>
+                        </div>
+                        <div class="solution-display">
+                            <h4 style="margin-bottom: 0.5rem; color: var(--success-color);">Solution:</h4>
+                            ${this.state.puzzle.solution.map(s => 
+                                `<div class="solution-item">${Object.entries(s).map(([k,v]) => `${k}: ${v}`).join(', ')}</div>`
+                            ).join('')}
+                        </div>
+                        <div class="modal-actions">
+                            <button class="glass-button primary" onclick="app.closeModal(); app.quitGame();">New Puzzle</button>
+                            <button class="glass-button" onclick="app.closeModal(); app.createChallenge();">Challenge Friend</button>
+                        </div>
+                    `;
+                } else if (type === 'daily-completed') {
+                    html = `
+                        <h2>📅 Daily Challenge</h2>
+                        <p>You already completed today's puzzle!</p>
+                        <p>Your time: <strong>${data.time}</strong></p>
+                        <p>Come back tomorrow!</p>
+                        <div class="modal-actions">
+                            <button class="glass-button primary" onclick="app.closeModal()">OK</button>
+                        </div>
+                    `;
+                } else if (type === 'challenge-share') {
+                    html = `
+                        <h2>Challenge a Friend</h2>
+                        <p>Share this link for the same puzzle!</p>
+                        <div class="challenge-box" onclick="app.copyLink('${data.url}')">${data.url}</div>
+                        <div class="modal-actions">
+                            <button class="glass-button primary" onclick="app.copyLink('${data.url}')">Copy Link</button>
+                            <button class="glass-button" onclick="app.shareNative('${data.url}')">Share</button>
+                            <button class="glass-button" onclick="app.closeModal()">Close</button>
+                        </div>
+                    `;
+                } else if (type === 'challenge-started') {
+                    html = `
+                        <h2>⚔️ Challenge Accepted!</h2>
+                        <p>Difficulty: <strong>${data.difficulty.toUpperCase()}</strong></p>
+                        <p>Beat your friend's time!</p>
+                        <div class="modal-actions">
+                            <button class="glass-button primary" onclick="app.closeModal()">Start Solving</button>
+                        </div>
+                    `;
+                }
+                
+                content.innerHTML = html;
+                overlay.classList.add('active');
+            },
+
+            closeModal() {
+                document.getElementById('modal-overlay').classList.remove('active');
+            },
+
+            copyLink(url) {
+                navigator.clipboard.writeText(url).then(() => {
+                    alert('Link copied!');
+                }).catch(() => {
+                    const textArea = document.createElement("textarea");
+                    textArea.value = url;
+                    document.body.appendChild(textArea);
+                    textArea.select();
+                    document.execCommand("copy");
+                    document.body.removeChild(textArea);
+                    alert('Link copied!');
+                });
+            },
+
+            shareNative(url) {
+                const text = `🧩 I challenged you to a Logic Grid puzzle on PrimeLab!\n\nCan you solve it faster?\n\nPlay now: ${url}`;
+                if (navigator.share) {
+                    navigator.share({ title: 'Logic Grid Challenge', text, url }).catch(() => {});
+                } else {
+                    window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+                }
+            }
+        };
+
+        function mulberry32(a) {
+            return function() {
+                var t = a += 0x6D2B79F5;
+                t = Math.imul(t ^ t >>> 15, t | 1);
+                t ^= t + Math.imul(t ^ t >>> 7, t | 61);
+                return ((t ^ t >>> 14) >>> 0) / 4294967296;
+            }
+        }
+
+        function stringToSeed(str) {
+            let hash = 0;
+            for (let i = 0; i < str.length; i++) {
+                const char = str.charCodeAt(i);
+                hash = ((hash << 5) - hash) + char;
+                hash = hash & hash;
+            }
+            return Math.abs(hash);
+        }
+
+        const AudioController = {
+            ctx: null,
+            enabled: true,
+
+            init() {
+                if (!this.ctx) {
+                    this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+                }
+                if (this.ctx.state === 'suspended') this.ctx.resume();
+            },
+
+            playTone(freq, type, duration, vol = 0.1) {
+                if (!this.enabled || !this.ctx) return;
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+                gain.gain.setValueAtTime(vol, this.ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + duration);
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+                osc.start();
+                osc.stop(this.ctx.currentTime + duration);
+            },
+
+            playSelect() { this.playTone(800, 'sine', 0.05, 0.05); },
+            playCorrect() { 
+                this.playTone(523.25, 'sine', 0.1, 0.1); 
+                setTimeout(() => this.playTone(659.25, 'sine', 0.2, 0.1), 50);
+            },
+            playError() { this.playTone(150, 'sawtooth', 0.15, 0.1); },
+            playComplete() {
+                [523.25, 659.25, 783.99, 1046.50].forEach((freq, i) => {
+                    setTimeout(() => this.playTone(freq, 'sine', 0.3, 0.1), i * 100);
+                });
+            }
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            app.init();
+            AudioController.init();
+        });
+
+        let lastTouchEnd = 0;
+        document.addEventListener('touchend', (e) => {
+            const now = Date.now();
+            if (now - lastTouchEnd <= 300) e.preventDefault();
+            lastTouchEnd = now;
+        }, false);
+    </script>
+</body>
+</html>
