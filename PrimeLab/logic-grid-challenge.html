@@ -564,7 +564,7 @@
                                 <div>Easy<br><small>3×3 Grid</small></div>
                             </button>
                             <button class="diff-btn" onclick="app.startGame('medium')">
-                                <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">🎯</div>
+                                <div style="font-size: 1.5rem; margin-bottom: 0.5rem;"></div>
                                 <div>Medium<br><small>4×4 Grid</small></div>
                             </button>
                             <button class="diff-btn" onclick="app.startGame('hard')">
@@ -618,7 +618,7 @@
 
                 <div class="legend">
                     <div class="legend-item">
-                        <span class="legend-x"></span>
+                        <span class="legend-x">✗</span>
                         <span>Not a match</span>
                     </div>
                     <div class="legend-item">
@@ -636,8 +636,8 @@
 
                 <div class="controls">
                     <button class="glass-button" onclick="app.undo()">↩️ Undo</button>
-                    <button class="glass-button" onclick="app.clearCell()"> Clear Cell</button>
-                    <button class="glass-button" onclick="app.giveHint()"> Hint</button>
+                    <button class="glass-button" onclick="app.clearCell()">️ Clear Cell</button>
+                    <button class="glass-button" onclick="app.giveHint()">💡 Hint</button>
                     <button class="glass-button" onclick="app.validateProgress()">✓ Validate</button>
                     <button class="glass-button" onclick="app.pauseGame()">⏸️ Pause</button>
                 </div>
@@ -768,6 +768,44 @@
             ]
         };
 
+        const AudioController = {
+            ctx: null,
+            enabled: true,
+
+            init() {
+                if (!this.ctx) {
+                    this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+                }
+                if (this.ctx.state === 'suspended') this.ctx.resume();
+            },
+
+            playTone(freq, type, duration, vol = 0.1) {
+                if (!this.enabled || !this.ctx) return;
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+                gain.gain.setValueAtTime(vol, this.ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + duration);
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+                osc.start();
+                osc.stop(this.ctx.currentTime + duration);
+            },
+
+            playSelect() { this.playTone(800, 'sine', 0.05, 0.05); },
+            playCorrect() { 
+                this.playTone(523.25, 'sine', 0.1, 0.1); 
+                setTimeout(() => this.playTone(659.25, 'sine', 0.2, 0.1), 50);
+            },
+            playError() { this.playTone(150, 'sawtooth', 0.15, 0.1); },
+            playComplete() {
+                [523.25, 659.25, 783.99, 1046.50].forEach((freq, i) => {
+                    setTimeout(() => this.playTone(freq, 'sine', 0.3, 0.1), i * 100);
+                });
+            }
+        };
+
         const app = {
             state: {
                 puzzle: null,
@@ -812,24 +850,29 @@
             },
 
             startGame(difficulty, mode = 'classic', puzzleIndex = null) {
-                this.state.difficulty = difficulty;
-                this.state.mode = mode;
-                this.state.timer = 0;
-                this.state.hints = 3;
-                this.state.score = 0;
-                this.state.history = [];
-                this.state.isPaused = false;
+                try {
+                    this.state.difficulty = difficulty;
+                    this.state.mode = mode;
+                    this.state.timer = 0;
+                    this.state.hints = 3;
+                    this.state.score = 0;
+                    this.state.history = [];
+                    this.state.isPaused = false;
 
-                const puzzles = PUZZLES[difficulty];
-                const puzzle = puzzleIndex !== null ? puzzles[puzzleIndex] : puzzles[Math.floor(Math.random() * puzzles.length)];
-                
-                this.state.puzzle = JSON.parse(JSON.stringify(puzzle));
-                this.initializeGrid();
-                this.renderGrid();
-                this.renderClues();
-                this.updateStats();
-                this.showScreen('game-screen');
-                this.startTimer();
+                    const puzzles = PUZZLES[difficulty];
+                    const puzzle = puzzleIndex !== null ? puzzles[puzzleIndex] : puzzles[Math.floor(Math.random() * puzzles.length)];
+                    
+                    this.state.puzzle = JSON.parse(JSON.stringify(puzzle));
+                    this.initializeGrid();
+                    this.renderGrid();
+                    this.renderClues();
+                    this.updateStats();
+                    this.showScreen('game-screen');
+                    this.startTimer();
+                } catch (error) {
+                    console.error('Error starting game:', error);
+                    alert('Error starting game. Please try again.');
+                }
             },
 
             initializeGrid() {
@@ -847,8 +890,9 @@
                 
                 const categoryNames = Object.values(this.state.puzzle.categories);
                 const categoryKeys = Object.keys(this.state.puzzle.categories);
+                const headerOffset = categoryKeys.length;
                 
-                const totalSize = categoryNames.reduce((sum, arr) => sum + arr.length, 0) + categoryKeys.length;
+                const totalSize = categoryNames.reduce((sum, arr) => sum + arr.length, 0) + headerOffset;
                 
                 grid.style.gridTemplateColumns = `repeat(${totalSize}, minmax(60px, 1fr))`;
 
@@ -869,14 +913,15 @@
                             cell.textContent = rowCategory;
                         } else {
                             cell.classList.add('interactive');
-                            cell.dataset.row = row;
-                            cell.dataset.col = col;
                             
-                            const value = this.state.grid[row][col];
+                            const logicalRow = row - headerOffset;
+                            const logicalCol = col - headerOffset;
+                            
+                            const value = this.state.grid[logicalRow][logicalCol];
                             if (value === -1) cell.classList.add('marked-x');
                             else if (value === 1) cell.classList.add('marked-check');
                             
-                            cell.addEventListener('click', () => this.handleCellClick(row, col));
+                            cell.addEventListener('click', () => this.handleCellClick(logicalRow, logicalCol));
                         }
                         
                         grid.appendChild(cell);
@@ -886,11 +931,15 @@
 
             getCategoryForRow(row) {
                 const categoryKeys = Object.keys(this.state.puzzle.categories);
-                let offset = categoryKeys.length;
-                for (let i = 0; i < categoryKeys.length; i++) {
-                    const cat = categoryKeys[i];
+                const headerOffset = categoryKeys.length;
+                
+                if (row < headerOffset) return null;
+                
+                const adjustedRow = row - headerOffset;
+                let offset = 0;
+                for (let cat of categoryKeys) {
                     const size = this.state.puzzle.categories[cat].length;
-                    if (row >= offset && row < offset + size) return cat;
+                    if (adjustedRow >= offset && adjustedRow < offset + size) return cat;
                     offset += size;
                 }
                 return null;
@@ -902,20 +951,20 @@
 
             getHeaderItem(row, col) {
                 const categoryKeys = Object.keys(this.state.puzzle.categories);
+                const headerOffset = categoryKeys.length;
                 
-                if (row < categoryKeys.length) {
-                    if (col < categoryKeys.length) return '';
-                    const colCat = categoryKeys[col - categoryKeys.length];
+                if (row < headerOffset) {
+                    if (col < headerOffset) return '';
+                    const colCat = categoryKeys[col - headerOffset];
                     return colCat;
                 }
                 
-                if (col < categoryKeys.length) {
-                    const rowCat = categoryKeys[row - categoryKeys.length];
+                if (col < headerOffset) {
+                    const rowCat = categoryKeys[row - headerOffset];
                     return rowCat;
                 }
                 
-                const rowCatIndex = row - categoryKeys.length;
-                const colCatIndex = col - categoryKeys.length;
+                const rowCatIndex = row - headerOffset;
                 
                 let offset = 0;
                 for (let cat of categoryKeys) {
@@ -972,6 +1021,9 @@
             },
 
             renderClues() {
+                document.getElementById('puzzle-title').textContent = this.state.puzzle.title;
+                document.getElementById('puzzle-question').textContent = this.state.puzzle.question;
+                
                 const clueList = document.getElementById('clue-list');
                 clueList.innerHTML = this.state.puzzle.clues.map((clue, i) => 
                     `<div class="clue-item" id="clue-${i}">${i + 1}. ${clue}</div>`
@@ -1017,7 +1069,7 @@
                         
                         for (let j = 0; j < items.length; j++) {
                             const row = this.getRowIndex(categories[0], i);
-                            const col = this.getColumnIndex(cat, j);
+                            const col = this.getRowIndex(cat, j);
                             
                             if (this.state.grid[row][col] === 1) {
                                 item[cat] = items[j];
@@ -1040,16 +1092,12 @@
 
             getRowIndex(category, index) {
                 const categories = Object.keys(this.state.puzzle.categories);
-                let offset = categories.length;
+                let offset = 0;
                 for (let cat of categories) {
                     if (cat === category) return offset + index;
                     offset += this.state.puzzle.categories[cat].length;
                 }
                 return -1;
-            },
-
-            getColumnIndex(category, index) {
-                return this.getRowIndex(category, index);
             },
 
             isClueSatisfied(clue, solution) {
@@ -1065,13 +1113,10 @@
             },
 
             clearCell() {
-                if (!this.state.selectedCell || this.state.isPaused) return;
-                const { row, col } = this.state.selectedCell;
-                this.state.history.push({
-                    row, col,
-                    prevValue: this.state.grid[row][col]
-                });
-                this.state.grid[row][col] = 0;
+                if (this.state.history.length === 0 || this.state.isPaused) return;
+                const last = this.state.history[this.state.history.length - 1];
+                this.state.grid[last.row][last.col] = 0;
+                this.state.history.pop();
                 this.renderGrid();
             },
 
@@ -1081,13 +1126,13 @@
                 const solution = this.state.puzzle.solution[0];
                 const categories = Object.keys(this.state.puzzle.categories);
                 
-                for (let item of solution) {
+                for (let item of this.state.puzzle.solution) {
                     for (let cat1 of categories) {
                         for (let cat2 of categories) {
                             if (cat1 === cat2) continue;
                             
                             const row = this.getRowIndex(cat1, this.state.puzzle.categories[cat1].indexOf(item[cat1]));
-                            const col = this.getColumnIndex(cat2, this.state.puzzle.categories[cat2].indexOf(item[cat2]));
+                            const col = this.getRowIndex(cat2, this.state.puzzle.categories[cat2].indexOf(item[cat2]));
                             
                             if (this.state.grid[row][col] !== 1) {
                                 this.state.hints--;
@@ -1389,44 +1434,6 @@
             }
             return Math.abs(hash);
         }
-
-        const AudioController = {
-            ctx: null,
-            enabled: true,
-
-            init() {
-                if (!this.ctx) {
-                    this.ctx = new (window.AudioContext || window.webkitAudioContext)();
-                }
-                if (this.ctx.state === 'suspended') this.ctx.resume();
-            },
-
-            playTone(freq, type, duration, vol = 0.1) {
-                if (!this.enabled || !this.ctx) return;
-                const osc = this.ctx.createOscillator();
-                const gain = this.ctx.createGain();
-                osc.type = type;
-                osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
-                gain.gain.setValueAtTime(vol, this.ctx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + duration);
-                osc.connect(gain);
-                gain.connect(this.ctx.destination);
-                osc.start();
-                osc.stop(this.ctx.currentTime + duration);
-            },
-
-            playSelect() { this.playTone(800, 'sine', 0.05, 0.05); },
-            playCorrect() { 
-                this.playTone(523.25, 'sine', 0.1, 0.1); 
-                setTimeout(() => this.playTone(659.25, 'sine', 0.2, 0.1), 50);
-            },
-            playError() { this.playTone(150, 'sawtooth', 0.15, 0.1); },
-            playComplete() {
-                [523.25, 659.25, 783.99, 1046.50].forEach((freq, i) => {
-                    setTimeout(() => this.playTone(freq, 'sine', 0.3, 0.1), i * 100);
-                });
-            }
-        };
 
         document.addEventListener('DOMContentLoaded', () => {
             app.init();
