@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>PrimeLab Word Challenge</title>
+    <style>
+        :root {
+            --bg-color: #ffffff;
+            --text-color: #1a1a1b;
+            --border-color: #d3d6da;
+            --key-bg: #d3d6da;
+            --correct: #6aaa64;
+            --present: #c9b458;
+            --absent: #787c7e;
+            --prime-accent: #2563eb; /* PrimeLab Blue */
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Clear Sans', 'Helvetica Neue', Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Header */
+        header {
+            width: 100%;
+            max-width: 500px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            margin-bottom: 10px;
+        }
+
+        .back-link {
+            text-decoration: none;
+            color: var(--prime-accent);
+            font-weight: bold;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .icon-btn {
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        /* Toast Messages */
+        #toast-container {
+            position: absolute;
+            top: 15%;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            z-index: 100;
+            pointer-events: none;
+        }
+
+        .toast {
+            background-color: var(--text-color);
+            color: var(--bg-color);
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 0.95rem;
+            opacity: 0;
+            transition: opacity 0.3s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        .toast.show { opacity: 1; }
+
+        /* Game Board */
+        #board-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-grow: 1;
+            width: 100%;
+            max-width: 350px;
+            padding: 10px;
+        }
+
+        #board {
+            display: grid;
+            grid-template-rows: repeat(6, 1fr);
+            gap: 6px;
+            width: 100%;
+            aspect-ratio: 5 / 6;
+        }
+
+        .row {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 6px;
+        }
+
+        .tile {
+            width: 100%;
+            height: 100%;
+            border: 2px solid var(--border-color);
+            border-radius: 4px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            user-select: none;
+            color: var(--text-color);
+        }
+
+        .tile.filled {
+            border-color: #878a8c;
+            animation: pop 0.1s ease-in-out;
+        }
+
+        .tile.correct { background-color: var(--correct); border-color: var(--correct); color: white; }
+        .tile.present { background-color: var(--present); border-color: var(--present); color: white; }
+        .tile.absent { background-color: var(--absent); border-color: var(--absent); color: white; }
+
+        .tile.flip { animation: flip 0.5s ease-in; }
+        .row.shake { animation: shake 0.5s; }
+
+        /* Keyboard */
+        #keyboard {
+            width: 100%;
+            max-width: 500px;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .key-row {
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+            width: 100%;
+        }
+
+        .key {
+            font-family: inherit;
+            font-weight: bold;
+            border: 0;
+            padding: 0;
+            margin: 0;
+            height: 58px;
+            border-radius: 6px;
+            cursor: pointer;
+            user-select: none;
+            background-color: var(--key-bg);
+            color: var(--text-color);
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-transform: uppercase;
+            font-size: 1.1rem;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .key.wide { flex: 1.5; font-size: 0.85rem; letter-spacing: 1px; }
+        .key.correct { background-color: var(--correct); color: white; }
+        .key.present { background-color: var(--present); color: white; }
+        .key.absent { background-color: var(--absent); color: white; }
+
+        /* Animations */
+        @keyframes pop { 50% { transform: scale(1.1); } }
+        @keyframes flip {
+            0% { transform: rotateX(0); }
+            50% { transform: rotateX(90deg); }
+            100% { transform: rotateX(0); }
+        }
+        @keyframes shake {
+            10%, 90% { transform: translateX(-1px); }
+            20%, 80% { transform: translateX(2px); }
+            30%, 50%, 70% { transform: translateX(-4px); }
+            40%, 60% { transform: translateX(4px); }
+        }
+
+        /* Loading State */
+        #loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1.2rem;
+            color: var(--prime-accent);
+            font-weight: bold;
+        }
+
+        @media (max-height: 700px) {
+            .key { height: 45px; font-size: 0.9rem; }
+            .tile { font-size: 1.5rem; }
+            h1 { font-size: 1.4rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="https://primespirit.co.in" class="back-link">← PrimeSpirit</a>
+        <h1>PrimeLab</h1>
+        <button class="icon-btn" onclick="initGame()" title="New Game">↻</button>
+    </header>
+
+    <div id="loading">Loading PrimeLab Dictionary...</div>
+    <div id="toast-container"></div>
+
+    <div id="board-container">
+        <div id="board"></div>
+    </div>
+
+    <div id="keyboard"></div>
+
+    <script>
+        const KEYBOARD_LAYOUT = [
+            ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'],
+            ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L'],
+            ['ENTER', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', '⌫']
+        ];
+
+        let dictionary = [];
+        let targetWord = '';
+        let currentRow = 0;
+        let currentTile = 0;
+        let gameOver = false;
+        let guesses = [[]];
+
+        // 1. Fetch the 10k words from the separate folder
+        async function loadDictionary() {
+            try {
+                const response = await fetch('words/dictionary.json');
+                if (!response.ok) throw new Error("Network response was not ok");
+                const data = await response.json();
+                
+                // Filter and format: ensure exactly 5 letters, uppercase
+                dictionary = data.filter(word => typeof word === 'string' && word.length === 5).map(word => word.toUpperCase());
+                
+                if (dictionary.length < 100) throw new Error("Dictionary too small");
+                
+                document.getElementById('loading').style.display = 'none';
+                initGame();
+            } catch (error) {
+                console.error("Failed to load dictionary:", error);
+                document.getElementById('loading').textContent = "Error: Could not load words/dictionary.json. Check file path.";
+            }
+        }
+
+        function initGame() {
+            targetWord = dictionary[Math.floor(Math.random() * dictionary.length)];
+            currentRow = 0;
+            currentTile = 0;
+            gameOver = false;
+            guesses = [['', '', '', '', '']];
+            
+            document.getElementById('board').innerHTML = '';
+            document.getElementById('keyboard').innerHTML = '';
+            
+            createBoard();
+            createKeyboard();
+            console.log("PrimeLab Debug: Target word is", targetWord);
+        }
+
+        function createBoard() {
+            const board = document.getElementById('board');
+            for (let i = 0; i < 6; i++) {
+                const row = document.createElement('div');
+                row.className = 'row';
+                row.id = `row-${i}`;
+                for (let j = 0; j < 5; j++) {
+                    const tile = document.createElement('div');
+                    tile.className = 'tile';
+                    tile.id = `tile-${i}-${j}`;
+                    row.appendChild(tile);
+                }
+                board.appendChild(row);
+            }
+        }
+
+        function createKeyboard() {
+            const keyboard = document.getElementById('keyboard');
+            KEYBOARD_LAYOUT.forEach(rowKeys => {
+                const rowDiv = document.createElement('div');
+                rowDiv.className = 'key-row';
+                rowKeys.forEach(key => {
+                    const btn = document.createElement('button');
+                    btn.className = `key ${key.length > 1 ? 'wide' : ''}`;
+                    btn.textContent = key;
+                    btn.id = `key-${key}`;
+                    btn.onclick = () => handleInput(key);
+                    rowDiv.appendChild(btn);
+                });
+                keyboard.appendChild(rowDiv);
+            });
+        }
+
+        function handleInput(key) {
+            if (gameOver) return;
+
+            if (key === '⌫' || key === 'BACKSPACE') {
+                if (currentTile > 0) {
+                    currentTile--;
+                    guesses[currentRow][currentTile] = '';
+                    updateTile(currentRow, currentTile, '');
+                }
+                return;
+            }
+
+            if (key === 'ENTER') {
+                if (currentTile === 5) {
+                    submitGuess();
+                } else {
+                    showToast("Not enough letters");
+                    shakeRow();
+                }
+                return;
+            }
+
+            if (/^[A-Z]$/.test(key) && currentTile < 5) {
+                guesses[currentRow][currentTile] = key;
+                updateTile(currentRow, currentTile, key);
+                currentTile++;
+            }
+        }
+
+        function updateTile(row, col, letter) {
+            const tile = document.getElementById(`tile-${row}-${col}`);
+            tile.textContent = letter;
+            tile.classList.toggle('filled', letter !== '');
+        }
+
+        function submitGuess() {
+            const guess = guesses[currentRow].join('');
+            
+            if (!dictionary.includes(guess)) {
+                showToast("Not in PrimeLab dictionary");
+                shakeRow();
+                return;
+            }
+
+            const targetLetters = targetWord.split('');
+            const guessLetters = guess.split('');
+            const result = new Array(5).fill('absent');
+
+            // Pass 1: Correct (Green)
+            for (let i = 0; i < 5; i++) {
+                if (guessLetters[i] === targetLetters[i]) {
+                    result[i] = 'correct';
+                    targetLetters[i] = null;
+                    guessLetters[i] = null;
+                }
+            }
+
+            // Pass 2: Present (Yellow)
+            for (let i = 0; i < 5; i++) {
+                if (guessLetters[i] !== null) {
+                    const index = targetLetters.indexOf(guessLetters[i]);
+                    if (index !== -1) {
+                        result[i] = 'present';
+                        targetLetters[index] = null;
+                    }
+                }
+            }
+
+            // Animate
+            for (let i = 0; i < 5; i++) {
+                setTimeout(() => {
+                    const tile = document.getElementById(`tile-${currentRow}-${i}`);
+                    tile.classList.add('flip', result[i]);
+                    
+                    const key = document.getElementById(`key-${guesses[currentRow][i]}`);
+                    if (key) {
+                        if (result[i] === 'correct') key.className = 'key correct';
+                        else if (result[i] === 'present' && !key.classList.contains('correct')) key.className = 'key present';
+                        else if (result[i] === 'absent' && !key.classList.contains('correct') && !key.classList.contains('present')) key.className = 'key absent';
+                    }
+                }, i * 250);
+            }
+
+            setTimeout(() => {
+                if (guess === targetWord) {
+                    showToast("Brilliant! 🎉");
+                    gameOver = true;
+                } else if (currentRow === 5) {
+                    showToast(`Game Over! Word: ${targetWord}`);
+                    gameOver = true;
+                } else {
+                    currentRow++;
+                    currentTile = 0;
+                    guesses.push(['', '', '', '', '']);
+                }
+            }, 1500);
+        }
+
+        function shakeRow() {
+            const row = document.getElementById(`row-${currentRow}`);
+            row.classList.add('shake');
+            setTimeout(() => row.classList.remove('shake'), 500);
+        }
+
+        function showToast(message) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.textContent = message;
+            container.appendChild(toast);
+            setTimeout(() => toast.classList.add('show'), 10);
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 300);
+            }, 2000);
+        }
+
+        // Physical keyboard support
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') handleInput('ENTER');
+            else if (e.key === 'Backspace') handleInput('⌫');
+            else handleInput(e.key.toUpperCase());
+        });
+
+        // Initialize
+        loadDictionary();
+    </script>
+</body>
+</html>
