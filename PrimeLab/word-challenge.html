@@ -3,105 +3,137 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#02040a">
     <title>PrimeLab Word Challenge</title>
+    
+    <!-- GSAP for Premium Animations & Confetti -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
     <style>
         :root {
-            --bg-color: #ffffff;
-            --text-color: #1a1a1b;
-            --border-color: #d3d6da;
-            --key-bg: #d3d6da;
-            --correct: #6aaa64;
-            --present: #c9b458;
-            --absent: #787c7e;
-            --prime-accent: #2563eb; /* PrimeLab Blue */
+            --bg: #02040a;
+            --surface: #0a0f1e;
+            --border: #1e293b;
+            --text: #f4f7ff;
+            --text-sec: #94a3b8;
+            --accent: #00f3ff;
+            --correct: #00ff9d;
+            --present: #ffd700;
+            --absent: #334155;
+            --font-head: 'Syne', sans-serif;
+            --font-body: 'Source Serif 4', serif;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+        
         body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            font-family: 'Clear Sans', 'Helvetica Neue', Arial, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: var(--font-body);
             display: flex;
             flex-direction: column;
             align-items: center;
-            height: 100vh;
+            height: 100dvh; /* Dynamic viewport height for mobile */
             overflow: hidden;
+            touch-action: manipulation;
         }
 
-        /* Header */
+        /* --- HEADER --- */
         header {
             width: 100%;
-            max-width: 500px;
-            border-bottom: 1px solid var(--border-color);
+            max-width: 600px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 10px 20px;
-            margin-bottom: 10px;
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border);
+            flex-shrink: 0;
         }
 
         .back-link {
+            color: var(--accent);
             text-decoration: none;
-            color: var(--prime-accent);
-            font-weight: bold;
+            font-family: var(--font-head);
+            font-weight: 700;
             font-size: 0.9rem;
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 6px;
         }
 
         h1 {
-            font-size: 1.8rem;
+            font-family: var(--font-head);
+            font-size: 1.4rem;
             font-weight: 800;
             letter-spacing: 1px;
-            text-transform: uppercase;
+            background: linear-gradient(135deg, var(--accent), #bc13fe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         .icon-btn {
             background: none;
-            border: none;
-            color: var(--text-color);
-            font-size: 1.5rem;
+            border: 1px solid var(--border);
+            color: var(--text);
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             cursor: pointer;
-            padding: 5px;
+            font-size: 1.1rem;
+            transition: all 0.2s;
         }
+        .icon-btn:active { transform: scale(0.9); background: var(--surface); }
 
-        /* Toast Messages */
+        /* --- LOADING STATE --- */
+        #loading-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: var(--font-head);
+            color: var(--accent);
+            font-size: 1.2rem;
+            text-shadow: 0 0 15px rgba(0,243,255,0.3);
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+        /* --- TOAST --- */
         #toast-container {
             position: absolute;
             top: 15%;
             left: 50%;
             transform: translateX(-50%);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
             z-index: 100;
             pointer-events: none;
-        }
-
-        .toast {
-            background-color: var(--text-color);
-            color: var(--bg-color);
-            padding: 12px 24px;
-            border-radius: 8px;
-            font-weight: bold;
-            font-size: 0.95rem;
-            opacity: 0;
-            transition: opacity 0.3s;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-        }
-        .toast.show { opacity: 1; }
-
-        /* Game Board */
-        #board-container {
             display: flex;
-            justify-content: center;
+            flex-direction: column;
+            gap: 8px;
             align-items: center;
+        }
+        .toast {
+            background: var(--text);
+            color: var(--bg);
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-family: var(--font-head);
+            font-weight: 700;
+            font-size: 0.9rem;
+            opacity: 0;
+            box-shadow: 0 4px 20px rgba(0,243,255,0.2);
+        }
+
+        /* --- GAME BOARD (Mobile First) --- */
+        #board-container {
             flex-grow: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             width: 100%;
-            max-width: 350px;
             padding: 10px;
         }
 
@@ -110,6 +142,7 @@
             grid-template-rows: repeat(6, 1fr);
             gap: 6px;
             width: 100%;
+            max-width: 330px;
             aspect-ratio: 5 / 6;
         }
 
@@ -122,39 +155,35 @@
         .tile {
             width: 100%;
             height: 100%;
-            border: 2px solid var(--border-color);
-            border-radius: 4px;
+            border: 2px solid var(--border);
+            border-radius: 6px;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 2rem;
-            font-weight: bold;
+            font-family: var(--font-head);
+            font-size: 1.8rem;
+            font-weight: 800;
             text-transform: uppercase;
+            color: var(--text);
+            background: var(--surface);
             user-select: none;
-            color: var(--text-color);
         }
 
-        .tile.filled {
-            border-color: #878a8c;
-            animation: pop 0.1s ease-in-out;
-        }
+        .tile.filled { border-color: var(--text-sec); }
+        .tile.correct { background: var(--correct); border-color: var(--correct); color: #000; }
+        .tile.present { background: var(--present); border-color: var(--present); color: #000; }
+        .tile.absent { background: var(--absent); border-color: var(--absent); }
 
-        .tile.correct { background-color: var(--correct); border-color: var(--correct); color: white; }
-        .tile.present { background-color: var(--present); border-color: var(--present); color: white; }
-        .tile.absent { background-color: var(--absent); border-color: var(--absent); color: white; }
-
-        .tile.flip { animation: flip 0.5s ease-in; }
-        .row.shake { animation: shake 0.5s; }
-
-        /* Keyboard */
+        /* --- KEYBOARD (Mobile First) --- */
         #keyboard {
             width: 100%;
             max-width: 500px;
-            padding: 10px;
+            padding: 8px;
             display: flex;
             flex-direction: column;
             gap: 8px;
-            margin-bottom: 10px;
+            flex-shrink: 0;
+            margin-bottom: env(safe-area-inset-bottom, 8px);
         }
 
         .key-row {
@@ -165,72 +194,62 @@
         }
 
         .key {
-            font-family: inherit;
-            font-weight: bold;
-            border: 0;
-            padding: 0;
-            margin: 0;
-            height: 58px;
+            font-family: var(--font-head);
+            font-weight: 700;
+            font-size: 1.1rem;
+            border: none;
             border-radius: 6px;
-            cursor: pointer;
-            user-select: none;
-            background-color: var(--key-bg);
-            color: var(--text-color);
+            height: 54px;
             flex: 1;
             display: flex;
             justify-content: center;
             align-items: center;
-            text-transform: uppercase;
-            font-size: 1.1rem;
-            transition: background-color 0.3s, color 0.3s;
+            background: var(--border);
+            color: var(--text);
+            cursor: pointer;
+            user-select: none;
+            transition: background 0.2s, transform 0.1s;
         }
 
-        .key.wide { flex: 1.5; font-size: 0.85rem; letter-spacing: 1px; }
-        .key.correct { background-color: var(--correct); color: white; }
-        .key.present { background-color: var(--present); color: white; }
-        .key.absent { background-color: var(--absent); color: white; }
+        .key:active { transform: scale(0.92); }
+        .key.wide { flex: 1.5; font-size: 0.85rem; letter-spacing: 0.5px; }
+        .key.correct { background: var(--correct); color: #000; }
+        .key.present { background: var(--present); color: #000; }
+        .key.absent { background: var(--absent); color: var(--text-sec); }
 
-        /* Animations */
-        @keyframes pop { 50% { transform: scale(1.1); } }
-        @keyframes flip {
-            0% { transform: rotateX(0); }
-            50% { transform: rotateX(90deg); }
-            100% { transform: rotateX(0); }
-        }
-        @keyframes shake {
-            10%, 90% { transform: translateX(-1px); }
-            20%, 80% { transform: translateX(2px); }
-            30%, 50%, 70% { transform: translateX(-4px); }
-            40%, 60% { transform: translateX(4px); }
+        /* --- LAPTOP OPTIMIZATION (768px+) --- */
+        @media (min-width: 768px) {
+            #board { max-width: 400px; gap: 8px; }
+            .row { gap: 8px; }
+            .tile { font-size: 2.2rem; border-radius: 8px; }
+            .key { height: 64px; font-size: 1.2rem; border-radius: 8px; }
+            h1 { font-size: 1.8rem; }
         }
 
-        /* Loading State */
-        #loading {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 1.2rem;
-            color: var(--prime-accent);
-            font-weight: bold;
-        }
-
-        @media (max-height: 700px) {
-            .key { height: 45px; font-size: 0.9rem; }
-            .tile { font-size: 1.5rem; }
-            h1 { font-size: 1.4rem; }
+        /* --- DESKTOP OPTIMIZATION (1024px+) --- */
+        @media (min-width: 1024px) {
+            #board { max-width: 450px; gap: 10px; }
+            .row { gap: 10px; }
+            .tile { font-size: 2.5rem; border-radius: 10px; }
+            .key { height: 70px; font-size: 1.3rem; border-radius: 10px; }
+            header { padding: 16px 24px; }
         }
     </style>
+    
+    <!-- Load Prime Spirit Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@400;600&family=Syne:wght@700;800&display=swap" rel="stylesheet">
 </head>
 <body>
 
     <header>
         <a href="https://primespirit.co.in" class="back-link">← PrimeSpirit</a>
-        <h1>PrimeLab</h1>
-        <button class="icon-btn" onclick="initGame()" title="New Game">↻</button>
+        <h1>WORD CHALLENGE</h1>
+        <button class="icon-btn" onclick="initGame()" aria-label="New Game">↻</button>
     </header>
 
-    <div id="loading">Loading PrimeLab Dictionary...</div>
+    <div id="loading-text">Loading PrimeLab Dictionary...</div>
     <div id="toast-container"></div>
 
     <div id="board-container">
@@ -240,41 +259,100 @@
     <div id="keyboard"></div>
 
     <script>
+        // ==========================================
+        // 1. DICTIONARY LOADER (Fetch from JSON)
+        // ==========================================
+        let DICTIONARY = [];
+        
+        async function loadDictionary() {
+            try {
+                // IMPORTANT: Ensure this path matches your GitHub folder structure!
+                // If HTML is in PrimeLab/ and JSON is in PrimeLab/words/dictionary.json
+                const response = await fetch('words/dictionary.json');
+                if (!response.ok) throw new Error('Network response was not ok');
+                const data = await response.json();
+                
+                // Filter: ensure exactly 5 letters, uppercase (adjust if your JSON has different lengths)
+                DICTIONARY = data
+                    .filter(word => typeof word === 'string' && word.length === 5)
+                    .map(word => word.toUpperCase());
+                    
+                if (DICTIONARY.length === 0) throw new Error('No valid 5-letter words found');
+                
+                // Hide loading state and start game
+                document.getElementById('loading-text').style.display = 'none';
+                initGame();
+            } catch (error) {
+                console.error('Failed to load dictionary:', error);
+                document.getElementById('loading-text').textContent = 'Error loading dictionary. Check file path.';
+            }
+        }
+
         const KEYBOARD_LAYOUT = [
-            ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'],
-            ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L'],
-            ['ENTER', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', '⌫']
+            ['Q','W','E','R','T','Y','U','I','O','P'],
+            ['A','S','D','F','G','H','J','K','L'],
+            ['ENTER','Z','X','C','V','B','N','M','⌫']
         ];
 
-        let dictionary = [];
         let targetWord = '';
         let currentRow = 0;
         let currentTile = 0;
         let gameOver = false;
         let guesses = [[]];
 
-        // 1. Fetch the 10k words from the separate folder
-        async function loadDictionary() {
-            try {
-               const response = await fetch('prime-lab-word-game/words/dictionary.json');
-                if (!response.ok) throw new Error("Network response was not ok");
-                const data = await response.json();
-                
-                // Filter and format: ensure exactly 5 letters, uppercase
-                dictionary = data.filter(word => typeof word === 'string' && word.length === 5).map(word => word.toUpperCase());
-                
-                if (dictionary.length < 100) throw new Error("Dictionary too small");
-                
-                document.getElementById('loading').style.display = 'none';
-                initGame();
-            } catch (error) {
-                console.error("Failed to load dictionary:", error);
-                document.getElementById('loading').textContent = "Error: Could not load words/dictionary.json. Check file path.";
+        // ==========================================
+        // 2. WEB AUDIO API SOUND ENGINE (No 404s!)
+        // ==========================================
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        
+        function playSound(type) {
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            const osc = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            osc.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+
+            const now = audioCtx.currentTime;
+            
+            if (type === 'pop') {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(600, now);
+                osc.frequency.exponentialRampToValueAtTime(300, now + 0.1);
+                gainNode.gain.setValueAtTime(0.1, now);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
+                osc.start(now); osc.stop(now + 0.1);
+            } else if (type === 'error') {
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(150, now);
+                osc.frequency.linearRampToValueAtTime(100, now + 0.15);
+                gainNode.gain.setValueAtTime(0.1, now);
+                gainNode.gain.linearRampToValueAtTime(0.01, now + 0.15);
+                osc.start(now); osc.stop(now + 0.15);
+            } else if (type === 'flip') {
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(400, now);
+                osc.frequency.exponentialRampToValueAtTime(600, now + 0.1);
+                gainNode.gain.setValueAtTime(0.05, now);
+                gainNode.gain.linearRampToValueAtTime(0.01, now + 0.1);
+                osc.start(now); osc.stop(now + 0.1);
+            } else if (type === 'win') {
+                [523.25, 659.25, 783.99, 1046.50].forEach((freq, i) => {
+                    const o = audioCtx.createOscillator();
+                    const g = audioCtx.createGain();
+                    o.connect(g); g.connect(audioCtx.destination);
+                    o.type = 'sine'; o.frequency.value = freq;
+                    g.gain.setValueAtTime(0.1, now + i * 0.1);
+                    g.gain.exponentialRampToValueAtTime(0.01, now + i * 0.1 + 0.3);
+                    o.start(now + i * 0.1); o.stop(now + i * 0.1 + 0.3);
+                });
             }
         }
 
+        // ==========================================
+        // 3. GAME LOGIC
+        // ==========================================
         function initGame() {
-            targetWord = dictionary[Math.floor(Math.random() * dictionary.length)];
+            targetWord = DICTIONARY[Math.floor(Math.random() * DICTIONARY.length)];
             currentRow = 0;
             currentTile = 0;
             gameOver = false;
@@ -292,12 +370,10 @@
             const board = document.getElementById('board');
             for (let i = 0; i < 6; i++) {
                 const row = document.createElement('div');
-                row.className = 'row';
-                row.id = `row-${i}`;
+                row.className = 'row'; row.id = `row-${i}`;
                 for (let j = 0; j < 5; j++) {
                     const tile = document.createElement('div');
-                    tile.className = 'tile';
-                    tile.id = `tile-${i}-${j}`;
+                    tile.className = 'tile'; tile.id = `tile-${i}-${j}`;
                     row.appendChild(tile);
                 }
                 board.appendChild(row);
@@ -314,7 +390,11 @@
                     btn.className = `key ${key.length > 1 ? 'wide' : ''}`;
                     btn.textContent = key;
                     btn.id = `key-${key}`;
-                    btn.onclick = () => handleInput(key);
+                    // Use pointerdown for instant mobile response
+                    btn.addEventListener('pointerdown', (e) => {
+                        e.preventDefault();
+                        handleInput(key);
+                    });
                     rowDiv.appendChild(btn);
                 });
                 keyboard.appendChild(rowDiv);
@@ -329,6 +409,7 @@
                     currentTile--;
                     guesses[currentRow][currentTile] = '';
                     updateTile(currentRow, currentTile, '');
+                    playSound('pop');
                 }
                 return;
             }
@@ -339,6 +420,7 @@
                 } else {
                     showToast("Not enough letters");
                     shakeRow();
+                    playSound('error');
                 }
                 return;
             }
@@ -347,6 +429,10 @@
                 guesses[currentRow][currentTile] = key;
                 updateTile(currentRow, currentTile, key);
                 currentTile++;
+                playSound('pop');
+                
+                const tile = document.getElementById(`tile-${currentRow}-${currentTile-1}`);
+                gsap.fromTo(tile, { scale: 0.8 }, { scale: 1, duration: 0.15, ease: "back.out(1.7)" });
             }
         }
 
@@ -359,9 +445,10 @@
         function submitGuess() {
             const guess = guesses[currentRow].join('');
             
-            if (!dictionary.includes(guess)) {
+            if (!DICTIONARY.includes(guess)) {
                 showToast("Not in PrimeLab dictionary");
                 shakeRow();
+                playSound('error');
                 return;
             }
 
@@ -373,8 +460,7 @@
             for (let i = 0; i < 5; i++) {
                 if (guessLetters[i] === targetLetters[i]) {
                     result[i] = 'correct';
-                    targetLetters[i] = null;
-                    guessLetters[i] = null;
+                    targetLetters[i] = null; guessLetters[i] = null;
                 }
             }
 
@@ -389,40 +475,50 @@
                 }
             }
 
-            // Animate
+            // GSAP Flip Animation & Sound
             for (let i = 0; i < 5; i++) {
                 setTimeout(() => {
                     const tile = document.getElementById(`tile-${currentRow}-${i}`);
-                    tile.classList.add('flip', result[i]);
-                    
                     const key = document.getElementById(`key-${guesses[currentRow][i]}`);
-                    if (key) {
-                        if (result[i] === 'correct') key.className = 'key correct';
-                        else if (result[i] === 'present' && !key.classList.contains('correct')) key.className = 'key present';
-                        else if (result[i] === 'absent' && !key.classList.contains('correct') && !key.classList.contains('present')) key.className = 'key absent';
-                    }
-                }, i * 250);
+                    
+                    playSound('flip');
+                    
+                    gsap.to(tile, {
+                        rotateX: 90, duration: 0.25,
+                        onComplete: () => {
+                            tile.classList.add(result[i]);
+                            if (key) {
+                                if (result[i] === 'correct') key.className = 'key correct';
+                                else if (result[i] === 'present' && !key.classList.contains('correct')) key.className = 'key present';
+                                else if (result[i] === 'absent' && !key.classList.contains('correct') && !key.classList.contains('present')) key.className = 'key absent';
+                            }
+                            gsap.to(tile, { rotateX: 0, duration: 0.25 });
+                        }
+                    });
+                }, i * 300);
             }
 
             setTimeout(() => {
                 if (guess === targetWord) {
+                    playSound('win');
                     showToast("Brilliant! 🎉");
+                    triggerConfetti();
                     gameOver = true;
                 } else if (currentRow === 5) {
                     showToast(`Game Over! Word: ${targetWord}`);
+                    playSound('error');
                     gameOver = true;
                 } else {
                     currentRow++;
                     currentTile = 0;
                     guesses.push(['', '', '', '', '']);
                 }
-            }, 1500);
+            }, 1800);
         }
 
         function shakeRow() {
             const row = document.getElementById(`row-${currentRow}`);
-            row.classList.add('shake');
-            setTimeout(() => row.classList.remove('shake'), 500);
+            gsap.to(row, { x: -5, duration: 0.05, yoyo: true, repeat: 5, onComplete: () => gsap.set(row, { x: 0 }) });
         }
 
         function showToast(message) {
@@ -431,11 +527,20 @@
             toast.className = 'toast';
             toast.textContent = message;
             container.appendChild(toast);
-            setTimeout(() => toast.classList.add('show'), 10);
+            
+            gsap.to(toast, { opacity: 1, y: -10, duration: 0.3 });
             setTimeout(() => {
-                toast.classList.remove('show');
-                setTimeout(() => toast.remove(), 300);
+                gsap.to(toast, { opacity: 0, y: -20, duration: 0.3, onComplete: () => toast.remove() });
             }, 2000);
+        }
+
+        function triggerConfetti() {
+            confetti({
+                particleCount: 150,
+                spread: 70,
+                origin: { y: 0.6 },
+                colors: ['#00f3ff', '#00ff9d', '#ffd700', '#bc13fe']
+            });
         }
 
         // Physical keyboard support
@@ -445,7 +550,10 @@
             else handleInput(e.key.toUpperCase());
         });
 
-        // Initialize
+        // ==========================================
+        // 4. INITIALIZE
+        // ==========================================
+        // Start by fetching the dictionary from your JSON file
         loadDictionary();
     </script>
 </body>
