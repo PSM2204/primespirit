@@ -1072,27 +1072,65 @@
 'use strict';
 
 /* ═══════════════════════════════════════════════════════════
-   1. DICTIONARY — words/dictionary.json from your repo
+   1. DICTIONARY — Multi-source loader with fallbacks
    ═══════════════════════════════════════════════════════════ */
 let DICT = [];
 
 async function loadDict() {
-    try {
-        const response = await fetch('prime-lab-word-game/words/dictionary.json');
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const data = await res.json();
-        DICT = [...new Set(data)]
-            .filter(w => typeof w === 'string' && w.length === 5)
-            .map(w => w.toUpperCase());
-        if (DICT.length < 50) throw new Error('Too small');
-        document.getElementById('loading-screen').remove();
-        loadStats();
-    } catch (err) {
-        console.error(err);
-        document.querySelector('.loading-text').textContent = 'Error loading words/dictionary.json';
-        document.querySelector('.loading-text').style.color = '#E88C7C';
-        document.querySelector('.loading-spinner').style.display = 'none';
+    const loadEl = document.getElementById('loading-screen');
+    const msgEl = document.querySelector('.loading-text');
+    const spinEl = document.querySelector('.loading-spinner');
+
+    // 3 possible sources — try each in order
+    const sources = [
+        {
+            url: 'words/dictionary.json',
+            label: 'local file (words/dictionary.json)'
+        },
+        {
+            url: 'https://raw.githubusercontent.com/PSM2204/primespirit/main/PrimeLab/prime-lab-word-game/words/dictionary.json',
+            label: 'GitHub raw (words/dictionary.json)'
+        },
+        {
+            url: 'https://cdn.jsdelivr.net/gh/PSM2204/primespirit@main/PrimeLab/prime-lab-word-game/words/dictionary.json',
+            label: 'jsDelivr CDN (words/dictionary.json)'
+        }
+    ];
+
+    for (const source of sources) {
+        try {
+            msgEl.textContent = `Trying ${source.label}…`;
+
+            const res = await fetch(source.url);
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+            const data = await res.json();
+
+            // Validate the data
+            const words = [...new Set(data)]
+                .filter(w => typeof w === 'string' && w.length === 5)
+                .map(w => w.toUpperCase());
+
+            if (words.length < 50) throw new Error(`Only ${words.length} valid words`);
+
+            DICT = words;
+            console.log(`✅ Loaded ${DICT.length} words from: ${source.label}`);
+
+            // Success — hide loader
+            if (loadEl) loadEl.remove();
+            loadStats();
+            return;
+
+        } catch (err) {
+            console.warn(`❌ ${source.label}:`, err.message);
+        }
     }
+
+    // All sources failed
+    console.error('ALL dictionary sources failed');
+    msgEl.textContent = 'Failed to load dictionary. Check network / GitHub path.';
+    msgEl.style.color = '#E88C7C';
+    if (spinEl) spinEl.style.display = 'none';
 }
 
 /* ═══════════════════════════════════════════════════════════
