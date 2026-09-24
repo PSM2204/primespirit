@@ -268,7 +268,7 @@
             try {
                 // IMPORTANT: Ensure this path matches your GitHub folder structure!
                 // If HTML is in PrimeLab/ and JSON is in PrimeLab/words/dictionary.json
-                const response = await fetch('words/dictionary.json');
+                const response = await fetch('prime-lab-word-game/words/dictionary.json');
                 if (!response.ok) throw new Error('Network response was not ok');
                 const data = await response.json();
                 
