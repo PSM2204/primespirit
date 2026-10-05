@@ -5,7 +5,7 @@
   <!-- ═══ HOMEPAGE ═══ -->
   <url>
     <loc>https://primespirit.co.in/</loc>
-    <lastmod>2026-07-23</lastmod>
+    <lastmod>2026-10-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
     <image:image>
@@ -14,17 +14,25 @@
     </image:image>
   </url>
 
+  <!-- ═══ ABOUT ═══ -->
+  <url>
+    <loc>https://primespirit.co.in/about.html</loc>
+    <lastmod>2026-10-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
   <!-- ═══ PROGRAMS / PAGES ═══ -->
   <url>
     <loc>https://primespirit.co.in/poonam-foundation.html</loc>
-    <lastmod>2026-07-23</lastmod>
+    <lastmod>2026-10-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
     <loc>https://primespirit.co.in/genz-vibe.html</loc>
-    <lastmod>2026-07-23</lastmod>
+    <lastmod>2026-10-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -32,67 +40,146 @@
   <!-- ═══ FREE TOOLS ═══ -->
   <url>
     <loc>https://primespirit.co.in/primescore/</loc>
-    <lastmod>2026-07-23</lastmod>
+    <lastmod>2026-10-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
 
   <url>
     <loc>https://primespirit.co.in/primetestq/index.html</loc>
-    <lastmod>2026-07-23</lastmod>
+    <lastmod>2026-10-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://primespirit.co.in/predict.html</loc>
+    <lastmod>2026-10-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://primespirit.co.in/periodic-table.html</loc>
+    <lastmod>2026-10-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <!-- ═══ PRIMELAB GAMES ═══ -->
+  <url>
+    <loc>https://primespirit.co.in/PrimeLab/sudoku-challenge.html</loc>
+    <lastmod>2026-10-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>https://primespirit.co.in/PrimeLab/logic-grid-challenge.html</loc>
+    <lastmod>2026-10-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>https://primespirit.co.in/PrimeLab/brainclimb.html</loc>
+    <lastmod>2026-10-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>https://primespirit.co.in/PrimeLab/puddleberry-quest.html</loc>
+    <lastmod>2026-10-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>https://primespirit.co.in/PrimeLab/chess-game.html</loc>
+    <lastmod>2026-10-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>https://primespirit.co.in/PrimeLab/word-challenge.html</loc>
+    <lastmod>2026-10-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
   </url>
 
   <!-- ═══ CITY LANDING PAGES (Local SEO) ═══ -->
   <url>
     <loc>https://primespirit.co.in/city/neet-bengaluru.html</loc>
-    <lastmod>2026-07-23</lastmod>
+    <lastmod>2026-10-05</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
   </url>
 
   <url>
     <loc>https://primespirit.co.in/city/jee-bengaluru.html</loc>
-    <lastmod>2026-07-23</lastmod>
+    <lastmod>2026-10-05</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
   </url>
 
   <url>
     <loc>https://primespirit.co.in/city/neet-hyderabad.html</loc>
-    <lastmod>2026-07-23</lastmod>
+    <lastmod>2026-10-05</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
   </url>
 
   <url>
     <loc>https://primespirit.co.in/city/cuet-hyderabad.html</loc>
-    <lastmod>2026-07-23</lastmod>
+    <lastmod>2026-10-05</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
   </url>
 
   <url>
     <loc>https://primespirit.co.in/city/neet-bhubaneswar.html</loc>
-    <lastmod>2026-07-23</lastmod>
+    <lastmod>2026-10-05</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
   </url>
 
   <url>
     <loc>https://primespirit.co.in/city/neet-cuttack.html</loc>
-    <lastmod>2026-07-23</lastmod>
+    <lastmod>2026-10-05</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
   </url>
 
+  <!-- TODO: these are linked in your footer but have no sitemap entry yet.
+       Either they don't exist yet (build them — see priority #3 in my last message)
+       or they exist and were simply left out. Uncomment once live and confirmed 200 OK. -->
+  <!--
+  <url>
+    <loc>https://primespirit.co.in/city/neet-pune.html</loc>
+    <lastmod>2026-10-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://primespirit.co.in/city/neet-mumbai.html</loc>
+    <lastmod>2026-10-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  -->
+
   <!-- ═══ BLOG POSTS ═══ -->
-  <!-- Add each blog post URL here as you publish them -->
-  <!-- Example:
+  <!-- CRITICAL: this section is still empty. Your homepage advertises
+       "The Mentorship Blog" with Physics/Chemistry/Maths/Biology/Economics/Strategy
+       categories, but zero posts are indexed. Add each post below as you publish it.
+       This is almost certainly your single biggest missed traffic opportunity —
+       see priority #2 in my last message.
   <url>
     <loc>https://primespirit.co.in/blog/newtons-laws-neet-guide.html</loc>
-    <lastmod>2026-07-20</lastmod>
+    <lastmod>2026-10-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
