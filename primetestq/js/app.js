@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Setup Auth and Admin UI listeners
     initAuthUI();
     initAdminUI();
+    initAnalyticsUI(); // Initialize the new analytics listeners
     
     // Route user based on login status
     checkSessionAndRoute();
@@ -46,7 +47,7 @@ function initAuthUI() {
         const email = document.getElementById('auth-email').value.trim();
         const pass = document.getElementById('auth-password').value;
         
-        if (!email || !pass) return showAuthMsg("️ Please enter email and password.");
+        if (!email || !pass) return showAuthMsg("⚠️ Please enter email and password.");
         
         const res = PrimeAuth.login(email, pass);
         if (res.success) {
@@ -95,7 +96,7 @@ function initAdminUI() {
         const examId = document.getElementById('admin-exam-select').value;
         const file = fileInput.files[0];
         
-        if (!file) return alert("⚠️ Please select a file first!");
+        if (!file) return alert("️ Please select a file first!");
 
         const reader = new FileReader();
         reader.onload = async (e) => {
@@ -127,6 +128,93 @@ function initAdminUI() {
         };
         reader.readAsText(file);
     });
+}
+
+// ==========================================
+// ANALYTICS UI LOGIC (CLOUDFLARE D1 INTEGRATION)
+// ==========================================
+function initAnalyticsUI() {
+    const WORKER_URL = 'https://primetestq-api.primespiritmentors.workers.dev';
+
+    document.getElementById('btn-load-analytics')?.addEventListener('click', async () => {
+        const analyticsSection = document.getElementById('analytics-section');
+        analyticsSection.classList.remove('hidden');
+        
+        const filter = document.getElementById('analytics-exam-filter').value;
+        const url = filter ? `${WORKER_URL}/submissions?exam=${encodeURIComponent(filter)}` : `${WORKER_URL}/submissions`;
+
+        const container = document.getElementById('analytics-table-container');
+        container.innerHTML = '<p style="color: var(--primary-neon); text-align: center; padding: 20px;">Loading data from Cloudflare...</p>';
+
+        try {
+            const response = await fetch(url);
+            const result = await response.json();
+            
+            if (result.success) {
+                renderAnalyticsTable(result.data);
+            } else {
+                container.innerHTML = '<p style="color: #FF4D4D; text-align: center; padding: 20px;">Failed to load analytics.</p>';
+            }
+        } catch (error) {
+            console.error('Error fetching analytics:', error);
+            container.innerHTML = '<p style="color: #FF4D4D; text-align: center; padding: 20px;">Network error. Check Worker URL.</p>';
+        }
+    });
+
+    document.getElementById('analytics-exam-filter')?.addEventListener('change', () => {
+        document.getElementById('btn-load-analytics').click();
+    });
+}
+
+function renderAnalyticsTable(data) {
+    const container = document.getElementById('analytics-table-container');
+    
+    if (!data || data.length === 0) {
+        container.innerHTML = '<p style="color: #A0AEC0; text-align: center; padding: 20px;">No submissions found yet.</p>';
+        return;
+    }
+
+    let html = `
+        <table class="analytics-table">
+            <thead>
+                <tr>
+                    <th>Student</th>
+                    <th>Email</th>
+                    <th>Exam</th>
+                    <th>Score</th>
+                    <th>Accuracy</th>
+                    <th>C / W / Skip</th>
+                    <th>Submitted</th>
+                </tr>
+            </thead>
+            <tbody>
+    `;
+
+    data.forEach(row => {
+        const date = new Date(row.submitted_at).toLocaleString('en-IN', { 
+            day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' 
+        });
+        const skipped = row.attempted - row.correct - row.incorrect;
+        
+        html += `
+            <tr>
+                <td><strong>${row.student_name}</strong></td>
+                <td style="font-size: 0.75rem;">${row.student_email}</td>
+                <td><span class="exam-badge">${row.exam_name}</span></td>
+                <td class="score-cell">${row.total_score} / ${row.max_score}</td>
+                <td class="accuracy-cell">${row.accuracy}</td>
+                <td style="font-size: 0.75rem;">
+                    <span style="color: var(--status-answered);">✓${row.correct}</span> / 
+                    <span style="color: var(--status-unanswered);">${row.incorrect}</span> / 
+                    <span style="color: #7F8C8D;">${skipped < 0 ? 0 : skipped}</span>
+                </td>
+                <td style="font-size: 0.75rem; color: #A0AEC0;">${date}</td>
+            </tr>
+        `;
+    });
+
+    html += '</tbody></table>';
+    container.innerHTML = html;
 }
 
 // ==========================================
