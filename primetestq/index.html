@@ -148,6 +148,47 @@
         </div>
     </div>
 
+    <!-- 6. RESULT & REVIEW DASHBOARD (NEW) -->
+    <div id="screen-result-dashboard" class="hidden" style="padding: 90px 30px 30px 30px; min-height: 100vh;">
+        <div class="hub-header" style="position: relative; top: 0; left: 0; right: 0; margin-bottom: 30px;">
+            <div class="brand-logotype">PRIMETESTQ // TELEMETRY REPORT</div>
+            <button id="btn-return-home" class="btn-magnetic back-button">
+                <i class="fas fa-arrow-left"></i> RETURN TO BASE
+            </button>
+        </div>
+
+        <!-- Score Summary Grid -->
+        <div class="result-summary-grid">
+            <div class="glass-panel-static result-stat-card">
+                <h3>TOTAL SCORE</h3>
+                <div id="res-total-score" class="stat-value-large">0</div>
+                <div class="stat-sub">Out of <span id="res-max-score">0</span></div>
+            </div>
+            <div class="glass-panel-static result-stat-card">
+                <h3>ACCURACY</h3>
+                <div id="res-accuracy" class="stat-value-large">0%</div>
+                <div class="stat-sub">Attempted: <span id="res-attempted">0</span></div>
+            </div>
+            <div class="glass-panel-static result-stat-card">
+                <h3>CORRECT</h3>
+                <div id="res-correct" class="stat-value-large" style="color: var(--status-answered);">0</div>
+                <div class="stat-sub">Incorrect: <span id="res-incorrect" style="color: var(--status-unanswered);">0</span></div>
+            </div>
+        </div>
+
+        <!-- Subject-wise Breakdown -->
+        <div class="glass-panel-static" style="padding: 25px; margin-top: 25px;">
+            <h3 style="color: var(--primary-neon); margin-bottom: 15px; font-size: 1rem; letter-spacing: 0.05em;">SUBJECT TELEMETRY</h3>
+            <div id="res-subject-breakdown" class="subject-breakdown-grid"></div>
+        </div>
+
+        <!-- Detailed Question Review -->
+        <div style="margin-top: 30px;">
+            <h3 style="color: var(--accent-glow); font-size: 1.2rem; margin-bottom: 20px; font-weight: 900;">DETAILED QUESTION REVIEW</h3>
+            <div id="res-question-review-list" class="review-list-container"></div>
+        </div>
+    </div>
+
     <!-- MathJax Configuration for LaTeX Physics Formulas -->
     <script>
         window.MathJax = {
