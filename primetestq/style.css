@@ -1,3 +1,7 @@
+/* ==========================================
+   PRIME TEST Q - ATOMIC MODEL INTERFACE
+   ========================================== */
+
 :root {
     --bg-space: #0B1020;
     --card-glass: rgba(13, 20, 38, 0.45);
@@ -20,7 +24,13 @@
     --transition-smooth: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
-* { margin: 0; padding: 0; box-sizing: border-box; user-select: none; -webkit-user-select: none; }
+* { 
+    margin: 0; 
+    padding: 0; 
+    box-sizing: border-box; 
+    user-select: none; 
+    -webkit-user-select: none; 
+}
 
 body { 
     background-color: var(--bg-space); 
@@ -31,6 +41,10 @@ body {
     min-height: 100vh; 
     position: relative; 
 }
+
+/* ==========================================
+   BACKGROUND EFFECTS
+   ========================================== */
 
 .aurora-container { 
     position: fixed; 
@@ -67,6 +81,10 @@ body {
     pointer-events: none; 
     background: radial-gradient(circle 350px at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(0, 198, 255, 0.04), transparent 80%); 
 }
+
+/* ==========================================
+   GLASSMORPHISM & BUTTONS
+   ========================================== */
 
 .glass-panel { 
     background: var(--card-glass); 
@@ -105,6 +123,11 @@ body {
     border-color: var(--primary-neon); 
 }
 
+.w-full {
+    width: 100%;
+    justify-content: center;
+}
+
 .back-button {
     font-size: 0.75rem;
     padding: 8px 16px;
@@ -124,6 +147,10 @@ body {
 .hidden { display: none !important; }
 
 #app-view-viewport { width: 100%; height: 100%; position: relative; }
+
+/* ==========================================
+   HUB HEADER & FOOTER
+   ========================================== */
 
 .hub-header {
     position: absolute; 
@@ -158,6 +185,10 @@ footer {
     text-align: center; 
     z-index: 100; 
 }
+
+/* ==========================================
+   ORBITAL UNIVERSE SYSTEM
+   ========================================== */
 
 .orbit-universe-wrapper {
     position: absolute; 
@@ -223,6 +254,7 @@ footer {
 .path-orbit-9 .glass-panel  { animation: reverse-spin 52s linear infinite; }
 .path-orbit-10 .glass-panel { animation: reverse-spin 60s linear infinite; }
 
+/* Orbit Node Specific Glass Panel Styling */
 .glass-panel { 
     background: rgba(7, 11, 22, 0.95); 
     backdrop-filter: blur(10px); 
@@ -253,7 +285,16 @@ footer {
     to   { transform: rotate(0deg); }
 }
 
-#screen-cockpit-simulation { padding: 90px 30px 30px 30px; height: 100vh; display: flex; flex-direction: column; }
+/* ==========================================
+   COCKPIT SIMULATION UI
+   ========================================== */
+
+#screen-cockpit-simulation { 
+    padding: 90px 30px 30px 30px; 
+    height: 100vh; 
+    display: flex; 
+    flex-direction: column; 
+}
 
 .cockpit-bar {
     position: absolute; 
@@ -317,6 +358,39 @@ footer {
 .option-node-item:hover { border-color: rgba(0, 198, 255, 0.3); }
 .option-node-item.selected { border-color: var(--primary-neon); background: rgba(0, 198, 255, 0.06); }
 
+/* NEW: NUMERICAL INPUT STYLES FOR SECTION B */
+.numerical-input-container { 
+    margin-top: 20px; 
+    display: flex; 
+    flex-direction: column; 
+    gap: 10px; 
+}
+
+.numerical-input-field { 
+    background: rgba(255, 255, 255, 0.03); 
+    border: 1px solid var(--border-glass); 
+    border-radius: 12px; 
+    padding: 16px 20px; 
+    color: #fff; 
+    font-size: 1.2rem; 
+    font-family: monospace; 
+    outline: none; 
+    transition: all 0.3s ease; 
+    width: 100%; 
+}
+
+.numerical-input-field:focus { 
+    border-color: var(--primary-neon); 
+    box-shadow: 0 0 15px rgba(0, 198, 255, 0.1); 
+    background: rgba(0, 198, 255, 0.05); 
+}
+
+.numerical-hint { 
+    font-size: 0.75rem; 
+    color: #A0AEC0; 
+    font-style: italic; 
+}
+
 .cockpit-control-toolbar-row { 
     display: flex; 
     justify-content: space-between; 
@@ -358,7 +432,10 @@ footer {
     .cockpit-workstation-grid { grid-template-columns: 1fr; } 
 }
 
-/* AUTH & ADMIN OVERLAYS */
+/* ==========================================
+   AUTH & ADMIN OVERLAYS
+   ========================================== */
+
 .auth-gateway-overlay, .admin-overlay { 
     position: fixed; 
     top: 0; 
@@ -477,6 +554,10 @@ footer {
     border: 1px solid var(--border-glass); 
 }
 
+/* ==========================================
+   WARNINGS & PAUSE OVERLAY
+   ========================================== */
+
 .warning-toast { 
     position: fixed; 
     top: 20px; 
@@ -490,6 +571,7 @@ footer {
     z-index: 10000; 
     box-shadow: 0 10px 30px rgba(255, 0, 0, 0.3); 
     animation: slideDown 0.3s ease-out; 
+    transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
 @keyframes slideDown { 
