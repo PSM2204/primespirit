@@ -1,3 +1,7 @@
+// ==========================================
+// COCKPIT TEST EXECUTION ENGINE
+// ==========================================
+
 import { ExamState, loadRealQuestions, generateMockDataset, getCurrentQuestion, updateQuestionStatus } from './state.js';
 import { PrimeDB } from './auth.js';
 import { setTestPauseState } from './antiCheating.js';
@@ -6,39 +10,60 @@ let timerInterval = null;
 
 export function initializeTestExecutionEngine() {
     
+    // 1. LISTEN FOR ORBIT CLICK (Start Test)
     window.addEventListener('startSimulation', async (event) => {
         const stream = event.detail.stream;
         console.log(`🚀 Initializing CBT for: ${stream}`);
 
         try {
-            const realQuestions = await PrimeDB.getQuestions(stream);
-            if (realQuestions && Array.isArray(realQuestions) && realQuestions.length > 0) {
+            let realQuestions = [];
+            
+            // Try fetching from GitHub first, fallback to Admin IndexedDB
+            try {
+                const response = await fetch(`questions/${stream}.json`);
+                if (response.ok) realQuestions = await response.json();
+            } catch (err) { /* GitHub file not found, fallback to DB */ }
+
+            if (!realQuestions || realQuestions.length === 0) {
+                realQuestions = await PrimeDB.getQuestions(stream);
+            }
+
+            // Load data into state
+            if (realQuestions && realQuestions.length > 0) {
                 loadRealQuestions(realQuestions, stream);
             } else {
                 generateMockDataset(stream);
             }
+
+            // Initialize UI
             renderCurrentQuestion();
             startTimer();
             renderPalette();
+
         } catch (error) {
             console.error("Failed to initialize test:", error);
             alert("⚠️ Critical Error: Could not load examination matrix.");
         }
     });
 
-    // Anti-cheating force submit listener
+    // 2. LISTEN FOR ANTI-CHEATING FORCE SUBMIT
     window.addEventListener('forceSubmitTest', () => {
         console.warn("🚨 Anti-cheating protocol triggered: Force submitting test.");
         executeFinalSubmissionSequence();
     });
 
-    // UI Button Listeners
+    // 3. UI BUTTON LISTENERS
     document.getElementById('btn-action-next')?.addEventListener('click', () => saveAndNext());
     document.getElementById('btn-action-prev')?.addEventListener('click', () => navigateQuestion(-1));
     document.getElementById('btn-action-review')?.addEventListener('click', () => markForReview());
     document.getElementById('btn-action-clear')?.addEventListener('click', () => clearResponse());
-    document.getElementById('btn-cockpit-submit')?.addEventListener('click', () => executeFinalSubmissionSequence());
+    document.getElementById('btn-cockpit-submit')?.addEventListener('click', () => {
+        if(confirm("Are you sure you want to submit the test? This action cannot be undone.")) {
+            executeFinalSubmissionSequence();
+        }
+    });
     
+    // Pause & Resume Logic
     document.getElementById('btn-cockpit-pause')?.addEventListener('click', () => {
         setTestPauseState(true);
         clearInterval(timerInterval);
@@ -59,20 +84,46 @@ export function initializeTestExecutionEngine() {
     });
 }
 
+// ==========================================
+// RENDERING LOGIC
+// ==========================================
+
 function renderCurrentQuestion() {
     const q = getCurrentQuestion();
     if (!q) return;
 
+    // Update Header
     document.getElementById('hud-question-index-number').innerText = `Q. ${ExamState.activeQuestionIndex + 1} // SUBJECT: ${q.subject}`;
     
+    // Render Question Text
     const viewport = document.getElementById('hud-question-render-viewport');
     viewport.innerHTML = q.question;
     
-    // Trigger MathJax render
+    // Trigger MathJax to render LaTeX formulas
     if (window.MathJax) {
         MathJax.typesetPromise([viewport]).catch((err) => console.log('MathJax error:', err));
     }
 
+    // Render Image (ImgBB / Cloudinary)
+    const existingImage = document.getElementById('q-image-container');
+    if (existingImage) existingImage.remove(); // Clear previous image
+
+    if (q.imageUrl) {
+        const imgContainer = document.createElement('div');
+        imgContainer.id = 'q-image-container';
+        imgContainer.className = 'question-image-container';
+        
+        const img = document.createElement('img');
+        img.src = q.imageUrl;
+        img.alt = "Question Diagram";
+        img.onerror = () => { imgContainer.innerHTML = '<p style="color: #FF4D4D; font-size: 0.8rem;">⚠️ Image failed to load. Check URL.</p>'; };
+        
+        imgContainer.appendChild(img);
+        // Insert image right after the question text
+        viewport.parentNode.insertBefore(imgContainer, viewport.nextSibling);
+    }
+
+    // Render Options or Numerical Input
     const optionsViewport = document.getElementById('hud-options-render-viewport');
     optionsViewport.innerHTML = '';
 
@@ -91,6 +142,7 @@ function renderCurrentQuestion() {
             renderPalette();
         });
     } else {
+        // Render MCQ Options
         q.options.forEach((opt, index) => {
             const isSelected = ExamState.userResponses[q.id]?.value === index;
             const div = document.createElement('div');
@@ -100,6 +152,7 @@ function renderCurrentQuestion() {
             optionsViewport.appendChild(div);
         });
     }
+    
     renderPalette();
 }
 
@@ -107,8 +160,12 @@ function selectOption(index) {
     const q = getCurrentQuestion();
     ExamState.userResponses[q.id] = { type: 'MCQ', value: index };
     updateQuestionStatus(q.id, 'answered');
-    renderCurrentQuestion(); // Re-render to show selection
+    renderCurrentQuestion(); // Re-render to show selection styling
 }
+
+// ==========================================
+// NAVIGATION & PALETTE LOGIC
+// ==========================================
 
 function saveAndNext() {
     const q = getCurrentQuestion();
@@ -159,6 +216,10 @@ function renderPalette() {
     });
 }
 
+// ==========================================
+// TIMER & SUBMISSION LOGIC
+// ==========================================
+
 function startTimer() {
     clearInterval(timerInterval);
     updateTimerDisplay();
@@ -202,7 +263,7 @@ export function executeFinalSubmissionSequence() {
                 }
             } else if (q.type === 'Numerical') {
                 const userVal = parseFloat(response.value);
-                const correctVal = parseFloat(q.correctAnswerIndex); // Stored in correctAnswerIndex for simplicity
+                const correctVal = parseFloat(q.correctAnswerIndex); 
                 const tolerance = q.tolerance || 0.1;
                 if (!isNaN(userVal) && Math.abs(userVal - correctVal) <= tolerance) {
                     score += q.marks;
