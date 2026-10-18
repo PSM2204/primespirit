@@ -43,7 +43,10 @@
     <div id="admin-cockpit" class="admin-overlay hidden">
         <div class="admin-header">
             <h2>MENTOR TELEMETRY DASHBOARD</h2>
-            <button id="btn-admin-logout" class="btn-magnetic">LOGOUT</button>
+            <div style="display:flex; gap:10px;">
+                <button id="btn-load-analytics" class="btn-magnetic" style="padding: 8px 16px; font-size: 0.75rem;">📊 LOAD ANALYTICS</button>
+                <button id="btn-admin-logout" class="btn-magnetic">LOGOUT</button>
+            </div>
         </div>
         <div class="admin-grid">
             <div class="glass-panel-static admin-panel">
@@ -63,6 +66,28 @@
                 </select>
                 <input type="file" id="admin-json-upload" accept=".json, .csv" class="auth-input">
                 <button id="btn-upload-json" class="btn-magnetic w-full">INJECT TO LOCAL DB</button>
+            </div>
+        </div>
+
+        <!-- NEW: MENTEE ANALYTICS SECTION -->
+        <div id="analytics-section" class="hidden" style="margin-top: 30px;">
+            <div class="glass-panel-static" style="padding: 25px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px;">
+                    <h3 style="color: var(--primary-neon); font-size: 1rem; letter-spacing: 0.05em;">📊 MENTEE PERFORMANCE ANALYTICS</h3>
+                    <select id="analytics-exam-filter" class="auth-input" style="width: auto; margin: 0;">
+                        <option value="">All Exams</option>
+                        <option value="JEE MAIN">JEE Main</option>
+                        <option value="NEET UG">NEET UG</option>
+                        <option value="CUET">CUET</option>
+                        <option value="IAT CBT">IAT CBT</option>
+                        <option value="NEST CBT">NEST CBT</option>
+                        <option value="CLASS 11">Class 11th</option>
+                        <option value="CLASS 12">Class 12th</option>
+                    </select>
+                </div>
+                <div id="analytics-table-container" style="overflow-x: auto;">
+                    <p style="color: #A0AEC0; text-align: center; padding: 20px;">Click "📊 LOAD ANALYTICS" to fetch data from Cloudflare D1.</p>
+                </div>
             </div>
         </div>
     </div>
@@ -148,7 +173,7 @@
         </div>
     </div>
 
-    <!-- 6. RESULT & REVIEW DASHBOARD (NEW) -->
+    <!-- 6. RESULT & REVIEW DASHBOARD -->
     <div id="screen-result-dashboard" class="hidden" style="padding: 90px 30px 30px 30px; min-height: 100vh;">
         <div class="hub-header" style="position: relative; top: 0; left: 0; right: 0; margin-bottom: 30px;">
             <div class="brand-logotype">PRIMETESTQ // TELEMETRY REPORT</div>
