@@ -15,7 +15,7 @@
     <div class="spotlight-shield"></div>
 
     <!-- 1. AUTH GATEWAY -->
-    <div id="auth-gateway" class="auth-gateway-overlay hidden">
+    <div id="auth-gateway" class="auth-gateway-overlay">
         <div class="auth-glass-panel">
             <div id="auth-login-view">
                 <h2 class="auth-title">SECURE NODE ACCESS</h2>
@@ -148,7 +148,7 @@
         </div>
     </div>
 
-    <!-- MathJax for LaTeX Rendering -->
+    <!-- MathJax Configuration for LaTeX Physics Formulas -->
     <script>
         window.MathJax = {
             tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
@@ -157,6 +157,7 @@
     </script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     
-    <script type="module" src="app.js"></script>
+    <!-- CRITICAL FIX: Path updated to match your 'js/' folder structure -->
+    <script type="module" src="js/app.js"></script>
 </body>
 </html>
