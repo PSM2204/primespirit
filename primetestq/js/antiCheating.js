@@ -1,19 +1,40 @@
 import { ExamState } from './state.js';
-import { executeFinalSubmissionSequence } from './cockpitEngine.js';
 
 let isTestPaused = false;
+let debuggerInterval = null;
 
 export function setTestPauseState(paused) {
     isTestPaused = paused;
+    if (paused) stopDebuggerTrap();
+    else startDebuggerTrap();
 }
 
 export function enforceAntiCheatingProtocols() {
-    document.addEventListener('contextmenu', (e) => e.preventDefault());
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'F12' || 
-            ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'j')) ||
-            ((e.ctrlKey || e.metaKey) && (e.key === 'U' || e.key === 'S' || e.key === 's'))) {
+    document.addEventListener('contextmenu', (e) => {
+        if (!isTestPaused) {
             e.preventDefault();
+            showWarningToast("⚠️ Right-click is disabled during active simulation.");
+        }
+    });
+
+    ['copy', 'cut', 'paste'].forEach(event => {
+        document.addEventListener(event, (e) => {
+            if (!isTestPaused) {
+                e.preventDefault();
+                showWarningToast("⚠️ Clipboard actions are restricted.");
+            }
+        });
+    });
+
+    document.addEventListener('keydown', (e) => {
+        if (isTestPaused) return;
+        const isDevTools = 
+            e.key === 'F12' || 
+            ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'j')) ||
+            ((e.ctrlKey || e.metaKey) && (e.key === 'U' || e.key === 'S' || e.key === 's'));
+        if (isDevTools) {
+            e.preventDefault();
+            showWarningToast("🚨 Developer tools access is strictly prohibited.");
             return false;
         }
     });
@@ -21,29 +42,53 @@ export function enforceAntiCheatingProtocols() {
     document.addEventListener('visibilitychange', () => {
         if (document.hidden && !isTestPaused) {
             ExamState.warnings = (ExamState.warnings || 0) + 1;
-            showWarningToast(`⚠️ Tab Switch Detected (${ExamState.warnings}/3)`);
-            if (ExamState.warnings >= 3) {
-                showWarningToast("🚨 SECURITY BREACH: Auto-submitting test!");
-                setTimeout(() => executeFinalSubmissionSequence(), 1500);
+            const remaining = 3 - ExamState.warnings;
+            if (remaining > 0) {
+                showWarningToast(`⚠️ TAB SWITCH DETECTED! Warning ${ExamState.warnings}/3. ${remaining} remaining.`);
+            } else {
+                showWarningToast("🚨 SECURITY BREACH: Max warnings exceeded. Auto-submitting!");
+                window.dispatchEvent(new CustomEvent('forceSubmitTest'));
             }
         }
     });
 
     window.addEventListener('offline', () => {
         const syncPill = document.getElementById('network-status-indicator');
-        if (syncPill) { syncPill.innerText = "⚠️ OFFLINE MODE COMPILING"; syncPill.style.color = "#FF4D4D"; }
+        if (syncPill) { syncPill.innerText = "⚠️ OFFLINE MODE: LOCAL CACHE ACTIVE"; syncPill.style.color = "#FF4D4D"; }
     });
 
     window.addEventListener('online', () => {
         const syncPill = document.getElementById('network-status-indicator');
-        if (syncPill) { syncPill.innerText = "🔄 SECURE NODE SYNC ACTIVE"; syncPill.style.color = "var(--accent-glow)"; }
+        if (syncPill) { syncPill.innerText = "🟢 SECURE NODE SYNC ACTIVE"; syncPill.style.color = "var(--accent-glow)"; }
     });
+
+    startDebuggerTrap();
+}
+
+function startDebuggerTrap() {
+    if (debuggerInterval) return;
+    debuggerInterval = setInterval(() => {
+        // eslint-disable-next-line no-debugger
+        debugger; 
+    }, 1000);
+}
+
+function stopDebuggerTrap() {
+    if (debuggerInterval) {
+        clearInterval(debuggerInterval);
+        debuggerInterval = null;
+    }
 }
 
 function showWarningToast(msg) {
+    if (document.querySelector('.warning-toast')) return;
     const toast = document.createElement('div');
     toast.className = 'warning-toast';
     toast.innerText = msg;
     document.body.appendChild(toast);
-    setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 300); }, 3000);
+    setTimeout(() => { 
+        toast.style.opacity = '0'; 
+        toast.style.transform = 'translateX(-50%) translateY(-20px)';
+        setTimeout(() => toast.remove(), 300); 
+    }, 3000);
 }
