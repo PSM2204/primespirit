@@ -16,25 +16,19 @@ export const PrimeAuth = {
         }
     },
     
-    getUsers() {
-        return JSON.parse(localStorage.getItem(this.DB_KEY_USERS) || '[]');
-    },
+    getUsers() { return JSON.parse(localStorage.getItem(this.DB_KEY_USERS) || '[]'); },
     
     register(name, classLevel, email, password) {
         const users = this.getUsers();
-        if (users.find(u => u.email === email)) {
-            return { success: false, msg: "⚠️ Email already exists." };
-        }
+        if (users.find(u => u.email === email)) return { success: false, msg: "⚠️ Email already exists." };
         const newUser = { name, classLevel, email, password, role: 'student', joined: Date.now() };
         users.push(newUser);
         localStorage.setItem(this.DB_KEY_USERS, JSON.stringify(users));
-        const loginResult = this.login(email, password);
-        return { success: true, user: loginResult.user };
+        return { success: true, user: this.login(email, password).user };
     },
     
     login(email, password) {
-        const users = this.getUsers();
-        const user = users.find(u => u.email === email && u.password === password);
+        const user = this.getUsers().find(u => u.email === email && u.password === password);
         if (user) {
             localStorage.setItem(this.DB_KEY_SESSION, JSON.stringify(user));
             return { success: true, user };
@@ -47,9 +41,7 @@ export const PrimeAuth = {
         return session ? JSON.parse(session) : null;
     },
     
-    logout() {
-        localStorage.removeItem(this.DB_KEY_SESSION);
-    }
+    logout() { localStorage.removeItem(this.DB_KEY_SESSION); }
 };
 
 export const PrimeDB = {
@@ -64,17 +56,27 @@ export const PrimeDB = {
                     db.createObjectStore('questions', { keyPath: 'examId' });
                 }
             };
-            request.onsuccess = (e) => {
-                this.db = e.target.result;
-                resolve(this.db);
-            };
+            request.onsuccess = (e) => { this.db = e.target.result; resolve(this.db); };
             request.onerror = (e) => reject(e.target.error);
         });
     },
     
     async saveQuestions(examId, data) {
+        // NORMALIZE DATA: Ensures UI always gets 'question' and 'correctAnswerIndex'
+        const normalizedData = data.map((q, index) => ({
+            id: q.id || `q_${index + 1}`,
+            type: q.type || (q.options && q.options.length > 0 ? 'MCQ' : 'Numerical'),
+            subject: q.subject || 'General',
+            chapter: q.chapter || 'General',
+            question: q.question || q.text || 'Question text missing',
+            options: q.options || [],
+            correctAnswerIndex: q.correctAnswerIndex !== undefined ? q.correctAnswerIndex : (parseInt(q.correct) || 0),
+            marks: q.marks || 4,
+            negativeMarks: q.negativeMarks !== undefined ? q.negativeMarks : 1
+        }));
+
         const tx = this.db.transaction('questions', 'readwrite');
-        tx.objectStore('questions').put({ examId, data, updatedAt: Date.now() });
+        tx.objectStore('questions').put({ examId, data: normalizedData, updatedAt: Date.now() });
     },
     
     async getQuestions(examId) {
@@ -86,57 +88,38 @@ export const PrimeDB = {
         });
     },
     
-    // NEW: CSV Parser Function
     parseCSV(csvText) {
         const lines = csvText.trim().split('\n');
         const questions = [];
-        
-        // Skip header row (first line)
         for (let i = 1; i < lines.length; i++) {
             const line = lines[i].trim();
             if (!line) continue;
-            
-            // Handle CSV with proper quote handling
             const fields = this.parseCSVLine(line);
-            
-            if (fields.length >= 6) {
+            if (fields.length >= 7) {
                 questions.push({
-                    id: questions.length + 1,
+                    id: `csv_${questions.length + 1}`,
+                    type: "MCQ",
                     subject: fields[0].trim(),
-                    text: fields[1].trim(),
-                    options: [
-                        fields[2].trim(),
-                        fields[3].trim(),
-                        fields[4].trim(),
-                        fields[5].trim()
-                    ],
-                    correct: parseInt(fields[6]) || 0
+                    chapter: "Imported via CSV",
+                    question: fields[1].trim(),
+                    options: [fields[2].trim(), fields[3].trim(), fields[4].trim(), fields[5].trim()],
+                    correctAnswerIndex: parseInt(fields[6].trim()) || 0,
+                    marks: 4,
+                    negativeMarks: 1
                 });
             }
         }
-        
         return questions;
     },
     
-    // Helper: Parse a single CSV line (handles quoted fields)
     parseCSVLine(line) {
-        const result = [];
-        let current = '';
-        let inQuotes = false;
-        
+        const result = []; let current = ''; let inQuotes = false;
         for (let i = 0; i < line.length; i++) {
             const char = line[i];
-            
-            if (char === '"') {
-                inQuotes = !inQuotes;
-            } else if (char === ',' && !inQuotes) {
-                result.push(current);
-                current = '';
-            } else {
-                current += char;
-            }
+            if (char === '"') inQuotes = !inQuotes;
+            else if (char === ',' && !inQuotes) { result.push(current); current = ''; }
+            else current += char;
         }
-        
         result.push(current);
         return result;
     }
