@@ -13,7 +13,7 @@ export function initializeTestExecutionEngine() {
     // 1. LISTEN FOR ORBIT CLICK (Start Test)
     window.addEventListener('startSimulation', async (event) => {
         const stream = event.detail.stream;
-        console.log(` Initializing CBT for: ${stream}`);
+        console.log(`🚀 Initializing CBT for: ${stream}`);
 
         try {
             let realQuestions = [];
@@ -301,12 +301,54 @@ export function executeFinalSubmissionSequence() {
 
     ExamState.testResults = { totalScore, attempted, correct, incorrect, subjectStats };
 
-    // 2. Hide Cockpit and Show Result Dashboard
+    // 2. SEND SCORE TO CLOUDFLARE D1 DATABASE
+    sendScoreToMentor();
+
+    // 3. Hide Cockpit and Show Result Dashboard
     document.getElementById('screen-cockpit-simulation').classList.add('hidden');
     document.getElementById('screen-result-dashboard').classList.remove('hidden');
 
-    // 3. Render the Dashboard
+    // 4. Render the Dashboard
     renderResultDashboard();
+}
+
+function sendScoreToMentor() {
+    const session = JSON.parse(localStorage.getItem('ptq_active_session') || '{}');
+    const studentName = session.name || 'Unknown Student';
+    const studentEmail = session.email || 'unknown@unknown.com';
+    const res = ExamState.testResults;
+    const maxScore = ExamState.totalQuestions * ExamState.posMark;
+    const accuracy = res.attempted > 0 ? Math.round((res.correct / res.attempted) * 100) : 0;
+
+    const payload = {
+        studentName: studentName,
+        studentEmail: studentEmail,
+        examName: ExamState.stream.toUpperCase(),
+        totalScore: res.totalScore,
+        maxScore: maxScore,
+        accuracy: `${accuracy}%`,
+        correct: res.correct,
+        incorrect: res.incorrect,
+        attempted: res.attempted
+    };
+
+    // YOUR CLOUDFLARE WORKER URL
+    const WORKER_URL = 'https://primetestq-api.primespiritmentors.workers.dev';
+
+    fetch(`${WORKER_URL}/submit`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            console.log('✅ Score saved to Cloudflare D1 database!');
+        } else {
+            console.error('❌ Failed to save score:', data.error);
+        }
+    })
+    .catch(error => console.error('❌ Network error:', error));
 }
 
 function renderResultDashboard() {
