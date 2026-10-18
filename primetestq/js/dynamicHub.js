@@ -1,16 +1,21 @@
+// ==========================================
+// ORBITAL NAVIGATION ENGINE
+// ==========================================
+
 export function initializeOrbitEngine() {
     document.addEventListener('click', (e) => {
         const node = e.target.closest('.orbit-node');
         if (!node) return;
 
-        // Anti-spam protection
+        // Anti-spam protection to prevent double-click glitches
         if (node.classList.contains('is-launching')) return;
         node.classList.add('is-launching');
         setTimeout(() => node.classList.remove('is-launching'), 1500);
 
+        // 1. Extract Ecosystem ID
         let ecosystem = node.dataset.ecosystem;
         
-        // Fallback mapping if data-ecosystem is missing
+        // Fallback mapping if data-ecosystem is missing in HTML
         if (!ecosystem) {
             const text = node.innerText.toLowerCase();
             if (text.includes('jee')) ecosystem = 'jee-main';
@@ -29,12 +34,16 @@ export function initializeOrbitEngine() {
             return;
         }
 
+        // 2. UI Transition
         document.getElementById('screen-home-hub').classList.add('hidden');
         document.getElementById('screen-cockpit-simulation').classList.remove('hidden');
         
         const cockpitTitle = document.getElementById('cockpit-title-label');
         if (cockpitTitle) cockpitTitle.innerText = `${ecosystem.toUpperCase().replace('-', ' ')} CBT HUD`;
         
-        window.dispatchEvent(new CustomEvent('startSimulation', { detail: { stream: ecosystem } }));
+        // 3. Dispatch Event to Cockpit Engine
+        window.dispatchEvent(new CustomEvent('startSimulation', { 
+            detail: { stream: ecosystem } 
+        }));
     });
 }
