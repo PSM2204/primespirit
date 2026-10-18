@@ -13,7 +13,8 @@ export const ExamState = {
     posMark: 4,
     negMark: 1,
     warnings: 0,
-    isRealDataLoaded: false
+    isRealDataLoaded: false,
+    testResults: null // <-- Stores final score, stats, and subject breakdown
 };
 
 // Apply specific exam rules (time, marks) based on the selected track
@@ -45,6 +46,7 @@ export function loadRealQuestions(jsonData, stream) {
     ExamState.userResponses = {};
     ExamState.questionStatuses = {};
     ExamState.warnings = 0;
+    ExamState.testResults = null; // Reset previous results
     
     jsonData.forEach(q => { 
         ExamState.questionStatuses[q.id] = 'unvisited'; 
@@ -59,6 +61,7 @@ export function generateMockDataset(stream) {
     ExamState.stream = stream;
     ExamState.isRealDataLoaded = false;
     ExamState.warnings = 0;
+    ExamState.testResults = null;
     
     const dataset = [];
     const mockTotal = stream.includes('jee') ? 30 : 20;
