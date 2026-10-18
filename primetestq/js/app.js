@@ -137,27 +137,36 @@ function initAnalyticsUI() {
     const WORKER_URL = 'https://primetestq-api.primespiritmentors.workers.dev';
 
     document.getElementById('btn-load-analytics')?.addEventListener('click', async () => {
+        console.log("🔵 [DEBUG] Load Analytics button clicked!");
+        
         const analyticsSection = document.getElementById('analytics-section');
         analyticsSection.classList.remove('hidden');
         
         const filter = document.getElementById('analytics-exam-filter').value;
         const url = filter ? `${WORKER_URL}/submissions?exam=${encodeURIComponent(filter)}` : `${WORKER_URL}/submissions`;
+        
+        console.log("🔵 [DEBUG] Fetching from URL:", url);
 
         const container = document.getElementById('analytics-table-container');
         container.innerHTML = '<p style="color: var(--primary-neon); text-align: center; padding: 20px;">Loading data from Cloudflare...</p>';
 
         try {
             const response = await fetch(url);
+            console.log("🟢 [DEBUG] Response received. Status:", response.status, response.statusText);
+            
             const result = await response.json();
+            console.log("🟢 [DEBUG] Parsed JSON result:", result);
             
             if (result.success) {
+                console.log("🟢 [DEBUG] Calling renderAnalyticsTable with data:", result.data);
                 renderAnalyticsTable(result.data);
             } else {
-                container.innerHTML = '<p style="color: #FF4D4D; text-align: center; padding: 20px;">Failed to load analytics.</p>';
+                console.error("🔴 [DEBUG] Worker returned success: false", result);
+                container.innerHTML = `<p style="color: #FF4D4D; text-align: center; padding: 20px;">Failed to load analytics: ${result.error || 'Unknown error'}</p>`;
             }
         } catch (error) {
-            console.error('Error fetching analytics:', error);
-            container.innerHTML = '<p style="color: #FF4D4D; text-align: center; padding: 20px;">Network error. Check Worker URL.</p>';
+            console.error("🔴 [DEBUG] Network or Parsing Error:", error);
+            container.innerHTML = '<p style="color: #FF4D4D; text-align: center; padding: 20px;">Network error. Check Console (F12) for details.</p>';
         }
     });
 
@@ -167,10 +176,12 @@ function initAnalyticsUI() {
 }
 
 function renderAnalyticsTable(data) {
+    console.log("🟢 [DEBUG] Inside renderAnalyticsTable. Data length:", data ? data.length : 'null');
+    
     const container = document.getElementById('analytics-table-container');
     
     if (!data || data.length === 0) {
-        container.innerHTML = '<p style="color: #A0AEC0; text-align: center; padding: 20px;">No submissions found yet.</p>';
+        container.innerHTML = '<p style="color: #A0AEC0; text-align: center; padding: 20px;">No submissions found yet. (Take a test as a student first!)</p>';
         return;
     }
 
@@ -191,30 +202,40 @@ function renderAnalyticsTable(data) {
     `;
 
     data.forEach(row => {
-        const date = new Date(row.submitted_at).toLocaleString('en-IN', { 
-            day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' 
-        });
-        const skipped = row.attempted - row.correct - row.incorrect;
+        // Fallback for date formatting if submitted_at is missing or invalid
+        let dateStr = 'Unknown Date';
+        if (row.submitted_at) {
+            try {
+                dateStr = new Date(row.submitted_at).toLocaleString('en-IN', { 
+                    day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' 
+                });
+            } catch (e) {
+                dateStr = row.submitted_at;
+            }
+        }
+        
+        const skipped = (row.attempted || 0) - (row.correct || 0) - (row.incorrect || 0);
         
         html += `
             <tr>
-                <td><strong>${row.student_name}</strong></td>
-                <td style="font-size: 0.75rem;">${row.student_email}</td>
-                <td><span class="exam-badge">${row.exam_name}</span></td>
-                <td class="score-cell">${row.total_score} / ${row.max_score}</td>
-                <td class="accuracy-cell">${row.accuracy}</td>
+                <td><strong>${row.student_name || 'Unknown'}</strong></td>
+                <td style="font-size: 0.75rem;">${row.student_email || 'Unknown'}</td>
+                <td><span class="exam-badge">${row.exam_name || 'Unknown'}</span></td>
+                <td class="score-cell">${row.total_score || 0} / ${row.max_score || 0}</td>
+                <td class="accuracy-cell">${row.accuracy || '0%'}</td>
                 <td style="font-size: 0.75rem;">
-                    <span style="color: var(--status-answered);">✓${row.correct}</span> / 
-                    <span style="color: var(--status-unanswered);">${row.incorrect}</span> / 
+                    <span style="color: var(--status-answered);">✓${row.correct || 0}</span> / 
+                    <span style="color: var(--status-unanswered);">✗${row.incorrect || 0}</span> / 
                     <span style="color: #7F8C8D;">${skipped < 0 ? 0 : skipped}</span>
                 </td>
-                <td style="font-size: 0.75rem; color: #A0AEC0;">${date}</td>
+                <td style="font-size: 0.75rem; color: #A0AEC0;">${dateStr}</td>
             </tr>
         `;
     });
 
     html += '</tbody></table>';
     container.innerHTML = html;
+    console.log("🟢 [DEBUG] Table rendered successfully!");
 }
 
 // ==========================================
